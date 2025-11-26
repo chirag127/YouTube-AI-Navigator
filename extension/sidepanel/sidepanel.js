@@ -1,17 +1,9 @@
-console.log('YouTube AI Master: Sidepanel script starting to load...')
-
 import { GeminiService } from '../services/GeminiService.js'
 import { StorageService } from '../services/StorageService.js'
-import { YouTubeTranscriptService } from '../services/YouTubeTranscriptService.js'
 
-console.log('YouTube AI Master: Imports loaded successfully')
-
-const transcriptService = new YouTubeTranscriptService()
 const storageService = new StorageService()
 let geminiService = null
 let currentTranscriptText = '' // Store for chat context
-
-console.log('YouTube AI Master: Services initialized')
 
 // UI Elements
 const analyzeBtn = document.getElementById('analyze-btn')
@@ -31,11 +23,8 @@ const chatSendBtn = document.getElementById('chat-send-btn')
 const chatHistory = document.getElementById('chat-history')
 
 document.addEventListener('DOMContentLoaded', async () => {
-  console.log('YouTube AI Master: DOMContentLoaded fired')
-
   // 1. Check Auth
   const { geminiApiKey } = await chrome.storage.local.get('geminiApiKey')
-  console.log('YouTube AI Master: API key check result:', geminiApiKey ? 'Present' : 'Missing')
   if (!geminiApiKey) {
     authWarning.style.display = 'block'
     analyzeBtn.disabled = true
@@ -124,7 +113,6 @@ function updateChatMessage(id, text) {
 }
 
 analyzeBtn.addEventListener('click', async () => {
-  console.log('YouTube AI Master: Analyze button clicked')
   try {
     statusDiv.textContent = 'Fetching video info...'
     statusDiv.className = ''
@@ -149,10 +137,22 @@ analyzeBtn.addEventListener('click', async () => {
     console.log('YouTube AI Master: Extracted video ID:', videoId)
     if (!videoId) throw new Error('Could not find Video ID.')
 
-    // 2. Fetch Metadata & Transcript
+    // 2. Fetch Metadata & Transcript via content script
     statusDiv.textContent = 'Fetching transcript...'
-    const metadata = await transcriptService.getVideoMetadata(videoId)
-    const transcript = await transcriptService.getTranscript(videoId)
+
+    // Get metadata
+    const metadataResponse = await chrome.tabs.sendMessage(tab.id, { action: 'GET_METADATA', videoId })
+    if (metadataResponse.error) {
+      throw new Error(`Metadata fetch failed: ${metadataResponse.error}`)
+    }
+    const metadata = metadataResponse.metadata
+
+    // Get transcript
+    const transcriptResponse = await chrome.tabs.sendMessage(tab.id, { action: 'GET_TRANSCRIPT', videoId })
+    if (transcriptResponse.error) {
+      throw new Error(`Transcript fetch failed: ${transcriptResponse.error}`)
+    }
+    const transcript = transcriptResponse.transcript
 
     // Store for Chat
     currentTranscriptText = transcript.map((s) => s.text).join(' ')
