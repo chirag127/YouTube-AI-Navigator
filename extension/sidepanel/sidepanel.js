@@ -1,11 +1,17 @@
+console.log('YouTube AI Master: Sidepanel script starting to load...')
+
 import { GeminiService } from '../services/GeminiService.js'
 import { StorageService } from '../services/StorageService.js'
 import { YouTubeTranscriptService } from '../services/YouTubeTranscriptService.js'
+
+console.log('YouTube AI Master: Imports loaded successfully')
 
 const transcriptService = new YouTubeTranscriptService()
 const storageService = new StorageService()
 let geminiService = null
 let currentTranscriptText = '' // Store for chat context
+
+console.log('YouTube AI Master: Services initialized')
 
 // UI Elements
 const analyzeBtn = document.getElementById('analyze-btn')
@@ -25,8 +31,11 @@ const chatSendBtn = document.getElementById('chat-send-btn')
 const chatHistory = document.getElementById('chat-history')
 
 document.addEventListener('DOMContentLoaded', async () => {
+  console.log('YouTube AI Master: DOMContentLoaded fired')
+
   // 1. Check Auth
   const { geminiApiKey } = await chrome.storage.local.get('geminiApiKey')
+  console.log('YouTube AI Master: API key check result:', geminiApiKey ? 'Present' : 'Missing')
   if (!geminiApiKey) {
     authWarning.style.display = 'block'
     analyzeBtn.disabled = true
@@ -115,6 +124,7 @@ function updateChatMessage(id, text) {
 }
 
 analyzeBtn.addEventListener('click', async () => {
+  console.log('YouTube AI Master: Analyze button clicked')
   try {
     statusDiv.textContent = 'Fetching video info...'
     statusDiv.className = ''
@@ -129,12 +139,14 @@ analyzeBtn.addEventListener('click', async () => {
 
     // 1. Get Active Tab
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
+    console.log('YouTube AI Master: Active tab:', tab?.url)
     if (!tab || !tab.url.includes('youtube.com/watch')) {
       throw new Error('Please open a YouTube video page.')
     }
 
     const urlParams = new URLSearchParams(new URL(tab.url).search)
     const videoId = urlParams.get('v')
+    console.log('YouTube AI Master: Extracted video ID:', videoId)
     if (!videoId) throw new Error('Could not find Video ID.')
 
     // 2. Fetch Metadata & Transcript

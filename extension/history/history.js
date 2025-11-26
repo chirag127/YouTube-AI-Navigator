@@ -29,7 +29,7 @@ function renderList(items) {
 
   noResults.style.display = 'none'
 
-  items.forEach((item) => {
+  for (const item of items) {
     const li = document.createElement('li')
     li.className = 'video-item'
 
@@ -52,7 +52,7 @@ function renderList(items) {
     li.querySelector('.btn-delete').addEventListener('click', (e) => deleteItem(e, item.videoId))
 
     videoList.appendChild(li)
-  })
+  }
 }
 
 function openTranscript(videoId) {
