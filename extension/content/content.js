@@ -1,26 +1,266 @@
 /**
  * YouTube AI Master - Content Script
- * Handles DOM interaction: video seeking, data extraction, transcript fetching, and UI injection.
+ * Handles DOM interaction and UI Injection.
  */
 
 console.log('YouTube AI Master: Content script loaded.')
 
-// Import transcript service functionality
+// --- UI Injection Logic ---
+
+let currentVideoId = null
+let widgetContainer = null
+let isAnalyzing = false
+
+// Observer to handle SPA navigation
+const observer = new MutationObserver(() => {
+  const urlParams = new URLSearchParams(window.location.search)
+  const videoId = urlParams.get('v')
+
+  if (window.location.pathname === '/watch' && videoId && videoId !== currentVideoId) {
+    currentVideoId = videoId
+    console.log('YouTube AI Master: New video detected:', videoId)
+    injectWidget()
+  } else if (window.location.pathname === '/watch' && videoId && !document.getElementById('yt-ai-master-widget')) {
+    // Re-inject if removed
+    injectWidget()
+  }
+})
+
+observer.observe(document.body, { childList: true, subtree: true })
+
+// Initial check
+if (window.location.pathname === '/watch') {
+  const urlParams = new URLSearchParams(window.location.search)
+  currentVideoId = urlParams.get('v')
+  if (currentVideoId) injectWidget()
+}
+
+function injectWidget() {
+  const secondaryColumn = document.querySelector('#secondary')
+  if (!secondaryColumn) {
+    // Retry if secondary column not yet loaded
+    setTimeout(injectWidget, 1000)
+    return
+  }
+
+  if (document.getElementById('yt-ai-master-widget')) return
+
+  console.log('YouTube AI Master: Injecting widget...')
+
+  // Create Widget Container
+  widgetContainer = document.createElement('div')
+  widgetContainer.id = 'yt-ai-master-widget'
+  widgetContainer.innerHTML = `
+    <div class="yt-ai-header">
+      <div class="yt-ai-title">
+        <span>✨ YouTube AI Master</span>
+      </div>
+      <button id="yt-ai-analyze-btn" class="yt-ai-btn">Analyze Video</button>
+    </div>
+    <div class="yt-ai-tabs">
+      <div class="yt-ai-tab active" data-tab="summary">Summary</div>
+      <div class="yt-ai-tab" data-tab="transcript">Transcript</div>
+      <div class="yt-ai-tab" data-tab="comments">Comments</div>
+      <div class="yt-ai-tab" data-tab="segments">Segments</div>
+    </div>
+    <div id="yt-ai-content-area" class="yt-ai-content">
+      <div class="yt-ai-placeholder">Click "Analyze Video" to start.</div>
+    </div>
+  `
+
+  // Insert at top of secondary column
+  secondaryColumn.insertBefore(widgetContainer, secondaryColumn.firstChild)
+
+  // Attach Event Listeners
+  document.getElementById('yt-ai-analyze-btn').addEventListener('click', startAnalysis)
+
+  const tabs = widgetContainer.querySelectorAll('.yt-ai-tab')
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => switchTab(tab.dataset.tab))
+  })
+}
+
+// --- State Management ---
+let analysisData = null
+let currentTranscript = []
+
+async function startAnalysis() {
+  if (isAnalyzing) return
+  isAnalyzing = true
+
+  const btn = document.getElementById('yt-ai-analyze-btn')
+  btn.disabled = true
+  btn.textContent = 'Analyzing...'
+
+  const contentArea = document.getElementById('yt-ai-content-area')
+  contentArea.innerHTML = '<div class="yt-ai-loading">Analyzing video... This may take a few seconds.</div>'
+
+  try {
+    // 1. Get Metadata & Transcript (Local)
+    const transcriptService = new ContentScriptTranscriptService()
+    const metadata = await transcriptService.getVideoMetadata(currentVideoId)
+    const transcript = await transcriptService.getTranscript(currentVideoId)
+    currentTranscript = transcript
+
+    // 2. Send to Background for AI Processing
+    const response = await chrome.runtime.sendMessage({
+      action: 'ANALYZE_VIDEO',
+      transcript,
+      metadata,
+      options: { length: 'Medium' } // Default options
+    })
+
+    if (!response.success) throw new Error(response.error)
+
+    analysisData = response.data
+
+    // 3. Render Results
+    renderSummary()
+
+    // 4. Inject Segments into Player
+    injectSegmentMarkers(analysisData.segments)
+
+  } catch (error) {
+    console.error('Analysis Error:', error)
+    contentArea.innerHTML = `<div class="yt-ai-error">Error: ${error.message}</div>`
+  } finally {
+    isAnalyzing = false
+    btn.disabled = false
+    btn.textContent = 'Analyze Video'
+  }
+}
+
+function switchTab(tabName) {
+  // Update Tab UI
+  const tabs = widgetContainer.querySelectorAll('.yt-ai-tab')
+  tabs.forEach(t => t.classList.remove('active'))
+  widgetContainer.querySelector(`[data-tab="${tabName}"]`).classList.add('active')
+
+  // Render Content
+  if (!analysisData && !currentTranscript.length) {
+    return // Nothing to show yet
+  }
+
+  switch (tabName) {
+    case 'summary':
+      renderSummary()
+      break
+    case 'transcript':
+      renderTranscript()
+      break
+    case 'comments':
+      renderComments()
+      break
+    case 'segments':
+      renderSegments()
+      break
+  }
+}
+
+function renderSummary() {
+  const contentArea = document.getElementById('yt-ai-content-area')
+  if (!analysisData) return
+
+  contentArea.innerHTML = `
+    <div class="yt-ai-markdown">
+      ${marked.parse(analysisData.summary)}
+      <hr style="border-color: #333; margin: 20px 0;">
+      <h3>Key Insights</h3>
+      ${marked.parse(analysisData.insights)}
+      <hr style="border-color: #333; margin: 20px 0;">
+      <h3>FAQ</h3>
+      ${marked.parse(analysisData.faq)}
+    </div>
+  `
+  addTimestampListeners(contentArea)
+}
+
+function renderTranscript() {
+  const contentArea = document.getElementById('yt-ai-content-area')
+  contentArea.innerHTML = ''
+
+  if (currentTranscript.length === 0) {
+    contentArea.innerHTML = 'No transcript available.'
+    return
+  }
+
+  // Virtual scrolling or just limit for now? Let's limit to first 100 lines or implement lazy load later.
+  // For now, simple list.
+  const list = document.createElement('div')
+  currentTranscript.forEach(line => {
+    const row = document.createElement('div')
+    row.className = 'yt-ai-segment'
+    row.innerHTML = `
+      <span class="yt-ai-timestamp">${formatTime(line.start)}</span>
+      <span class="yt-ai-text">${line.text}</span>
+    `
+    row.addEventListener('click', () => seekToTimestamp(line.start))
+    list.appendChild(row)
+  })
+  contentArea.appendChild(list)
+}
+
+function renderComments() {
+  const contentArea = document.getElementById('yt-ai-content-area')
+  contentArea.innerHTML = '<div class="yt-ai-loading">Fetching comments analysis... (Not implemented in this demo step)</div>'
+  // TODO: Implement comment fetching and analysis here or reuse logic
+}
+
+function renderSegments() {
+  const contentArea = document.getElementById('yt-ai-content-area')
+  if (!analysisData?.segments) {
+    contentArea.innerHTML = 'No segments found.'
+    return
+  }
+
+  const list = document.createElement('div')
+  analysisData.segments.forEach(seg => {
+    const item = document.createElement('div')
+    item.className = `yt-ai-segment-item ${seg.label}`
+    item.innerHTML = `
+      <div style="font-weight:bold; color:#fff;">${seg.label}</div>
+      <div style="font-size:12px; color:#aaa;">${formatTime(seg.start)} - ${formatTime(seg.end)}</div>
+      <div style="margin-top:4px;">${seg.description || ''}</div>
+    `
+    item.addEventListener('click', () => seekToTimestamp(seg.start))
+    list.appendChild(item)
+  })
+  contentArea.appendChild(list)
+}
+
+// --- Helper Functions ---
+
+function formatTime(seconds) {
+  const m = Math.floor(seconds / 60)
+  const s = Math.floor(seconds % 60)
+  return `${m}:${s.toString().padStart(2, '0')}`
+}
+
+function seekToTimestamp(seconds) {
+  const video = document.querySelector('video')
+  if (video) {
+    video.currentTime = seconds
+    video.play()
+  }
+}
+
+function addTimestampListeners(container) {
+  // If summary has timestamps like [12:30], make them clickable
+  // Implementation depends on how Gemini returns timestamps.
+}
+
+// --- Transcript Service Class (Copied/Adapted) ---
 class ContentScriptTranscriptService {
   async _fetchVideoPage(videoId) {
     const response = await fetch(`https://www.youtube.com/watch?v=${videoId}`)
-    if (!response.ok) {
-      throw new Error(`Failed to fetch video page: ${response.statusText}`)
-    }
+    if (!response.ok) throw new Error(`Failed to fetch video page: ${response.statusText}`)
     return response.text()
   }
 
   _extractPlayerResponse(html) {
     const startPattern = 'ytInitialPlayerResponse = '
     const startIndex = html.indexOf(startPattern)
-    if (startIndex === -1) {
-      throw new Error('Failed to extract player response')
-    }
+    if (startIndex === -1) throw new Error('Failed to extract player response')
 
     let braceCount = 0
     let endIndex = -1
@@ -28,12 +268,8 @@ class ContentScriptTranscriptService {
     const jsonStartIndex = startIndex + startPattern.length
 
     for (let i = jsonStartIndex; i < html.length; i++) {
-      if (html[i] === '{') {
-        braceCount++
-        foundStart = true
-      } else if (html[i] === '}') {
-        braceCount--
-      }
+      if (html[i] === '{') { braceCount++; foundStart = true }
+      else if (html[i] === '}') { braceCount-- }
 
       if (foundStart && braceCount === 0) {
         endIndex = i + 1
@@ -41,30 +277,18 @@ class ContentScriptTranscriptService {
       }
     }
 
-    if (endIndex === -1) {
-      throw new Error('Failed to parse player response JSON')
-    }
-
+    if (endIndex === -1) throw new Error('Failed to parse player response JSON')
     const jsonStr = html.substring(jsonStartIndex, endIndex)
-    try {
-      return JSON.parse(jsonStr)
-    } catch (e) {
-      throw new Error('Failed to parse player response JSON content')
-    }
+    try { return JSON.parse(jsonStr) } catch (e) { throw new Error('Failed to parse player response JSON content') }
   }
 
   async getVideoMetadata(videoId) {
     if (!videoId) throw new Error('Video ID is required')
-
     try {
       const html = await this._fetchVideoPage(videoId)
       const playerResponse = this._extractPlayerResponse(html)
       const videoDetails = playerResponse.videoDetails
-
-      if (!videoDetails) {
-        throw new Error('No video details found')
-      }
-
+      if (!videoDetails) throw new Error('No video details found')
       return {
         title: videoDetails.title,
         duration: Number.parseInt(videoDetails.lengthSeconds, 10),
@@ -79,111 +303,69 @@ class ContentScriptTranscriptService {
 
   async getTranscript(videoId, lang = 'en') {
     if (!videoId) throw new Error('Video ID is required')
-
     try {
-      console.log('Fetching transcript for video:', videoId)
       const html = await this._fetchVideoPage(videoId)
       let tracks = []
 
-      // Strategy 1: Parse ytInitialPlayerResponse (Most reliable)
+      // Strategy 1: JSON
       try {
         const playerResponse = this._extractPlayerResponse(html)
         if (playerResponse?.captions?.playerCaptionsTracklistRenderer?.captionTracks) {
           tracks = playerResponse.captions.playerCaptionsTracklistRenderer.captionTracks
-          console.log('Found tracks via JSON:', tracks.length)
         }
-      } catch (e) {
-        console.log('JSON strategy failed:', e.message)
-      }
+      } catch (e) {}
 
-      // Strategy 2: Regex for captionTracks
+      // Strategy 2: Regex
       if (tracks.length === 0) {
-        console.log('Trying regex strategy...')
         const patterns = [
           /["']?captionTracks["']?\s*:\s*(\[[\s\S]+?\])/,
-          /"captionTracks":\s*(\[[^\]]+\])/,
-          /captionTracks["']?\s*:\s*(\[[^\]]+\])/
+          /"captionTracks":\s*(\[[^\]]+\])/
         ]
-
         for (const pattern of patterns) {
           const match = html.match(pattern)
           if (match) {
             try {
               const json = JSON.parse(match[1])
-              if (Array.isArray(json)) {
-                tracks = json
-                console.log('Found tracks via Regex JSON:', tracks.length)
-                break
-              }
-            } catch (e) { /* ignore */ }
+              if (Array.isArray(json)) { tracks = json; break }
+            } catch (e) {}
           }
         }
       }
 
-      // Strategy 3: Regex for baseUrl (Last resort)
-      if (tracks.length === 0) {
-        console.log('Trying baseUrl regex strategy...')
-        const captionPattern = /captionTracks[^}]+baseUrl["']?\s*:\s*["']([^"']+)["']/g
-        const matches = [...html.matchAll(captionPattern)]
-        if (matches.length > 0) {
-          tracks = matches.map((match) => ({
-            languageCode: 'en', // Default assumption
-            baseUrl: match[1],
-          }))
-        }
-      }
+      if (tracks.length === 0) throw new Error('No captions available.')
 
-      if (tracks.length === 0) {
-        throw new Error(
-          'This video does not have captions/subtitles available. Try a different video that has closed captions enabled.'
-        )
-      }
+      const track = tracks.find((t) => t.languageCode === lang) || tracks.find((t) => t.languageCode.startsWith('en')) || tracks[0]
+      if (!track) throw new Error('No suitable caption track found')
 
-      // Select the best track
-      const track =
-        tracks.find((t) => t.languageCode === lang) ||
-        tracks.find((t) => t.languageCode.startsWith('en')) ||
-        tracks[0]
-
-      if (!track) {
-        throw new Error('No suitable caption track found')
-      }
-
-      console.log('Fetching transcript from:', track.baseUrl)
       const transcriptResponse = await fetch(track.baseUrl + '&fmt=json3')
-      const transcriptJson = await transcriptResponse.json()
+      if (!transcriptResponse.ok) {
+        throw new Error(`Failed to fetch transcript: ${transcriptResponse.status} ${transcriptResponse.statusText}`)
+      }
+      const responseText = await transcriptResponse.text()
+      if (!responseText) {
+        throw new Error('Transcript response was empty')
+      }
 
-      const segments = this.parseTranscriptJson(transcriptJson)
-      console.log('Parsed transcript segments:', segments.length)
-      return segments
+      try {
+        const transcriptJson = JSON.parse(responseText)
+        return this.parseTranscriptJson(transcriptJson)
+      } catch (e) {
+        console.error('Failed to parse transcript JSON:', responseText.substring(0, 200))
+        throw new Error('Invalid transcript JSON format')
+      }
     } catch (error) {
       console.error('ContentScriptTranscriptService Error:', error)
-      if (error.message.includes('captions') || error.message.includes('caption tracks')) {
-        throw new Error(
-          'This video does not have captions/subtitles available. Please try a different video that has closed captions enabled by the creator.'
-        )
-      }
-      if (error.message.includes('Failed to fetch')) {
-        throw new Error(
-          'Unable to access YouTube. Please check your internet connection and try again.'
-        )
-      }
-      throw new Error(`Transcript analysis failed: ${error.message}`)
+      throw error
     }
   }
 
   parseTranscriptJson(json) {
     const segments = []
     if (!json.events) return segments
-
     for (const event of json.events) {
-      // Skip events without segments (e.g. just timing info)
       if (!event.segs) continue
-
       const text = event.segs.map(s => s.utf8).join('').trim()
-      // Skip empty text segments
       if (!text) continue
-
       segments.push({
         start: event.tStartMs / 1000,
         duration: (event.dDurationMs || 0) / 1000,
@@ -200,226 +382,27 @@ class ContentScriptTranscriptService {
   }
 }
 
-const transcriptService = new ContentScriptTranscriptService()
-
-// Listen for messages from the extension (Side Panel / Background)
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === 'SEEK_TO') {
-    seekToTimestamp(request.timestamp)
-    sendResponse({ status: 'success' })
-  } else if (request.action === 'GET_VIDEO_DATA') {
-    // Placeholder for extracting data if needed directly from DOM
-    sendResponse({ title: document.title })
-  } else if (request.action === 'GET_COMMENTS') {
-    const comments = extractComments()
-    sendResponse({ comments })
-  } else if (request.action === 'GET_TRANSCRIPT') {
-    ;(async () => {
-      try {
-        const transcript = await transcriptService.getTranscript(request.videoId)
-        sendResponse({ transcript })
-      } catch (error) {
-        sendResponse({ error: error.message })
-      }
-    })()
-    return true // Keep the message channel open for async response
-  } else if (request.action === 'GET_METADATA') {
-    ;(async () => {
-      try {
-        const metadata = await transcriptService.getVideoMetadata(request.videoId)
-        sendResponse({ metadata })
-      } catch (error) {
-        sendResponse({ error: error.message })
-      }
-    })()
-    return true // Keep the message channel open for async response
-  } else if (request.action === 'SHOW_SEGMENTS') {
-    injectSegmentMarkers(request.segments)
-    currentSegments = request.segments
-    updateSkipSettings() // Ensure we have latest settings
-    startMonitoring()
-    sendResponse({ status: 'success' })
-  } else if (request.action === 'UPDATE_SETTINGS') {
-    updateSkipSettings()
-    sendResponse({ status: 'success' })
-  }
-})
-
-let currentSegments = []
-let skipSettings = {}
-let monitoringInterval = null
-let skipButton = null
-
-function updateSkipSettings() {
-  chrome.storage.local.get('autoSkip', (items) => {
-    skipSettings = items.autoSkip || {}
-    console.log('YouTube AI Master: Updated skip settings:', skipSettings)
-  })
-}
-
-function startMonitoring() {
-  if (monitoringInterval) clearInterval(monitoringInterval)
-
-  const video = document.querySelector('video')
-  if (!video) return
-
-  // Use timeupdate event for smoother checking
-  video.addEventListener('timeupdate', checkSkipLogic)
-
-  // Backup interval in case event listeners are cleared
-  monitoringInterval = setInterval(() => {
-    if (!video.paused) checkSkipLogic()
-  }, 1000)
-}
-
-function checkSkipLogic() {
-  const video = document.querySelector('video')
-  if (!video) return
-
-  const currentTime = video.currentTime
-  const currentSegment = currentSegments.find(
-    (s) => currentTime >= s.start && currentTime < s.start + s.duration
-  )
-
-  if (currentSegment && currentSegment.label !== 'Content') {
-    const shouldSkip = skipSettings[currentSegment.label]
-
-    if (shouldSkip) {
-      // Auto-skip
-      console.log(`YouTube AI Master: Auto-skipping ${currentSegment.label}`)
-      video.currentTime = currentSegment.start + currentSegment.duration
-      showToast(`Skipped ${currentSegment.label}`)
-    } else {
-      // Show Skip Button
-      showSkipButton(currentSegment)
-    }
-  } else {
-    hideSkipButton()
-  }
-}
-
-function showSkipButton(segment) {
-  if (!skipButton) {
-    skipButton = document.createElement('button')
-    skipButton.id = 'ai-master-skip-btn'
-    skipButton.style.cssText = `
-      position: absolute;
-      bottom: 150px;
-      right: 20px;
-      z-index: 9999;
-      background: rgba(0, 0, 0, 0.8);
-      color: white;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 10px 20px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-family: Roboto, Arial, sans-serif;
-      font-size: 14px;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: opacity 0.2s;
-    `
-    skipButton.innerHTML = `
-      <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:white;"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
-      Skip Segment
-    `
-
-    // Find a stable container
-    const player = document.querySelector('#movie_player') || document.body
-    player.appendChild(skipButton)
-
-    skipButton.addEventListener('click', () => {
-      const video = document.querySelector('video')
-      if (video) {
-        video.currentTime = segment.start + segment.duration
-        hideSkipButton()
-      }
-    })
-  }
-
-  skipButton.querySelector('span')?.remove() // Remove old text if any
-  const textSpan = document.createElement('span')
-  textSpan.textContent = `Skip ${segment.label}`
-  skipButton.appendChild(textSpan)
-
-  skipButton.style.display = 'flex'
-}
-
-function hideSkipButton() {
-  if (skipButton) {
-    skipButton.style.display = 'none'
-  }
-}
-
-function showToast(message) {
-  const toast = document.createElement('div')
-  toast.textContent = message
-  toast.style.cssText = `
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 8px 16px;
-    border-radius: 20px;
-    z-index: 10000;
-    font-family: Roboto, Arial, sans-serif;
-    font-size: 13px;
-    pointer-events: none;
-    animation: fadeInOut 2s ease-in-out forwards;
-  `
-
-  // Add keyframes if not present
-  if (!document.getElementById('ai-master-toast-style')) {
-    const style = document.createElement('style')
-    style.id = 'ai-master-toast-style'
-    style.textContent = `
-      @keyframes fadeInOut {
-        0% { opacity: 0; transform: translate(-50%, -10px); }
-        10% { opacity: 1; transform: translate(-50%, 0); }
-        90% { opacity: 1; transform: translate(-50%, 0); }
-        100% { opacity: 0; transform: translate(-50%, -10px); }
-      }
-    `
-    document.head.appendChild(style)
-  }
-
-  document.body.appendChild(toast)
-  setTimeout(() => toast.remove(), 2000)
-}
-
+// --- Segment Markers (Visuals) ---
 function injectSegmentMarkers(segments) {
+  if (!segments) return
   const progressBar = document.querySelector('.ytp-progress-bar')
   if (!progressBar) return
 
-  // Remove existing markers
   const existingContainer = document.getElementById('ai-master-markers')
   if (existingContainer) existingContainer.remove()
 
   const container = document.createElement('div')
   container.id = 'ai-master-markers'
-  container.style.cssText = `
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 30;
-  `
+  container.style.cssText = `position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 30;`
 
   const video = document.querySelector('video')
   const totalDuration = video ? video.duration : 0
   if (!totalDuration) return
 
   segments.forEach(segment => {
-    if (segment.label === 'Content') return // Don't mark content
-
+    if (segment.label === 'Content') return
     const startPercent = (segment.start / totalDuration) * 100
-    const widthPercent = (segment.duration / totalDuration) * 100
+    const widthPercent = ((segment.end - segment.start) / totalDuration) * 100
 
     const marker = document.createElement('div')
     marker.style.cssText = `
@@ -433,7 +416,6 @@ function injectSegmentMarkers(segments) {
     marker.title = segment.label
     container.appendChild(marker)
   })
-
   progressBar.appendChild(container)
 }
 
@@ -451,53 +433,3 @@ function getSegmentColor(label) {
   }
   return colors[label] || '#999999'
 }
-
-/**
- * Extracts top comments from the DOM.
- * @returns {Array<string>}
- */
-function extractComments() {
-  const commentElements = document.querySelectorAll('#content-text')
-  const comments = []
-  // Get top 10 visible comments
-  for (let i = 0; i < Math.min(commentElements.length, 10); i++) {
-    comments.push(commentElements[i].innerText)
-  }
-
-  if (comments.length === 0) {
-    // Try to scroll down a bit to trigger loading?
-    // Or just warn that comments might not be loaded.
-    console.warn('YouTube AI Master: No comments found in DOM. User might need to scroll.')
-  }
-  return comments
-}
-
-/**
- * Seeks the YouTube video player to the specified timestamp.
- * @param {number} seconds - Timestamp in seconds.
- */
-function seekToTimestamp(seconds) {
-  const video = document.querySelector('video')
-  if (video) {
-    video.currentTime = seconds
-    video.play() // Optional: auto-play after seek
-    console.log(`YouTube AI Master: Seeked to ${seconds}s`)
-  } else {
-    console.error('YouTube AI Master: Video element not found.')
-  }
-}
-
-// Example: Inject a button (placeholder for future UI)
-function injectTestButton() {
-  // Wait for player to be ready
-  const checkPlayer = setInterval(() => {
-    const player = document.querySelector('#movie_player')
-    if (player) {
-      clearInterval(checkPlayer)
-      console.log('YouTube AI Master: Player found, ready for injection.')
-      // Logic to inject UI elements can go here
-    }
-  }, 1000)
-}
-
-injectTestButton()

@@ -24,10 +24,13 @@ export class GeminiService {
     try {
       const response = await fetch(url)
       if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(
-          `Gemini API Error (List Models): ${errorData.error?.message || response.statusText}`
-        )
+        const text = await response.text()
+        let errorMsg = response.statusText
+        try {
+            const errorData = JSON.parse(text)
+            errorMsg = errorData.error?.message || errorMsg
+        } catch (e) { /* ignore */ }
+        throw new Error(`Gemini API Error (List Models): ${errorMsg}`)
       }
 
       const data = await response.json()
@@ -169,6 +172,50 @@ export class GeminiService {
     const prompt = `Analyze the following video transcript for market analysis content. If this appears to be a market/finance/investment video, extract key market data points, trends, stock mentions, economic indicators, and insights. Format as timestamped subtitles suitable for market analysis. If not market-related, return "Not applicable - video does not contain market analysis content."`
     const fullPrompt = `${prompt}\n\nTranscript:\n${text}`
     return this.generateContent(fullPrompt, model)
+  }
+
+  /**
+   * Extracts classified segments from the transcript with timestamps.
+   * @param {string} text - The transcript text with timestamp markers (e.g. "[12.5] Hello world").
+   * @param {string} [model]
+   * @returns {Promise<Array<{label: string, start: number, end: number, description: string}>>}
+   */
+  async extractSegments(text, model = null) {
+    const prompt = `
+      Analyze the following video transcript and identify segments that fall into these categories:
+      1. Sponsor (Paid promotions)
+      2. Interaction Reminder (Like/Subscribe calls)
+      3. Self Promotion (Merch/Services)
+      4. Unpaid Promotion (Shout-outs)
+      5. Highlight (Key moments)
+      6. Preview/Recap
+      7. Hook/Greetings (Intro)
+      8. Tangents/Jokes (Off-topic)
+
+      Return a JSON array of objects with these properties:
+      - label: One of the categories above.
+      - start: Start time in seconds (number).
+      - end: End time in seconds (number).
+      - description: Brief description of the segment content.
+
+      Only include segments that clearly fit these categories. Do NOT include "Content" segments.
+      The transcript is provided with timestamp markers in brackets like [12.5]. Use these to determine start/end times.
+
+      Required JSON Structure:
+      [
+        { "label": "Sponsor", "start": 10.5, "end": 45.2, "description": "Sponsor read for X" }
+      ]
+    `
+    const fullPrompt = `${prompt}\n\nTranscript:\n${text}`
+
+    try {
+      const responseText = await this.generateContent(fullPrompt, model)
+      const cleanJson = responseText.replace(/```json/g, '').replace(/```/g, '').trim()
+      return JSON.parse(cleanJson)
+    } catch (error) {
+      console.error('Segment extraction failed:', error)
+      return []
+    }
   }
 
   /**

@@ -6,18 +6,15 @@
     "permissions": [
         "activeTab",
         "scripting",
-        "storage",
-        "sidePanel"
+        "storage"
     ],
     "host_permissions": [
         "https://www.youtube.com/*",
         "https://generativelanguage.googleapis.com/*"
     ],
     "background": {
-        "service_worker": "background/background.js"
-    },
-    "side_panel": {
-        "default_path": "sidepanel/sidepanel.html"
+        "service_worker": "background/background.js",
+        "type": "module"
     },
     "action": {
         "default_title": "YouTube AI Master",
@@ -34,7 +31,22 @@
                 "https://www.youtube.com/*"
             ],
             "js": [
+                "lib/marked.min.js",
                 "content/content.js"
+            ],
+            "css": [
+                "content/content.css"
+            ]
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "assets/*",
+                "content/content.css"
+            ],
+            "matches": [
+                "https://www.youtube.com/*"
             ]
         }
     ],
