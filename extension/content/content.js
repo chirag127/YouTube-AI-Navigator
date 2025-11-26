@@ -200,10 +200,97 @@ function renderTranscript() {
   contentArea.appendChild(list)
 }
 
-function renderComments() {
+async function renderComments() {
   const contentArea = document.getElementById('yt-ai-content-area')
-  contentArea.innerHTML = '<div class="yt-ai-loading">Fetching comments analysis... (Not implemented in this demo step)</div>'
-  // TODO: Implement comment fetching and analysis here or reuse logic
+
+  if (analysisData?.commentAnalysis) {
+    // Already analyzed, just render
+    contentArea.innerHTML = `
+      <div class="yt-ai-markdown">
+        ${marked.parse(analysisData.commentAnalysis)}
+      </div>
+    `
+    return
+  }
+
+  contentArea.innerHTML = '<div class="yt-ai-loading">Fetching and analyzing comments...</div>'
+
+  try {
+    const comments = await fetchCommentsFromDOM()
+
+    if (comments.length === 0) {
+      contentArea.innerHTML = '<div class="yt-ai-error">No comments found on this page. Try scrolling down to load comments first.</div>'
+      return
+    }
+
+    // Send to background for analysis
+    const response = await chrome.runtime.sendMessage({
+      action: 'ANALYZE_COMMENTS',
+      comments: comments.map(c => c.text)
+    })
+
+    if (!response.success) throw new Error(response.error)
+
+    // Cache result
+    if (!analysisData) analysisData = {}
+    analysisData.commentAnalysis = response.analysis
+
+    // Render
+    contentArea.innerHTML = `
+      <div class="yt-ai-markdown">
+        <h3>Comment Sentiment Analysis</h3>
+        ${marked.parse(response.analysis)}
+        <hr style="border-color: #333; margin: 20px 0;">
+        <h4>Top Comments Analyzed (${comments.length})</h4>
+        <div class="yt-ai-comments-list">
+          ${comments.slice(0, 5).map(c => `
+            <div class="yt-ai-comment-item">
+              <div class="yt-ai-comment-author">${c.author}</div>
+              <div class="yt-ai-comment-text">${c.text}</div>
+              <div class="yt-ai-comment-stats">👍 ${c.likes}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `
+  } catch (error) {
+    console.error('Comments analysis error:', error)
+    contentArea.innerHTML = `<div class="yt-ai-error">Failed to analyze comments: ${error.message}</div>`
+  }
+}
+
+function fetchCommentsFromDOM() {
+  return new Promise((resolve) => {
+    // Wait a bit for comments to potentially load
+    setTimeout(() => {
+      const comments = []
+
+      // YouTube comment selectors (may change over time)
+      const commentElements = document.querySelectorAll('ytd-comment-thread-renderer')
+
+      for (const elem of commentElements) {
+        if (comments.length >= 20) break
+
+        try {
+          const authorElem = elem.querySelector('#author-text')
+          const textElem = elem.querySelector('#content-text')
+          const likeElem = elem.querySelector('#vote-count-middle')
+
+          if (authorElem && textElem) {
+            comments.push({
+              author: authorElem.textContent.trim(),
+              text: textElem.textContent.trim(),
+              likes: likeElem ? likeElem.textContent.trim() : '0'
+            })
+          }
+        } catch (e) {
+          console.warn('Failed to parse comment:', e)
+        }
+      }
+
+      resolve(comments)
+    }, 1000)
+  })
 }
 
 function renderSegments() {
@@ -245,8 +332,58 @@ function seekToTimestamp(seconds) {
 }
 
 function addTimestampListeners(container) {
-  // If summary has timestamps like [12:30], make them clickable
-  // Implementation depends on how Gemini returns timestamps.
+  // Parse and make timestamps clickable
+  // Supports formats: [12:30], (12:30), 12:30
+  const timestampPattern = /(\[|\()?(\d{1,2}):(\d{2})(\]|\))?/g
+
+  const walker = document.createTreeWalker(
+    container,
+    NodeFilter.SHOW_TEXT,
+    null
+  )
+
+  const nodesToReplace = []
+  let currentNode
+
+  while (currentNode = walker.nextNode()) {
+    const text = currentNode.textContent
+    if (timestampPattern.test(text)) {
+      nodesToReplace.push(currentNode)
+    }
+  }
+
+  nodesToReplace.forEach(node => {
+    const text = node.textContent
+    const fragment = document.createDocumentFragment()
+    let lastIndex = 0
+
+    text.replace(timestampPattern, (match, prefix, minutes, seconds, suffix, offset) => {
+      // Add text before match
+      if (offset > lastIndex) {
+        fragment.appendChild(document.createTextNode(text.substring(lastIndex, offset)))
+      }
+
+      // Create clickable timestamp
+      const totalSeconds = parseInt(minutes) * 60 + parseInt(seconds)
+      const link = document.createElement('span')
+      link.textContent= match
+      link.style.color = 'var(--yt-ai-accent)'
+      link.style.cursor = 'pointer'
+      link.style.fontWeight = '600'
+      link.style.textDecoration = 'underline'
+      link.addEventListener('click', () => seekToTimestamp(totalSeconds))
+      fragment.appendChild(link)
+
+      lastIndex = offset + match.length
+    })
+
+    // Add remaining text
+    if (lastIndex < text.length) {
+      fragment.appendChild(document.createTextNode(text.substring(lastIndex)))
+    }
+
+    node.parentNode.replaceChild(fragment, node)
+  })
 }
 
 // --- Transcript Service Class (Copied/Adapted) ---

@@ -2,84 +2,87 @@
 <html>
   <head>
     <title>YouTube AI Master Options</title>
-    <style>
-      body {
-        padding: 20px;
-        font-family: sans-serif;
-      }
-      .container {
-        max-width: 500px;
-        margin: 0 auto;
-      }
-      label {
-        display: block;
-        margin-bottom: 5px;
-      }
-      input {
-        width: 100%;
-        padding: 8px;
-        margin-bottom: 10px;
-      }
-      button {
-        padding: 8px 16px;
-        cursor: pointer;
-      }
-    </style>
+    <link rel="stylesheet" href="options.css">
   </head>
   <body>
     <div class="container">
-      <h1>Options</h1>
-      <label for="apiKey">Gemini API Key:</label>
-      <input type="password" id="apiKey" placeholder="Enter your API Key" />
-
-      <label for="summaryLength">Summary Length:</label>
-      <select id="summaryLength">
-        <option value="Short">Short (Bullet points, ~100 words)</option>
-        <option value="Medium" selected>Medium (Standard paragraphs, ~300 words)</option>
-        <option value="Detailed">Detailed (Comprehensive, ~600 words)</option>
-      </select>
-
-      <label for="targetLanguage">Target Language:</label>
-      <select id="targetLanguage">
-        <option value="English" selected>English</option>
-        <option value="Spanish">Spanish</option>
-        <option value="French">French</option>
-        <option value="German">German</option>
-        <option value="Hindi">Hindi</option>
-        <option value="Chinese">Chinese</option>
-        <option value="Japanese">Japanese</option>
-        <option value="Portuguese">Portuguese</option>
-        <option value="Russian">Russian</option>
-        <option value="Italian">Italian</option>
-        <option value="Korean">Korean</option>
-        <option value="Dutch">Dutch</option>
-        <option value="Turkish">Turkish</option>
-        <option value="Arabic">Arabic</option>
-        <option value="Polish">Polish</option>
-        <option value="Swedish">Swedish</option>
-        <option value="Indonesian">Indonesian</option>
-        <option value="Vietnamese">Vietnamese</option>
-        <option value="Thai">Thai</option>
-      </select>
-
-      <h3>Auto-skip Categories</h3>
-      <div style="margin-bottom: 20px;">
-        <label style="display: flex; align-items: center; gap: 8px; font-weight: normal;">
-          <input type="checkbox" id="skipSponsor" style="width: auto; margin: 0;">
-          Sponsor
-        </label>
-        <label style="display: flex; align-items: center; gap: 8px; font-weight: normal;">
-          <input type="checkbox" id="skipSelfPromo" style="width: auto; margin: 0;">
-          Self Promotion
-        </label>
-        <label style="display: flex; align-items: center; gap: 8px; font-weight: normal;">
-          <input type="checkbox" id="skipInteraction" style="width: auto; margin: 0;">
-          Interaction Reminder
-        </label>
+      <div class="header">
+        <h1>✨ YouTube AI Master</h1>
+        <p class="subtitle">Configure your AI-powered YouTube experience</p>
       </div>
 
-      <button id="save-btn">Save</button>
-      <p id="status"></p>
+      <div class="card">
+        <div class="card-header">
+          <h2>🔑 API Configuration</h2>
+        </div>
+        <div class="card-body">
+          <label for="apiKey">Gemini API Key</label>
+          <input type="password" id="apiKey" placeholder="Enter your Gemini API Key" />
+          <small class="hint">Get your free API key from <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a></small>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>⚙️ Analysis Settings</h2>
+        </div>
+        <div class="card-body">
+          <label for="summaryLength">Summary Length</label>
+          <select id="summaryLength">
+            <option value="Short">Short - Bullet points (~100 words)</option>
+            <option value="Medium" selected>Medium - Standard paragraphs (~300 words)</option>
+            <option value="Detailed">Detailed - Comprehensive (~600 words)</option>
+          </select>
+
+          <label for="targetLanguage">Target Language</label>
+          <select id="targetLanguage">
+            <option value="English" selected>English</option>
+            <option value="Spanish">Spanish</option>
+            <option value="French">French</option>
+            <option value="German">German</option>
+            <option value="Hindi">Hindi</option>
+            <option value="Chinese">Chinese</option>
+            <option value="Japanese">Japanese</option>
+            <option value="Portuguese">Portuguese</option>
+            <option value="Russian">Russian</option>
+            <option value="Italian">Italian</option>
+            <option value="Korean">Korean</option>
+            <option value="Dutch">Dutch</option>
+            <option value="Turkish">Turkish</option>
+            <option value="Arabic">Arabic</option>
+            <option value="Polish">Polish</option>
+            <option value="Swedish">Swedish</option>
+            <option value="Indonesian">Indonesian</option>
+            <option value="Vietnamese">Vietnamese</option>
+            <option value="Thai">Thai</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>⏭️ Auto-Skip Categories</h2>
+        </div>
+        <div class="card-body">
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="skipSponsor">
+              <span>Sponsor</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="skipSelfPromo">
+              <span>Self Promotion</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="skipInteraction">
+              <span>Interaction Reminder</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <button id="save-btn" class="save-btn">💾 Save Settings</button>
+      <p id="status" class="status-message"></p>
     </div>
     <script src="options.js"></script>
   </body>

@@ -37,6 +37,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   } else if (request.action === 'CHAT') {
     handleChat(request, sendResponse)
     return true // Async response
+  } else if (request.action === 'ANALYZE_COMMENTS') {
+    handleAnalyzeComments(request, sendResponse)
+    return true // Async response
   }
 })
 
@@ -87,6 +90,23 @@ async function handleChat(request, sendResponse) {
     sendResponse({ success: true, answer })
   } catch (error) {
     console.error('Chat failed:', error)
+    sendResponse({ success: false, error: error.message })
+  }
+}
+
+async function handleAnalyzeComments(request, sendResponse) {
+  try {
+    if (!geminiService) {
+      await initServices()
+      if (!geminiService) throw new Error('API Key is missing. Please set it in options.')
+    }
+
+    const { comments } = request
+    const analysis = await geminiService.analyzeCommentSentiment(comments)
+
+    sendResponse({ success: true, analysis })
+  } catch (error) {
+    console.error('Comment analysis failed:', error)
     sendResponse({ success: false, error: error.message })
   }
 }

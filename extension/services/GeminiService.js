@@ -33,7 +33,13 @@ export class GeminiService {
         throw new Error(`Gemini API Error (List Models): ${errorMsg}`)
       }
 
-      const data = await response.json()
+      const text = await response.text()
+      let data
+      try {
+        data = JSON.parse(text)
+      } catch (e) {
+        throw new Error('Failed to parse models list JSON')
+      }
       if (!data.models) {
         throw new Error('No models found in response')
       }
@@ -349,17 +355,27 @@ export class GeminiService {
     })
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}))
-      throw new Error(`Gemini API Error (${response.status}): ${errorData.error?.message || response.statusText}`)
+      const text = await response.text()
+      let errorMsg = response.statusText
+      try {
+        const errorData = JSON.parse(text)
+        errorMsg = errorData.error?.message || errorMsg
+      } catch (e) { /* ignore */ }
+      throw new Error(`Gemini API Error (${response.status}): ${errorMsg}`)
     }
 
-    const data = await response.json()
-    const generatedText = data.candidates?.[0]?.content?.parts?.[0]?.text
+    const text = await response.text()
+    try {
+      const data = JSON.parse(text)
+      const generatedText = data.candidates?.[0]?.content?.parts?.[0]?.text
 
-    if (!generatedText) {
-      throw new Error('No content generated')
+      if (!generatedText) {
+        throw new Error('No content generated')
+      }
+
+      return generatedText
+    } catch (e) {
+      throw new Error(`Failed to parse Gemini API response: ${e.message}`)
     }
-
-    return generatedText
   }
 }
