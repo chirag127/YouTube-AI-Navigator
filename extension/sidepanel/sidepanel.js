@@ -42,18 +42,22 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // 2. Tab Switching Logic
-  tabBtns.forEach((btn) => {
+  for (const btn of tabBtns) {
     btn.addEventListener('click', () => {
       // Remove active class from all
-      tabBtns.forEach((b) => b.classList.remove('active'))
-      tabContents.forEach((c) => c.classList.remove('active'))
+      for (const b of tabBtns) {
+        b.classList.remove('active')
+      }
+      for (const c of tabContents) {
+        c.classList.remove('active')
+      }
 
       // Add active class to clicked
       btn.classList.add('active')
       const tabId = btn.getAttribute('data-tab')
       document.getElementById(`${tabId}-tab`).classList.add('active')
     })
-  })
+  }
 
   // 3. Chat Event Listeners
   chatSendBtn.addEventListener('click', handleChatSubmit)
@@ -219,7 +223,7 @@ function renderMarkdown(text, element) {
 
 function renderTranscript(transcript) {
   transcriptContainer.innerHTML = ''
-  transcript.forEach((segment) => {
+  for (const segment of transcript) {
     const div = document.createElement('div')
     div.className = 'transcript-segment'
 
@@ -239,7 +243,7 @@ function renderTranscript(transcript) {
     })
 
     transcriptContainer.appendChild(div)
-  })
+  }
 }
 
 async function seekVideo(seconds) {
