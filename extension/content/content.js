@@ -3,54 +3,62 @@
  * Handles DOM interaction and UI Injection.
  */
 
-console.log('YouTube AI Master: Content script loaded.')
+console.log("YouTube AI Master: Content script loaded.");
 
 // --- UI Injection Logic ---
 
-let currentVideoId = null
-let widgetContainer = null
-let isAnalyzing = false
+let currentVideoId = null;
+let widgetContainer = null;
+let isAnalyzing = false;
 
 // Observer to handle SPA navigation
 const observer = new MutationObserver(() => {
-  const urlParams = new URLSearchParams(window.location.search)
-  const videoId = urlParams.get('v')
+    const urlParams = new URLSearchParams(window.location.search);
+    const videoId = urlParams.get("v");
 
-  if (window.location.pathname === '/watch' && videoId && videoId !== currentVideoId) {
-    currentVideoId = videoId
-    console.log('YouTube AI Master: New video detected:', videoId)
-    injectWidget()
-  } else if (window.location.pathname === '/watch' && videoId && !document.getElementById('yt-ai-master-widget')) {
-    // Re-inject if removed
-    injectWidget()
-  }
-})
+    if (
+        window.location.pathname === "/watch" &&
+        videoId &&
+        videoId !== currentVideoId
+    ) {
+        currentVideoId = videoId;
+        console.log("YouTube AI Master: New video detected:", videoId);
+        injectWidget();
+    } else if (
+        window.location.pathname === "/watch" &&
+        videoId &&
+        !document.getElementById("yt-ai-master-widget")
+    ) {
+        // Re-inject if removed
+        injectWidget();
+    }
+});
 
-observer.observe(document.body, { childList: true, subtree: true })
+observer.observe(document.body, { childList: true, subtree: true });
 
 // Initial check
-if (window.location.pathname === '/watch') {
-  const urlParams = new URLSearchParams(window.location.search)
-  currentVideoId = urlParams.get('v')
-  if (currentVideoId) injectWidget()
+if (window.location.pathname === "/watch") {
+    const urlParams = new URLSearchParams(window.location.search);
+    currentVideoId = urlParams.get("v");
+    if (currentVideoId) injectWidget();
 }
 
 function injectWidget() {
-  const secondaryColumn = document.querySelector('#secondary')
-  if (!secondaryColumn) {
-    // Retry if secondary column not yet loaded
-    setTimeout(injectWidget, 1000)
-    return
-  }
+    const secondaryColumn = document.querySelector("#secondary");
+    if (!secondaryColumn) {
+        // Retry if secondary column not yet loaded
+        setTimeout(injectWidget, 1000);
+        return;
+    }
 
-  if (document.getElementById('yt-ai-master-widget')) return
+    if (document.getElementById("yt-ai-master-widget")) return;
 
-  console.log('YouTube AI Master: Injecting widget...')
+    console.log("YouTube AI Master: Injecting widget...");
 
-  // Create Widget Container
-  widgetContainer = document.createElement('div')
-  widgetContainer.id = 'yt-ai-master-widget'
-  widgetContainer.innerHTML = `
+    // Create Widget Container
+    widgetContainer = document.createElement("div");
+    widgetContainer.id = "yt-ai-master-widget";
+    widgetContainer.innerHTML = `
     <div class="yt-ai-header">
       <div class="yt-ai-title">
         <span>✨ YouTube AI Master</span>
@@ -66,102 +74,110 @@ function injectWidget() {
     <div id="yt-ai-content-area" class="yt-ai-content">
       <div class="yt-ai-placeholder">Click "Analyze Video" to start.</div>
     </div>
-  `
+  `;
 
-  // Insert at top of secondary column
-  secondaryColumn.insertBefore(widgetContainer, secondaryColumn.firstChild)
+    // Insert at top of secondary column
+    secondaryColumn.insertBefore(widgetContainer, secondaryColumn.firstChild);
 
-  // Attach Event Listeners
-  document.getElementById('yt-ai-analyze-btn').addEventListener('click', startAnalysis)
+    // Attach Event Listeners
+    document
+        .getElementById("yt-ai-analyze-btn")
+        .addEventListener("click", startAnalysis);
 
-  const tabs = widgetContainer.querySelectorAll('.yt-ai-tab')
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => switchTab(tab.dataset.tab))
-  })
+    const tabs = widgetContainer.querySelectorAll(".yt-ai-tab");
+    tabs.forEach((tab) => {
+        tab.addEventListener("click", () => switchTab(tab.dataset.tab));
+    });
 }
 
 // --- State Management ---
-let analysisData = null
-let currentTranscript = []
+let analysisData = null;
+let currentTranscript = [];
 
 async function startAnalysis() {
-  if (isAnalyzing) return
-  isAnalyzing = true
+    if (isAnalyzing) return;
+    isAnalyzing = true;
 
-  const btn = document.getElementById('yt-ai-analyze-btn')
-  btn.disabled = true
-  btn.textContent = 'Analyzing...'
+    const btn = document.getElementById("yt-ai-analyze-btn");
+    btn.disabled = true;
+    btn.textContent = "Analyzing...";
 
-  const contentArea = document.getElementById('yt-ai-content-area')
-  contentArea.innerHTML = '<div class="yt-ai-loading">Analyzing video... This may take a few seconds.</div>'
+    const contentArea = document.getElementById("yt-ai-content-area");
+    contentArea.innerHTML =
+        '<div class="yt-ai-loading">Analyzing video... This may take a few seconds.</div>';
 
-  try {
-    // 1. Get Metadata & Transcript (Local)
-    const transcriptService = new ContentScriptTranscriptService()
-    const metadata = await transcriptService.getVideoMetadata(currentVideoId)
-    const transcript = await transcriptService.getTranscript(currentVideoId)
-    currentTranscript = transcript
+    try {
+        // 1. Get Metadata & Transcript (Local)
+        const transcriptService = new ContentScriptTranscriptService();
+        const metadata = await transcriptService.getVideoMetadata(
+            currentVideoId
+        );
+        const transcript = await transcriptService.getTranscript(
+            currentVideoId
+        );
+        currentTranscript = transcript;
 
-    // 2. Send to Background for AI Processing
-    const response = await chrome.runtime.sendMessage({
-      action: 'ANALYZE_VIDEO',
-      transcript,
-      metadata,
-      options: { length: 'Medium' } // Default options
-    })
+        // 2. Send to Background for AI Processing
+        const response = await chrome.runtime.sendMessage({
+            action: "ANALYZE_VIDEO",
+            transcript,
+            metadata,
+            options: { length: "Medium" }, // Default options
+        });
 
-    if (!response.success) throw new Error(response.error)
+        if (!response.success) throw new Error(response.error);
 
-    analysisData = response.data
+        analysisData = response.data;
 
-    // 3. Render Results
-    renderSummary()
+        // 3. Render Results
+        renderSummary();
 
-    // 4. Inject Segments into Player
-    injectSegmentMarkers(analysisData.segments)
-
-  } catch (error) {
-    console.error('Analysis Error:', error)
-    contentArea.innerHTML = `<div class="yt-ai-error">Error: ${error.message}</div>`
-  } finally {
-    isAnalyzing = false
-    btn.disabled = false
-    btn.textContent = 'Analyze Video'
-  }
+        // 4. Inject Segments into Player
+        injectSegmentMarkers(analysisData.segments);
+    } catch (error) {
+        console.error("Analysis Error:", error);
+        contentArea.innerHTML = `<div class="yt-ai-error">Error: ${error.message}</div>`;
+    } finally {
+        isAnalyzing = false;
+        btn.disabled = false;
+        btn.textContent = "Analyze Video";
+    }
 }
 
 function switchTab(tabName) {
-  // Update Tab UI
-  const tabs = widgetContainer.querySelectorAll('.yt-ai-tab')
-  tabs.forEach(t => t.classList.remove('active'))
-  widgetContainer.querySelector(`[data-tab="${tabName}"]`).classList.add('active')
+    // Update Tab UI
+    const tabs = widgetContainer.querySelectorAll(".yt-ai-tab");
+    tabs.forEach((t) => t.classList.remove("active"));
+    widgetContainer
+        .querySelector(`[data-tab="${tabName}"]`)
+        .classList.add("active");
 
-  // Render Content
-  if (!analysisData && !currentTranscript.length) {
-    return // Nothing to show yet
-  }
+    // Render Content
+    if (!analysisData && !currentTranscript.length) {
+        return; // Nothing to show yet
+    }
 
-  switch (tabName) {
-    case 'summary':
-      renderSummary()
-      break
-    case 'transcript':
-      renderTranscript()
-      break
-    case 'comments':
-      renderComments()
-      break
-    case 'segments':
-      renderSegments()
-      break
-  }
+    switch (tabName) {
+        case "summary":
+            renderSummary();
+            break;
+        case "transcript":
+            renderTranscript();
+            break;
+        case "comments":
+            renderComments();
+            break;
+        case "segments":
+            renderSegments();
+            break;
+    }
 }
 
 function renderSummary() {
-  const contentArea = document.getElementById('yt-ai-content-area')
-  if (!analysisData) return
+    const contentArea = document.getElementById("yt-ai-content-area");
+    if (!analysisData) return;
 
-  contentArea.innerHTML = `
+    contentArea.innerHTML = `
     <div class="yt-ai-markdown">
       ${marked.parse(analysisData.summary)}
       <hr style="border-color: #333; margin: 20px 0;">
@@ -171,402 +187,708 @@ function renderSummary() {
       <h3>FAQ</h3>
       ${marked.parse(analysisData.faq)}
     </div>
-  `
-  addTimestampListeners(contentArea)
+  `;
+    addTimestampListeners(contentArea);
 }
 
 function renderTranscript() {
-  const contentArea = document.getElementById('yt-ai-content-area')
-  contentArea.innerHTML = ''
+    const contentArea = document.getElementById("yt-ai-content-area");
+    contentArea.innerHTML = "";
 
-  if (currentTranscript.length === 0) {
-    contentArea.innerHTML = 'No transcript available.'
-    return
-  }
+    if (currentTranscript.length === 0) {
+        contentArea.innerHTML = "No transcript available.";
+        return;
+    }
 
-  // Virtual scrolling or just limit for now? Let's limit to first 100 lines or implement lazy load later.
-  // For now, simple list.
-  const list = document.createElement('div')
-  currentTranscript.forEach(line => {
-    const row = document.createElement('div')
-    row.className = 'yt-ai-segment'
-    row.innerHTML = `
+    // Virtual scrolling or just limit for now? Let's limit to first 100 lines or implement lazy load later.
+    // For now, simple list.
+    const list = document.createElement("div");
+    currentTranscript.forEach((line) => {
+        const row = document.createElement("div");
+        row.className = "yt-ai-segment";
+        row.innerHTML = `
       <span class="yt-ai-timestamp">${formatTime(line.start)}</span>
       <span class="yt-ai-text">${line.text}</span>
-    `
-    row.addEventListener('click', () => seekToTimestamp(line.start))
-    list.appendChild(row)
-  })
-  contentArea.appendChild(list)
+    `;
+        row.addEventListener("click", () => seekToTimestamp(line.start));
+        list.appendChild(row);
+    });
+    contentArea.appendChild(list);
 }
 
 async function renderComments() {
-  const contentArea = document.getElementById('yt-ai-content-area')
+    const contentArea = document.getElementById("yt-ai-content-area");
 
-  if (analysisData?.commentAnalysis) {
-    // Already analyzed, just render
-    contentArea.innerHTML = `
+    if (analysisData?.commentAnalysis) {
+        // Already analyzed, just render
+        contentArea.innerHTML = `
       <div class="yt-ai-markdown">
         ${marked.parse(analysisData.commentAnalysis)}
       </div>
-    `
-    return
-  }
-
-  contentArea.innerHTML = '<div class="yt-ai-loading">Fetching and analyzing comments...</div>'
-
-  try {
-    const comments = await fetchCommentsFromDOM()
-
-    if (comments.length === 0) {
-      contentArea.innerHTML = '<div class="yt-ai-error">No comments found on this page. Try scrolling down to load comments first.</div>'
-      return
+    `;
+        return;
     }
 
-    // Send to background for analysis
-    const response = await chrome.runtime.sendMessage({
-      action: 'ANALYZE_COMMENTS',
-      comments: comments.map(c => c.text)
-    })
+    contentArea.innerHTML =
+        '<div class="yt-ai-loading">Fetching and analyzing comments...</div>';
 
-    if (!response.success) throw new Error(response.error)
+    try {
+        const comments = await fetchCommentsFromDOM();
 
-    // Cache result
-    if (!analysisData) analysisData = {}
-    analysisData.commentAnalysis = response.analysis
+        if (comments.length === 0) {
+            contentArea.innerHTML =
+                '<div class="yt-ai-error">No comments found on this page. Try scrolling down to load comments first.</div>';
+            return;
+        }
 
-    // Render
-    contentArea.innerHTML = `
+        // Send to background for analysis
+        const response = await chrome.runtime.sendMessage({
+            action: "ANALYZE_COMMENTS",
+            comments: comments.map((c) => c.text),
+        });
+
+        if (!response.success) throw new Error(response.error);
+
+        // Cache result
+        if (!analysisData) analysisData = {};
+        analysisData.commentAnalysis = response.analysis;
+
+        // Render
+        contentArea.innerHTML = `
       <div class="yt-ai-markdown">
         <h3>Comment Sentiment Analysis</h3>
         ${marked.parse(response.analysis)}
         <hr style="border-color: #333; margin: 20px 0;">
         <h4>Top Comments Analyzed (${comments.length})</h4>
         <div class="yt-ai-comments-list">
-          ${comments.slice(0, 5).map(c => `
+          ${comments
+              .slice(0, 5)
+              .map(
+                  (c) => `
             <div class="yt-ai-comment-item">
               <div class="yt-ai-comment-author">${c.author}</div>
               <div class="yt-ai-comment-text">${c.text}</div>
               <div class="yt-ai-comment-stats">👍 ${c.likes}</div>
             </div>
-          `).join('')}
+          `
+              )
+              .join("")}
         </div>
       </div>
-    `
-  } catch (error) {
-    console.error('Comments analysis error:', error)
-    contentArea.innerHTML = `<div class="yt-ai-error">Failed to analyze comments: ${error.message}</div>`
-  }
+    `;
+    } catch (error) {
+        console.error("Comments analysis error:", error);
+        contentArea.innerHTML = `<div class="yt-ai-error">Failed to analyze comments: ${error.message}</div>`;
+    }
 }
 
 function fetchCommentsFromDOM() {
-  return new Promise((resolve) => {
-    // Wait a bit for comments to potentially load
-    setTimeout(() => {
-      const comments = []
+    return new Promise((resolve) => {
+        // Wait a bit for comments to potentially load
+        setTimeout(() => {
+            const comments = [];
 
-      // YouTube comment selectors (may change over time)
-      const commentElements = document.querySelectorAll('ytd-comment-thread-renderer')
+            // YouTube comment selectors (may change over time)
+            const commentElements = document.querySelectorAll(
+                "ytd-comment-thread-renderer"
+            );
 
-      for (const elem of commentElements) {
-        if (comments.length >= 20) break
+            for (const elem of commentElements) {
+                if (comments.length >= 20) break;
 
-        try {
-          const authorElem = elem.querySelector('#author-text')
-          const textElem = elem.querySelector('#content-text')
-          const likeElem = elem.querySelector('#vote-count-middle')
+                try {
+                    const authorElem = elem.querySelector("#author-text");
+                    const textElem = elem.querySelector("#content-text");
+                    const likeElem = elem.querySelector("#vote-count-middle");
 
-          if (authorElem && textElem) {
-            comments.push({
-              author: authorElem.textContent.trim(),
-              text: textElem.textContent.trim(),
-              likes: likeElem ? likeElem.textContent.trim() : '0'
-            })
-          }
-        } catch (e) {
-          console.warn('Failed to parse comment:', e)
-        }
-      }
+                    if (authorElem && textElem) {
+                        comments.push({
+                            author: authorElem.textContent.trim(),
+                            text: textElem.textContent.trim(),
+                            likes: likeElem ? likeElem.textContent.trim() : "0",
+                        });
+                    }
+                } catch (e) {
+                    console.warn("Failed to parse comment:", e);
+                }
+            }
 
-      resolve(comments)
-    }, 1000)
-  })
+            resolve(comments);
+        }, 1000);
+    });
 }
 
 function renderSegments() {
-  const contentArea = document.getElementById('yt-ai-content-area')
-  if (!analysisData?.segments) {
-    contentArea.innerHTML = 'No segments found.'
-    return
-  }
+    const contentArea = document.getElementById("yt-ai-content-area");
+    if (!analysisData?.segments) {
+        contentArea.innerHTML = "No segments found.";
+        return;
+    }
 
-  const list = document.createElement('div')
-  analysisData.segments.forEach(seg => {
-    const item = document.createElement('div')
-    item.className = `yt-ai-segment-item ${seg.label}`
-    item.innerHTML = `
+    const list = document.createElement("div");
+    analysisData.segments.forEach((seg) => {
+        const item = document.createElement("div");
+        item.className = `yt-ai-segment-item ${seg.label}`;
+        item.innerHTML = `
       <div style="font-weight:bold; color:#fff;">${seg.label}</div>
-      <div style="font-size:12px; color:#aaa;">${formatTime(seg.start)} - ${formatTime(seg.end)}</div>
-      <div style="margin-top:4px;">${seg.description || ''}</div>
-    `
-    item.addEventListener('click', () => seekToTimestamp(seg.start))
-    list.appendChild(item)
-  })
-  contentArea.appendChild(list)
+      <div style="font-size:12px; color:#aaa;">${formatTime(
+          seg.start
+      )} - ${formatTime(seg.end)}</div>
+      <div style="margin-top:4px;">${seg.description || ""}</div>
+    `;
+        item.addEventListener("click", () => seekToTimestamp(seg.start));
+        list.appendChild(item);
+    });
+    contentArea.appendChild(list);
 }
 
 // --- Helper Functions ---
 
 function formatTime(seconds) {
-  const m = Math.floor(seconds / 60)
-  const s = Math.floor(seconds % 60)
-  return `${m}:${s.toString().padStart(2, '0')}`
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
 function seekToTimestamp(seconds) {
-  const video = document.querySelector('video')
-  if (video) {
-    video.currentTime = seconds
-    video.play()
-  }
+    const video = document.querySelector("video");
+    if (video) {
+        video.currentTime = seconds;
+        video.play();
+    }
 }
 
 function addTimestampListeners(container) {
-  // Parse and make timestamps clickable
-  // Supports formats: [12:30], (12:30), 12:30
-  const timestampPattern = /(\[|\()?(\d{1,2}):(\d{2})(\]|\))?/g
+    // Parse and make timestamps clickable
+    // Supports formats: [12:30], (12:30), 12:30
+    const timestampPattern = /(\[|\()?(\d{1,2}):(\d{2})(\]|\))?/g;
 
-  const walker = document.createTreeWalker(
-    container,
-    NodeFilter.SHOW_TEXT,
-    null
-  )
+    const walker = document.createTreeWalker(
+        container,
+        NodeFilter.SHOW_TEXT,
+        null
+    );
 
-  const nodesToReplace = []
-  let currentNode
+    const nodesToReplace = [];
+    let currentNode;
 
-  while (currentNode = walker.nextNode()) {
-    const text = currentNode.textContent
-    if (timestampPattern.test(text)) {
-      nodesToReplace.push(currentNode)
-    }
-  }
-
-  nodesToReplace.forEach(node => {
-    const text = node.textContent
-    const fragment = document.createDocumentFragment()
-    let lastIndex = 0
-
-    text.replace(timestampPattern, (match, prefix, minutes, seconds, suffix, offset) => {
-      // Add text before match
-      if (offset > lastIndex) {
-        fragment.appendChild(document.createTextNode(text.substring(lastIndex, offset)))
-      }
-
-      // Create clickable timestamp
-      const totalSeconds = parseInt(minutes) * 60 + parseInt(seconds)
-      const link = document.createElement('span')
-      link.textContent= match
-      link.style.color = 'var(--yt-ai-accent)'
-      link.style.cursor = 'pointer'
-      link.style.fontWeight = '600'
-      link.style.textDecoration = 'underline'
-      link.addEventListener('click', () => seekToTimestamp(totalSeconds))
-      fragment.appendChild(link)
-
-      lastIndex = offset + match.length
-    })
-
-    // Add remaining text
-    if (lastIndex < text.length) {
-      fragment.appendChild(document.createTextNode(text.substring(lastIndex)))
+    while ((currentNode = walker.nextNode())) {
+        const text = currentNode.textContent;
+        if (timestampPattern.test(text)) {
+            nodesToReplace.push(currentNode);
+        }
     }
 
-    node.parentNode.replaceChild(fragment, node)
-  })
+    nodesToReplace.forEach((node) => {
+        const text = node.textContent;
+        const fragment = document.createDocumentFragment();
+        let lastIndex = 0;
+
+        text.replace(
+            timestampPattern,
+            (match, prefix, minutes, seconds, suffix, offset) => {
+                // Add text before match
+                if (offset > lastIndex) {
+                    fragment.appendChild(
+                        document.createTextNode(
+                            text.substring(lastIndex, offset)
+                        )
+                    );
+                }
+
+                // Create clickable timestamp
+                const totalSeconds = parseInt(minutes) * 60 + parseInt(seconds);
+                const link = document.createElement("span");
+                link.textContent = match;
+                link.style.color = "var(--yt-ai-accent)";
+                link.style.cursor = "pointer";
+                link.style.fontWeight = "600";
+                link.style.textDecoration = "underline";
+                link.addEventListener("click", () =>
+                    seekToTimestamp(totalSeconds)
+                );
+                fragment.appendChild(link);
+
+                lastIndex = offset + match.length;
+            }
+        );
+
+        // Add remaining text
+        if (lastIndex < text.length) {
+            fragment.appendChild(
+                document.createTextNode(text.substring(lastIndex))
+            );
+        }
+
+        node.parentNode.replaceChild(fragment, node);
+    });
 }
 
 // --- Transcript Service Class (Copied/Adapted) ---
 class ContentScriptTranscriptService {
-  async _fetchVideoPage(videoId) {
-    const response = await fetch(`https://www.youtube.com/watch?v=${videoId}`)
-    if (!response.ok) throw new Error(`Failed to fetch video page: ${response.statusText}`)
-    return response.text()
-  }
-
-  _extractPlayerResponse(html) {
-    const startPattern = 'ytInitialPlayerResponse = '
-    const startIndex = html.indexOf(startPattern)
-    if (startIndex === -1) throw new Error('Failed to extract player response')
-
-    let braceCount = 0
-    let endIndex = -1
-    let foundStart = false
-    const jsonStartIndex = startIndex + startPattern.length
-
-    for (let i = jsonStartIndex; i < html.length; i++) {
-      if (html[i] === '{') { braceCount++; foundStart = true }
-      else if (html[i] === '}') { braceCount-- }
-
-      if (foundStart && braceCount === 0) {
-        endIndex = i + 1
-        break
-      }
+    async _fetchVideoPage(videoId) {
+        const response = await fetch(
+            `https://www.youtube.com/watch?v=${videoId}`
+        );
+        if (!response.ok)
+            throw new Error(
+                `Failed to fetch video page: ${response.statusText}`
+            );
+        return response.text();
     }
 
-    if (endIndex === -1) throw new Error('Failed to parse player response JSON')
-    const jsonStr = html.substring(jsonStartIndex, endIndex)
-    try { return JSON.parse(jsonStr) } catch (e) { throw new Error('Failed to parse player response JSON content') }
-  }
+    _extractPlayerResponse(html) {
+        const startPattern = "ytInitialPlayerResponse = ";
+        const startIndex = html.indexOf(startPattern);
+        if (startIndex === -1)
+            throw new Error("Failed to extract player response");
 
-  async getVideoMetadata(videoId) {
-    if (!videoId) throw new Error('Video ID is required')
-    try {
-      const html = await this._fetchVideoPage(videoId)
-      const playerResponse = this._extractPlayerResponse(html)
-      const videoDetails = playerResponse.videoDetails
-      if (!videoDetails) throw new Error('No video details found')
-      return {
-        title: videoDetails.title,
-        duration: Number.parseInt(videoDetails.lengthSeconds, 10),
-        author: videoDetails.author,
-        viewCount: videoDetails.viewCount,
-      }
-    } catch (error) {
-      console.error('ContentScriptTranscriptService getVideoMetadata Error:', error)
-      throw error
-    }
-  }
+        let braceCount = 0;
+        let endIndex = -1;
+        let foundStart = false;
+        const jsonStartIndex = startIndex + startPattern.length;
 
-  async getTranscript(videoId, lang = 'en') {
-    if (!videoId) throw new Error('Video ID is required')
-    try {
-      const html = await this._fetchVideoPage(videoId)
-      let tracks = []
+        for (let i = jsonStartIndex; i < html.length; i++) {
+            if (html[i] === "{") {
+                braceCount++;
+                foundStart = true;
+            } else if (html[i] === "}") {
+                braceCount--;
+            }
 
-      // Strategy 1: JSON
-      try {
-        const playerResponse = this._extractPlayerResponse(html)
-        if (playerResponse?.captions?.playerCaptionsTracklistRenderer?.captionTracks) {
-          tracks = playerResponse.captions.playerCaptionsTracklistRenderer.captionTracks
+            if (foundStart && braceCount === 0) {
+                endIndex = i + 1;
+                break;
+            }
         }
-      } catch (e) {}
 
-      // Strategy 2: Regex
-      if (tracks.length === 0) {
-        const patterns = [
-          /["']?captionTracks["']?\s*:\s*(\[[\s\S]+?\])/,
-          /"captionTracks":\s*(\[[^\]]+\])/
-        ]
-        for (const pattern of patterns) {
-          const match = html.match(pattern)
-          if (match) {
-            try {
-              const json = JSON.parse(match[1])
-              if (Array.isArray(json)) { tracks = json; break }
-            } catch (e) {}
-          }
+        if (endIndex === -1)
+            throw new Error("Failed to parse player response JSON");
+        const jsonStr = html.substring(jsonStartIndex, endIndex);
+        try {
+            return JSON.parse(jsonStr);
+        } catch (e) {
+            throw new Error("Failed to parse player response JSON content");
         }
-      }
-
-      if (tracks.length === 0) throw new Error('No captions available.')
-
-      const track = tracks.find((t) => t.languageCode === lang) || tracks.find((t) => t.languageCode.startsWith('en')) || tracks[0]
-      if (!track) throw new Error('No suitable caption track found')
-
-      const transcriptResponse = await fetch(track.baseUrl + '&fmt=json3')
-      if (!transcriptResponse.ok) {
-        throw new Error(`Failed to fetch transcript: ${transcriptResponse.status} ${transcriptResponse.statusText}`)
-      }
-      const responseText = await transcriptResponse.text()
-      if (!responseText) {
-        throw new Error('Transcript response was empty')
-      }
-
-      try {
-        const transcriptJson = JSON.parse(responseText)
-        return this.parseTranscriptJson(transcriptJson)
-      } catch (e) {
-        console.error('Failed to parse transcript JSON:', responseText.substring(0, 200))
-        throw new Error('Invalid transcript JSON format')
-      }
-    } catch (error) {
-      console.error('ContentScriptTranscriptService Error:', error)
-      throw error
     }
-  }
 
-  parseTranscriptJson(json) {
-    const segments = []
-    if (!json.events) return segments
-    for (const event of json.events) {
-      if (!event.segs) continue
-      const text = event.segs.map(s => s.utf8).join('').trim()
-      if (!text) continue
-      segments.push({
-        start: event.tStartMs / 1000,
-        duration: (event.dDurationMs || 0) / 1000,
-        text: this.decodeHtml(text),
-      })
+    async getVideoMetadata(videoId) {
+        if (!videoId) throw new Error("Video ID is required");
+        try {
+            const html = await this._fetchVideoPage(videoId);
+            const playerResponse = this._extractPlayerResponse(html);
+            const videoDetails = playerResponse.videoDetails;
+            if (!videoDetails) throw new Error("No video details found");
+            return {
+                title: videoDetails.title,
+                duration: Number.parseInt(videoDetails.lengthSeconds, 10),
+                author: videoDetails.author,
+                viewCount: videoDetails.viewCount,
+            };
+        } catch (error) {
+            console.error(
+                "ContentScriptTranscriptService getVideoMetadata Error:",
+                error
+            );
+            throw error;
+        }
     }
-    return segments
-  }
 
-  decodeHtml(html) {
-    const txt = document.createElement('textarea')
-    txt.innerHTML = html
-    return txt.value
-  }
+    async getTranscript(videoId, lang = "en") {
+        if (!videoId) throw new Error("Video ID is required");
+
+        console.log("🎬 Fetching transcript using Eightify method...");
+
+        try {
+            // Extract caption tracks from page
+            const captionTracks = this._extractCaptionTracks(videoId);
+
+            if (!captionTracks || captionTracks.length === 0) {
+                throw new Error("No captions available for this video");
+            }
+
+            console.log(`Found ${captionTracks.length} caption tracks`);
+
+            // Language codes to try for the requested language
+            const langCodes =
+                lang === "en"
+                    ? ["en", "en-US", "en-GB"]
+                    : lang === "es"
+                    ? ["es", "es-419", "es-ES"]
+                    : [lang];
+
+            // Strategy 1: Try manual transcript in requested language
+            const manualTrack = this._findTrack(
+                captionTracks,
+                langCodes,
+                false
+            );
+            if (manualTrack) {
+                console.log(
+                    "✓ Found manual transcript:",
+                    manualTrack.languageCode
+                );
+                const transcript = await this._fetchAndParseTranscript(
+                    manualTrack.baseUrl
+                );
+                if (transcript && transcript.length >= 10) {
+                    return transcript;
+                }
+            }
+
+            // Strategy 2: Try auto-generated transcript in requested language
+            const autoTrack = this._findTrack(captionTracks, langCodes, true);
+            if (autoTrack) {
+                console.log(
+                    "✓ Found auto-generated transcript:",
+                    autoTrack.languageCode
+                );
+                const transcript = await this._fetchAndParseTranscript(
+                    autoTrack.baseUrl
+                );
+                if (transcript && transcript.length >= 10) {
+                    return transcript;
+                }
+            }
+
+            // Strategy 3: Try any manual transcript (avoid rate limits)
+            const anyManualTrack = captionTracks.find(
+                (t) => !t.kind || t.kind !== "asr"
+            );
+            if (anyManualTrack) {
+                console.log(
+                    "Trying any manual transcript:",
+                    anyManualTrack.languageCode
+                );
+                const transcript = await this._fetchAndParseTranscript(
+                    anyManualTrack.baseUrl
+                );
+                if (transcript && transcript.length >= 10) {
+                    console.log(
+                        "✓ Using manual transcript in",
+                        anyManualTrack.languageCode
+                    );
+                    return transcript;
+                }
+            }
+
+            // Strategy 4: Try any auto-generated transcript
+            const anyAutoTrack = captionTracks.find((t) => t.kind === "asr");
+            if (anyAutoTrack) {
+                console.log(
+                    "Trying any auto-generated transcript:",
+                    anyAutoTrack.languageCode
+                );
+                const transcript = await this._fetchAndParseTranscript(
+                    anyAutoTrack.baseUrl
+                );
+                if (transcript && transcript.length >= 10) {
+                    console.log(
+                        "✓ Using auto-generated transcript in",
+                        anyAutoTrack.languageCode
+                    );
+                    return transcript;
+                }
+            }
+
+            throw new Error("No valid transcript found");
+        } catch (error) {
+            console.error("❌ Transcript fetch error:", error);
+            throw error;
+        }
+    }
+
+    _extractCaptionTracks(videoId) {
+        try {
+            // Try to get from ytInitialPlayerResponse
+            const scripts = document.querySelectorAll("script");
+
+            for (const script of scripts) {
+                const content = script.textContent;
+                if (content && content.includes("ytInitialPlayerResponse")) {
+                    // Try to extract the player response
+                    const match = content.match(
+                        /var ytInitialPlayerResponse = ({.+?});/
+                    );
+                    if (match) {
+                        try {
+                            const playerResponse = JSON.parse(match[1]);
+                            const tracks =
+                                playerResponse?.captions
+                                    ?.playerCaptionsTracklistRenderer
+                                    ?.captionTracks;
+                            if (tracks && tracks.length > 0) {
+                                console.log(
+                                    "✓ Extracted caption tracks from ytInitialPlayerResponse"
+                                );
+                                return tracks;
+                            }
+                        } catch (e) {
+                            console.warn(
+                                "Failed to parse ytInitialPlayerResponse:",
+                                e.message
+                            );
+                        }
+                    }
+                }
+
+                // Alternative: Extract from HTML string (Eightify's method)
+                if (content && content.includes('"captions":')) {
+                    try {
+                        const parts = content.split('"captions":');
+                        if (parts.length > 1) {
+                            const captionsPart = parts[1]
+                                .split(',"videoDetails')[0]
+                                .replace(/\n/g, "");
+                            const captionsData = JSON.parse(captionsPart);
+                            const tracks =
+                                captionsData?.playerCaptionsTracklistRenderer
+                                    ?.captionTracks;
+                            if (tracks && tracks.length > 0) {
+                                console.log(
+                                    "✓ Extracted caption tracks from HTML split method"
+                                );
+                                return tracks;
+                            }
+                        }
+                    } catch (e) {
+                        console.warn(
+                            "Failed to extract captions via split method:",
+                            e.message
+                        );
+                    }
+                }
+            }
+
+            // Try window.ytInitialPlayerResponse
+            if (window.ytInitialPlayerResponse) {
+                const tracks =
+                    window.ytInitialPlayerResponse?.captions
+                        ?.playerCaptionsTracklistRenderer?.captionTracks;
+                if (tracks && tracks.length > 0) {
+                    console.log(
+                        "✓ Extracted caption tracks from window object"
+                    );
+                    return tracks;
+                }
+            }
+
+            throw new Error("Could not extract caption tracks from page");
+        } catch (error) {
+            console.error("❌ Caption track extraction failed:", error);
+            throw new Error(`Transcripts are disabled for video ${videoId}`);
+        }
+    }
+
+    _findTrack(tracks, langCodes, isAutoGenerated) {
+        // Find track that matches language and generation type
+        for (const code of langCodes) {
+            const track = tracks.find((t) => {
+                const matchesLang = t.languageCode === code;
+                const matchesType = isAutoGenerated
+                    ? t.kind === "asr"
+                    : !t.kind || t.kind !== "asr";
+                return matchesLang && matchesType;
+            });
+            if (track) return track;
+        }
+        return null;
+    }
+
+    _parseTranscriptXML(xmlText) {
+        try {
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+            const textElements = xmlDoc.getElementsByTagName("text");
+
+            if (!textElements || textElements.length === 0) {
+                console.warn("No text elements found in XML");
+                return null;
+            }
+
+            const segments = [];
+            for (const elem of Array.from(textElements)) {
+                const text = elem.textContent?.replace(/<[^>]*>/g, "").trim();
+                if (!text) continue;
+
+                const start = parseFloat(elem.getAttribute("start") || "0");
+                const duration = parseFloat(elem.getAttribute("dur") || "0");
+
+                segments.push({
+                    start,
+                    duration,
+                    text,
+                });
+            }
+
+            console.log(`✓ Parsed ${segments.length} segments from XML`);
+            return segments;
+        } catch (error) {
+            console.error("XML parsing error:", error);
+            return null;
+        }
+    }
+
+    async _fetchAndParseTranscript(url) {
+        try {
+            // Use the URL as-is - YouTube provides complete timedtext URLs
+            console.log(
+                "Fetching transcript from:",
+                url.substring(0, 120) + "..."
+            );
+
+            const response = await fetch(url);
+
+            // Handle rate limiting
+            if (response.status === 429) {
+                console.warn("⚠️ Rate limited by YouTube (429), waiting 2s...");
+                await new Promise((resolve) => setTimeout(resolve, 2000));
+                // Retry once
+                const retryResponse = await fetch(url);
+                if (!retryResponse.ok) {
+                    console.warn(
+                        `Retry also failed with status ${retryResponse.status}`
+                    );
+                    return null;
+                }
+                return await this._parseResponse(retryResponse);
+            }
+
+            if (!response.ok) {
+                console.warn(`Fetch failed with status ${response.status}`);
+                return null;
+            }
+
+            return await this._parseResponse(response);
+        } catch (error) {
+            console.warn("Fetch/parse error:", error.message);
+            return null;
+        }
+    }
+
+    async _parseResponse(response) {
+        const xmlText = await response.text();
+
+        console.log("Response length:", xmlText.length, "bytes");
+        console.log("Response preview:", xmlText.substring(0, 200));
+
+        if (!xmlText || xmlText.trim().length === 0) {
+            console.warn("Empty response received");
+            return null;
+        }
+
+        return this._parseTranscriptXML(xmlText);
+    }
+
+    _parseTranscriptXML(xmlText) {
+        try {
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+            const textElements = xmlDoc.getElementsByTagName("text");
+
+            if (!textElements || textElements.length === 0) {
+                console.warn("No text elements found in XML");
+                return null;
+            }
+
+            const segments = [];
+            for (const elem of Array.from(textElements)) {
+                const text = elem.textContent?.replace(/<[^>]*>/g, "").trim();
+                if (!text) continue;
+
+                const start = parseFloat(elem.getAttribute("start") || "0");
+                const duration = parseFloat(elem.getAttribute("dur") || "0");
+
+                segments.push({
+                    start,
+                    duration,
+                    text,
+                });
+            }
+
+            console.log(`✓ Parsed ${segments.length} segments from XML`);
+            return segments;
+        } catch (error) {
+            console.error("XML parsing error:", error);
+            return null;
+        }
+    }
+
+    parseTranscriptJson(json) {
+        const segments = [];
+        if (!json.events) return segments;
+        for (const event of json.events) {
+            if (!event.segs) continue;
+            const text = event.segs
+                .map((s) => s.utf8)
+                .join("")
+                .trim();
+            if (!text) continue;
+            segments.push({
+                start: event.tStartMs / 1000,
+                duration: (event.dDurationMs || 0) / 1000,
+                text: this.decodeHtml(text),
+            });
+        }
+        return segments;
+    }
+
+    decodeHtml(html) {
+        const txt = document.createElement("textarea");
+        txt.innerHTML = html;
+        return txt.value;
+    }
 }
 
 // --- Segment Markers (Visuals) ---
 function injectSegmentMarkers(segments) {
-  if (!segments) return
-  const progressBar = document.querySelector('.ytp-progress-bar')
-  if (!progressBar) return
+    if (!segments) return;
+    const progressBar = document.querySelector(".ytp-progress-bar");
+    if (!progressBar) return;
 
-  const existingContainer = document.getElementById('ai-master-markers')
-  if (existingContainer) existingContainer.remove()
+    const existingContainer = document.getElementById("ai-master-markers");
+    if (existingContainer) existingContainer.remove();
 
-  const container = document.createElement('div')
-  container.id = 'ai-master-markers'
-  container.style.cssText = `position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 30;`
+    const container = document.createElement("div");
+    container.id = "ai-master-markers";
+    container.style.cssText = `position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 30;`;
 
-  const video = document.querySelector('video')
-  const totalDuration = video ? video.duration : 0
-  if (!totalDuration) return
+    const video = document.querySelector("video");
+    const totalDuration = video ? video.duration : 0;
+    if (!totalDuration) return;
 
-  segments.forEach(segment => {
-    if (segment.label === 'Content') return
-    const startPercent = (segment.start / totalDuration) * 100
-    const widthPercent = ((segment.end - segment.start) / totalDuration) * 100
+    segments.forEach((segment) => {
+        if (segment.label === "Content") return;
+        const startPercent = (segment.start / totalDuration) * 100;
+        const widthPercent =
+            ((segment.end - segment.start) / totalDuration) * 100;
 
-    const marker = document.createElement('div')
-    marker.style.cssText = `
+        const marker = document.createElement("div");
+        marker.style.cssText = `
       position: absolute;
       left: ${startPercent}%;
       width: ${widthPercent}%;
       height: 100%;
       background-color: ${getSegmentColor(segment.label)};
       opacity: 0.6;
-    `
-    marker.title = segment.label
-    container.appendChild(marker)
-  })
-  progressBar.appendChild(container)
+    `;
+        marker.title = segment.label;
+        container.appendChild(marker);
+    });
+    progressBar.appendChild(container);
 }
 
 function getSegmentColor(label) {
-  const colors = {
-    'Sponsor': '#ff4444',
-    'Interaction Reminder': '#ff8800',
-    'Self Promotion': '#ffaa00',
-    'Unpaid Promotion': '#88cc00',
-    'Highlight': '#00cc44',
-    'Preview/Recap': '#00aaff',
-    'Hook/Greetings': '#aa66cc',
-    'Tangents/Jokes': '#cc66aa',
-    'Content': 'transparent'
-  }
-  return colors[label] || '#999999'
+    const colors = {
+        Sponsor: "#ff4444",
+        "Interaction Reminder": "#ff8800",
+        "Self Promotion": "#ffaa00",
+        "Unpaid Promotion": "#88cc00",
+        Highlight: "#00cc44",
+        "Preview/Recap": "#00aaff",
+        "Hook/Greetings": "#aa66cc",
+        "Tangents/Jokes": "#cc66aa",
+        Content: "transparent",
+    };
+    return colors[label] || "#999999";
 }
