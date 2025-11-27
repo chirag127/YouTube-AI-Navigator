@@ -25,9 +25,9 @@ export class GeminiService {
     attachTimestampHandlers(containerElement) {
         return this.streamingSummary.attachTimestampClickHandlers(containerElement);
     }
-    async chatWithVideo(q, c, m = null) { return this.generateContent(prompts.chat(q, c), m) }
+    async chatWithVideo(q, c, m = null, metadata = null) { return this.generateContent(prompts.chat(q, c, metadata), m) }
     async analyzeCommentSentiment(c, m = null) { if (!c || !c.length) return 'No comments available to analyze.'; return this.generateContent(prompts.comments(c), m) }
-    async generateFAQ(t, m = null) { return this.generateContent(prompts.faq(t), m) }
+    async generateFAQ(t, m = null, metadata = null) { return this.generateContent(prompts.faq(t, metadata), m) }
     async extractSegments(t, m = null) { try { const r = await this.generateContent(prompts.segments(t), m), c = r.replace(/```json/g, '').replace(/```/g, '').trim(); return JSON.parse(c) } catch (e) { return [] } }
     async generateComprehensiveAnalysis(t, o = {}, onChunk = null) {
         try {

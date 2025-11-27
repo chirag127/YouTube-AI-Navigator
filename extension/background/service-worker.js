@@ -274,9 +274,15 @@ async function handleAnalyzeVideo(request, sendResponse) {
       }
     }
 
+    // Pass metadata to the analysis
     const analysis = await geminiService.generateStreamingSummaryWithTimestamps(
       transcript,
-      { model: 'gemini-2.5-flash-lite-preview-09-2025', language: options.language || 'English', length: options.length || 'Medium' }
+      {
+        model: 'gemini-2.5-flash-lite-preview-09-2025',
+        language: options.language || 'English',
+        length: options.length || 'Medium',
+        metadata: metadata // Include video metadata for better context
+      }
     )
 
     let segments = []
@@ -364,7 +370,7 @@ async function handleClassifySegments(request, sendResponse) {
 }
 
 async function handleChatWithVideo(request, sendResponse) {
-  const { question, context } = request
+  const { question, context, metadata } = request
 
   const apiKey = await getApiKey()
   if (!apiKey) {
@@ -374,7 +380,8 @@ async function handleChatWithVideo(request, sendResponse) {
 
   await initializeServices(apiKey)
 
-  const answer = await geminiService.chatWithVideo(question, context)
+  // Pass metadata to chat for better context
+  const answer = await geminiService.chatWithVideo(question, context, null, metadata)
   sendResponse({ success: true, answer })
 }
 
@@ -727,9 +734,15 @@ async function handleAnalyzeVideoStreaming(request, sendResponse) {
       return
     }
 
+    // Pass metadata to the streaming analysis
     await geminiService.generateStreamingSummaryWithTimestamps(
       transcript,
-      { model: 'gemini-2.5-flash-lite-preview-09-2025', language: options.language || 'English', length: options.length || 'Medium' },
+      {
+        model: 'gemini-2.5-flash-lite-preview-09-2025',
+        language: options.language || 'English',
+        length: options.length || 'Medium',
+        metadata: metadata // Include video metadata for better context
+      },
       (chunk, fullText, timestamps) => {
         chrome.tabs.sendMessage(tabId, {
           type: 'ANALYSIS_CHUNK',

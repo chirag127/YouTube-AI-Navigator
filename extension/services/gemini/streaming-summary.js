@@ -4,8 +4,8 @@ export class StreamingSummaryService {
     constructor(k) { this.api = new GeminiAPI(k) }
 
     async generateStreamingSummary(t, o = {}, cb) {
-        const { model = 'gemini-1.5-flash', language = 'English', length = 'Medium' } = o
-        const p = this._createPrompt(t, language, length)
+        const { model = 'gemini-1.5-flash', language = 'English', length = 'Medium', metadata = null } = o
+        const p = this._createPrompt(t, language, length, metadata)
         let full = ''
 
         await this.api.callStream(p, model, (c, a) => {
@@ -16,13 +16,25 @@ export class StreamingSummaryService {
         return { summary: full, timestamps: this._extractTS(full) }
     }
 
-    _createPrompt(t, lang, len) {
+    _createPrompt(t, lang, len, metadata = null) {
         const secs = this._groupSections(t, 120)
         const txt = secs.map(s => `[${this._fmt(s.start)}] ${s.segments.map(x => x.text).join(' ')}`).join('\n\n')
         const guide = { Short: '3-5 key points', Medium: '5-8 main points', Long: '10-15 points' }
 
-        return `Create ${len.toLowerCase()} summary in ${lang}. Start each point with [MM:SS] or [HH:MM:SS] timestamp.
+        // Build metadata context if available
+        let metadataContext = ''
+        if (metadata) {
+            metadataContext = '\nVIDEO METADATA:\n'
+            if (metadata.title) metadataContext += `Title: ${metadata.title}\n`
+            if (metadata.author) metadataContext += `Channel: ${metadata.author}\n`
+            if (metadata.description) metadataContext += `Description: ${metadata.description}\n`
+            if (metadata.category) metadataContext += `Category: ${metadata.category}\n`
+            if (metadata.keywords?.length) metadataContext += `Keywords: ${metadata.keywords.join(', ')}\n`
+            metadataContext += '\n'
+        }
 
+        return `Create ${len.toLowerCase()} summary in ${lang}. Start each point with [MM:SS] or [HH:MM:SS] timestamp.
+${metadataContext}
 TRANSCRIPT:
 ${txt}
 
@@ -35,6 +47,19 @@ FORMAT:
 - [00:00] Point 1
 - [02:15] Point 2
 
+## 💡 Key Insights
+- Important takeaway 1
+- Important takeaway 2
+
+## ❓ FAQs
+**Q: Common question?**
+A: Answer based on content...
+
+## 💬 Key Discussion Points
+- Main theme 1
+- Main theme 2
+
+Use the video title, description, and keywords to provide better context and more accurate summaries.
 Include ${guide[len] || guide.Medium}.`
     }
 
