@@ -95,70 +95,73 @@ function extractCaptionTracksFromDOM() {
 
 /**
  * Helper to fetch transcript from a caption track
+ * Tries multiple formats: json3, srv3, srv1, default XML
  */
 async function fetchFromTrack(track) {
     if (!track?.baseUrl) return null;
 
     console.log("[YouTube Direct] Fetching from track:", track.languageCode);
-    console.log("[YouTube Direct] Base URL:", track.baseUrl);
 
-    // Check if fmt parameter already exists in the URL
-    let url = track.baseUrl;
-    if (!url.includes('fmt=')) {
-        url += "&fmt=json3";
-    } else if (!url.includes('fmt=json3')) {
-        // Replace existing fmt with json3
-        url = url.replace(/fmt=[^&]+/, 'fmt=json3');
-    }
+    // Try different formats - json3 first, then XML formats
+    const formats = ['json3', 'srv3', 'srv1', ''];
 
-    console.log("[YouTube Direct] Final URL:", url);
-
-    try {
-        const res = await fetch(url, {
-            method: 'GET',
-            credentials: 'include', // Include cookies for auth
-        });
-
-        if (!res.ok) {
-            console.warn("[YouTube Direct] Track fetch failed:", res.status, res.statusText);
-            return null;
-        }
-
-        // Read the full response as text first to handle any encoding issues
-        const text = await res.text();
-        console.log("[YouTube Direct] Response length:", text.length);
-
-        if (!text || text.length === 0) {
-            console.warn("[YouTube Direct] Empty response from track URL");
-            return null;
-        }
-
-        // Check if response is HTML (error page)
-        if (text.trim().startsWith('<!') || text.trim().startsWith('<html')) {
-            console.warn("[YouTube Direct] Received HTML instead of JSON");
-            return null;
-        }
-
-        // Parse JSON
-        let data;
+    for (const fmt of formats) {
         try {
-            data = JSON.parse(text);
-        } catch (parseErr) {
-            console.warn("[YouTube Direct] JSON parse error:", parseErr.message);
-            console.warn("[YouTube Direct] Response preview:", text.substring(0, 200));
-            return null;
-        }
+            let url = track.baseUrl;
 
-        const segments = parseJSON3(data);
+            // Add or replace fmt parameter
+            if (fmt) {
+                if (url.includes('fmt=')) {
+                    url = url.replace(/fmt=[^&]*/, `fmt=${fmt}`);
+                } else {
+                    url += `&fmt=${fmt}`;
+                }
+            }
 
-        if (segments?.length) {
-            console.log(`[YouTube Direct] ✅ Got ${segments.length} segments from track`);
-            return segments;
-        } else {
-            console.warn("[YouTube Direct] parseJSON3 returned 0 segments");
+            console.log(`[YouTube Direct] Trying format '${fmt || 'default'}'`);
+
+            const res = await fetch(url, {
+                method: 'GET',
+                credentials: 'include',
+            });
+
+            if (!res.ok) {
+                console.warn(`[YouTube Direct] Format '${fmt}' HTTP error:`, res.status);
+                continue;
+            }
+
+            const text = await res.text();
+            console.log(`[YouTube Direct] Format '${fmt}' response length:`, text.length);
+
+            if (!text || text.length === 0) continue;
+            if (text.trim().startsWith('<!') || text.trim().startsWith('<html')) continue;
+
+            let segments = [];
+
+            // Try JSON parsing for json3 format
+            if (fmt === 'json3') {
+                try {
+                    const data = JSON.parse(text);
+                    segments = parseJSON3(data);
+                } catch (e) {
+                    console.warn(`[YouTube Direct] JSON parse failed for '${fmt}':`, e.message);
+                    // Try XML parsing as fallback
+                    if (text.includes('<text') || text.includes('<transcript')) {
+                        segments = parseXML(text);
+                    }
+                }
+            } else {
+                // XML formats (srv3, srv1, default)
+                segments = parseXML(text);
+            }
+
+            if (segments?.length) {
+                console.log(`[YouTube Direct] ✅ Got ${segments.length} segments from format '${fmt || 'default'}'`);
+                return segments;
+            }
+        } catch (e) {
+            console.warn(`[YouTube Direct] Format '${fmt}' error:`, e.message);
         }
-    } catch (e) {
-        console.warn("[YouTube Direct] Track fetch error:", e.message);
     }
 
     return null;
