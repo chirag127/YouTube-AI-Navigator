@@ -1,9 +1,9 @@
 // Main transcript service
 
-import { getPlayerResponse, extractCaptionTracks } from './parser.js';
-import { fetchTranscriptData, parseTranscriptData } from './fetcher.js';
-import { selectBestTrack } from './selector.js';
-import { formatAsPlainText, formatWithTimestamps } from './formatter.js';
+import { getPlayerResponse, extractCaptionTracks } from "./parser.js";
+import { fetchTranscript as fetchTranscriptFromFetcher } from "./fetcher.js";
+import { selectBestTrack } from "./selector.js";
+import { formatAsPlainText, formatWithTimestamps } from "./formatter.js";
 
 /**
  * Get available caption tracks for current video
@@ -16,24 +16,16 @@ export function getAvailableCaptions() {
 
 /**
  * Fetch transcript for current video
+ * @param {string} videoId - Video ID
  * @param {string} [languageCode] - Preferred language code
  * @returns {Promise<Array>} Transcript segments
  */
-export async function fetchTranscript(languageCode) {
-    const tracks = getAvailableCaptions();
-
-    if (tracks.length === 0) {
-        throw new Error('No captions available for this video');
+export async function fetchTranscript(videoId, languageCode) {
+    if (!videoId) {
+        throw new Error("Video ID is required");
     }
 
-    const track = selectBestTrack(tracks, languageCode);
-
-    if (!track) {
-        throw new Error('Could not select caption track');
-    }
-
-    const data = await fetchTranscriptData(track.baseUrl);
-    return parseTranscriptData(data);
+    return fetchTranscriptFromFetcher(videoId, languageCode);
 }
 
 /**
@@ -42,7 +34,10 @@ export async function fetchTranscript(languageCode) {
  * @param {boolean} [includeTimestamps] - Include timestamps
  * @returns {Promise<string>} Formatted transcript
  */
-export async function getTranscriptText(languageCode, includeTimestamps = false) {
+export async function getTranscriptText(
+    languageCode,
+    includeTimestamps = false
+) {
     const segments = await fetchTranscript(languageCode);
 
     return includeTimestamps

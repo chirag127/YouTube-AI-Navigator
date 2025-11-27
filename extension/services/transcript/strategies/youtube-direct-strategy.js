@@ -30,23 +30,60 @@ export async function fetchViaYouTubeDirect(videoId, lang = 'en') {
     // Try JSON3 first (most reliable and structured format)
     try {
         const url = buildTimedTextUrl(videoId, lang, 'json3')
+        console.log('[YouTube Direct] Fetching JSON3:', url)
+
         const res = await fetch(url, {
+            method: 'GET',
             headers: {
-                'Accept': 'application/json',
+                'Accept': 'application/json, text/plain, */*',
                 'Accept-Language': lang
-            }
+            },
+            credentials: 'omit', // Don't send cookies to avoid auth issues
+            cache: 'no-cache'
+        })
+
+        console.log('[YouTube Direct] Response status:', res.status, res.statusText)
+        console.log('[YouTube Direct] Response headers:', {
+            contentType: res.headers.get('content-type'),
+            contentLength: res.headers.get('content-length')
         })
 
         if (res.ok) {
-            const data = await res.json()
+            // Use arrayBuffer then decode to handle large responses better
+            const buffer = await res.arrayBuffer()
+            const text = new TextDecoder('utf-8').decode(buffer)
+
+            console.log('[YouTube Direct] Response length:', text.length)
+            console.log('[YouTube Direct] Response preview:', text.substring(0, 100))
+
+            // Validate response is not empty
+            if (!text || text.trim().length === 0) {
+                throw new Error('Empty response from YouTube API')
+            }
+
+            // Try to parse JSON
+            let data
+            try {
+                data = JSON.parse(text)
+            } catch (parseError) {
+                console.warn('[YouTube Direct] JSON parse error:', parseError.message)
+                console.warn('[YouTube Direct] Response preview:', text.substring(0, 500))
+                console.warn('[YouTube Direct] Response end:', text.substring(text.length - 100))
+                throw new Error(`Invalid JSON response: ${parseError.message}`)
+            }
+
             const segments = parseJSON3(data)
             if (segments.length) {
                 console.log(`[YouTube Direct] ✅ JSON3 format: ${segments.length} segments`)
                 return segments
+            } else {
+                console.warn('[YouTube Direct] JSON3 parsed but returned 0 segments')
             }
+        } else {
+            console.warn('[YouTube Direct] HTTP error:', res.status, res.statusText)
         }
     } catch (e) {
-        console.warn('[YouTube Direct] JSON3 failed:', e.message)
+        console.warn('[YouTube Direct] JSON3 failed:', e.message, e.stack)
     }
 
     // Fallback to XML formats
