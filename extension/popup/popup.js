@@ -1,138 +1,35 @@
-/**
- * YouTube AI Master - Popup Script
- * Quick access to extension features
- */
-
-// DOM Elements
-const apiStatus = document.getElementById('api-status')
-const pageStatus = document.getElementById('page-status')
-const analyzeBtn = document.getElementById('analyze-btn')
-const historyBtn = document.getElementById('history-btn')
-const optionsBtn = document.getElementById('options-btn')
-const messageEl = document.getElementById('message')
-
-/**
- * Show message to user
- */
-function showMessage(text, type = 'info') {
-  messageEl.textContent = text
-  messageEl.className = `show ${type}`
-  setTimeout(() => {
-    messageEl.classList.remove('show')
-  }, 3000)
-}
-
-/**
- * Check API key status
- */
-async function checkApiStatus() {
+const a = document.getElementById('api-status'), p = document.getElementById('page-status'), b = document.getElementById('analyze-btn'), h = document.getElementById('history-btn'), o = document.getElementById('options-btn'), m = document.getElementById('message')
+function showMsg(t, y = 'info') { m.textContent = t; m.className = `show ${y}`; setTimeout(() => m.classList.remove('show'), 3000) }
+async function checkApi() {
   try {
-    const syncResult = await chrome.storage.sync.get('apiKey')
-    const localResult = await chrome.storage.local.get('geminiApiKey')
-
-    const hasKey = syncResult.apiKey || localResult.geminiApiKey
-
-    if (hasKey) {
-      apiStatus.innerHTML = '<span>✅ Configured</span>'
-      apiStatus.className = 'value success'
-      return true
-    }
-    apiStatus.innerHTML = '<span>⚠️ Not configured</span>'
-    apiStatus.className = 'value warning'
-    return false
-  } catch (error) {
-    apiStatus.innerHTML = '<span>❌ Error</span>'
-    apiStatus.className = 'value error'
-    return false
-  }
+    const s = await chrome.storage.sync.get('apiKey'), l = await chrome.storage.local.get('geminiApiKey'), k = s.apiKey || l.geminiApiKey
+    if (k) { a.innerHTML = '<span>✅ Configured</span>'; a.className = 'value success'; return true }
+    a.innerHTML = '<span>⚠️ Not configured</span>'; a.className = 'value warning'; return false
+  } catch (e) { a.innerHTML = '<span>❌ Error</span>'; a.className = 'value error'; return false }
 }
-
-/**
- * Check current page status
- */
-async function checkPageStatus() {
+async function checkPage() {
   try {
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
-
-    if (!tab || !tab.url) {
-      pageStatus.innerHTML = '<span>❌ No active tab</span>'
-      pageStatus.className = 'value error'
-      return null
+    const [t] = await chrome.tabs.query({ active: true, currentWindow: true })
+    if (!t || !t.url) { p.innerHTML = '<span>❌ No active tab</span>'; p.className = 'value error'; return null }
+    if (t.url.includes('youtube.com/watch')) {
+      const u = new URL(t.url), v = u.searchParams.get('v')
+      if (v) { p.innerHTML = '<span>✅ YouTube Video</span>'; p.className = 'value success'; return { tab: t, videoId: v } }
     }
-
-    if (tab.url.includes('youtube.com/watch')) {
-      const url = new URL(tab.url)
-      const videoId = url.searchParams.get('v')
-
-      if (videoId) {
-        pageStatus.innerHTML = '<span>✅ YouTube Video</span>'
-        pageStatus.className = 'value success'
-        return { tab, videoId }
-      }
-    }
-
-    pageStatus.innerHTML = '<span>⚠️ Not a YouTube video</span>'
-    pageStatus.className = 'value warning'
-    return null
-  } catch (error) {
-    pageStatus.innerHTML = '<span>❌ Error</span>'
-    pageStatus.className = 'value error'
-    return null
-  }
+    p.innerHTML = '<span>⚠️ Not a YouTube video</span>'; p.className = 'value warning'; return null
+  } catch (e) { p.innerHTML = '<span>❌ Error</span>'; p.className = 'value error'; return null }
 }
-
-/**
- * Initialize popup
- */
-async function init() {
-  const hasApiKey = await checkApiStatus()
-  const pageInfo = await checkPageStatus()
-
-  // Enable analyze button only if on YouTube video with API key
-  if (hasApiKey && pageInfo) {
-    analyzeBtn.disabled = false
-  }
-}
-
-// Event Listeners
-analyzeBtn.addEventListener('click', async () => {
+async function init() { const k = await checkApi(), pg = await checkPage(); if (k && pg) b.disabled = false }
+b.addEventListener('click', async () => {
   try {
-    analyzeBtn.disabled = true
-    analyzeBtn.textContent = '⏳ Analyzing...'
-
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
-
-    if (!tab) {
-      showMessage('No active tab found', 'error')
-      return
-    }
-
-    // Send message to content script to start analysis
-    const response = await chrome.tabs.sendMessage(tab.id, { action: 'START_ANALYSIS' })
-
-    if (response?.success) {
-      showMessage('Analysis started!', 'success')
-      // Close popup after short delay
-      setTimeout(() => window.close(), 1000)
-    } else {
-      showMessage(response?.error || 'Failed to start analysis', 'error')
-    }
-  } catch (error) {
-    console.error('Analyze error:', error)
-    showMessage('Failed to communicate with page. Try refreshing.', 'error')
-  } finally {
-    analyzeBtn.disabled = false
-    analyzeBtn.textContent = '🎬 Analyze Current Video'
-  }
+    b.disabled = true; b.textContent = '⏳ Analyzing...'
+    const [t] = await chrome.tabs.query({ active: true, currentWindow: true })
+    if (!t) { showMsg('No active tab found', 'error'); return }
+    const r = await chrome.tabs.sendMessage(t.id, { action: 'START_ANALYSIS' })
+    if (r?.success) { showMsg('Analysis started!', 'success'); setTimeout(() => window.close(), 1000) }
+    else showMsg(r?.error || 'Failed to start analysis', 'error')
+  } catch (e) { showMsg('Failed to communicate with page. Try refreshing.', 'error') }
+  finally { b.disabled = false; b.textContent = '🎬 Analyze Current Video' }
 })
-
-historyBtn.addEventListener('click', () => {
-  chrome.tabs.create({ url: chrome.runtime.getURL('history/history.html') })
-})
-
-optionsBtn.addEventListener('click', () => {
-  chrome.runtime.openOptionsPage()
-})
-
-// Initialize on load
+h.addEventListener('click', () => chrome.tabs.create({ url: chrome.runtime.getURL('history/history.html') }))
+o.addEventListener('click', () => chrome.runtime.openOptionsPage())
 document.addEventListener('DOMContentLoaded', init)

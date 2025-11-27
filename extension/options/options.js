@@ -1,227 +1,58 @@
-/**
- * YouTube AI Master - Options Page Script
- * Handles user settings and API key configuration
- */
-
-// Default settings
-const DEFAULT_SETTINGS = {
-  apiKey: '',
-  model: 'gemini-2.5-flash',
-  summaryLength: 'medium',
-  outputLanguage: 'en',
-  customPrompt: '',
-  autoAnalyze: true,
-  enableSegments: true,
-  autoSkipSponsors: false,
-  autoSkipIntros: false,
-  saveHistory: true,
-}
-
-// DOM Elements
-const elements = {
-  apiKey: document.getElementById('apiKey'),
-  modelSelect: document.getElementById('modelSelect'),
-  summaryLength: document.getElementById('summaryLength'),
-  outputLanguage: document.getElementById('outputLanguage'),
-  customPrompt: document.getElementById('customPrompt'),
-  autoAnalyze: document.getElementById('autoAnalyze'),
-  enableSegments: document.getElementById('enableSegments'),
-  autoSkipSponsors: document.getElementById('autoSkipSponsors'),
-  autoSkipIntros: document.getElementById('autoSkipIntros'),
-  saveHistory: document.getElementById('saveHistory'),
-  saveBtn: document.getElementById('saveBtn'),
-  testBtn: document.getElementById('testBtn'),
-  clearHistory: document.getElementById('clearHistory'),
-  statusMessage: document.getElementById('statusMessage'),
-}
-
-/**
- * Load settings from Chrome storage
- */
+const D = { apiKey: '', model: 'gemini-2.5-flash', summaryLength: 'medium', outputLanguage: 'en', customPrompt: '', autoAnalyze: true, enableSegments: true, autoSkipSponsors: false, autoSkipIntros: false, saveHistory: true }
+const e = { apiKey: document.getElementById('apiKey'), modelSelect: document.getElementById('modelSelect'), summaryLength: document.getElementById('summaryLength'), outputLanguage: document.getElementById('outputLanguage'), customPrompt: document.getElementById('customPrompt'), autoAnalyze: document.getElementById('autoAnalyze'), enableSegments: document.getElementById('enableSegments'), autoSkipSponsors: document.getElementById('autoSkipSponsors'), autoSkipIntros: document.getElementById('autoSkipIntros'), saveHistory: document.getElementById('saveHistory'), saveBtn: document.getElementById('saveBtn'), testBtn: document.getElementById('testBtn'), clearHistory: document.getElementById('clearHistory'), statusMessage: document.getElementById('statusMessage') }
 async function loadSettings() {
   try {
-    const result = await chrome.storage.sync.get(DEFAULT_SETTINGS)
-
-    elements.apiKey.value = result.apiKey || ''
-    elements.modelSelect.value = result.model || DEFAULT_SETTINGS.model
-    elements.summaryLength.value = result.summaryLength || DEFAULT_SETTINGS.summaryLength
-    elements.outputLanguage.value = result.outputLanguage || DEFAULT_SETTINGS.outputLanguage
-    elements.customPrompt.value = result.customPrompt || ''
-    elements.autoAnalyze.checked = result.autoAnalyze !== false
-    elements.enableSegments.checked = result.enableSegments !== false
-    elements.autoSkipSponsors.checked = result.autoSkipSponsors === true
-    elements.autoSkipIntros.checked = result.autoSkipIntros === true
-    elements.saveHistory.checked = result.saveHistory !== false
-  } catch (error) {
-    console.error('Error loading settings:', error)
-    showStatus('Failed to load settings', 'error')
-  }
+    const r = await chrome.storage.sync.get(D)
+    e.apiKey.value = r.apiKey || ''
+    e.modelSelect.value = r.model || D.model
+    e.summaryLength.value = r.summaryLength || D.summaryLength
+    e.outputLanguage.value = r.outputLanguage || D.outputLanguage
+    e.customPrompt.value = r.customPrompt || ''
+    e.autoAnalyze.checked = r.autoAnalyze !== false
+    e.enableSegments.checked = r.enableSegments !== false
+    e.autoSkipSponsors.checked = r.autoSkipSponsors === true
+    e.autoSkipIntros.checked = r.autoSkipIntros === true
+    e.saveHistory.checked = r.saveHistory !== false
+  } catch (err) { showStatus('Failed to load settings', 'error') }
 }
-
-/**
- * Save settings to Chrome storage
- */
 async function saveSettings() {
   try {
-    const settings = {
-      apiKey: elements.apiKey.value.trim(),
-      model: elements.modelSelect.value,
-      summaryLength: elements.summaryLength.value,
-      outputLanguage: elements.outputLanguage.value,
-      customPrompt: elements.customPrompt.value.trim(),
-      autoAnalyze: elements.autoAnalyze.checked,
-      enableSegments: elements.enableSegments.checked,
-      autoSkipSponsors: elements.autoSkipSponsors.checked,
-      autoSkipIntros: elements.autoSkipIntros.checked,
-      saveHistory: elements.saveHistory.checked,
-    }
-
-    // Validate API key
-    if (!settings.apiKey) {
-      showStatus('Please enter your Gemini API key', 'error')
-      elements.apiKey.focus()
-      return
-    }
-
-    // Save to sync storage (primary)
-    await chrome.storage.sync.set(settings)
-
-    // Also save API key to local storage for sidepanel compatibility
-    await chrome.storage.local.set({
-      geminiApiKey: settings.apiKey,
-      summaryLength: settings.summaryLength,
-      targetLanguage: settings.outputLanguage,
-    })
-
+    const s = { apiKey: e.apiKey.value.trim(), model: e.modelSelect.value, summaryLength: e.summaryLength.value, outputLanguage: e.outputLanguage.value, customPrompt: e.customPrompt.value.trim(), autoAnalyze: e.autoAnalyze.checked, enableSegments: e.enableSegments.checked, autoSkipSponsors: e.autoSkipSponsors.checked, autoSkipIntros: e.autoSkipIntros.checked, saveHistory: e.saveHistory.checked }
+    if (!s.apiKey) { showStatus('Please enter your Gemini API key', 'error'); e.apiKey.focus(); return }
+    await chrome.storage.sync.set(s)
+    await chrome.storage.local.set({ geminiApiKey: s.apiKey, summaryLength: s.summaryLength, targetLanguage: s.outputLanguage })
     showStatus('Settings saved successfully!', 'success')
-  } catch (error) {
-    console.error('Error saving settings:', error)
-    showStatus('Failed to save settings', 'error')
-  }
+  } catch (err) { showStatus('Failed to save settings', 'error') }
 }
-
-/**
- * Test API connection with Gemini
- */
-async function testApiConnection() {
-  const apiKey = elements.apiKey.value.trim()
-  const model = elements.modelSelect.value
-
-  if (!apiKey) {
-    showStatus('Please enter your API key first', 'error')
-    elements.apiKey.focus()
-    return
-  }
-
+async function testApi() {
+  const k = e.apiKey.value.trim(), m = e.modelSelect.value
+  if (!k) { showStatus('Please enter your API key first', 'error'); e.apiKey.focus(); return }
   showStatus('Testing API connection...', 'info')
-  elements.testBtn.disabled = true
-
+  e.testBtn.disabled = true
   try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                {
-                  text: 'Hello! Please respond with "API connection successful"',
-                },
-              ],
-            },
-          ],
-        }),
-      }
-    )
-
-    if (!response.ok) {
-      const errorData = await response.json()
-      throw new Error(errorData.error?.message || 'API request failed')
-    }
-
-    const data = await response.json()
-    const responseText = data.candidates?.[0]?.content?.parts?.[0]?.text
-
-    if (responseText) {
-      showStatus('✅ API connection successful! Your key is working.', 'success')
-    } else {
-      throw new Error('Unexpected API response format')
-    }
-  } catch (error) {
-    console.error('API test failed:', error)
-    showStatus(`❌ API test failed: ${error.message}`, 'error')
-  } finally {
-    elements.testBtn.disabled = false
-  }
+    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${k}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: 'Hello! Please respond with "API connection successful"' }] }] }) })
+    if (!r.ok) { const d = await r.json(); throw new Error(d.error?.message || 'API request failed') }
+    const d = await r.json(), t = d.candidates?.[0]?.content?.parts?.[0]?.text
+    if (t) showStatus('✅ API connection successful! Your key is working.', 'success')
+    else throw new Error('Unexpected API response format')
+  } catch (err) { showStatus(`❌ API test failed: ${err.message}`, 'error') }
+  finally { e.testBtn.disabled = false }
 }
-
-/**
- * Clear all saved history
- */
-async function clearAllHistory() {
-  if (
-    !confirm('Are you sure you want to clear all saved summaries? This action cannot be undone.')
-  ) {
-    return
-  }
-
-  try {
-    await chrome.storage.local.remove('summaryHistory')
-    showStatus('History cleared successfully', 'success')
-  } catch (error) {
-    console.error('Error clearing history:', error)
-    showStatus('Failed to clear history', 'error')
-  }
+async function clearHistory() {
+  if (!confirm('Are you sure you want to clear all saved summaries? This action cannot be undone.')) return
+  try { await chrome.storage.local.remove('summaryHistory'); showStatus('History cleared successfully', 'success') }
+  catch (err) { showStatus('Failed to clear history', 'error') }
 }
-
-/**
- * Show status message
- * @param {string} message - Message to display
- * @param {string} type - Message type: 'success', 'error', or 'info'
- */
-function showStatus(message, type = 'info') {
-  elements.statusMessage.textContent = message
-  elements.statusMessage.className = `status-message show ${type}`
-
-  // Auto-hide after 5 seconds for success/info messages
-  if (type !== 'error') {
-    setTimeout(() => {
-      elements.statusMessage.classList.remove('show')
-    }, 5000)
-  }
+function showStatus(msg, type = 'info') {
+  e.statusMessage.textContent = msg
+  e.statusMessage.className = `status-message show ${type}`
+  if (type !== 'error') setTimeout(() => e.statusMessage.classList.remove('show'), 5000)
 }
-
-/**
- * Initialize event listeners
- */
-function initializeEventListeners() {
-  elements.saveBtn.addEventListener('click', saveSettings)
-  elements.testBtn.addEventListener('click', testApiConnection)
-  elements.clearHistory.addEventListener('click', clearAllHistory)
-
-  // Auto-save on Enter key in API key field
-  elements.apiKey.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      saveSettings()
-    }
-  })
+function init() {
+  e.saveBtn.addEventListener('click', saveSettings)
+  e.testBtn.addEventListener('click', testApi)
+  e.clearHistory.addEventListener('click', clearHistory)
+  e.apiKey.addEventListener('keypress', ev => { if (ev.key === 'Enter') saveSettings() })
 }
-
-/**
- * Initialize the options page
- */
-async function init() {
-  await loadSettings()
-  initializeEventListeners()
-}
-
-// Run initialization when DOM is ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init)
-} else {
-  init()
-}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => { loadSettings(); init() })
+else { loadSettings(); init() }

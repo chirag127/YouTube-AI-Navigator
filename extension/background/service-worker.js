@@ -3,10 +3,10 @@
  * Handles extension lifecycle, message passing, and AI processing
  */
 
-import { ChunkingService } from '../services/ChunkingService.js'
-import { GeminiService } from '../services/GeminiService.js'
-import { SegmentClassificationService } from '../services/SegmentClassificationService.js'
-import { StorageService } from '../services/StorageService.js'
+import { ChunkingService } from '../services/chunking/index.js'
+import { GeminiService } from '../services/gemini/index.js'
+import { SegmentClassificationService } from '../services/segments/index.js'
+import { StorageService } from '../services/storage/index.js'
 
 // Service instances (initialized on demand)
 let geminiService, chunkingService, segmentClassificationService, storageService
@@ -80,6 +80,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
           case 'SAVE_TO_HISTORY':
             await handleSaveToHistory(request, sendResponse)
+            break
+
+          case 'GET_METADATA':
+            await handleGetMetadata(request, sendResponse)
+            break
+
+          case 'FETCH_INVIDIOUS_TRANSCRIPT':
+            await handleFetchInvidiousTranscript(request, sendResponse)
             break
 
           default:
@@ -291,6 +299,114 @@ async function handleSaveToHistory(request, sendResponse) {
   await chrome.storage.local.set({ summaryHistory: trimmedHistory })
 
   sendResponse({ success: true })
+}
+
+/**
+ * Get metadata from Invidious (CORS-free)
+ */
+async function handleGetMetadata(request, sendResponse) {
+  const { videoId } = request
+  const instances = await getInvidiousInstances()
+
+  for (const inst of instances) {
+    try {
+      const url = `${inst}/api/v1/videos/${videoId}`
+      const r = await fetch(url, { signal: AbortSignal.timeout(5000) })
+      if (!r.ok) continue
+      const d = await r.json()
+      sendResponse({
+        success: true,
+        data: { title: d.title, duration: d.lengthSeconds, author: d.author, viewCount: d.viewCount },
+      })
+      return
+    } catch (e) {
+      continue
+    }
+  }
+  sendResponse({ success: false, error: 'Failed to get metadata from Invidious' })
+}
+
+/**
+ * Fetch transcript from Invidious (CORS-free)
+ */
+async function handleFetchInvidiousTranscript(request, sendResponse) {
+  const { videoId, lang } = request
+  const instances = await getInvidiousInstances()
+
+  for (const inst of instances) {
+    try {
+      const url = `${inst}/api/v1/captions/${videoId}?lang=${lang}`
+      const r = await fetch(url, { signal: AbortSignal.timeout(5000) })
+      if (!r.ok) continue
+      const d = await r.json()
+      if (!d.captions?.length) continue
+      const c = d.captions.find((x) => x.languageCode === lang || x.label.includes(lang))?.url || d.captions[0]?.url
+      if (!c) continue
+      const cd = await fetch(c, { signal: AbortSignal.timeout(5000) })
+      const vtt = await cd.text()
+      const segments = parseVTT(vtt)
+      sendResponse({ success: true, data: segments })
+      return
+    } catch (e) {
+      continue
+    }
+  }
+  sendResponse({ success: false, error: 'All Invidious instances failed' })
+}
+
+/**
+ * Get Invidious instances
+ */
+async function getInvidiousInstances() {
+  try {
+    const r = await fetch('https://api.invidious.io/instances.json?sort_by=type,users', {
+      signal: AbortSignal.timeout(3000),
+    })
+    if (!r.ok) throw new Error('Failed to fetch instances')
+    const d = await r.json()
+    const instances = d
+      .filter((x) => x[1]?.type === 'https' && x[1]?.api !== false && x[1]?.monitor?.down === false)
+      .slice(0, 10)
+      .map((x) => x[1]?.uri || `https://${x[0]}`)
+    return instances.length > 0 ? instances : ['https://inv.nadeko.net', 'https://yewtu.be']
+  } catch (e) {
+    return ['https://inv.nadeko.net', 'https://yewtu.be']
+  }
+}
+
+/**
+ * Parse VTT format
+ */
+function parseVTT(v) {
+  const s = [],
+    l = v.split('\n')
+  let i = 0
+  while (i < l.length) {
+    const ln = l[i].trim()
+    if (ln.includes('-->')) {
+      const [st, en] = ln.split('-->').map((t) => parseVTTTime(t.trim()))
+      i++
+      let txt = ''
+      while (i < l.length && l[i].trim() !== '') {
+        txt += l[i].trim() + ' '
+        i++
+      }
+      if (txt.trim())
+        s.push({ start: st, duration: en - st, text: txt.trim().replace(/<[^>]+>/g, '') })
+    }
+    i++
+  }
+  return s
+}
+
+function parseVTTTime(t) {
+  const p = t.split(':')
+  if (p.length === 3) {
+    const [h, m, s] = p
+    return parseFloat(h) * 3600 + parseFloat(m) * 60 + parseFloat(s)
+  }
+  const [m, s] = p
+  return parseFloat(m) * 60 + parseFloat(s)
 }
 
 // Keep service worker alive

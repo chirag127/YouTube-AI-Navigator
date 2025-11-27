@@ -1,184 +1,59 @@
-/**
- * Transcript extraction service with 4 fallback methods
- */
-
 import { decodeHTML } from '../utils/dom.js'
-
 export class TranscriptService {
-    constructor() {
-        this.invidiousInstances = []
-        this.instancesFetched = false
-        this.fallbackInstances = [
-            'https://invidious.fdn.fr',
-            'https://inv.nadeko.net',
-            'https://invidious.privacyredirect.com'
-        ]
-    }
-
-    async _getInstances() {
-        if (this.instancesFetched && this.invidiousInstances.length > 0) return this.invidiousInstances
-        try {
-            const r = await fetch('https://api.invidious.io/instances.json?sort_by=type,users', { signal: AbortSignal.timeout(3000) })
-            if (!r.ok) throw new Error('Failed to fetch instances')
-            const data = await r.json()
-            this.invidiousInstances = data
-                .filter(x => x[1]?.type === 'https' && x[1]?.api === true && x[1]?.monitor?.statusClass === 'success')
-                .slice(0, 10)
-                .map(x => `https://${x[0]}`)
-            this.instancesFetched = true
-            if (this.invidiousInstances.length === 0) this.invidiousInstances = this.fallbackInstances
-        } catch (e) {
-            this.invidiousInstances = this.fallbackInstances
-        }
-        return this.invidiousInstances
-    }
-
-    /**
-     * Get transcript with fallback methods
-     * @param {string} videoId - YouTube video ID
-     * @param {string} lang - Language code
-     * @returns {Promise<Array>} Transcript segments
-     */
-    async getTranscript(videoId, lang = 'en') {
-        const methods = [
-            () => this._method1_YouTubeAPI(videoId, lang),
-            () => this._method2_InvidiousAPI(videoId, lang),
-            () => this._method3_BackgroundProxy(videoId, lang),
-            () => this._method4_DOMParse()
-        ]
-
-        for (let i = 0; i < methods.length; i++) {
+    async getTranscript(v, l = 'en') {
+        const m = [() => this._method1_YouTubeAPI(v, l), () => this._method2_InvidiousAPI(v, l), () => this._method3_BackgroundProxy(v, l), () => this._method4_DOMParse()]
+        for (let i = 0; i < m.length; i++) {
             try {
                 console.log(`Transcript method ${i + 1}...`)
-                const result = await methods[i]()
-                if (result?.length > 0) {
-                    console.log(`✓ Method ${i + 1} succeeded`)
-                    return result
-                }
-            } catch (e) {
-                console.warn(`Method ${i + 1} failed:`, e.message)
-            }
+                const r = await m[i]()
+                if (r?.length > 0) { console.log(`✓ Method ${i + 1} succeeded`); return r }
+            } catch (e) { console.warn(`Method ${i + 1} failed:`, e.message) }
         }
-
         throw new Error('All transcript methods failed')
     }
-
-    /**
-     * Get video metadata
-     */
-    async getMetadata(videoId) {
-        try {
-            // Try Invidious first (faster)
-            for (const instance of this.invidiousInstances) {
-                try {
-                    const url = `${instance}/api/v1/videos/${videoId}`
-                    const response = await fetch(url, { signal: AbortSignal.timeout(5000) })
-                    if (!response.ok) continue
-
-                    const data = await response.json()
-                    return {
-                        title: data.title,
-                        duration: data.lengthSeconds,
-                        author: data.author,
-                        viewCount: data.viewCount
-                    }
-                } catch (e) {
-                    continue
-                }
-            }
-        } catch (e) {
-            console.warn('Invidious metadata failed, trying DOM')
-        }
-
-        // Fallback to DOM
+    async getMetadata(v) {
         if (window.ytInitialPlayerResponse) {
-            const details = window.ytInitialPlayerResponse.videoDetails
-            return {
-                title: details.title,
-                duration: parseInt(details.lengthSeconds, 10),
-                author: details.author,
-                viewCount: details.viewCount
-            }
+            const d = window.ytInitialPlayerResponse.videoDetails
+            return { title: d.title, duration: parseInt(d.lengthSeconds, 10), author: d.author, viewCount: d.viewCount }
         }
-
+        try {
+            const r = await chrome.runtime.sendMessage({ action: 'GET_METADATA', videoId: v })
+            if (r.success) return r.data
+        } catch (e) { }
         throw new Error('Failed to get metadata')
     }
-
-    async _method1_YouTubeAPI(videoId, lang) {
-        const url = `https://www.youtube.com/api/timedtext?v=${videoId}&lang=${lang}&fmt=json3`
-        const response = await fetch(url)
-        if (!response.ok) throw new Error('YouTube API failed')
-
-        const data = await response.json()
-        if (!data.events) throw new Error('No transcript data')
-
-        return data.events
-            .filter(e => e.segs)
-            .map(e => ({
-                start: e.tStartMs / 1000,
-                duration: (e.dDurationMs || 0) / 1000,
-                text: e.segs.map(s => s.utf8).join('')
-            }))
+    async _method1_YouTubeAPI(v, l) {
+        const u = `https://www.youtube.com/api/timedtext?v=${v}&lang=${l}&fmt=json3`, r = await fetch(u)
+        if (!r.ok) throw new Error('YouTube API failed')
+        const d = await r.json()
+        if (!d.events) throw new Error('No transcript data')
+        return d.events.filter(e => e.segs).map(e => ({ start: e.tStartMs / 1000, duration: (e.dDurationMs || 0) / 1000, text: e.segs.map(s => s.utf8).join('') }))
     }
-
-    async _method2_InvidiousAPI(videoId, lang) {
-        for (const instance of this.invidiousInstances) {
-            try {
-                const url = `${instance}/api/v1/captions/${videoId}?label=${lang}`
-                const response = await fetch(url, { signal: AbortSignal.timeout(5000) })
-                if (!response.ok) continue
-
-                const data = await response.json()
-                if (!data.captions?.length) continue
-
-                return data.captions.map(c => ({
-                    start: c.start,
-                    duration: c.duration,
-                    text: c.text
-                }))
-            } catch (e) {
-                continue
-            }
-        }
-        throw new Error('All Invidious instances failed')
+    async _method2_InvidiousAPI(v, l) {
+        try {
+            const r = await chrome.runtime.sendMessage({ action: 'FETCH_INVIDIOUS_TRANSCRIPT', videoId: v, lang: l })
+            if (r.success) return r.data
+            throw new Error(r.error || 'Invidious failed')
+        } catch (e) { throw new Error('Invidious API failed') }
     }
-
-    async _method3_BackgroundProxy(videoId, lang) {
-        const response = await chrome.runtime.sendMessage({
-            action: 'FETCH_TRANSCRIPT',
-            videoId,
-            lang
-        })
-        if (!response.success) throw new Error(response.error)
-        return response.data.segments
+    async _method3_BackgroundProxy(v, l) {
+        const r = await chrome.runtime.sendMessage({ action: 'FETCH_TRANSCRIPT', videoId: v, lang: l })
+        if (!r.success) throw new Error(r.error)
+        return r.data.segments
     }
-
     async _method4_DOMParse() {
         if (window.ytInitialPlayerResponse) {
-            const tracks = window.ytInitialPlayerResponse?.captions?.playerCaptionsTracklistRenderer?.captionTracks
-            if (tracks?.length > 0) {
-                const track = tracks[0]
-                const response = await fetch(track.baseUrl)
-                const xml = await response.text()
-                return this._parseXML(xml)
+            const t = window.ytInitialPlayerResponse?.captions?.playerCaptionsTracklistRenderer?.captionTracks
+            if (t?.length > 0) {
+                const tr = t[0], r = await fetch(tr.baseUrl), x = await r.text()
+                return this._parseXML(x)
             }
         }
         throw new Error('DOM parse failed')
     }
-
-    _parseXML(xml) {
-        const segments = []
-        const regex = /<text start="([\d.]+)" dur="([\d.]+)">([^<]+)<\/text>/g
-        let match
-
-        while ((match = regex.exec(xml)) !== null) {
-            segments.push({
-                start: parseFloat(match[1]),
-                duration: parseFloat(match[2]),
-                text: decodeHTML(match[3])
-            })
-        }
-
-        return segments
+    _parseXML(x) {
+        const s = [], re = /<text start="([\d.]+)" dur="([\d.]+)">([^<]+)<\/text>/g; let m
+        while ((m = re.exec(x)) !== null) s.push({ start: parseFloat(m[1]), duration: parseFloat(m[2]), text: decodeHTML(m[3]) })
+        return s
     }
 }
