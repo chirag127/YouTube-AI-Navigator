@@ -1,46 +1,19 @@
 // Invidious API Strategy
-// Priority: 3 (Fallback - CORS-free, but less reliable than direct YouTube API)
-
-import { parseVTT } from '../parsers/vtt-parser.js'
-
-const INSTANCES = [
-    'https://inv.perditum.com',
-    'https://invidious.privacyredirect.com',
-    'https://invidious.fdn.fr',
-    'https://iv.ggtyler.dev',
-    'https://invidious.protokolla.fi'
-]
+// Priority: 3 (Fallback - Uses background script to bypass CORS)
 
 export async function fetchViaInvidious(videoId, lang = 'en') {
-    for (const instance of INSTANCES) {
-        try {
-            const videoUrl = `${instance}/api/v1/videos/${videoId}`
-            const res = await fetch(videoUrl, { signal: AbortSignal.timeout(8000) })
+    // Route through background script to bypass CORS
+    const response = await chrome.runtime.sendMessage({
+        action: 'FETCH_INVIDIOUS_TRANSCRIPT',
+        videoId,
+        lang
+    });
 
-            if (!res.ok) continue
-
-            const data = await res.json()
-
-            if (!data.captions?.length) {
-                throw new Error('No captions available')
-            }
-
-            let track = data.captions.find(c => c.language_code === lang)
-            if (!track) track = data.captions[0]
-
-            const captionUrl = track.url.startsWith('http') ? track.url : `${instance}${track.url}`
-            const captionRes = await fetch(captionUrl, { signal: AbortSignal.timeout(10000) })
-
-            if (!captionRes.ok) continue
-
-            const captionText = await captionRes.text()
-            return parseVTT(captionText)
-        } catch (e) {
-            continue
-        }
+    if (!response.success || !response.data) {
+        throw new Error(response.error || 'Invidious API failed');
     }
 
-    throw new Error('All Invidious instances failed')
+    return response.data;
 }
 
 export const strategy = {

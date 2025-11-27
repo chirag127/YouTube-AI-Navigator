@@ -90,8 +90,40 @@ class YouTubeExtractor {
     }
 
     getInitialData() {
+        // Try to get from window first
+        let playerResponse = window.ytInitialPlayerResponse;
+
+        // If not available, try to get from ytd-app element (Polymer data binding)
+        if (!playerResponse) {
+            try {
+                const app = document.querySelector('ytd-app');
+                playerResponse = app?.data?.playerResponse || app?.__data?.playerResponse;
+            } catch (e) { /* ignore */ }
+        }
+
+        // If still not available, try to scrape from script tags
+        if (!playerResponse) {
+            try {
+                for (const script of document.querySelectorAll('script')) {
+                    const text = script.textContent || '';
+                    const match = text.match(/ytInitialPlayerResponse\s*=\s*({.+?});/s);
+                    if (match) {
+                        playerResponse = JSON.parse(match[1]);
+                        break;
+                    }
+                }
+            } catch (e) { /* ignore */ }
+        }
+
+        // Try to get from ytplayer.config
+        if (!playerResponse && window.ytplayer?.config?.args?.player_response) {
+            try {
+                playerResponse = JSON.parse(window.ytplayer.config.args.player_response);
+            } catch (e) { /* ignore */ }
+        }
+
         return {
-            playerResponse: window.ytInitialPlayerResponse,
+            playerResponse: playerResponse,
             initialData: window.ytInitialData,
             cfg: window.ytcfg?.data_,
         };
