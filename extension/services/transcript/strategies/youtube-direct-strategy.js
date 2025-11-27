@@ -21,6 +21,18 @@ function buildTimedTextUrl(videoId, lang = "en", fmt = "json3") {
         hl: lang,
         ip: "0.0.0.0",
         ipbits: "0",
+        // Client parameters from user request
+        cbr: "Chrome",
+        cbrver: "142.0.0.0",
+        c: "WEB",
+        cver: "2.20251125.06.00",
+        cplayer: "UNIPLAYER",
+        cos: "Windows",
+        cosver: "10.0",
+        cplatform: "DESKTOP",
+        xorb: "2",
+        xobt: "3",
+        xovt: "3",
     });
 
     return `https://www.youtube.com/api/timedtext?${params.toString()}`;
@@ -56,17 +68,23 @@ async function getCaptionTracksFromMainWorld() {
 function extractCaptionTracksFromDOM() {
     try {
         // Look for ytInitialPlayerResponse in script tags
-        for (const script of document.querySelectorAll('script')) {
-            const text = script.textContent || '';
+        for (const script of document.querySelectorAll("script")) {
+            const text = script.textContent || "";
 
             // Try to find ytInitialPlayerResponse
             const match = text.match(/ytInitialPlayerResponse\s*=\s*({.+?});/s);
             if (match) {
                 try {
                     const data = JSON.parse(match[1]);
-                    if (data?.captions?.playerCaptionsTracklistRenderer?.captionTracks) {
-                        console.log("[YouTube Direct] Found caption tracks in script tag");
-                        return data.captions.playerCaptionsTracklistRenderer.captionTracks;
+                    if (
+                        data?.captions?.playerCaptionsTracklistRenderer
+                            ?.captionTracks
+                    ) {
+                        console.log(
+                            "[YouTube Direct] Found caption tracks in script tag"
+                        );
+                        return data.captions.playerCaptionsTracklistRenderer
+                            .captionTracks;
                     }
                 } catch (e) {
                     continue;
@@ -79,7 +97,9 @@ function extractCaptionTracksFromDOM() {
                 try {
                     const tracks = JSON.parse(captionMatch[1]);
                     if (tracks?.length) {
-                        console.log("[YouTube Direct] Found caption tracks via regex");
+                        console.log(
+                            "[YouTube Direct] Found caption tracks via regex"
+                        );
                         return tracks;
                     }
                 } catch (e) {
@@ -103,7 +123,7 @@ async function fetchFromTrack(track) {
     console.log("[YouTube Direct] Fetching from track:", track.languageCode);
 
     // Try different formats - json3 first, then XML formats
-    const formats = ['json3', 'srv3', 'srv1', ''];
+    const formats = ["json3", "srv3", "srv1", ""];
 
     for (const fmt of formats) {
         try {
@@ -111,42 +131,76 @@ async function fetchFromTrack(track) {
 
             // Add or replace fmt parameter
             if (fmt) {
-                if (url.includes('fmt=')) {
+                if (url.includes("fmt=")) {
                     url = url.replace(/fmt=[^&]*/, `fmt=${fmt}`);
                 } else {
                     url += `&fmt=${fmt}`;
                 }
             }
 
-            console.log(`[YouTube Direct] Trying format '${fmt || 'default'}'`);
+            // Append client parameters if missing
+            const extraParams = {
+                cbr: "Chrome",
+                cbrver: "142.0.0.0",
+                c: "WEB",
+                cver: "2.20251125.06.00",
+                cplayer: "UNIPLAYER",
+                cos: "Windows",
+                cosver: "10.0",
+                cplatform: "DESKTOP",
+                xorb: "2",
+                xobt: "3",
+                xovt: "3",
+            };
+
+            for (const [key, value] of Object.entries(extraParams)) {
+                if (!url.includes(`${key}=`)) {
+                    url += `&${key}=${value}`;
+                }
+            }
+
+            console.log(`[YouTube Direct] Trying format '${fmt || "default"}'`);
 
             const res = await fetch(url, {
-                method: 'GET',
-                credentials: 'include',
+                method: "GET",
+                credentials: "include",
             });
 
             if (!res.ok) {
-                console.warn(`[YouTube Direct] Format '${fmt}' HTTP error:`, res.status);
+                console.warn(
+                    `[YouTube Direct] Format '${fmt}' HTTP error:`,
+                    res.status
+                );
                 continue;
             }
 
             const text = await res.text();
-            console.log(`[YouTube Direct] Format '${fmt}' response length:`, text.length);
+            console.log(
+                `[YouTube Direct] Format '${fmt}' response length:`,
+                text.length
+            );
 
             if (!text || text.length === 0) continue;
-            if (text.trim().startsWith('<!') || text.trim().startsWith('<html')) continue;
+            if (text.trim().startsWith("<!") || text.trim().startsWith("<html"))
+                continue;
 
             let segments = [];
 
             // Try JSON parsing for json3 format
-            if (fmt === 'json3') {
+            if (fmt === "json3") {
                 try {
                     const data = JSON.parse(text);
                     segments = parseJSON3(data);
                 } catch (e) {
-                    console.warn(`[YouTube Direct] JSON parse failed for '${fmt}':`, e.message);
+                    console.warn(
+                        `[YouTube Direct] JSON parse failed for '${fmt}':`,
+                        e.message
+                    );
                     // Try XML parsing as fallback
-                    if (text.includes('<text') || text.includes('<transcript')) {
+                    if (
+                        text.includes("<text") ||
+                        text.includes("<transcript")
+                    ) {
                         segments = parseXML(text);
                     }
                 }
@@ -156,7 +210,10 @@ async function fetchFromTrack(track) {
             }
 
             if (segments?.length) {
-                console.log(`[YouTube Direct] ✅ Got ${segments.length} segments from format '${fmt || 'default'}'`);
+                console.log(
+                    `[YouTube Direct] ✅ Got ${segments.length
+                    } segments from format '${fmt || "default"}'`
+                );
                 return segments;
             }
         } catch (e) {
@@ -174,31 +231,55 @@ function findBestTrack(tracks, lang) {
     if (!tracks?.length) return null;
 
     // Priority: exact match > starts with lang > first available
-    let track = tracks.find(t => t.languageCode === lang);
-    if (!track) track = tracks.find(t => t.languageCode?.startsWith(lang.split('-')[0]));
+    let track = tracks.find((t) => t.languageCode === lang);
+    if (!track)
+        track = tracks.find((t) =>
+            t.languageCode?.startsWith(lang.split("-")[0])
+        );
     if (!track) track = tracks[0];
 
     return track;
 }
 
 export async function fetchViaYouTubeDirect(videoId, lang = "en") {
-    console.log(`[YouTube Direct] Starting extraction for ${videoId}, lang: ${lang}`);
+    console.log(
+        `[YouTube Direct] Starting extraction for ${videoId}, lang: ${lang}`
+    );
 
     // Strategy 1: Get data from Main World via postMessage
     try {
         console.log("[YouTube Direct] Trying Main World postMessage...");
         const initialData = await getCaptionTracksFromMainWorld();
 
-        if (initialData?.playerResponse?.captions?.playerCaptionsTracklistRenderer?.captionTracks) {
-            const tracks = initialData.playerResponse.captions.playerCaptionsTracklistRenderer.captionTracks;
-            console.log(`[YouTube Direct] Found ${tracks.length} tracks from Main World`);
+        if (
+            initialData?.playerResponse?.captions
+                ?.playerCaptionsTracklistRenderer?.captionTracks
+        ) {
+            const tracks =
+                initialData.playerResponse.captions
+                    .playerCaptionsTracklistRenderer.captionTracks;
+            console.log(
+                `[YouTube Direct] Found ${tracks.length} tracks from Main World`
+            );
 
             const track = findBestTrack(tracks, lang);
-            const segments = await fetchFromTrack(track);
-            if (segments) return segments;
+            if (track) {
+                console.log(
+                    `[YouTube Direct] Selected track: ${track.languageCode}, baseUrl: ${track.baseUrl}`
+                );
+                const segments = await fetchFromTrack(track);
+                if (segments) return segments;
+            }
+        } else {
+            console.log(
+                "[YouTube Direct] No caption tracks found in Main World data"
+            );
         }
     } catch (e) {
-        console.warn("[YouTube Direct] Main World postMessage failed:", e.message);
+        console.warn(
+            "[YouTube Direct] Main World postMessage failed:",
+            e.message
+        );
     }
 
     // Strategy 2: Extract caption tracks from DOM script tags
@@ -207,7 +288,9 @@ export async function fetchViaYouTubeDirect(videoId, lang = "en") {
         const tracks = extractCaptionTracksFromDOM();
 
         if (tracks?.length) {
-            console.log(`[YouTube Direct] Found ${tracks.length} tracks from DOM`);
+            console.log(
+                `[YouTube Direct] Found ${tracks.length} tracks from DOM`
+            );
             const track = findBestTrack(tracks, lang);
             const segments = await fetchFromTrack(track);
             if (segments) return segments;
@@ -218,11 +301,20 @@ export async function fetchViaYouTubeDirect(videoId, lang = "en") {
 
     // Strategy 3: Try window.ytInitialPlayerResponse directly (works in Main World)
     try {
-        console.log("[YouTube Direct] Trying window.ytInitialPlayerResponse...");
+        console.log(
+            "[YouTube Direct] Trying window.ytInitialPlayerResponse..."
+        );
         const playerResponse = window.ytInitialPlayerResponse;
-        if (playerResponse?.captions?.playerCaptionsTracklistRenderer?.captionTracks) {
-            const tracks = playerResponse.captions.playerCaptionsTracklistRenderer.captionTracks;
-            console.log(`[YouTube Direct] Found ${tracks.length} tracks from window`);
+        if (
+            playerResponse?.captions?.playerCaptionsTracklistRenderer
+                ?.captionTracks
+        ) {
+            const tracks =
+                playerResponse.captions.playerCaptionsTracklistRenderer
+                    .captionTracks;
+            console.log(
+                `[YouTube Direct] Found ${tracks.length} tracks from window`
+            );
 
             const track = findBestTrack(tracks, lang);
             const segments = await fetchFromTrack(track);
@@ -270,74 +362,24 @@ export async function fetchViaYouTubeDirect(videoId, lang = "en") {
 
             // Validate response is not empty
             if (!text || text.trim().length === 0) {
-                throw new Error("Empty response from YouTube API");
+                throw new Error("Empty response");
             }
 
-            // Try to parse JSON
-            let data;
-            try {
-                data = JSON.parse(text);
-            } catch (parseError) {
-                console.warn(
-                    "[YouTube Direct] JSON parse error:",
-                    parseError.message
-                );
-                console.warn(
-                    "[YouTube Direct] Response preview:",
-                    text.substring(0, 500)
-                );
-                console.warn(
-                    "[YouTube Direct] Response end:",
-                    text.substring(text.length - 100)
-                );
-                throw new Error(`Invalid JSON response: ${parseError.message}`);
-            }
-
+            // Parse JSON3 format
+            const data = JSON.parse(text);
             const segments = parseJSON3(data);
             if (segments.length) {
                 console.log(
-                    `[YouTube Direct] ✅ JSON3 format: ${segments.length} segments`
+                    `[YouTube Direct] ✅ Got ${segments.length} segments from JSON3 fallback`
                 );
                 return segments;
-            } else {
-                console.warn(
-                    "[YouTube Direct] JSON3 parsed but returned 0 segments"
-                );
             }
-        } else {
-            console.warn(
-                "[YouTube Direct] HTTP error:",
-                res.status,
-                res.statusText
-            );
         }
     } catch (e) {
-        console.warn("[YouTube Direct] JSON3 failed:", e.message, e.stack);
+        console.warn("[YouTube Direct] JSON3 fallback failed:", e.message);
     }
 
-    // Fallback to XML formats
-    const xmlFormats = ["srv3", "srv2", "srv1"];
-    for (const fmt of xmlFormats) {
-        try {
-            const url = buildTimedTextUrl(videoId, lang, fmt);
-            const res = await fetch(url);
-
-            if (res.ok) {
-                const xmlText = await res.text();
-                const segments = parseXML(xmlText);
-                if (segments.length) {
-                    console.log(
-                        `[YouTube Direct] ✅ ${fmt} format: ${segments.length} segments`
-                    );
-                    return segments;
-                }
-            }
-        } catch (e) {
-            continue;
-        }
-    }
-
-    throw new Error("YouTube Direct API failed for all formats");
+    return null;
 }
 
 export const strategy = {
