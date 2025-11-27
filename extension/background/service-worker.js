@@ -38,7 +38,7 @@ chrome.runtime.onInstalled.addListener((details) => {
 })
 
 // Message handler for communication between content scripts and background
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
   const action = request.action || request.type
   console.log('Background received message:', action)
 
@@ -88,6 +88,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
           case 'FETCH_INVIDIOUS_TRANSCRIPT':
             await handleFetchInvidiousTranscript(request, sendResponse)
+            break
+
+          case 'FETCH_INVIDIOUS_METADATA':
+            await handleFetchInvidiousMetadata(request, sendResponse)
             break
 
           default:
@@ -155,9 +159,7 @@ async function handleAnalyzeVideo(request, sendResponse) {
 
   await initializeServices(apiKey)
 
-  // Format transcript for AI
-  const formattedTranscript = transcript.map((t) => `[${t.start.toFixed(1)}] ${t.text}`).join('\n')
-
+  // Format transcript for AI (plain text for analysis)
   const plainText = transcript.map((t) => t.text).join(' ')
 
   // Generate comprehensive analysis (summary + FAQ + insights)
@@ -302,111 +304,335 @@ async function handleSaveToHistory(request, sendResponse) {
 }
 
 /**
- * Get metadata from Invidious (CORS-free)
+ * Get metadata - now handled by content script
+ * This is kept for backward compatibility but shouldn't be called
  */
 async function handleGetMetadata(request, sendResponse) {
   const { videoId } = request
-  const instances = await getInvidiousInstances()
+  console.warn('[Background] GET_METADATA called - this should be handled by content script')
 
-  for (const inst of instances) {
-    try {
-      const url = `${inst}/api/v1/videos/${videoId}`
-      const r = await fetch(url, { signal: AbortSignal.timeout(5000) })
-      if (!r.ok) continue
-      const d = await r.json()
-      sendResponse({
-        success: true,
-        data: { title: d.title, duration: d.lengthSeconds, author: d.author, viewCount: d.viewCount },
-      })
-      return
-    } catch (e) {
-      continue
+  // Return a basic response to prevent errors
+  sendResponse({
+    success: true,
+    data: {
+      title: 'YouTube Video',
+      author: 'Unknown Channel',
+      viewCount: 'Unknown',
+      videoId: videoId
     }
-  }
-  sendResponse({ success: false, error: 'Failed to get metadata from Invidious' })
+  })
 }
 
 /**
- * Fetch transcript from Invidious (CORS-free)
+ * Fetch transcript from Invidious API (CORS-free)
  */
 async function handleFetchInvidiousTranscript(request, sendResponse) {
-  const { videoId, lang } = request
-  const instances = await getInvidiousInstances()
+  const { videoId, lang = 'en' } = request
+  console.log(`[Invidious] 🔍 Fetching transcript for ${videoId}, lang: ${lang}`)
 
-  for (const inst of instances) {
+  const instances = await getInvidiousInstances()
+  console.log(`[Invidious] 📡 Testing ${instances.length} instances`)
+
+  let lastError = null
+
+  for (let i = 0; i < instances.length; i++) {
+    const inst = instances[i]
     try {
-      const url = `${inst}/api/v1/captions/${videoId}?lang=${lang}`
-      const r = await fetch(url, { signal: AbortSignal.timeout(5000) })
-      if (!r.ok) continue
-      const d = await r.json()
-      if (!d.captions?.length) continue
-      const c = d.captions.find((x) => x.languageCode === lang || x.label.includes(lang))?.url || d.captions[0]?.url
-      if (!c) continue
-      const cd = await fetch(c, { signal: AbortSignal.timeout(5000) })
-      const vtt = await cd.text()
-      const segments = parseVTT(vtt)
+      console.log(`[Invidious] 🔄 Trying instance ${i + 1}/${instances.length}: ${inst}`)
+
+      // First, get video data to find captions
+      const videoUrl = `${inst}/api/v1/videos/${videoId}`
+      console.log(`[Invidious] 📥 Fetching video data: ${videoUrl}`)
+
+      const videoResponse = await fetch(videoUrl, {
+        signal: AbortSignal.timeout(8000)
+      })
+
+      if (!videoResponse.ok) {
+        console.warn(`[Invidious] ⚠️ Instance ${inst} returned HTTP ${videoResponse.status}`)
+        continue
+      }
+
+      const videoData = await videoResponse.json()
+      console.log(`[Invidious] 📊 Video data received:`, {
+        title: videoData.title,
+        captionsCount: videoData.captions?.length || 0
+      })
+
+      if (!videoData.captions || videoData.captions.length === 0) {
+        console.warn(`[Invidious] ⚠️ No captions available for this video`)
+        lastError = new Error('No captions available')
+        continue
+      }
+
+      // Find caption track
+      let captionTrack = videoData.captions.find(c => c.language_code === lang)
+      if (!captionTrack) {
+        console.log(`[Invidious] 🔄 Language '${lang}' not found, using first available: ${videoData.captions[0].language_code}`)
+        captionTrack = videoData.captions[0]
+      }
+
+      console.log(`[Invidious] 📝 Selected caption:`, {
+        label: captionTrack.label,
+        languageCode: captionTrack.language_code,
+        url: captionTrack.url
+      })
+
+      // Fetch caption data
+      const captionResponse = await fetch(captionTrack.url, {
+        signal: AbortSignal.timeout(8000)
+      })
+
+      if (!captionResponse.ok) {
+        console.warn(`[Invidious] ⚠️ Caption fetch failed: HTTP ${captionResponse.status}`)
+        continue
+      }
+
+      const captionText = await captionResponse.text()
+      console.log(`[Invidious] 📄 Caption data received: ${captionText.length} bytes`)
+
+      // Parse captions
+      const segments = parseVTT(captionText)
+      console.log(`[Invidious] ✅ Successfully parsed ${segments.length} segments`)
+
       sendResponse({ success: true, data: segments })
       return
     } catch (e) {
+      lastError = e
+      console.error(`[Invidious] ❌ Instance ${inst} failed:`, e.message)
       continue
     }
   }
-  sendResponse({ success: false, error: 'All Invidious instances failed' })
+
+  console.error(`[Invidious] ❌ All instances failed. Last error:`, lastError?.message)
+  sendResponse({
+    success: false,
+    error: lastError?.message || 'All Invidious instances failed'
+  })
 }
 
 /**
- * Get Invidious instances
+ * Fetch metadata from Invidious API
  */
+async function handleFetchInvidiousMetadata(request, sendResponse) {
+  const { videoId } = request
+  console.log(`[Invidious] 🔍 Fetching metadata for ${videoId}`)
+
+  const instances = await getInvidiousInstances()
+
+  for (let i = 0; i < instances.length; i++) {
+    const inst = instances[i]
+    try {
+      console.log(`[Invidious] 🔄 Trying instance ${i + 1}/${instances.length}: ${inst}`)
+
+      const url = `${inst}/api/v1/videos/${videoId}`
+      const response = await fetch(url, {
+        signal: AbortSignal.timeout(8000)
+      })
+
+      if (!response.ok) {
+        console.warn(`[Invidious] ⚠️ Instance ${inst} returned HTTP ${response.status}`)
+        continue
+      }
+
+      const data = await response.json()
+
+      const metadata = {
+        videoId: data.videoId,
+        title: data.title,
+        author: data.author,
+        authorId: data.authorId,
+        lengthSeconds: data.lengthSeconds,
+        duration: data.lengthSeconds,
+        viewCount: data.viewCount,
+        likeCount: data.likeCount,
+        published: data.published,
+        description: data.description,
+        keywords: data.keywords || [],
+        genre: data.genre,
+        captionsAvailable: (data.captions?.length || 0) > 0,
+        availableLanguages: data.captions?.map(c => c.language_code) || []
+      }
+
+      console.log(`[Invidious] ✅ Metadata fetched successfully:`, {
+        title: metadata.title,
+        author: metadata.author,
+        captionsAvailable: metadata.captionsAvailable
+      })
+
+      sendResponse({ success: true, data: metadata })
+      return
+    } catch (e) {
+      console.error(`[Invidious] ❌ Instance ${inst} failed:`, e.message)
+      continue
+    }
+  }
+
+  console.error(`[Invidious] ❌ All instances failed for metadata`)
+  sendResponse({
+    success: false,
+    error: 'Failed to fetch metadata from Invidious'
+  })
+}
+
+/**
+ * Get Invidious instances (with caching)
+ */
+let cachedInstances = null
+let instancesCacheTime = 0
+const INSTANCES_CACHE_DURATION = 5 * 60 * 1000 // 5 minutes
+
 async function getInvidiousInstances() {
+  const now = Date.now()
+
+  // Return cached instances if still valid
+  if (cachedInstances && (now - instancesCacheTime) < INSTANCES_CACHE_DURATION) {
+    console.log(`[Invidious] 📦 Using cached instances (${cachedInstances.length} instances)`)
+    return cachedInstances
+  }
+
+  console.log(`[Invidious] 🔍 Fetching fresh instance list from live API...`)
+
+  // Hardcoded fallback instances (reliable ones based on live API data)
+  const fallbackInstances = [
+    'https://inv.nadeko.net',
+    'https://invidious.nerdvpn.de',
+    'https://invidious.f5.si',
+    'https://inv.perditum.com',
+    'https://yewtu.be'
+  ]
+
   try {
     const r = await fetch('https://api.invidious.io/instances.json?sort_by=type,users', {
-      signal: AbortSignal.timeout(3000),
+      signal: AbortSignal.timeout(8000),
     })
-    if (!r.ok) throw new Error('Failed to fetch instances')
-    const d = await r.json()
-    const instances = d
-      .filter((x) => x[1]?.type === 'https' && x[1]?.api !== false && x[1]?.monitor?.down === false)
-      .slice(0, 10)
-      .map((x) => x[1]?.uri || `https://${x[0]}`)
-    return instances.length > 0 ? instances : ['https://inv.nadeko.net', 'https://yewtu.be']
+
+    if (!r.ok) {
+      console.warn(`[Invidious] ⚠️ Instance API returned HTTP ${r.status}, using fallback`)
+      cachedInstances = fallbackInstances
+      instancesCacheTime = now
+      return fallbackInstances
+    }
+
+    const data = await r.json()
+    console.log(`[Invidious] 📊 Received ${data.length} total instances from API`)
+
+    // Filter for working HTTPS instances with API enabled and not down
+    const instances = data
+      .filter((entry) => {
+        const [_domain, info] = entry
+
+        // Must be HTTPS
+        if (info?.type !== 'https') return false
+
+        // API must not be explicitly disabled (api: false means disabled)
+        // If api is null or undefined, we assume it's enabled
+        if (info?.api === false) return false
+
+        // Must not be marked as down
+        if (info?.monitor?.down === true) return false
+
+        // Must have a valid URI
+        if (!info?.uri) return false
+
+        return true
+      })
+      .sort((a, b) => {
+        // Sort by uptime (higher is better)
+        const uptimeA = a[1]?.monitor?.uptime || 0
+        const uptimeB = b[1]?.monitor?.uptime || 0
+        return uptimeB - uptimeA
+      })
+      .slice(0, 15) // Take top 15 instances
+      .map((entry) => entry[1].uri)
+
+    if (instances.length > 0) {
+      console.log(`[Invidious] ✅ Fetched ${instances.length} active instances with API enabled`)
+      console.log(`[Invidious] 📋 Top instances:`, instances.slice(0, 5))
+      cachedInstances = instances
+      instancesCacheTime = now
+      return instances
+    } else {
+      console.warn(`[Invidious] ⚠️ No valid instances found in API response, using fallback`)
+      cachedInstances = fallbackInstances
+      instancesCacheTime = now
+      return fallbackInstances
+    }
   } catch (e) {
-    return ['https://inv.nadeko.net', 'https://yewtu.be']
+    console.error(`[Invidious] ❌ Failed to fetch instances from API:`, e.message)
+    cachedInstances = fallbackInstances
+    instancesCacheTime = now
+    return fallbackInstances
   }
 }
 
 /**
- * Parse VTT format
+ * Parse VTT format captions
  */
-function parseVTT(v) {
-  const s = [],
-    l = v.split('\n')
+function parseVTT(vttText) {
+  console.log(`[Parser] 🔍 Parsing VTT format (${vttText.length} bytes)`)
+
+  const segments = []
+  const lines = vttText.split('\n')
   let i = 0
-  while (i < l.length) {
-    const ln = l[i].trim()
-    if (ln.includes('-->')) {
-      const [st, en] = ln.split('-->').map((t) => parseVTTTime(t.trim()))
+  let segmentCount = 0
+
+  while (i < lines.length) {
+    const line = lines[i].trim()
+
+    // Look for timestamp line (e.g., "00:00:00.000 --> 00:00:02.000")
+    if (line.includes('-->')) {
+      const [startStr, endStr] = line.split('-->').map((t) => t.trim())
+      const start = parseVTTTime(startStr)
+      const end = parseVTTTime(endStr)
+
       i++
-      let txt = ''
-      while (i < l.length && l[i].trim() !== '') {
-        txt += l[i].trim() + ' '
+      let text = ''
+
+      // Collect text lines until empty line or next timestamp
+      while (i < lines.length && lines[i].trim() !== '' && !lines[i].includes('-->')) {
+        text += lines[i].trim() + ' '
         i++
       }
-      if (txt.trim())
-        s.push({ start: st, duration: en - st, text: txt.trim().replace(/<[^>]+>/g, '') })
+
+      // Clean up text (remove HTML tags, extra spaces)
+      text = text.trim().replace(/<[^>]+>/g, '').replace(/\s+/g, ' ')
+
+      if (text) {
+        segments.push({
+          start,
+          duration: end - start,
+          text
+        })
+        segmentCount++
+      }
     }
     i++
   }
-  return s
+
+  console.log(`[Parser] ✅ Parsed ${segmentCount} VTT segments`)
+  return segments
 }
 
-function parseVTTTime(t) {
-  const p = t.split(':')
-  if (p.length === 3) {
-    const [h, m, s] = p
+/**
+ * Parse VTT timestamp to seconds
+ * Supports: HH:MM:SS.mmm, MM:SS.mmm, SS.mmm
+ */
+function parseVTTTime(timestamp) {
+  const parts = timestamp.split(':')
+
+  if (parts.length === 3) {
+    // HH:MM:SS.mmm
+    const [h, m, s] = parts
     return parseFloat(h) * 3600 + parseFloat(m) * 60 + parseFloat(s)
+  } else if (parts.length === 2) {
+    // MM:SS.mmm
+    const [m, s] = parts
+    return parseFloat(m) * 60 + parseFloat(s)
+  } else {
+    // SS.mmm
+    return parseFloat(parts[0])
   }
-  const [m, s] = p
-  return parseFloat(m) * 60 + parseFloat(s)
 }
 
 // Keep service worker alive

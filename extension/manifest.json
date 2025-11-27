@@ -51,10 +51,12 @@
             "resources": [
                 "content/*.js",
                 "content/**/*.js",
+                "services/*.js",
+                "services/**/*.js",
+                "lib/*.js",
                 "sidepanel/sidepanel.html",
                 "sidepanel/sidepanel.css",
                 "sidepanel/sidepanel.js",
-                "lib/marked.min.js",
                 "assets/*"
             ],
             "matches": [

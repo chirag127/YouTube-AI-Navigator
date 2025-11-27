@@ -11,5 +11,8 @@ export class ModelManager {
         if (this.models.length > 0) this.selected = this.models[0].name.replace('models/', '')
         return this.models
     }
-    getList() { return this.models.length > 0 ? this.models.map(m => m.name.replace('models/', '')) : ['gemini-2.0-flash-exp', 'gemini-1.5-flash', 'gemini-1.5-pro'] }
+    getList() {
+        const fallbackModels = ['gemini-2.0-flash-exp', 'gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-2.5-flash-lite', 'gemini-2.5-pro'];
+        return this.models.length > 0 ? this.models.map(m => m.name.replace('models/', '')) : fallbackModels;
+    }
 }
