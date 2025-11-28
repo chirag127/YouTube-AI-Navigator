@@ -4,8 +4,7 @@ import { handleGetSettings } from "./handlers/settings.js";
 import { handleFetchTranscript } from "./handlers/fetch-transcript.js";
 import { handleAnalyzeVideo } from "./handlers/analyze-video.js";
 import { handleAnalyzeComments } from "./handlers/comments.js";
-import { handleGenerateSummary } from "./handlers/summary.js";
-import { handleClassifySegments } from "./handlers/segments.js";
+
 import { handleChatWithVideo } from "./handlers/chat.js";
 import { handleSaveToHistory } from "./handlers/history.js";
 import { handleGetMetadata } from "./handlers/metadata.js";
@@ -70,12 +69,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 case "ANALYZE_COMMENTS":
                     await handleAnalyzeComments(sanitized, sendResponse);
                     break;
-                case "GENERATE_SUMMARY":
-                    await handleGenerateSummary(sanitized, sendResponse);
-                    break;
-                case "CLASSIFY_SEGMENTS":
-                    await handleClassifySegments(sanitized, sendResponse);
-                    break;
+
                 case "CHAT_WITH_VIDEO":
                     await handleChatWithVideo(sanitized, sendResponse);
                     break;

@@ -34,10 +34,6 @@ export class GeminiService {
         return this.models.fetch();
     }
 
-    async generateSummary(transcript, model = null, options = {}) {
-        const prompt = prompts.summary(transcript, options);
-        return this.generateContent(prompt, model);
-    }
     async chatWithVideo(question, context, model = null, metadata = null) {
         return this.generateContent(
             prompts.chat(question, context, metadata),
@@ -59,84 +55,6 @@ export class GeminiService {
         );
         const prompt = prompts.comments(comments);
         return this.generateContent(prompt, model);
-    }
-
-    async generateFAQ(transcript, model = null, metadata = null) {
-        return this.generateContent(prompts.faq(transcript, metadata), model);
-    }
-
-    async extractSegments(context) {
-        try {
-            const response = await this.generateContent(
-                prompts.segments(context)
-            );
-            cl("[GeminiService] Raw segments response:", response);
-
-            let parsedData = null;
-
-            // Robust JSON extraction
-            const start = response.indexOf("{");
-            const end = response.lastIndexOf("}");
-
-            if (start !== -1 && end !== -1) {
-                const jsonStr = response.substring(start, end + 1);
-                try {
-                    parsedData = JSON.parse(jsonStr);
-                } catch (e) {
-                    cw("[GeminiService] JSON parse failed:", e);
-                }
-            }
-
-            // Fallback for markdown
-            if (!parsedData) {
-                const cleanResponse = response
-                    .replace(/```json/g, "")
-                    .replace(/```/g, "")
-                    .trim();
-                if (
-                    cleanResponse.startsWith("{") &&
-                    cleanResponse.endsWith("}")
-                ) {
-                    try {
-                        parsedData = JSON.parse(cleanResponse);
-                    } catch (e) { }
-                }
-            }
-
-            if (parsedData) {
-                const fullVideoLabelCode = parsedData.fullVideoLabel;
-                let segments = (parsedData.segments || []).map((p) => ({
-                    start: p.s ?? p.start,
-                    end: p.e ?? p.end,
-                    label: LABEL_MAPPING[p.l] || p.l || p.label,
-                    labelCode: p.l, // Keep original code
-                    title: p.t ?? p.title,
-                    description: p.d ?? p.description,
-                }));
-
-                // Safety: Remove segments that match the fullVideoLabel
-                if (fullVideoLabelCode) {
-                    segments = segments.filter(
-                        (s) => s.labelCode !== fullVideoLabelCode
-                    );
-                }
-
-                // Return object with segments and fullVideoLabel
-                return {
-                    segments,
-                    fullVideoLabel: fullVideoLabelCode
-                        ? LABEL_MAPPING[fullVideoLabelCode] ||
-                        fullVideoLabelCode
-                        : null,
-                    fullVideoLabelCode: fullVideoLabelCode,
-                };
-            }
-
-            return { segments: [], fullVideoLabel: null };
-        } catch (e) {
-            console.warn("[GeminiService] Segment extraction failed:", e);
-            return { segments: [], fullVideoLabel: null };
-        }
     }
 
     async generateComprehensiveAnalysis(context, options = {}) {
@@ -208,8 +126,9 @@ export class GeminiService {
             const modelName = modelList[i];
             try {
                 cl(
-                    `[GeminiService] Attempting model: ${modelName} (${i + 1
-                    }/${modelList.length})`
+                    `[GeminiService] Attempting model: ${modelName} (${i + 1}/${
+                        modelList.length
+                    })`
                 );
 
                 const result = await this.client.generateContent(
@@ -218,7 +137,9 @@ export class GeminiService {
                 );
 
                 if (i > 0) {
-                    cl(`[GeminiService] Fallback model succeeded: ${modelName}`);
+                    cl(
+                        `[GeminiService] Fallback model succeeded: ${modelName}`
+                    );
                 }
 
                 return result;
@@ -238,8 +159,9 @@ export class GeminiService {
             }
         }
 
-        const errorMsg = `All ${modelList.length} Gemini models failed. ${errors[0]?.error || "Unknown error"
-            }`;
+        const errorMsg = `All ${modelList.length} Gemini models failed. ${
+            errors[0]?.error || "Unknown error"
+        }`;
         ce("[GeminiService]", errorMsg);
         throw new Error(errorMsg);
     }
