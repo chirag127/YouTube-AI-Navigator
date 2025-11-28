@@ -1,5 +1,5 @@
 import { ChunkingService } from '../services/chunking/index.js'
-import { GeminiService } from '../services/gemini/index.js'
+import { GeminiService } from '../api/gemini.js'
 import { SegmentClassificationService } from '../services/segments/index.js'
 import { StorageService } from '../services/storage/index.js'
 import { parseMarkdown } from '../lib/marked-loader.js'

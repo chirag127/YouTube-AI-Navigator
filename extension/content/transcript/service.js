@@ -1,5 +1,5 @@
 import { decodeHTML } from '../utils/dom.js'
-import pipedAPI from '../../services/piped/api.js'
+import pipedAPI from '../../api/piped.js'
 
 // Singleton instance
 let transcriptServiceInstance = null

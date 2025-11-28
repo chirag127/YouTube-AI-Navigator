@@ -1,4 +1,4 @@
-import { ModelManager } from "../services/gemini/models.js";
+import { ModelManager } from "../api/gemini.js";
 
 // Default Settings
 const DEFAULT_SETTINGS = {

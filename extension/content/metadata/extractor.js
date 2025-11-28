@@ -4,8 +4,8 @@
  * Priority: DeArrow (community titles) > DOM extraction > ytInitialPlayerResponse > Piped API (last fallback)
  */
 
-import pipedAPI from "../../services/piped/api.js";
-import deArrowAPI from "../../services/dearrow/api.js";
+import pipedAPI from "../../api/piped.js";
+import deArrowAPI from "../../api/dearrow.js";
 
 class MetadataExtractor {
     constructor() {
