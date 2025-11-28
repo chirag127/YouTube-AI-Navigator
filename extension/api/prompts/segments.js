@@ -9,39 +9,46 @@ export const segments = (context) => {
             : "[]";
 
     return `
-    Task: Segment transcript. Return raw JSON array.
+    Task: Segment transcript. Return raw JSON object.
 
     CRITICAL:
     1. MERGE adjacent segments of the same category if they cover the same topic. Do NOT fragment continuous topics.
     2. Descriptions MUST be concise summaries. NO raw transcript.
+    3. Use SHORT keys (S, SP, UP, IR, etc.) for labels in the JSON.
+    4. If >50% of the video belongs to ONE category (Sponsor, Exclusive Access, Unpaid/Self Promotion), set "fullVideoLabel" to that category's code. Otherwise null.
 
     Context:
     ${buildContextString(context)}
 
-    Categories(LABEL VALUE):
+    Categories(LABEL_CODE):
     - Sponsor(S): Part of a video promoting a product or service not directly related to the creator. The creator will receive payment or compensation in the form of money or free products. If the entire video is about the product or service, use a Full Video Label. Don't make segments covering the entire video Sponsor.
     - Self Promotion(SP): Promoting a product or service that is directly related to the creator themselves. This usually includes merchandise or promotion of monetized platforms.
     - Unpaid Promotion(UP): The creator will not receive any payment in exchange for this promotion. This includes charity drives or free shout outs for products or other people they like.
-    - Interaction Reminder(IR): Explicit reminders to like, subscribe or interact with them on any paid or free platform(s) (e.g. click on a video).
+    - Interaction Reminder(IR): Explicit reminders to like, subscribe or interact with them on any paid or free platform(s) (e.g. click on a video). If about something specific it should be Unpaid/Self Promotion instead. Can be bundled with Self Promotion into Endcards/Credits.
+    - Intermission/Intro Animation(I): Segments typically found at the start of a video that include an animation, still frame or clip which are also seen in other videos by the same creator. This can include livestream pauses with no content (looping animations or chat windows) and Copyright/ Fair Use disclaimers. Do not include disclaimers to protect viewers, preparation or cleanup clips. Do not include skits, time-lapses, slow-motion clips (possibly Tangents/Jokes).
+    - Endcards/Credits(EC): Typically near or at the end of the video when the credits pop up and/or endcards are shown. This should not be based solely on the YouTube annotations. Interaction Reminder or Self Promotion can be included.
     - Preview/Recap(P): Collection of clips that show what is coming up in in this video or other videos in a series where all information is repeated later in the video. Do not include recap clips that only appear in the video or clips from a recapped video that is not directly linked to the current video.
     - Hook/Greetings(G): Narrated trailers for the upcoming video, greetings and goodbyes. Do not include conclusions with information.
     - Tangents/Jokes(T): Tangents/ Jokes is only for tangential scenes that are not required to understand the main content of the video. This can also include: Timelapses/ B-Roll, Fake Sponsors and slow-motion clips that do not provide any context or are used as replays or B-roll.
-    - Exclusive Access(EA)
+    - Music: Non-Music Section(NM): Only to be used on videos which feature music as the primary content. Segments should only include music not present in the official or Spotify music release. Make sure to only include complete silence.
+    - Exclusive Access(EA): (Full Video Label Only) When the creator showcases a product, service or location that they've received free or subsidised access to in the video that cannot be completely removed by cuts.
     - Highlight(H)
-    - Intermission/Intro Animation(I)
-    - Endcards/Credits(EC)
     - Content(C)
 
     JSON Format:
-    [{
-        "s": number (start sec),
-        "e": number (end sec, use ${
-            context.metadata?.lengthSeconds || -1
-        } if unknown),
-        "l": "LABEL VALUE",
-        "t": "Title",
-        "d": "Description"
-    }]
+    {
+        "segments": [
+            {
+            "s": number (start sec),
+            "e": number (end sec, use ${
+                context.metadata?.lengthSeconds || -1
+            } if unknown),
+            "l": "LABEL_CODE",
+            "t": "Title",
+            "d": "Description"
+        }],
+        "fullVideoLabel": "LABEL_CODE" | null
+    }
 
     Transcript:
     ${transcript}

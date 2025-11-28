@@ -33,7 +33,7 @@ export function switchTab(n, container) {
                 renderTranscript(a, state.currentTranscript || []);
                 break;
             case "segments":
-                renderSegments(a, state.analysisData?.segments || []);
+                renderSegments(a, state.analysisData || {});
                 break;
             case "chat":
                 renderChat(a);

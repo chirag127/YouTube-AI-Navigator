@@ -17,6 +17,7 @@ const LABEL_MAPPING = {
     P: "Preview/Recap",
     G: "Hook/Greetings",
     T: "Tangents/Jokes",
+    NM: "Music: Non-Music Section",
     C: "Content",
 };
 
@@ -65,50 +66,59 @@ export class GeminiService {
             const r = await this.generateContent(prompts.segments(context));
             console.log("[GeminiService] Raw segments response:", r);
 
+            let parsedData = null;
+
             // Robust JSON extraction
-            const start = r.indexOf("[");
-            const end = r.lastIndexOf("]");
+            const start = r.indexOf("{");
+            const end = r.lastIndexOf("}");
 
             if (start !== -1 && end !== -1) {
                 const jsonStr = r.substring(start, end + 1);
                 try {
-                    const parsed = JSON.parse(jsonStr);
-                    if (Array.isArray(parsed)) {
-                        return parsed.map((p) => ({
-                            start: p.s ?? p.start,
-                            end: p.e ?? p.end,
-                            label: LABEL_MAPPING[p.l] || p.l || p.label,
-                            title: p.t ?? p.title,
-                            description: p.d ?? p.description,
-                        }));
-                    }
+                    parsedData = JSON.parse(jsonStr);
                 } catch (e) {
                     console.warn("[GeminiService] JSON parse failed:", e);
                 }
             }
 
             // Fallback for markdown
-            const cleanR = r
-                .replace(/```json/g, "")
-                .replace(/```/g, "")
-                .trim();
-            if (cleanR.startsWith("[") && cleanR.endsWith("]")) {
-                try {
-                    const parsed = JSON.parse(cleanR);
-                    return parsed.map((p) => ({
-                        start: p.s ?? p.start,
-                        end: p.e ?? p.end,
-                        label: LABEL_MAPPING[p.l] || p.l || p.label,
-                        title: p.t ?? p.title,
-                        description: p.d ?? p.description,
-                    }));
-                } catch (e) {}
+            if (!parsedData) {
+                const cleanR = r
+                    .replace(/```json/g, "")
+                    .replace(/```/g, "")
+                    .trim();
+                if (cleanR.startsWith("{") && cleanR.endsWith("}")) {
+                    try {
+                        parsedData = JSON.parse(cleanR);
+                    } catch (e) {}
+                }
             }
 
-            return [];
+            if (parsedData) {
+                const segments = (parsedData.segments || []).map((p) => ({
+                    start: p.s ?? p.start,
+                    end: p.e ?? p.end,
+                    label: LABEL_MAPPING[p.l] || p.l || p.label,
+                    labelCode: p.l, // Keep original code
+                    title: p.t ?? p.title,
+                    description: p.d ?? p.description,
+                }));
+
+                // Return object with segments and fullVideoLabel
+                return {
+                    segments,
+                    fullVideoLabel: parsedData.fullVideoLabel
+                        ? LABEL_MAPPING[parsedData.fullVideoLabel] ||
+                          parsedData.fullVideoLabel
+                        : null,
+                    fullVideoLabelCode: parsedData.fullVideoLabel,
+                };
+            }
+
+            return { segments: [], fullVideoLabel: null };
         } catch (e) {
             console.warn("[GeminiService] Segment extraction failed:", e);
-            return [];
+            return { segments: [], fullVideoLabel: null };
         }
     }
 

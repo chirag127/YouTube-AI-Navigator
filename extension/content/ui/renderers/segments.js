@@ -15,7 +15,26 @@ const colors = {
     "Tangents/Jokes": "#9400d3",
 };
 
-export function renderSegments(c, s) {
+export function renderSegments(c, data) {
+    const s = Array.isArray(data) ? data : data?.segments || [];
+    const fullLabel = !Array.isArray(data) ? data?.fullVideoLabel : null;
+
+    // Update Full Video Label Badge
+    const badge = document.getElementById("yt-ai-full-video-label");
+    if (badge) {
+        if (fullLabel) {
+            badge.textContent = fullLabel;
+            badge.style.display = "inline-block";
+            badge.style.backgroundColor = colors[fullLabel] || "#444";
+            badge.style.color = "#000"; // Ensure readability
+            badge.style.marginLeft = "8px";
+            badge.style.fontSize = "0.8em";
+            badge.style.padding = "2px 6px";
+            badge.style.borderRadius = "4px";
+        } else {
+            badge.style.display = "none";
+        }
+    }
     if (!s?.length) {
         showPlaceholder(c, "No segments detected.");
         return;

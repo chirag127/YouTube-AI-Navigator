@@ -13,10 +13,18 @@ export async function classifyTranscript(context, g) {
     };
 
     try {
-        const e = await g.extractSegments(annotatedContext);
+        const result = await g.extractSegments(annotatedContext);
 
-        return e || [];
+        // Handle both new object format and potential legacy array format (though extractSegments now returns object)
+        if (Array.isArray(result)) {
+            return { segments: result, fullVideoLabel: null };
+        }
+
+        return {
+            segments: result.segments || [],
+            fullVideoLabel: result.fullVideoLabel || null,
+        };
     } catch (e) {
-        return [];
+        return { segments: [], fullVideoLabel: null };
     }
 }

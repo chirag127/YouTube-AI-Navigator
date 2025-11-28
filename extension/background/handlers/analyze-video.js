@@ -116,16 +116,25 @@ export async function handleAnalyzeVideo(request, sendResponse) {
         );
 
         let segments = [];
+        let fullVideoLabel = null;
         console.log("[AnalyzeVideo] Options:", JSON.stringify(options));
         if (options.generateSegments !== false) {
             console.log("[AnalyzeVideo] Generating segments...");
-            segments = await segmentClassification.classifyTranscript({
-                transcript: transcript || [],
-                metadata,
-                lyrics,
-                comments,
-            });
-            console.log("[AnalyzeVideo] Segments generated:", segments.length);
+            const segmentResult =
+                await segmentClassification.classifyTranscript({
+                    transcript: transcript || [],
+                    metadata,
+                    lyrics,
+                    comments,
+                });
+            segments = segmentResult.segments;
+            fullVideoLabel = segmentResult.fullVideoLabel;
+            console.log(
+                "[AnalyzeVideo] Segments generated:",
+                segments.length,
+                "Full Label:",
+                fullVideoLabel
+            );
         } else {
             console.log(
                 "[AnalyzeVideo] Segment generation disabled in options"
@@ -154,6 +163,7 @@ export async function handleAnalyzeVideo(request, sendResponse) {
                 faq: analysis.faq,
                 insights: analysis.insights,
                 segments,
+                fullVideoLabel,
                 timestamps: analysis.timestamps,
             },
         });

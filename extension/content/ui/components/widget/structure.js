@@ -1,7 +1,7 @@
 export function createWidgetHTML() {
     return `
     <div class="yt-ai-header">
-        <div class="yt-ai-title">✨ YouTube AI Master</div>
+        <div class="yt-ai-title">✨ YouTube AI Master <span id="yt-ai-full-video-label" class="yt-ai-badge" style="display:none"></span></div>
         <div class="yt-ai-header-actions">
 
             <button id="yt-ai-close-btn" class="yt-ai-icon-btn" title="Close">❌</button>

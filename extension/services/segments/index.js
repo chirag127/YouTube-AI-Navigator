@@ -6,7 +6,15 @@ export class SegmentClassificationService {
         this.chunking = c;
     }
     async classifyTranscript(context) {
-        const c = await classifyTranscript(context, this.gemini);
-        return fillContentGaps(c, context.transcript);
+        const result = await classifyTranscript(context, this.gemini);
+        const filledSegments = fillContentGaps(
+            result.segments,
+            context.transcript
+        );
+
+        return {
+            segments: filledSegments,
+            fullVideoLabel: result.fullVideoLabel,
+        };
     }
 }
