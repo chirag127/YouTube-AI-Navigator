@@ -81,6 +81,9 @@
                 "sidepanel/sidepanel.html",
                 "sidepanel/sidepanel.css",
                 "sidepanel/sidepanel.js",
+                "onboarding/onboarding.html",
+                "onboarding/onboarding.css",
+                "onboarding/onboarding.js",
                 "assets/*",
                 "utils/*.js"
             ],

@@ -1,10 +1,12 @@
-const a = document.getElementById('api-status'), p = document.getElementById('page-status'), b = document.getElementById('analyze-btn'), h = document.getElementById('history-btn'), o = document.getElementById('options-btn'), m = document.getElementById('message')
+const a = document.getElementById('api-status'), p = document.getElementById('page-status'), b = document.getElementById('analyze-btn'), h = document.getElementById('history-btn'), o = document.getElementById('options-btn'), m = document.getElementById('message'), g = document.getElementById('setup-guide-btn')
 function showMsg(t, y = 'info') { m.textContent = t; m.className = `show ${y}`; setTimeout(() => m.classList.remove('show'), 3000) }
 async function checkApi() {
   try {
-    const s = await chrome.storage.sync.get('apiKey'), l = await chrome.storage.local.get('geminiApiKey'), k = s.apiKey || l.geminiApiKey
+    const s = await chrome.storage.sync.get(['apiKey', 'onboardingCompleted']), l = await chrome.storage.local.get('geminiApiKey'), k = s.apiKey || l.geminiApiKey
     if (k) { a.innerHTML = '<span>✅ Configured</span>'; a.className = 'value success'; return true }
-    a.innerHTML = '<span>⚠️ Not configured</span>'; a.className = 'value warning'; return false
+    a.innerHTML = '<span>⚠️ Not configured</span>'; a.className = 'value warning'
+    if (!s.onboardingCompleted) { g.style.display = 'flex'; b.style.display = 'none' }
+    return false
   } catch (e) { a.innerHTML = '<span>❌ Error</span>'; a.className = 'value error'; return false }
 }
 async function checkPage() {
@@ -32,4 +34,5 @@ b.addEventListener('click', async () => {
 })
 h.addEventListener('click', () => chrome.tabs.create({ url: chrome.runtime.getURL('history/history.html') }))
 o.addEventListener('click', () => chrome.runtime.openOptionsPage())
+g.addEventListener('click', () => chrome.tabs.create({ url: chrome.runtime.getURL('onboarding/onboarding.html') }))
 document.addEventListener('DOMContentLoaded', init)

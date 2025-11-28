@@ -22,10 +22,11 @@ import { handleSaveComments } from "./handlers/comments-storage.js";
 import { handleTranscribeAudio } from "./handlers/transcribe-audio.js";
 import { handleGetLyrics } from "./handlers/get-lyrics.js";
 
-chrome.runtime.onInstalled.addListener((details) => {
+chrome.runtime.onInstalled.addListener(async (details) => {
     if (details.reason === "install") {
         console.log("YouTube AI Master installed");
-        chrome.runtime.openOptionsPage();
+        const onboardingUrl = chrome.runtime.getURL("onboarding/onboarding.html");
+        await chrome.tabs.create({ url: onboardingUrl });
     } else if (details.reason === "update") {
         console.log(
             "YouTube AI Master updated to version",

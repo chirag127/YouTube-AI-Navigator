@@ -145,7 +145,18 @@ export class AIConfig {
         try {
             if (!s.apiKey) throw new Error("API Key is missing");
 
-            const model = els.modelSelect.value || "gemini-1.5-flash";
+            let model = els.modelSelect.value || "gemini-1.5-flash-latest";
+
+            // Ensure model name doesn't have 'models/' prefix for the URL
+            if (model.startsWith('models/')) {
+                model = model.replace('models/', '');
+            }
+
+            // Add -latest suffix if not present and not already a versioned model
+            if (!model.includes('-latest') && !model.match(/-\d{3}$/)) {
+                model = model + '-latest';
+            }
+
             const response = await fetch(
                 `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${s.apiKey}`,
                 {
@@ -157,8 +168,10 @@ export class AIConfig {
                 }
             );
 
-            if (!response.ok)
-                throw new Error(`API Error: ${response.statusText}`);
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error?.message || response.statusText);
+            }
 
             status.textContent = "Connection Successful!";
             status.className = "status-indicator success";

@@ -13,6 +13,24 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Initialize Managers
     await settingsManager.load();
 
+    // Check onboarding status and show banner if needed
+    const settings = settingsManager.get();
+    const welcomeBanner = document.getElementById('welcome-banner');
+    const startSetupBtn = document.getElementById('start-setup-btn');
+    const dismissBannerBtn = document.getElementById('dismiss-banner-btn');
+
+    if (!settings.onboardingCompleted && !settings.apiKey) {
+        welcomeBanner.style.display = 'block';
+    }
+
+    startSetupBtn?.addEventListener('click', () => {
+        chrome.tabs.create({ url: chrome.runtime.getURL('onboarding/onboarding.html') });
+    });
+
+    dismissBannerBtn?.addEventListener('click', () => {
+        welcomeBanner.style.display = 'none';
+    });
+
     // Setup Tabs
     uiManager.setupTabs((tabId) => {
         // Optional: Lazy load logic could go here

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to YouTube AI Master</title>
+    <link rel="stylesheet" href="onboarding.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="onboarding-container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="step-indicators">
+            <div class="step-dot active" data-step="0"></div>
+            <div class="step-dot" data-step="1"></div>
+            <div class="step-dot" data-step="2"></div>
+            <div class="step-dot" data-step="3"></div>
+        </div>
+
+        <div class="steps-container">
+            <!-- Step 0: Welcome -->
+            <div class="step active" data-step="0">
+                <div class="step-content">
+                    <div class="logo-large">⚡</div>
+                    <h1>Welcome to YouTube AI Master</h1>
+                    <p class="subtitle">Navigate YouTube smarter with AI-powered insights</p>
+
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <span class="feature-icon">🤖</span>
+                            <h3>AI Summaries</h3>
+                            <p>Get instant video summaries powered by Google Gemini</p>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">🎯</span>
+                            <h3>Smart Segments</h3>
+                            <p>Auto-skip sponsors, intros, and unwanted content</p>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">💬</span>
+                            <h3>Chat with Videos</h3>
+                            <p>Ask questions about any video content</p>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">🔒</span>
+                            <h3>Privacy First</h3>
+                            <p>All data stays local. No tracking, no servers</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 1: API Key Setup -->
+            <div class="step" data-step="1">
+                <div class="step-content">
+                    <h1>Set Up Your AI</h1>
+                    <p class="subtitle">Connect your free Google Gemini API to unlock AI features</p>
+
+                    <div class="info-box">
+                        <span class="info-icon">ℹ️</span>
+                        <div>
+                            <strong>Why do I need this?</strong>
+                            <p>YouTube AI Master uses Google's Gemini AI to analyze videos. You need a free API key to
+                                enable this feature.</p>
+                        </div>
+                    </div>
+
+                    <div class="setup-steps">
+                        <div class="setup-step">
+                            <span class="step-number">1</span>
+                            <div>
+                                <h3>Get Your Free API Key</h3>
+                                <p>Click the button below to open Google AI Studio</p>
+                                <a href="https://aistudio.google.com/app/apikey" target="_blank" class="btn btn-primary"
+                                    id="openApiKeyPage">
+                                    Open Google AI Studio →
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="setup-step">
+                            <span class="step-number">2</span>
+                            <div>
+                                <h3>Create API Key</h3>
+                                <p>Click "Create API Key" and copy it</p>
+                            </div>
+                        </div>
+
+                        <div class="setup-step">
+                            <span class="step-number">3</span>
+                            <div>
+                                <h3>Paste Your Key Below</h3>
+                                <div class="form-group">
+                                    <div class="input-with-button">
+                                        <input type="password" id="apiKeyInput" class="form-input"
+                                            placeholder="Paste your API key here">
+                                        <button id="toggleApiKeyBtn" class="btn-icon" title="Show/Hide">👁️</button>
+                                    </div>
+                                    <div id="apiKeyStatus" class="status-message"></div>
+                                </div>
+                                <button id="testApiKeyBtn" class="btn btn-secondary">Test Connection</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="skip-note">
+                        <p>You can skip this step and add your API key later in settings</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Basic Configuration -->
+            <div class="step" data-step="2">
+                <div class="step-content">
+                    <h1>Customize Your Experience</h1>
+                    <p class="subtitle">Configure basic settings to match your preferences</p>
+
+                    <div class="config-section">
+                        <h3>Language Settings</h3>
+                        <div class="form-group">
+                            <label for="outputLanguage">AI Output Language</label>
+                            <select id="outputLanguage" class="form-select">
+                                <option value="en">English</option>
+                                <option value="es">Spanish</option>
+                                <option value="fr">French</option>
+                                <option value="de">German</option>
+                                <option value="it">Italian</option>
+                                <option value="pt">Portuguese</option>
+                                <option value="ru">Russian</option>
+                                <option value="ja">Japanese</option>
+                                <option value="ko">Korean</option>
+                                <option value="zh">Chinese (Simplified)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="config-section">
+                        <h3>Automation</h3>
+                        <div class="toggle-option">
+                            <div>
+                                <strong>Auto-Analyze Videos</strong>
+                                <p>Automatically start analysis when you open a video</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="autoAnalyze">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="toggle-option">
+                            <div>
+                                <strong>Enable Segment Detection</strong>
+                                <p>Detect and handle sponsors, intros, and outros</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="enableSegments" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Complete -->
+            <div class="step" data-step="3">
+                <div class="step-content">
+                    <div class="success-icon">✓</div>
+                    <h1>You're All Set!</h1>
+                    <p class="subtitle">YouTube AI Master is ready to enhance your viewing experience</p>
+
+                    <div class="next-steps">
+                        <h3>What's Next?</h3>
+                        <div class="next-step-item">
+                            <span class="step-icon">🎬</span>
+                            <div>
+                                <strong>Open Any YouTube Video</strong>
+                                <p>Look for the AI Master panel on the right side</p>
+                            </div>
+                        </div>
+                        <div class="next-step-item">
+                            <span class="step-icon">🔍</span>
+                            <div>
+                                <strong>Click "Analyze Video"</strong>
+                                <p>Get instant AI-powered summaries and insights</p>
+                            </div>
+                        </div>
+                        <div class="next-step-item">
+                            <span class="step-icon">⚙️</span>
+                            <div>
+                                <strong>Explore Settings</strong>
+                                <p>Customize advanced features and integrations</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="final-actions">
+                        <button id="openSettingsBtn" class="btn btn-secondary">Open Settings</button>
+                        <button id="finishBtn" class="btn btn-primary">Start Using Extension</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation-buttons">
+            <button id="backBtn" class="btn btn-outline" disabled>Back</button>
+            <button id="nextBtn" class="btn btn-primary">Next</button>
+        </div>
+    </div>
+
+    <script src="onboarding.js" type="module"></script>
+</body>
+
+</html>

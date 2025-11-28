@@ -51,11 +51,22 @@ Alternatively, download the repository as a ZIP file from GitHub and extract it 
 3. Select the `extension` folder (not the root folder)
 4. Click **Select Folder**
 
-**Step 4: Verify Installation**
+**Step 4: Complete the Setup Wizard**
 
--   The extension should now appear in your extensions list with the YouTube AI Navigator icon
--   You may see a warning banner stating "This extension is not listed in the Chrome Web Store" - this is normal for developer mode extensions
--   Pin the extension to your toolbar for easy access (click the puzzle icon → pin YouTube AI Navigator)
+After installation, the extension will automatically open a **guided onboarding flow** that walks you through:
+
+1. **Welcome Screen** - Overview of features and capabilities
+2. **API Key Setup** - Step-by-step guide to get your free Google Gemini API key
+    - Direct link to [Google AI Studio API Key page](https://aistudio.google.com/app/apikey)
+    - Built-in connection tester to verify your key works
+    - Option to skip and configure later
+3. **Basic Configuration** - Set your preferences:
+    - Output language for AI responses
+    - Auto-analyze videos on page load
+    - Enable segment detection
+4. **Completion** - Quick start guide and next steps
+
+**The onboarding wizard ensures you're ready to use the extension immediately with zero confusion.**
 
 **Developer Mode Limitations**
 
@@ -80,20 +91,34 @@ Once published, you'll be able to install directly from the Chrome Web Store:
 
 1. Search for "YouTube AI Navigator" in the Chrome Web Store
 2. Click "Add to Chrome"
-3. Automatic updates will be handled by Chrome
+3. The onboarding wizard will launch automatically on first install
+4. Automatic updates will be handled by Chrome
 
-### 2. Configure Your API Key
+### 2. Manual Configuration (If You Skipped Onboarding)
+
+If you skipped the onboarding wizard, you can configure your API key manually:
 
 **Required: Google Gemini API Key**
 
-1. Visit [Google AI Studio](https://aistudio.google.com/app/apikey)
-2. Click "Create API Key"
+1. Visit [Google AI Studio API Key Page](https://aistudio.google.com/app/apikey)
+2. Click "Create API Key" (or "Get API Key")
 3. Copy the generated key
-4. Open the extension settings (click the extension icon → Settings)
+4. Open the extension settings:
+    - Click the extension icon in your toolbar
+    - Click "Settings" button, OR
+    - Click "Start Setup Guide" if you haven't configured yet
 5. Paste your API key in the "Gemini API Key" field
-6. Click "Save"
+6. Click "Test Connection" to verify it works
+7. Click "Save"
 
 **The extension is now fully functional.** All other API keys are optional enhancements.
+
+**Re-run Onboarding**
+
+If you want to see the setup wizard again:
+
+-   Click the extension icon → "Start Setup Guide"
+-   Or open Settings and click "Start Setup" in the welcome banner
 
 ### 3. Optional: Enhance with Additional APIs
 

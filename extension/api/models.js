@@ -25,11 +25,13 @@ export class ModelManager {
     getList() {
         // Prioritize specific models if available
         const priority = [
-            'gemini-2.5-flash-lite-preview-09-2025',
-            'gemini-2.5-flash-lite',
-            'gemini-2.5-flash',
-            'gemini-1.5-flash',
-            'gemini-1.5-pro'
+            'gemini-2.0-flash-exp',
+            'gemini-1.5-flash-latest',
+            'gemini-1.5-flash-002',
+            'gemini-1.5-flash-001',
+            'gemini-1.5-pro-latest',
+            'gemini-1.5-pro-002',
+            'gemini-1.5-pro-001'
         ];
 
         const sorted = [...this.models].sort((a, b) => {
