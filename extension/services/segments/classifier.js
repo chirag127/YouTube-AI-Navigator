@@ -4,7 +4,7 @@ export async function classifyTranscript(t, g, metadata) {
     if (!t || !t.length) return [];
     const f = annotateTranscript(t, metadata);
     try {
-        const e = await g.extractSegments(f);
+        const e = await g.extractSegments(f, null, metadata);
         return e;
     } catch (e) {
         return [];

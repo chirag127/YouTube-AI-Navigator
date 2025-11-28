@@ -396,35 +396,44 @@ async function handleAnalyzeVideo(request, sendResponse) {
         });
 
         // Pass metadata and lyrics to the analysis
-        const analysis =
-            await geminiService.generateStreamingSummaryWithTimestamps(
-                transcript,
-                {
-                    model: "gemini-2.5-flash-lite-preview-09-2025",
-                    language: options.language || "English",
-                    length: options.length || "Medium",
-                    metadata: metadata, // Include video metadata for better context
-                    lyrics: lyrics, // Include lyrics if available
-                }
-            );
+        // Use generateComprehensiveAnalysis instead of streaming summary
+        const analysis = await geminiService.generateComprehensiveAnalysis(
+            transcript,
+            {
+                model: "gemini-2.5-flash-lite-preview-09-2025",
+                language: options.language || "English",
+                length: options.length || "Medium",
+                metadata: metadata, // Include video metadata for better context
+                lyrics: lyrics, // Include lyrics if available
+            },
+            (chunk, fullText, timestamps) => {
+                // Simulate streaming callback if needed by the frontend
+                // The frontend expects: { type: "summary_chunk", text: ..., timestamps: ... }
+                // generateComprehensiveAnalysis simulates one chunk at the end
+                port.postMessage({
+                    type: "summary_chunk",
+                    text: fullText,
+                    timestamps: timestamps || [],
+                });
+            }
+        );
 
-        console.log("[Background] Gemini analysis complete", {
-            hasSummary: !!analysis.summary,
-            hasFaq: !!analysis.faq,
-            hasInsights: !!analysis.insights,
+        console.log("[Background] Analysis complete:", {
+            summaryLength: analysis.summary?.length,
+            insightsLength: analysis.insights?.length,
+            faqLength: analysis.faq?.length,
         });
 
+        // 4. Generate Segments (if enabled)
         let segments = [];
-        try {
-            console.log("[Background] Starting segment classification...");
+        if (options.generateSegments) {
+            console.log("[Background] Generating segments...");
+            // Pass metadata (including lyrics) to segment classification
             segments = await segmentClassificationService.classifyTranscript(
-                transcript
+                transcript,
+                { ...metadata, lyrics }
             );
-            console.log("[Background] Segment classification complete", {
-                count: segments.length,
-            });
-        } catch (e) {
-            console.warn("Segment classification failed:", e);
+            console.log(`[Background] Generated ${segments.length} segments`);
         }
 
         if (videoId && storageService) {

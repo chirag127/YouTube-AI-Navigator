@@ -1,13 +1,24 @@
 export const prompts = {
     summary: (transcript, options) => {
         const { metadata, lyrics } = options;
-        const title = metadata?.deArrowTitle || metadata?.title || "Unknown Title";
+
+        let titleContext = `Original Title: ${
+            metadata?.originalTitle || metadata?.title || "Unknown"
+        }`;
+        if (metadata?.deArrowTitle) {
+            titleContext += `\nCommunity Title (DeArrow): ${metadata.deArrowTitle}`;
+        }
+
         const contextInfo = `
-        Video Title: ${title}
-        ${metadata?.deArrowTitle ? "(Community Contributed Title)" : ""}
+        Video Context:
+        ${titleContext}
         Channel: ${metadata?.author || "Unknown"}
         Description: ${metadata?.description || "N/A"}
-        ${lyrics ? `\nLyrics Source: ${lyrics.source}\nLyrics:\n${lyrics.lyrics}\n` : ""}
+        ${
+            lyrics
+                ? `\nLyrics Source: ${lyrics.source}\nLyrics:\n${lyrics.lyrics}\n`
+                : ""
+        }
         `;
 
         return `
@@ -28,11 +39,18 @@ export const prompts = {
     },
 
     chat: (question, context, metadata) => {
-        const title = metadata?.deArrowTitle || metadata?.title || "Unknown";
+        let titleContext = `Original Title: ${
+            metadata?.originalTitle || metadata?.title || "Unknown"
+        }`;
+        if (metadata?.deArrowTitle) {
+            titleContext += `\nCommunity Title (DeArrow): ${metadata.deArrowTitle}`;
+        }
+
         return `
         Role: You are a helpful AI assistant for a YouTube video.
-        Context: The user is watching a video titled "${title}".
-        ${metadata?.deArrowTitle ? "Note: This is a community-contributed title (DeArrow)." : ""}
+
+        Context:
+        ${titleContext}
         Channel: ${metadata?.author || "Unknown"}
 
         Video Transcript Context: ${context}
@@ -69,40 +87,24 @@ export const prompts = {
     },
 
     faq: (transcript, metadata) => {
-        const title = metadata?.deArrowTitle || metadata?.title || "";
+        let titleContext = `Original Title: ${
+            metadata?.originalTitle || metadata?.title || "Unknown"
+        }`;
+        if (metadata?.deArrowTitle) {
+            titleContext += `\nCommunity Title (DeArrow): ${metadata.deArrowTitle}`;
+        }
+
         return `
         Task: Generate 5-7 Frequently Asked Questions (FAQ) that this video answers, along with their concise answers.
 
-        Video Title: ${title}
-        ${metadata?.deArrowTitle ? "(Community Contributed Title)" : ""}
+        Video Context:
+        ${titleContext}
         Channel: ${metadata?.author || "Unknown"}
 
         Transcript:
         ${transcript}
 
         Format:
-        **Q: [Question]**
-        A: [Answer]
-        `;
-    },
-
-    segments: (transcript, metadata) => {
-        const title = metadata?.deArrowTitle || metadata?.title || "";
-        return `
-        Task: Segment the following transcript into logical chapters based on the categories below.
-        Return ONLY a raw JSON array. No markdown formatting.
-
-        Context:
-        Video Title: ${title}
-        ${metadata?.deArrowTitle ? "(Community Contributed Title)" : ""}
-        Channel: ${metadata?.author || "Unknown"}
-        Description: ${metadata?.description ? metadata.description.substring(0, 500) + "..." : "N/A"}
-
-        Categories (Use EXACTLY these labels):
-        - Sponsor: Paid promotion, paid referrals and direct advertisements. Not for self-promotion or free shoutouts to causes/creators/websites/products they like.
-        - Unpaid/Self Promotion: Unpaid or self-promotion. This includes sections about merchandise, donations, or information about who they collaborated with.
-        - Exclusive Access: Only for labeling entire videos. Used when a video showcases a product, service or location that they've received free or subsidized access to.
-        - Interaction Reminder (Subscribe): When there is a short reminder to like, subscribe or follow them in the middle of content. If it is long or about something specific, it should be under self promotion instead.
         - Highlight: The part of the video that most people are looking for. Similar to "Video starts at x" comments.
         - Intermission/Intro Animation: An interval without actual content. Could be a pause, static frame, repeating animation. This should not be used for transitions containing information.
         - Endcards/Credits: Credits or when the YouTube endcards appear. Not for conclusions with information.
@@ -130,14 +132,24 @@ export const prompts = {
 
     comprehensive: (transcript, options) => {
         const { metadata, lyrics } = options;
-        const title = metadata?.deArrowTitle || metadata?.title || "Unknown Title";
+
+        let titleContext = `Original Title: ${
+            metadata?.originalTitle || metadata?.title || "Unknown"
+        }`;
+        if (metadata?.deArrowTitle) {
+            titleContext += `\nCommunity Title (DeArrow): ${metadata.deArrowTitle}`;
+        }
 
         const contextInfo = `
-        Video Title: ${title}
-        ${metadata?.deArrowTitle ? "(Community Contributed Title - Use this for context)" : ""}
+        Video Context:
+        ${titleContext}
         Channel: ${metadata?.author || "Unknown"}
         Description: ${metadata?.description || "N/A"}
-        ${lyrics ? `\nLyrics Source: ${lyrics.source}\nLyrics:\n${lyrics.lyrics}\n` : ""}
+        ${
+            lyrics
+                ? `\nLyrics Source: ${lyrics.source}\nLyrics:\n${lyrics.lyrics}\n`
+                : ""
+        }
         `;
 
         return `
@@ -170,4 +182,3 @@ export const prompts = {
         `;
     },
 };
-
