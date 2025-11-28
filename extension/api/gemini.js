@@ -79,6 +79,58 @@ export class GeminiService {
         }
     }
 
+    async extractSegments(context) {
+        try {
+            cl("[GeminiService] Extracting segments...");
+            const prompt = prompts.segments(context);
+            const response = await this.generateContent(prompt);
+
+            cl("[GeminiService] Raw segment response length:", response.length);
+            cl("[GeminiService] First 1000 chars:", response.substring(0, 1000));
+
+            // Remove markdown code blocks if present
+            let cleanedResponse = response.trim();
+            cleanedResponse = cleanedResponse.replace(/```json\s*/g, '');
+            cleanedResponse = cleanedResponse.replace(/```\s*/g, '');
+            cleanedResponse = cleanedResponse.trim();
+
+            // Try to find JSON object
+            let jsonMatch = cleanedResponse.match(/\{[\s\S]*\}/);
+
+            if (!jsonMatch) {
+                ce("[GeminiService] No JSON found in response. Full response:", response);
+                return { segments: [], fullVideoLabel: null };
+            }
+
+            const jsonStr = jsonMatch[0];
+            cl("[GeminiService] Extracted JSON string length:", jsonStr.length);
+
+            const parsed = JSON.parse(jsonStr);
+
+            if (!parsed.segments || !Array.isArray(parsed.segments)) {
+                ce("[GeminiService] Invalid segments structure:", parsed);
+                return { segments: [], fullVideoLabel: null };
+            }
+
+            cl("[GeminiService] Successfully parsed segments:", parsed.segments.length);
+            cl("[GeminiService] Full video label:", parsed.fullVideoLabel);
+
+            // Log first few segments for debugging
+            if (parsed.segments.length > 0) {
+                cl("[GeminiService] First segment:", JSON.stringify(parsed.segments[0]));
+            }
+
+            return {
+                segments: parsed.segments,
+                fullVideoLabel: parsed.fullVideoLabel || null
+            };
+        } catch (error) {
+            ce("[GeminiService] Segment extraction failed:", error.message);
+            ce("[GeminiService] Error stack:", error.stack);
+            return { segments: [], fullVideoLabel: null };
+        }
+    }
+
     _extractSection(text, sectionName) {
         const regex = new RegExp(
             `## ${sectionName}\\s*([\\s\\S]*?)(?=##|$)`,
@@ -126,8 +178,7 @@ export class GeminiService {
             const modelName = modelList[i];
             try {
                 cl(
-                    `[GeminiService] Attempting model: ${modelName} (${i + 1}/${
-                        modelList.length
+                    `[GeminiService] Attempting model: ${modelName} (${i + 1}/${modelList.length
                     })`
                 );
 
@@ -159,9 +210,8 @@ export class GeminiService {
             }
         }
 
-        const errorMsg = `All ${modelList.length} Gemini models failed. ${
-            errors[0]?.error || "Unknown error"
-        }`;
+        const errorMsg = `All ${modelList.length} Gemini models failed. ${errors[0]?.error || "Unknown error"
+            }`;
         ce("[GeminiService]", errorMsg);
         throw new Error(errorMsg);
     }

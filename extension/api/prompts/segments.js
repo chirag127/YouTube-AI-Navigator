@@ -14,7 +14,7 @@ export const segments = (context) => {
     console.log("Segments Transcript Length:", transcript.length);
 
     return `
-    Task: Segment transcript with HIGH GRANULARITY. Return raw JSON object.
+    Task: Segment transcript with HIGH GRANULARITY. Return ONLY a valid JSON object with NO additional text, markdown, or explanations.
 
     ${buildContextString(context)}
 
@@ -22,11 +22,14 @@ export const segments = (context) => {
     1. SEGMENTATION STRATEGY:
        - **Identify SPECIAL categories first** (Sponsor, Self Promotion, Intro, etc.).
        - **Segment "Content" by TOPIC**. Do NOT create one huge "Content" segment.
-       - **MANDATORY**: If the video is > 2 minutes, you MUST return at least 3 segments (unless it's a very short clip).
+       - **MANDATORY**: If the video is > 2 minutes, you MUST return at least 3-5 segments minimum.
+       - **MANDATORY**: For videos > 10 minutes, you MUST return at least 8-12 segments.
        - **FORBIDDEN**: Do NOT return a single segment for the entire video.
+       - **REQUIRED**: Break down content into logical topic changes, scene changes, or subject matter shifts.
     2. MERGE adjacent segments ONLY if they are the EXACT SAME category AND cover the same specific topic.
-    3. Descriptions MUST be concise summaries. NO raw transcript.
+    3. Descriptions MUST be concise summaries (1-2 sentences). NO raw transcript.
     4. Use SHORT keys (S, SP, UP, IR, etc.) for labels in the JSON.
+    5. **OUTPUT FORMAT**: Return ONLY the JSON object. NO markdown code blocks, NO explanations, NO additional text.
     4. FULL VIDEO LABEL RULE:
        - Calculate the total duration of the video based on the transcript.
        - If a single category (e.g., Sponsor, Self Promotion, etc.) occupies MORE THAN 50% of the video's total duration:
@@ -57,9 +60,8 @@ export const segments = (context) => {
         "segments": [
             {
             "s": number (start sec),
-            "e": number (end sec, use ${
-                context.metadata?.lengthSeconds || -1
-            } if unknown),
+            "e": number (end sec, use ${context.metadata?.lengthSeconds || -1
+        } if unknown),
             "l": "LABEL_CODE",
             "t": "Title",
             "d": "Description"
