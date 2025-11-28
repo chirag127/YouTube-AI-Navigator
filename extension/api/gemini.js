@@ -2,6 +2,20 @@ import { GeminiAPI } from "./api.js";
 import { ModelManager } from "./models.js";
 import { prompts } from "./prompts/index.js";
 
+const LABEL_MAPPING = {
+    S: "Sponsor",
+    USP: "Unpaid/Self Promotion",
+    EA: "Exclusive Access",
+    IR: "Interaction Reminder (Subscribe)",
+    H: "Highlight",
+    I: "Intermission/Intro Animation",
+    EC: "Endcards/Credits",
+    P: "Preview/Recap",
+    G: "Hook/Greetings",
+    T: "Tangents/Jokes",
+    C: "Content",
+};
+
 export class GeminiService {
     constructor(k) {
         this.api = new GeminiAPI(k);
@@ -59,7 +73,7 @@ export class GeminiService {
                         return parsed.map((p) => ({
                             start: p.s ?? p.start,
                             end: p.e ?? p.end,
-                            label: p.l ?? p.label,
+                            label: LABEL_MAPPING[p.l] || p.l || p.label,
                             title: p.t ?? p.title,
                             description: p.d ?? p.description,
                         }));
@@ -80,7 +94,7 @@ export class GeminiService {
                     return parsed.map((p) => ({
                         start: p.s ?? p.start,
                         end: p.e ?? p.end,
-                        label: p.l ?? p.label,
+                        label: LABEL_MAPPING[p.l] || p.l || p.label,
                         title: p.t ?? p.title,
                         description: p.d ?? p.description,
                     }));
