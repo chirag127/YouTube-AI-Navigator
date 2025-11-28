@@ -34,6 +34,7 @@ export const segments = (context) => {
          - DO NOT create any segments for that specific category. The "fullVideoLabel" covers it.
          - Only create segments for OTHER categories (e.g., if full video is Sponsor, still mark Intermissions or Self Promotion if they exist).
        - If no category exceeds 50%, set "fullVideoLabel" to null.
+       - Many videos are completely being sponsored by one company. So does will be the full sponsor.
     5. SPONSORBLOCK (STRICT PRIORITY):
        - IF Community Segments are provided: They are VERIFIED GROUND TRUTH. Use their EXACT times/categories.
        - IF NOT provided: Analyze transcript to find these categories.
