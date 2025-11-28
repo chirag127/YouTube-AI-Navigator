@@ -6,7 +6,7 @@ export const chat = (question, context, metadata) => {
         transcript: context,
         lyrics: null,
         comments: [],
-        sponsorBlockSegments: [],
+        sponsorBlockSegments: metadata?.sponsorBlockSegments || [],
     };
 
     return `
@@ -23,5 +23,6 @@ export const chat = (question, context, metadata) => {
     - Be concise and helpful.
     - If the answer is not in the video, state that clearly.
     - Reference timestamps or community segments when relevant.
+    - SponsorBlock segments are VERIFIED GROUND TRUTH. Use them to answer questions about sponsors or skipped content accurately.
     `;
 };

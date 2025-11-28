@@ -6,6 +6,7 @@ export const summary = (transcript, options) => {
         metadata: options.metadata || {},
         lyrics: options.lyrics,
         comments: [],
+        sponsorBlockSegments: options.sponsorBlockSegments,
     };
 
     return `
@@ -14,6 +15,10 @@ export const summary = (transcript, options) => {
 
     Context:
     ${buildContextString(context)}
+
+    Instructions:
+    - Use the provided SponsorBlock segments (VERIFIED GROUND TRUTH) to identify and EXCLUDE sponsors, self-promotion, and interaction reminders from the summary.
+    - Focus ONLY on the main content.
 
     Constraints:
     - Length: ${options.length || "Medium"}

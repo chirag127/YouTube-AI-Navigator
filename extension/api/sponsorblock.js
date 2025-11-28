@@ -14,6 +14,7 @@ const CATEGORY_MAP = {
     poi_highlight: "Highlight",
     filler: "Filler/Tangent",
     exclusive_access: "Exclusive Access",
+    chapter: "Chapter",
 };
 
 /**
@@ -49,7 +50,11 @@ export async function fetchSegments(videoID) {
     try {
         cl(`[SponsorBlock] Fetching segments for: ${videoID}`);
         const hashPrefix = await _generateHash(videoID);
-        const url = `${API_BASE}/skipSegments/${hashPrefix}?service=YouTube`;
+
+        // Explicitly request all categories including chapters
+        const categories = Object.keys(CATEGORY_MAP);
+        const categoryParams = categories.map((c) => `category=${c}`).join("&");
+        const url = `${API_BASE}/skipSegments/${hashPrefix}?service=YouTube&${categoryParams}`;
 
         cl(`[SponsorBlock] API URL: ${url}`);
         const response = await fetch(url);

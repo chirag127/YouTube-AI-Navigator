@@ -20,6 +20,7 @@ export const comprehensive = (context, options) => {
     2. **Key Insights**: Bullet points of the most valuable takeaways.
     3. **Timestamps**: Include [MM:SS] timestamps references where appropriate.
     4. **FAQ**: 3-5 relevant Q&A pairs.
+    5. **SponsorBlock**: Treat provided Community Segments as VERIFIED GROUND TRUTH. Exclude sponsors/self-promo from summary/insights unless relevant to the critique.
 
     Format (Markdown):
     ## Summary

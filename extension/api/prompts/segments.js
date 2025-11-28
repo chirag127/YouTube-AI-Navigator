@@ -24,11 +24,16 @@ export const segments = (context) => {
          - DO NOT create any segments for that specific category. The "fullVideoLabel" covers it.
          - Only create segments for OTHER categories (e.g., if full video is Sponsor, still mark Intermissions or Self Promotion if they exist).
        - If no category exceeds 50%, set "fullVideoLabel" to null.
-    5. SPONSORBLOCK REFERENCE:
+    5. SPONSORBLOCK REFERENCE (STRICT ADHERENCE):
+       - Community Segments (SponsorBlock) are VERIFIED GROUND TRUTH.
        - If Community Segments (SponsorBlock) are provided above, use them as REFERENCE for timing and categories.
        - Community segments are VERIFIED by multiple users, so they're likely accurate.
+       - You MUST prioritize them over your own analysis.
+       - If a SponsorBlock segment exists, use its EXACT start/end times and category.
        - You may refine or adjust them if the transcript provides additional context.
        - Avoid creating duplicate segments that already exist in SponsorBlock data.
+       - Only create NEW segments if they cover parts of the video NOT covered by SponsorBlock.
+       - Include Chapter titles from descriptions if available.
 
     Categories(LABEL_CODE):
     - Sponsor(S): Part of a video promoting a product or service not directly related to the creator. The creator will receive payment or compensation in the form of money or free products. If the entire video is about the product or service, use a Full Video Label.

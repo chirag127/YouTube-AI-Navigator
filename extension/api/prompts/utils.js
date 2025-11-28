@@ -29,16 +29,18 @@ export const buildContextString = ({
         };
 
         sponsorBlockCtx =
-            "\n\nCommunity Segments (SponsorBlock):\n" +
+            "\n\nCommunity Segments (SponsorBlock - VERIFIED GROUND TRUTH):\n" +
             sponsorBlockSegments
-                .map(
-                    (seg) =>
-                        `- [${seg.category}] ${formatTime(
-                            seg.start
-                        )} - ${formatTime(seg.end)} (${seg.votes} votes${
-                            seg.locked ? ", locked" : ""
-                        })`
-                )
+                .map((seg) => {
+                    const desc = seg.description
+                        ? ` - "${seg.description}"`
+                        : "";
+                    return `- [${seg.category}] ${formatTime(
+                        seg.start
+                    )} - ${formatTime(seg.end)}${desc} (${seg.votes} votes${
+                        seg.locked ? ", locked" : ""
+                    })`;
+                })
                 .join("\n");
     }
 
