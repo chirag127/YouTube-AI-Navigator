@@ -17,33 +17,13 @@ export class GeminiService {
         t,
         p = "Summarize the following video transcript.",
         m = null,
-        o = {},
-        onChunk = null
+        o = {}
     ) {
         const fp = prompts.summary(t, o);
-        return onChunk
-            ? this.generateContentStream(fp, m, onChunk)
-            : this.generateContent(fp, m);
-    }
-
-    async generateStreamingSummaryWithTimestamps(
-        transcript,
-        options = {},
-        onChunk
-    ) {
-        // Deprecated: Redirecting to generateComprehensiveAnalysis (non-streaming)
-        console.warn(
-            "[GeminiService] generateStreamingSummaryWithTimestamps is deprecated. Using generateComprehensiveAnalysis."
-        );
-        return this.generateComprehensiveAnalysis(
-            { transcript, metadata: options.metadata || {} },
-            options
-        );
+        return this.generateContent(fp, m);
     }
 
     convertSummaryToHTML(markdownText, videoId) {
-        // Basic conversion since streaming service is removed
-        // This might need a proper implementation if used elsewhere
         return markdownText;
     }
 
@@ -65,27 +45,25 @@ export class GeminiService {
     async extractSegments(context) {
         try {
             const r = await this.generateContent(prompts.segments(context));
-            const c = r
-                .replace(/```json/g, "")
-                .replace(/```/g, "")
-                .trim();
-            return JSON.parse(c);
+            // Robust JSON extraction: find first [ and last ]
+            const start = r.indexOf("[");
+            const end = r.lastIndexOf("]");
+            if (start !== -1 && end !== -1) {
+                const jsonStr = r.substring(start, end + 1);
+                return JSON.parse(jsonStr);
+            }
+            throw new Error("No JSON array found in response");
         } catch (e) {
+            console.warn("[GeminiService] Segment extraction failed:", e);
             return [];
         }
     }
 
-    async generateComprehensiveAnalysis(context, o = {}, onChunk = null) {
+    async generateComprehensiveAnalysis(context, o = {}) {
         try {
-            // Force non-streaming for now as requested
             const r = await this.generateContent(
                 prompts.comprehensive(context, o)
             );
-
-            // If onChunk is provided, simulate a single chunk to satisfy callers expecting streaming
-            if (onChunk) {
-                onChunk(r, r, []);
-            }
 
             const c = r
                 .replace(/```json/g, "")
@@ -117,70 +95,6 @@ export class GeminiService {
         return match ? match[1].trim() : null;
     }
 
-    async generateContentStream(p, m = null, onChunk) {
-        let mt = [];
-        const fallbackModels = [
-            "gemini-2.5-flash-lite-preview-09-2025",
-            "gemini-2.5-flash-lite",
-            "gemini-2.5-flash",
-            "gemini-2.0-flash-exp",
-            "gemini-1.5-flash",
-            "gemini-1.5-pro",
-        ];
-
-        if (m) {
-            mt = [m];
-        } else {
-            if (this.models.models.length === 0) {
-                try {
-                    await this.models.fetch();
-                } catch (e) {
-                    console.warn(
-                        "Failed to fetch models, using fallback list:",
-                        e.message
-                    );
-                    mt = fallbackModels;
-                }
-            }
-            if (this.models.models.length > 0) {
-                mt = this.models.getList();
-            } else if (mt.length === 0) {
-                mt = fallbackModels;
-            }
-        }
-
-        let lastError = null;
-
-        for (let i = 0; i < mt.length; i++) {
-            const modelName = mt[i];
-            try {
-                console.log(
-                    `Attempting to use Gemini model (streaming): ${modelName} (${
-                        i + 1
-                    }/${mt.length})`
-                );
-                const result = await this.api.callStream(p, modelName, onChunk);
-                if (i > 0) {
-                    console.log(
-                        `Successfully used fallback model: ${modelName}`
-                    );
-                }
-                return result;
-            } catch (e) {
-                lastError = e;
-                console.warn(`Model ${modelName} failed:`, e.message);
-
-                if (i < mt.length - 1) {
-                    console.log(`Falling back to next model...`);
-                    await new Promise((r) => setTimeout(r, 1000));
-                }
-            }
-        }
-
-        throw new Error(
-            `All ${mt.length} Gemini models failed. Last error: ${lastError?.message}`
-        );
-    }
     async generateContent(p, m = null) {
         let mt = [];
         const fallbackModels = [

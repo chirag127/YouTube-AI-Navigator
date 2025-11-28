@@ -12,6 +12,12 @@ export const segments = (context) => {
     Task: Segment the following transcript into logical chapters based on the categories below.
     Return ONLY a raw JSON array. No markdown formatting.
 
+    CRITICAL INSTRUCTION: You MUST generate at least one segment labeled "Content".
+    - If specific segments are found, the "Content" segment should cover the main body of the video.
+    - If NO specific segments are found (or transcript is missing), generate a SINGLE "Content" segment covering the entire video duration (0 to ${
+        context.metadata?.lengthSeconds || "End"
+    }).
+
     Context:
     ${buildContextString(context)}
 
@@ -20,13 +26,13 @@ export const segments = (context) => {
     - Unpaid/Self Promotion: Unpaid or self-promotion.
     - Exclusive Access: Only for labeling entire videos.
     - Interaction Reminder (Subscribe): Short reminder to like/subscribe.
-    - Highlight: The part of the video that most people are looking for.
+    - Highlight: The SINGLE best part of the video (Max 1 segment).
     - Intermission/Intro Animation: Interval without actual content.
     - Endcards/Credits: Credits or endcards.
     - Preview/Recap: Clips showing what is coming up or repeated info.
     - Hook/Greetings: Narrated trailers, greetings, goodbyes.
     - Tangents/Jokes: Tangential scenes or jokes not required for main content.
-    - Content: The main video content.
+    - Content: The main video content (MANDATORY).
 
     JSON Format:
     [
