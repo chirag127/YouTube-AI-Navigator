@@ -12,8 +12,9 @@ export const segments = (context) => {
     Task: Segment transcript. Return raw JSON array.
 
     CRITICAL:
-    1. MERGE adjacent "Content" segments.
-    2. Use SHORT keys.
+    1. Use SHORT keys.
+    2. Descriptions MUST be concise summaries (max 15 words). NO raw transcript.
+    3. Include timestamp range in description (e.g., "[00:00-00:30] Summary").
 
     Context:
     ${buildContextString(context)}
@@ -29,7 +30,7 @@ export const segments = (context) => {
     - Preview/Recap
     - Hook/Greetings
     - Tangents/Jokes
-    - Content (MERGE adjacent!)
+    - Content
 
     JSON Format:
     [{
@@ -39,7 +40,7 @@ export const segments = (context) => {
         } if unknown),
         "l": "Category",
         "t": "Title (max 3 words)",
-        "d": "Description"
+        "d": "[MM:SS] Concise Summary (max 15 words)"
     }]
 
     Transcript:
