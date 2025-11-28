@@ -27,6 +27,9 @@
                     <button class="nav-item" data-tab="segments">
                         <span class="icon">🎯</span> Segments & Actions
                     </button>
+                    <button class="nav-item" data-tab="external-apis">
+                        <span class="icon">🌐</span> External APIs
+                    </button>
                     <button class="nav-item" data-tab="advanced">
                         <span class="icon">🔧</span> Advanced
                     </button>
@@ -312,6 +315,106 @@
 
                         <div class="segments-grid" id="segmentsGrid">
                             <!-- Generated dynamically by JS -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- External APIs -->
+                <section id="external-apis" class="tab-content">
+                    <header class="section-header">
+                        <h2>External APIs</h2>
+                        <p>
+                            Enhance AI accuracy with free external data sources
+                            (Optional)
+                        </p>
+                    </header>
+
+                    <div class="card">
+                        <h3>Entertainment & Media</h3>
+                        <div class="form-group">
+                            <label for="tmdbApiKey"
+                                >TMDB API Key (Movies/TV)</label
+                            >
+                            <input
+                                type="password"
+                                id="tmdbApiKey"
+                                class="form-input"
+                                placeholder="Enter TMDB API Key"
+                            />
+                            <p class="help-text">
+                                Free key from
+                                <a
+                                    href="https://www.themoviedb.org/settings/api"
+                                    target="_blank"
+                                    >TheMovieDB</a
+                                >.
+                            </p>
+                        </div>
+                        <div class="form-group">
+                            <label for="twitchClientId"
+                                >Twitch Client ID (Gaming)</label
+                            >
+                            <input
+                                type="text"
+                                id="twitchClientId"
+                                class="form-input"
+                                placeholder="Enter Twitch Client ID"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="twitchAccessToken"
+                                >Twitch Access Token (Gaming)</label
+                            >
+                            <input
+                                type="password"
+                                id="twitchAccessToken"
+                                class="form-input"
+                                placeholder="Enter Twitch Access Token"
+                            />
+                            <p class="help-text">
+                                Required for IGDB. Get from
+                                <a
+                                    href="https://dev.twitch.tv/console"
+                                    target="_blank"
+                                    >Twitch Dev Console</a
+                                >.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>News & Facts</h3>
+                        <div class="form-group">
+                            <label for="newsDataApiKey"
+                                >NewsData.io API Key</label
+                            >
+                            <input
+                                type="password"
+                                id="newsDataApiKey"
+                                class="form-input"
+                                placeholder="Enter NewsData API Key"
+                            />
+                            <p class="help-text">
+                                Free tier available at
+                                <a href="https://newsdata.io/" target="_blank"
+                                    >NewsData.io</a
+                                >.
+                            </p>
+                        </div>
+                        <div class="form-group">
+                            <label for="googleFactCheckApiKey"
+                                >Google Fact Check API Key</label
+                            >
+                            <input
+                                type="password"
+                                id="googleFactCheckApiKey"
+                                class="form-input"
+                                placeholder="Enter Google Cloud API Key"
+                            />
+                            <p class="help-text">
+                                Requires GCP project with Fact Check Tools API
+                                enabled.
+                            </p>
                         </div>
                     </div>
                 </section>

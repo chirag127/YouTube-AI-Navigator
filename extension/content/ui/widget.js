@@ -5,6 +5,22 @@ import { log, logError, waitForElement } from "../core/debug.js";
 import { createWidgetHTML } from "./components/widget/structure.js";
 
 let widgetContainer = null;
+let resizeObserver = null;
+
+function updateWidgetHeight() {
+    if (!widgetContainer) return;
+
+    const player =
+        document.querySelector("#movie_player") ||
+        document.querySelector(".html5-video-player");
+    if (player) {
+        const height = player.offsetHeight;
+        if (height > 0) {
+            widgetContainer.style.maxHeight = `${height}px`;
+            widgetContainer.style.height = `${height}px`;
+        }
+    }
+}
 
 export async function injectWidget() {
     log("Attempting to inject widget...");
@@ -16,11 +32,17 @@ export async function injectWidget() {
         existing.remove();
     }
 
+    // Cleanup previous observer
+    if (resizeObserver) {
+        resizeObserver.disconnect();
+        resizeObserver = null;
+    }
+
     // Wait for YouTube's watch page to be ready
-    const watchFlexy = document.querySelector('ytd-watch-flexy');
-    if (watchFlexy && !watchFlexy.hasAttribute('video-id')) {
+    const watchFlexy = document.querySelector("ytd-watch-flexy");
+    if (watchFlexy && !watchFlexy.hasAttribute("video-id")) {
         log("Waiting for video to load...");
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise((resolve) => setTimeout(resolve, 500));
     }
 
     // Find secondary column with extended selectors
@@ -30,7 +52,8 @@ export async function injectWidget() {
 
     while (!secondaryColumn && attempts < maxAttempts) {
         log(
-            `Secondary column not found, waiting... (Attempt ${attempts + 1
+            `Secondary column not found, waiting... (Attempt ${
+                attempts + 1
             }/${maxAttempts})`
         );
         try {
@@ -48,7 +71,7 @@ export async function injectWidget() {
         }
         attempts++;
         // Small delay between attempts
-        await new Promise(resolve => setTimeout(resolve, 200));
+        await new Promise((resolve) => setTimeout(resolve, 200));
     }
 
     if (!secondaryColumn) {
@@ -56,7 +79,9 @@ export async function injectWidget() {
             "Secondary column not found after multiple attempts. Aborting widget injection."
         );
         // Try one more fallback - inject into the page anyway
-        secondaryColumn = document.querySelector('#columns') || document.querySelector('ytd-watch-flexy');
+        secondaryColumn =
+            document.querySelector("#columns") ||
+            document.querySelector("ytd-watch-flexy");
         if (!secondaryColumn) {
             return;
         }
@@ -72,17 +97,32 @@ export async function injectWidget() {
     secondaryColumn.insertBefore(widgetContainer, secondaryColumn.firstChild);
 
     // Attach Close Button Listener
-    const closeBtn = widgetContainer.querySelector('#yt-ai-close-btn');
+    const closeBtn = widgetContainer.querySelector("#yt-ai-close-btn");
     if (closeBtn) {
-        closeBtn.addEventListener('click', () => {
+        closeBtn.addEventListener("click", () => {
             log("Closing widget...");
             widgetContainer.remove();
+            if (resizeObserver) {
+                resizeObserver.disconnect();
+            }
         });
     }
 
     log("Initializing tabs and event listeners...");
     initTabs(widgetContainer);
     attachEventListeners(widgetContainer);
+
+    // Initialize height sync
+    updateWidgetHeight();
+    const player =
+        document.querySelector("#movie_player") ||
+        document.querySelector(".html5-video-player");
+    if (player) {
+        resizeObserver = new ResizeObserver(() => {
+            updateWidgetHeight();
+        });
+        resizeObserver.observe(player);
+    }
 
     log("Widget injection complete ✓");
 }

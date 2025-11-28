@@ -12,6 +12,12 @@ const DEFAULT_SETTINGS = {
     debugMode: false,
     transcriptMethod: "auto",
     transcriptLanguage: "en",
+    // External APIs
+    tmdbApiKey: "",
+    twitchClientId: "",
+    twitchAccessToken: "",
+    newsDataApiKey: "",
+    googleFactCheckApiKey: "",
     // Segment Settings: { category: { action: 'ignore'|'skip'|'speed', speed: 2 } }
     segments: {},
 };
@@ -69,6 +75,12 @@ function initializeElements() {
         debugMode: document.getElementById("debugMode"),
         transcriptMethod: document.getElementById("transcriptMethod"),
         transcriptLanguage: document.getElementById("transcriptLanguage"),
+        // External APIs
+        tmdbApiKey: document.getElementById("tmdbApiKey"),
+        twitchClientId: document.getElementById("twitchClientId"),
+        twitchAccessToken: document.getElementById("twitchAccessToken"),
+        newsDataApiKey: document.getElementById("newsDataApiKey"),
+        googleFactCheckApiKey: document.getElementById("googleFactCheckApiKey"),
         toast: document.getElementById("toast"),
     };
 }
@@ -162,6 +174,15 @@ async function loadSettings() {
         elements.transcriptLanguage.value =
             currentSettings.transcriptLanguage || "en";
 
+        // External APIs
+        elements.tmdbApiKey.value = currentSettings.tmdbApiKey || "";
+        elements.twitchClientId.value = currentSettings.twitchClientId || "";
+        elements.twitchAccessToken.value =
+            currentSettings.twitchAccessToken || "";
+        elements.newsDataApiKey.value = currentSettings.newsDataApiKey || "";
+        elements.googleFactCheckApiKey.value =
+            currentSettings.googleFactCheckApiKey || "";
+
         updateSegmentsUI();
     } catch (e) {
         console.error("Failed to load settings:", e);
@@ -183,6 +204,15 @@ async function saveSettings() {
         currentSettings.debugMode = elements.debugMode.checked;
         currentSettings.transcriptMethod = elements.transcriptMethod.value;
         currentSettings.transcriptLanguage = elements.transcriptLanguage.value;
+
+        // External APIs
+        currentSettings.tmdbApiKey = elements.tmdbApiKey.value.trim();
+        currentSettings.twitchClientId = elements.twitchClientId.value.trim();
+        currentSettings.twitchAccessToken =
+            elements.twitchAccessToken.value.trim();
+        currentSettings.newsDataApiKey = elements.newsDataApiKey.value.trim();
+        currentSettings.googleFactCheckApiKey =
+            elements.googleFactCheckApiKey.value.trim();
 
         // Segments are updated in real-time in the state object by event listeners
 
@@ -374,6 +404,11 @@ function setupEventListeners() {
         elements.debugMode,
         elements.transcriptMethod,
         elements.transcriptLanguage,
+        elements.tmdbApiKey,
+        elements.twitchClientId,
+        elements.twitchAccessToken,
+        elements.newsDataApiKey,
+        elements.googleFactCheckApiKey,
     ];
 
     autoSaveInputs.forEach((el) => {

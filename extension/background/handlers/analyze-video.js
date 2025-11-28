@@ -2,6 +2,7 @@ import { initializeServices, getServices } from "../services.js";
 import { getApiKey } from "../utils/api-key.js";
 import geniusLyricsAPI from "../../api/genius-lyrics.js";
 import sponsorBlockAPI from "../../api/sponsorblock.js";
+import { ContextManager } from "../../services/context-manager.js";
 
 let keepAliveInterval = null;
 
@@ -107,6 +108,100 @@ export async function handleAnalyzeVideo(request, sendResponse) {
             }
         }
 
+        // Fetch External Context (APIs)
+        let externalContext = {};
+        try {
+            console.log("[AnalyzeVideo] Starting ContextManager fetch...");
+
+            // Step 1: Check chrome.storage.sync availability
+            console.log(
+                "[AnalyzeVideo] Checking chrome.storage.sync availability..."
+            );
+            if (!chrome.storage || !chrome.storage.sync) {
+                throw new Error("chrome.storage.sync is not available");
+            }
+
+            // Step 2: Retrieve settings with detailed logging
+            console.log(
+                "[AnalyzeVideo] Retrieving settings from chrome.storage.sync..."
+            );
+            const settings = await chrome.storage.sync.get(null);
+            console.log(
+                "[AnalyzeVideo] Settings retrieved:",
+                Object.keys(settings || {})
+            );
+
+            // Step 3: Validate settings
+            if (!settings || Object.keys(settings).length === 0) {
+                console.warn(
+                    "[AnalyzeVideo] Warning: No settings found in chrome.storage.sync"
+                );
+            }
+
+            // Step 4: Validate metadata
+            if (!metadata) {
+                throw new Error("Metadata is null/undefined");
+            }
+            console.log(
+                "[AnalyzeVideo] Metadata validation - Title:",
+                metadata.title ? "✓" : "✗",
+                "Category:",
+                metadata.category ? "✓" : "✗",
+                "Author:",
+                metadata.author ? "✓" : "✗"
+            );
+
+            // Step 5: Create ContextManager
+            console.log(
+                "[AnalyzeVideo] Creating ContextManager with settings..."
+            );
+            const contextManager = new ContextManager(settings);
+            console.log("[AnalyzeVideo] ContextManager created successfully");
+
+            // Step 6: Execute fetchContext with timeout
+            console.log(
+                "[AnalyzeVideo] Starting context fetch with 10-second timeout..."
+            );
+            const fetchPromise = contextManager.fetchContext(metadata);
+            const timeoutPromise = new Promise((_, reject) =>
+                setTimeout(
+                    () => reject(new Error("ContextManager timeout after 10s")),
+                    10000
+                )
+            );
+
+            externalContext = await Promise.race([
+                fetchPromise,
+                timeoutPromise,
+            ]);
+            console.log(
+                "[AnalyzeVideo] ContextManager completed successfully, keys:",
+                Object.keys(externalContext || {})
+            );
+        } catch (e) {
+            console.error("[AnalyzeVideo] ContextManager failed:", e.message);
+            console.error("[AnalyzeVideo] Error stack:", e.stack);
+
+            // Provide specific error context
+            if (e.message.includes("timeout")) {
+                console.warn(
+                    "[AnalyzeVideo] Issue: External API calls are taking too long (>10s)"
+                );
+            } else if (e.message.includes("chrome.storage")) {
+                console.warn(
+                    "[AnalyzeVideo] Issue: chrome.storage.sync not accessible"
+                );
+            } else if (e.message.includes("Metadata")) {
+                console.warn(
+                    "[AnalyzeVideo] Issue: Missing or invalid metadata"
+                );
+            } else {
+                console.warn(
+                    "[AnalyzeVideo] Issue: Unexpected error - check API keys and network connectivity"
+                );
+            }
+        }
+
         if ((!transcript || !transcript.length) && !lyrics) {
             throw new Error("No transcript or lyrics available");
         }
@@ -124,6 +219,7 @@ export async function handleAnalyzeVideo(request, sendResponse) {
             comments: comments || [],
             metadata: metadata,
             sponsorBlockSegments: sponsorBlockSegments,
+            externalContext: externalContext,
         };
 
         const analysis = await gemini.generateComprehensiveAnalysis(

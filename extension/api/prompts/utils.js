@@ -3,6 +3,7 @@ export const buildContextString = ({
     lyrics,
     comments,
     sponsorBlockSegments,
+    externalContext,
 }) => {
     let title = `Original Title: ${
         metadata?.originalTitle || metadata?.title || "Unknown"
@@ -44,6 +45,18 @@ export const buildContextString = ({
                 .join("\n");
     }
 
+    let externalCtx = "";
+    if (externalContext && Object.keys(externalContext).length > 0) {
+        externalCtx = "\n\n[External Context (Verified Data Sources)]:\n";
+        for (const [source, data] of Object.entries(externalContext)) {
+            externalCtx += `\nSource: ${source.toUpperCase()}\nData: ${JSON.stringify(
+                data,
+                null,
+                2
+            )}\n`;
+        }
+    }
+
     return `
     Video Context:
     ${title}
@@ -60,5 +73,6 @@ export const buildContextString = ({
     }
     ${commentsCtx}
     ${sponsorBlockCtx}
+    ${externalCtx}
     `;
 };
