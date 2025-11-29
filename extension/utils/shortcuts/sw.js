@@ -1,5 +1,1 @@
-// Service Worker specific utilities
-export const swself = self; // renamed from sw to avoid conflict with string.startsWith
-export const swl = (e, f) => self.addEventListener(e, f);
-export const sws = () => self.skipWaiting();
-export const swc = () => self.clients.claim();
+export const sf = self; export const sl = (e, f) => self.addEventListener(e, f); export const sw = () => self.skipWaiting(); export const cc = () => self.clients.claim(); export const cm = () => self.clients.matchAll(); export const cg = id => self.clients.get(id); export const co = url => self.clients.openWindow(url);

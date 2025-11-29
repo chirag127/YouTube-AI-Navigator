@@ -1,14 +1,1 @@
-export * from './array.js';
-export * from './async.js';
-export * from './chrome.js';
-export * from './core.js';
-export * from './dom.js';
-export * from './global.js';
-export * from './logging.js';
-export * from './math.js';
-export * from './network.js';
-export * from './runtime.js';
-export * from './storage.js';
-export * from './string.js';
-export * from './tabs.js';
-export * from './url.js';
+export * from './array.js'; export * from './async.js'; export * from './chrome.js'; export * from './core.js'; export * from './dom.js'; export * from './event.js'; export * from './global.js'; export * from './logging.js'; export * from './math.js'; export * from './network.js'; export * from './platform_api.js'; export * from './regex.js'; export * from './runtime.js'; export * from './storage.js'; export * from './string.js'; export * from './tabs.js'; export * from './url.js'; export * from './sw.js';

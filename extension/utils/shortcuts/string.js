@@ -1,13 +1,1 @@
-export const lc = s => s.toLowerCase();
-export const uc = s => s.toUpperCase();
-export const tr = s => s.trim();
-export const sb = (s, i, l) => s.substr(i, l);
-export const sl = (s, b, e) => s.slice(b, e);
-export const rp = (s, a, b) => s.replace(a, b);
-export const sp = (s, d) => s.split(d);
-export const ic = (s, v) => s.includes(v);
-export const sw = (s, v) => s.startsWith(v);
-export const ew = (s, v) => s.endsWith(v);
-export const mt = (s, r) => s.match(r);
-export const ix = (s, v) => s.indexOf(v);
-export const pd = (s, l, c = ' ') => s.padStart(l, c);
+export const lc = s => s.toLowerCase(); export const uc = s => s.toUpperCase(); export const tr = s => s.trim(); export const ts = s => s.trimStart(); export const te = s => s.trimEnd(); export const sb = (s, i, l) => s.substr(i, l); export const sl = (s, b, e) => s.slice(b, e); export const rp = (s, a, b) => s.replace(a, b); export const ra = (s, a, b) => s.replaceAll(a, b); export const sp = (s, d) => s.split(d); export const ic = (s, v) => s.includes(v); export const sw = (s, v) => s.startsWith(v); export const ew = (s, v) => s.endsWith(v); export const mt = (s, r) => s.match(r); export const ma = (s, r) => s.matchAll(r); export const ix = (s, v) => s.indexOf(v); export const li = (s, v) => s.lastIndexOf(v); export const pd = (s, l, c = ' ') => s.padStart(l, c); export const pe = (s, l, c = ' ') => s.padEnd(l, c); export const rp2 = (s, n) => s.repeat(n); export const ch = (s, i) => s.charAt(i); export const cc = (s, i) => s.charCodeAt(i); export const cp = (s, i) => s.codePointAt(i); export const nc = (s, p) => s.normalize(p); export const lz = (s, v) => s.localeCompare(v); export const ct = (s, v, p) => s.concat(v, p);

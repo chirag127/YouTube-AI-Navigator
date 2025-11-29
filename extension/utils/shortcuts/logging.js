@@ -1,9 +1,1 @@
-export const l = console.log.bind(console);
-export const e = console.error.bind(console);
-export const w = console.warn.bind(console);
-export const i = console.info.bind(console);
-export const d = console.debug.bind(console);
-export const tr = console.trace.bind(console);
-export const cl = console.clear.bind(console);
-export const tm = console.time.bind(console);
-export const te = console.timeEnd.bind(console);
+export const l = console.log.bind(console); export const e = console.error.bind(console); export const w = console.warn.bind(console); export const i = console.info.bind(console); export const d = console.debug.bind(console); export const tr = console.trace.bind(console); export const cl = console.clear.bind(console); export const tm = console.time.bind(console); export const te = console.timeEnd.bind(console); export const tl = console.timeLog.bind(console); export const tb = console.table.bind(console); export const gr = console.group.bind(console); export const ge = console.groupEnd.bind(console); export const gc = console.groupCollapsed.bind(console); export const ct = console.count.bind(console); export const cr = console.countReset.bind(console); export const as = console.assert.bind(console); export const dr = console.dir.bind(console);

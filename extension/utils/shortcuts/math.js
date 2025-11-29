@@ -1,10 +1,1 @@
-export const mf = Math.floor;
-export const mc = Math.ceil;
-export const mr = Math.round;
-export const ma = Math.abs;
-export const mn = Math.min;
-export const mx = Math.max;
-export const rn = Math.random;
-export const pi = Math.PI;
-export const pw = Math.pow;
-export const sq = Math.sqrt;
+export const mf = Math.floor; export const mc = Math.ceil; export const mr = Math.round; export const ma = Math.abs; export const mn = Math.min; export const mx = Math.max; export const rn = Math.random; export const pi = Math.PI; export const pw = Math.pow; export const sq = Math.sqrt; export const cb = Math.cbrt; export const sn = Math.sin; export const cs = Math.cos; export const tn = Math.tan; export const as = Math.asin; export const ac = Math.acos; export const at = Math.atan; export const a2 = Math.atan2; export const ex = Math.exp; export const lg = Math.log; export const l2 = Math.log2; export const l1 = Math.log10; export const sg = Math.sign; export const tr = Math.trunc; export const rnd = (n, d = 0) => mr(n * pw(10, d)) / pw(10, d); export const clp = (n, mi, ma) => mn(mx(n, mi), ma); export const rng = (mi, ma) => mf(rn() * (ma - mi + 1)) + mi;

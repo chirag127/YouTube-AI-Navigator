@@ -1,1 +1,43 @@
-import { l, e, w } from '../utils/shortcuts/logging.js'; import { cr, ct } from '../utils/shortcuts/chrome.js'; import { ru, rg } from '../utils/shortcuts/runtime.js'; cr.onInstalled.addListener(async d => { if (d.reason === 'install') { l('YouTube AI Master installed'); try { await ct.create({ url: ru('onboarding/onboarding.html') }); } catch (x) { e('Failed to open onboarding:', x); } } else if (d.reason === 'update') { l('YouTube AI Master updated to version', rg().version); } }); cr.onMessage.addListener((req, snd, rsp) => { const act = req.action || req.type; l('Background received message:', act); (async () => { try { const { verifySender } = await import('./security/sender-check.js'); if (!verifySender(snd)) { rsp({ success: false, error: 'Unauthorized' }); return; } const { validateMessage, sanitizeRequest } = await import('./security/validator.js'); const val = validateMessage(req); if (!val.valid) { rsp({ success: false, error: val.error }); return; } const san = sanitizeRequest(req); switch (act) { case 'TEST': rsp({ success: true, message: 'Background script is running' }); break; case 'GET_SETTINGS': { const { handleGetSettings } = await import('./handlers/settings.js'); await handleGetSettings(rsp); break; } case 'FETCH_TRANSCRIPT': { const { handleFetchTranscript } = await import('./handlers/fetch-transcript.js'); await handleFetchTranscript(san, rsp); break; } case 'ANALYZE_VIDEO': { const { handleAnalyzeVideo } = await import('./handlers/analyze-video.js'); await handleAnalyzeVideo(san, rsp); break; } case 'ANALYZE_COMMENTS': { const { handleAnalyzeComments } = await import('./handlers/comments.js'); await handleAnalyzeComments(san, rsp); break; } case 'CHAT_WITH_VIDEO': { const { handleChatWithVideo } = await import('./handlers/chat.js'); await handleChatWithVideo(san, rsp); break; } case 'SAVE_TO_HISTORY': { const { handleSaveToHistory } = await import('./handlers/history.js'); await handleSaveToHistory(san, rsp); break; } case 'SAVE_HISTORY': { const { handleSaveHistory } = await import('./handlers/video-data.js'); rsp(await handleSaveHistory(san)); break; } case 'GET_METADATA': { const { handleGetMetadata } = await import('./handlers/metadata.js'); await handleGetMetadata(san, rsp); break; } case 'FETCH_INVIDIOUS_TRANSCRIPT': { const { handleFetchInvidiousTranscript } = await import('./handlers/invidious.js'); rsp(await handleFetchInvidiousTranscript(san)); break; } case 'FETCH_INVIDIOUS_METADATA': { const { handleFetchInvidiousMetadata } = await import('./handlers/invidious.js'); rsp(await handleFetchInvidiousMetadata(san)); break; } case 'GET_CACHED_DATA': { const { handleGetCachedData } = await import('./handlers/cache.js'); await handleGetCachedData(san, rsp); break; } case 'SAVE_CHAT_MESSAGE': { const { handleSaveChatMessage } = await import('./handlers/chat-history.js'); await handleSaveChatMessage(san, rsp); break; } case 'SAVE_COMMENTS': { const { handleSaveComments } = await import('./handlers/comments-storage.js'); await handleSaveComments(san, rsp); break; } case 'TRANSCRIBE_AUDIO': { const { handleTranscribeAudio } = await import('./handlers/transcribe-audio.js'); await handleTranscribeAudio(san, rsp); break; } case 'GET_LYRICS': { const { handleGetLyrics } = await import('./handlers/get-lyrics.js'); await handleGetLyrics(san, rsp); break; } case 'GET_VIDEO_DATA': { const { handleGetVideoData } = await import('./handlers/video-data.js'); rsp(await handleGetVideoData(san)); break; } case 'OPEN_OPTIONS': cr.openOptionsPage(); rsp({ success: true }); break; default: w('Unknown message type:', act); rsp({ success: false, error: 'Unknown message type' }); } } catch (err) { e('Background handler error:', err); rsp({ success: false, error: err.message }); } })(); return true; });
+import { l, e, w, cr, tab, url, rg } from '../utils/shortcuts/index.js';
+cr.onInstalled.addListener(async d => {
+    if (d.reason === 'install') {
+        l('YAM installed');
+        try { await tab({ url: url('onboarding/onboarding.html') }) } catch (x) { e('Onboard:', x) }
+    } else if (d.reason === 'update') l('YAM updated:', rg().version)
+});
+cr.onMessage.addListener((q, s, r) => {
+    const a = q.action || q.type;
+    l('BG:', a);
+    (async () => {
+        try {
+            const { verifySender: vs } = await import('./security/sender-check.js');
+            if (!vs(s)) { r({ success: false, error: 'Unauthorized' }); return }
+            const { validateMessage: vm, sanitizeRequest: sr } = await import('./security/validator.js');
+            const v = vm(q);
+            if (!v.valid) { r({ success: false, error: v.error }); return }
+            const n = sr(q);
+            switch (a) {
+                case 'TEST': r({ success: true, message: 'BG running' }); break;
+                case 'GET_SETTINGS': { const { handleGetSettings: h } = await import('./handlers/settings.js'); await h(r); break }
+                case 'FETCH_TRANSCRIPT': { const { handleFetchTranscript: h } = await import('./handlers/fetch-transcript.js'); await h(n, r); break }
+                case 'ANALYZE_VIDEO': { const { handleAnalyzeVideo: h } = await import('./handlers/analyze-video.js'); await h(n, r); break }
+                case 'ANALYZE_COMMENTS': { const { handleAnalyzeComments: h } = await import('./handlers/comments.js'); await h(n, r); break }
+                case 'CHAT_WITH_VIDEO': { const { handleChatWithVideo: h } = await import('./handlers/chat.js'); await h(n, r); break }
+                case 'SAVE_TO_HISTORY': { const { handleSaveToHistory: h } = await import('./handlers/history.js'); await h(n, r); break }
+                case 'SAVE_HISTORY': { const { handleSaveHistory: h } = await import('./handlers/video-data.js'); r(await h(n)); break }
+                case 'GET_METADATA': { const { handleGetMetadata: h } = await import('./handlers/metadata.js'); await h(n, r); break }
+                case 'FETCH_INVIDIOUS_TRANSCRIPT': { const { handleFetchInvidiousTranscript: h } = await import('./handlers/invidious.js'); r(await h(n)); break }
+                case 'FETCH_INVIDIOUS_METADATA': { const { handleFetchInvidiousMetadata: h } = await import('./handlers/invidious.js'); r(await h(n)); break }
+                case 'GET_CACHED_DATA': { const { handleGetCachedData: h } = await import('./handlers/cache.js'); await h(n, r); break }
+                case 'SAVE_CHAT_MESSAGE': { const { handleSaveChatMessage: h } = await import('./handlers/chat-history.js'); await h(n, r); break }
+                case 'SAVE_COMMENTS': { const { handleSaveComments: h } = await import('./handlers/comments-storage.js'); await h(n, r); break }
+                case 'TRANSCRIBE_AUDIO': { const { handleTranscribeAudio: h } = await import('./handlers/transcribe-audio.js'); await h(n, r); break }
+                case 'GET_LYRICS': { const { handleGetLyrics: h } = await import('./handlers/get-lyrics.js'); await h(n, r); break }
+                case 'GET_VIDEO_DATA': { const { handleGetVideoData: h } = await import('./handlers/video-data.js'); r(await h(n)); break }
+                case 'OPEN_OPTIONS': cr.openOptionsPage(); r({ success: true }); break;
+                default: w('Unknown:', a); r({ success: false, error: 'Unknown' })
+            }
+        } catch (x) { e('BG err:', x); r({ success: false, error: x.message }) }
+    })();
+    return true
+});

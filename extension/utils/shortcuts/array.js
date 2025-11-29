@@ -1,14 +1,1 @@
-export const af = Array.from;
-export const ia = Array.isArray;
-export const fe = (a, f) => a.forEach(f);
-export const mp = (a, f) => a.map(f);
-export const fl = (a, f) => a.filter(f);
-export const rd = (a, f, i) => a.reduce(f, i);
-export const fn = (a, f) => a.find(f);
-export const ic = (a, v) => a.includes(v);
-export const ps = (a, v) => a.push(v);
-export const sl = (a, s, e) => a.slice(s, e);
-export const sp = (a, s, d) => a.splice(s, d);
-export const jn = (a, s) => a.join(s);
-export const st = (a, f) => a.sort(f);
-export const ln = a => a.length;
+export const af = Array.from; export const ia = Array.isArray; export const fe = (a, f) => a.forEach(f); export const mp = (a, f) => a.map(f); export const fl = (a, f) => a.filter(f); export const rd = (a, f, i) => a.reduce(f, i); export const fn = (a, f) => a.find(f); export const fi = (a, f) => a.findIndex(f); export const fli = (a, f) => a.findLastIndex(f); export const ic = (a, v) => a.includes(v); export const ps = (a, v) => a.push(v); export const pp = (a) => a.pop(); export const sh = (a, v) => a.shift(v); export const us = (a, v) => a.unshift(v); export const sl = (a, s, e) => a.slice(s, e); export const sp = (a, s, d, ...i) => a.splice(s, d, ...i); export const jn = (a, s) => a.join(s); export const st = (a, f) => a.sort(f); export const rv = (a) => a.reverse(); export const ln = a => a.length; export const sm = (a, f, i) => a.some(f, i); export const ev = (a, f, i) => a.every(f, i); export const ft = (a, v) => a.flat(v); export const fm = (a, f) => a.flatMap(f); export const at = (a, i) => a.at(i); export const cp = (a, t, s, e) => a.copyWithin(t, s, e); export const fl2 = (a, v, s, e) => a.fill(v, s, e); export const io = (a, v, f) => a.indexOf(v, f); export const li = (a, v, f) => a.lastIndexOf(v, f);
