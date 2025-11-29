@@ -8,7 +8,7 @@ import { GoogleFactCheckAPI } from '../api/google-factcheck.js';
 import { WikidataAPI } from '../api/wikidata.js';
 import { DatamuseAPI } from '../api/datamuse.js';
 import { OpenMeteoAPI } from '../api/openmeteo.js';
-import { l, w } from '../utils/../../utils/shortcuts/log.js';
+import { l, w } from '../utils/shortcuts/log.js';
 import { ps } from '../utils/shortcuts/async.js';
 import { ok } from '../utils/shortcuts/core.js';
 import { ia } from '../utils/shortcuts/array.js';
