@@ -1,7 +1,7 @@
 export class GeneralSettings {
-    constructor(settingsManager, uiManager) {
+    constructor(settingsManager, autoSave) {
         this.settings = settingsManager;
-        this.ui = uiManager;
+        this.autoSave = autoSave;
     }
 
     init() {
@@ -25,7 +25,7 @@ export class GeneralSettings {
 
         // Cache
         this.setChecked('cacheEnabled', config.cache?.enabled ?? true);
-        this.setValue('cacheTTL', (config.cache?.ttl || 86400000) / 3600000); // Convert ms to hours
+        this.setValue('cacheTTL', (config.cache?.ttl || 86400000) / 3600000);
         this.setChecked('cacheTranscripts', config.cache?.transcripts ?? true);
         this.setChecked('cacheComments', config.cache?.comments ?? true);
         this.setChecked('cacheMetadata', config.cache?.metadata ?? true);
@@ -56,53 +56,41 @@ export class GeneralSettings {
     }
 
     attachListeners() {
-        // Language
-        this.onChange('outputLanguage', (v) => this.settings.update('ai.outputLanguage', v));
-        this.onChange('transcriptLanguage', (v) => this.settings.update('transcript.language', v));
-
-        // Transcript
-        this.onChange('transcriptMethod', (v) => this.settings.update('transcript.method', v));
-        this.onChange('transcriptAutoClose', (v) => this.settings.update('transcript.autoClose', v));
-        this.onChange('transcriptAutoCloseDelay', (v) => this.settings.update('transcript.autoCloseDelay', parseInt(v)));
-        this.onChange('transcriptAutoCloseOnCached', (v) => this.settings.update('transcript.autoCloseOnCached', v));
-        this.onChange('includeTimestamps', (v) => this.settings.update('transcript.includeTimestamps', v));
-
-        // Cache
-        this.onChange('cacheEnabled', (v) => this.settings.update('cache.enabled', v));
-        this.onChange('cacheTTL', (v) => this.settings.update('cache.ttl', parseInt(v) * 3600000)); // Convert hours to ms
-        this.onChange('cacheTranscripts', (v) => this.settings.update('cache.transcripts', v));
-        this.onChange('cacheComments', (v) => this.settings.update('cache.comments', v));
-        this.onChange('cacheMetadata', (v) => this.settings.update('cache.metadata', v));
-
-        // Scroll
-        this.onChange('autoScrollToComments', (v) => this.settings.update('scroll.autoScrollToComments', v));
-        this.onChange('scrollBackAfterComments', (v) => this.settings.update('scroll.scrollBackAfterComments', v));
-        this.onChange('showScrollNotification', (v) => this.settings.update('scroll.showScrollNotification', v));
-
-        // Comments
-        this.onChange('commentsEnabled', (v) => this.settings.update('comments.enabled', v));
-        this.onChange('commentsLimit', (v) => this.settings.update('comments.limit', parseInt(v)));
-        this.onChange('analyzeSentiment', (v) => this.settings.update('comments.analyzeSentiment', v));
-
-        // Metadata
-        this.onChange('includeTitle', (v) => this.settings.update('metadata.includeTitle', v));
-        this.onChange('includeAuthor', (v) => this.settings.update('metadata.includeAuthor', v));
-        this.onChange('includeViews', (v) => this.settings.update('metadata.includeViews', v));
-        this.onChange('includeDuration', (v) => this.settings.update('metadata.includeDuration', v));
-        this.onChange('includeDescription', (v) => this.settings.update('metadata.includeDescription', v));
-        this.onChange('includeTags', (v) => this.settings.update('metadata.includeTags', v));
-
-        // Automation
-        this.onChange('autoAnalyze', (v) => this.settings.update('automation.autoAnalyze', v));
-
-        // Data & Privacy
-        this.onChange('saveHistory', (v) => this.settings.update('advanced.saveHistory', v));
+        this.autoSave.attachToAll({
+            outputLanguage: { path: 'ai.outputLanguage' },
+            transcriptLanguage: { path: 'transcript.language' },
+            transcriptMethod: { path: 'transcript.method' },
+            transcriptAutoClose: { path: 'transcript.autoClose' },
+            transcriptAutoCloseDelay: { path: 'transcript.autoCloseDelay', transform: (v) => parseInt(v) },
+            transcriptAutoCloseOnCached: { path: 'transcript.autoCloseOnCached' },
+            includeTimestamps: { path: 'transcript.includeTimestamps' },
+            cacheEnabled: { path: 'cache.enabled' },
+            cacheTTL: { path: 'cache.ttl', transform: (v) => parseInt(v) * 3600000 },
+            cacheTranscripts: { path: 'cache.transcripts' },
+            cacheComments: { path: 'cache.comments' },
+            cacheMetadata: { path: 'cache.metadata' },
+            autoScrollToComments: { path: 'scroll.autoScrollToComments' },
+            scrollBackAfterComments: { path: 'scroll.scrollBackAfterComments' },
+            showScrollNotification: { path: 'scroll.showScrollNotification' },
+            commentsEnabled: { path: 'comments.enabled' },
+            commentsLimit: { path: 'comments.limit', transform: (v) => parseInt(v) },
+            analyzeSentiment: { path: 'comments.analyzeSentiment' },
+            includeTitle: { path: 'metadata.includeTitle' },
+            includeAuthor: { path: 'metadata.includeAuthor' },
+            includeViews: { path: 'metadata.includeViews' },
+            includeDuration: { path: 'metadata.includeDuration' },
+            includeDescription: { path: 'metadata.includeDescription' },
+            includeTags: { path: 'metadata.includeTags' },
+            autoAnalyze: { path: 'automation.autoAnalyze' },
+            saveHistory: { path: 'advanced.saveHistory' }
+        });
 
         // Clear History
         document.getElementById('clearHistory')?.addEventListener('click', async () => {
             if (confirm('Clear all history? This cannot be undone.')) {
-                await chrome.storage.local.remove('history');
-                this.ui.showToast('History cleared');
+                await chrome.storage.local.remove('comprehensive_history');
+                this.autoSave.show('✓ History cleared');
+                setTimeout(() => this.autoSave.hide(), 2000);
             }
         });
     }
@@ -115,18 +103,5 @@ export class GeneralSettings {
     setChecked(id, checked) {
         const el = document.getElementById(id);
         if (el) el.checked = checked;
-    }
-
-    onChange(id, callback) {
-        const el = document.getElementById(id);
-        if (!el) return;
-
-        const handler = (e) => {
-            const value = el.type === 'checkbox' ? el.checked : el.value;
-            callback(value);
-        };
-
-        el.addEventListener('change', handler);
-        el.addEventListener('input', handler);
     }
 }
