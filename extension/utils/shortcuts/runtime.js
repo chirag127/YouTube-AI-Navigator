@@ -4,3 +4,4 @@ export const url = p => chrome.runtime.getURL(p);
 export const rt = chrome.runtime;
 export const rrl = () => chrome.runtime.reload();
 export const rgm = () => chrome.runtime.getManifest();
+export const oop = () => chrome.runtime.openOptionsPage();

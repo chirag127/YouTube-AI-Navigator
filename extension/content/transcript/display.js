@@ -1,4 +1,4 @@
-import { rt as cr } from '../../utils/shortcuts/runtime.js';
+import { ce as cr } from '../../utils/shortcuts/dom.js';
 
 export function createTranscriptDisplay(s) {
   const c = cr('div');

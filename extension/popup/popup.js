@@ -1,10 +1,10 @@
 import { id } from '../utils/shortcuts/dom.js';
 import { sg, slg } from '../utils/shortcuts/storage.js';
-import { w } from '../utils/../../utils/shortcuts/log.js';
-import { cr } from '../utils/shortcuts/chrome.js';
-import { tab as ct } from '../utils/shortcuts/tabs.js';
-import { url } from '../utils/shortcuts/runtime.js';
+import { w } from '../utils/shortcuts/log.js';
+import { tq, tm, tc } from '../utils/shortcuts/tabs.js';
+import { url, oop } from '../utils/shortcuts/runtime.js';
 import { to } from '../utils/shortcuts/global.js';
+
 const a = id('api-status'),
   p = id('page-status'),
   b = id('analyze-btn'),
@@ -12,11 +12,13 @@ const a = id('api-status'),
   o = id('options-btn'),
   m = id('message'),
   g = id('setup-guide-btn');
+
 function showMsg(t, y = 'info') {
   m.textContent = t;
   m.className = `show ${y}`;
   to(() => m.classList.remove('show'), 3000);
 }
+
 async function checkApi() {
   try {
     const s = await sg(['apiKey', 'onboardingCompleted']),
@@ -31,7 +33,7 @@ async function checkApi() {
     a.className = 'value warning';
     if (!s.onboardingCompleted) {
       g.style.display = 'block';
-      g.onclick = () => cr.openOptionsPage();
+      g.onclick = () => oop();
     }
     return false;
   } catch (x) {
@@ -39,9 +41,10 @@ async function checkApi() {
     return false;
   }
 }
+
 async function checkPage() {
   try {
-    const [t] = await ct.query({ active: true, currentWindow: true });
+    const [t] = await tq({ active: true, currentWindow: true });
     if (t && t.url && t.url.includes('youtube.com/watch')) {
       p.innerHTML = '<span>✅ YouTube Video</span>';
       p.className = 'value success';
@@ -57,18 +60,21 @@ async function checkPage() {
     return false;
   }
 }
+
 b.onclick = async () => {
   try {
-    const [t] = await ct.query({ active: true, currentWindow: true });
+    const [t] = await tq({ active: true, currentWindow: true });
     if (!t) return;
-    await ct.sendMessage(t.id, { action: 'ANALYZE_VIDEO' });
+    await tm(t.id, { action: 'ANALYZE_VIDEO' });
     showMsg('Analysis started!', 'success');
   } catch (x) {
     showMsg('Failed to start analysis', 'error');
   }
 };
-h.onclick = () => ct.create({ url: url('history/history.html') });
-o.onclick = () => cr.openOptionsPage();
+
+h.onclick = () => tc({ url: url('history/history.html') });
+o.onclick = () => oop();
+
 (async () => {
   await checkApi();
   await checkPage();

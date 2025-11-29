@@ -82,9 +82,10 @@
     try {
       const { videoId: v } = r;
       const wc = await cTC(v);
-      const { getTranscript: gT } = await import(url('content/transcript/service.js'));
-      const t = await gT(v);
-      if (!t || !t.length) throw new Error('No caps');
+      const { extractTranscript: gT } = await import(url('content/transcript/strategy-manager.js'));
+      const r = await gT(v);
+      if (!r.success || !r.data || !r.data.length) throw new Error(r.error || 'No caps');
+      const t = r.data;
       if (!wc) {
         try {
           const { collapseTranscriptWidget: cTW } = await import(

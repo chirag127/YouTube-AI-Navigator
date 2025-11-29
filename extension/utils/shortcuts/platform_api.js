@@ -1,7 +1,6 @@
-export const wn = window;
-export const dc = document;
-export const nv = navigator;
-export const loc = location;
+export const w = window;
+export const n = navigator;
+export const l = location;
 export const ls = localStorage;
 export const ss = sessionStorage;
 export const hs = history;

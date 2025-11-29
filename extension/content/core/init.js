@@ -1,50 +1,40 @@
-import { log, logError } from './debug.js';
+import { lg, er } from '../../utils/shortcuts/log.js';
 
 export async function initializeExtension() {
-  const { ru } = await import(chrome.runtime.getURL('utils/shortcuts/runtime.js'));
-  log('=== YouTube AI Master Initialization ===');
+  const { url } = await import(chrome.runtime.getURL('utils/shortcuts/runtime.js'));
+  lg('=== YouTube AI Master Initialization ===');
   try {
-    log('Step 1: Loading settings...');
-    const { loadSettings } = await import(ru('content/core/state.js'));
+    lg('Step 1: Loading settings...');
+    const { loadSettings } = await import(url('content/core/state.js'));
     await loadSettings();
-    log('Settings loaded ✓');
+    lg('Settings loaded ✓');
 
-    log('Step 2: Initializing observer...');
-    const { initObserver } = await import(ru('content/core/observer.js'));
+    lg('Step 2: Initializing observer...');
+    const { initObserver } = await import(url('content/core/observer.js'));
     initObserver();
-    log('Observer initialized ✓');
+    lg('Observer initialized ✓');
 
-    log('Step 3: Initializing transcript service...');
+    lg('Step 3: Initializing Auto-Liker...');
     try {
-      const { initTranscriptLoader } = await import(ru('content/transcript-loader.js'));
-      initTranscriptLoader();
-      log('Transcript service initialized ✓');
-    } catch (e) {
-      logError('Transcript service initialization failed (non-critical)', e);
-      log('Continuing without transcript loader...');
-    }
-
-    log('Step 4: Initializing Auto-Liker...');
-    try {
-      const { autoLiker } = await import(ru('content/features/auto-liker.js'));
+      const { autoLiker } = await import(url('content/features/auto-liker.js'));
       autoLiker.init();
-      log('Auto-Liker initialized ✓');
+      lg('Auto-Liker initialized ✓');
     } catch (e) {
-      logError('Auto-Liker initialization failed (non-critical)', e);
+      er('Auto-Liker initialization failed (non-critical)', e);
     }
 
-    log('=== Initialization Complete ✓ ===');
+    lg('=== Initialization Complete ✓ ===');
     return true;
   } catch (e) {
-    logError('Initialization failed', e);
+    er('Initialization failed', e);
     return false;
   }
 }
 
 export async function waitForPageReady() {
-  const { ru } = await import(chrome.runtime.getURL('utils/shortcuts/runtime.js'));
-  const { d: dc, win: wn } = await import(ru('utils/shortcuts/dom.js'));
-  const { on } = await import(ru('utils/shortcuts/dom.js'));
+  const { url } = await import(chrome.runtime.getURL('utils/shortcuts/runtime.js'));
+  const { d: dc, w: wn } = await import(url('utils/shortcuts/dom.js'));
+  const { on } = await import(url('utils/shortcuts/dom.js'));
   return new Promise(r => {
     if (dc.readyState === 'complete') r();
     else on(wn, 'load', r);

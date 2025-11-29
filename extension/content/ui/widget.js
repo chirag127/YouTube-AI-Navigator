@@ -1,10 +1,10 @@
 import { findSecondaryColumn, isWidgetProperlyVisible } from '../utils/dom.js';
 import { initTabs } from './tabs.js';
 import { attachEventListeners } from '../handlers/events.js';
-import { log, logError, waitForElement } from '../core/debug.js';
 import { createWidgetHTML } from './components/widget/structure.js';
-import { qs as $, id as ge, on, ce } from '../../utils/shortcuts/dom.js';
+import { qs as $, id as ge, on, ce, wfe } from '../../utils/shortcuts/dom.js';
 import { si, csi, st } from '../../utils/shortcuts/time.js';
+import { lg as log, er as logError } from '../../utils/shortcuts/log.js';
 
 let widgetContainer = null,
   resizeObserver = null,
@@ -99,7 +99,7 @@ export async function injectWidget() {
   while (!sc && att < 20) {
     if (att % 5 === 0) log(`Waiting for secondary column... (${att}/20)`);
     try {
-      sc = await waitForElement(
+      sc = await wfe(
         '#secondary-inner, #secondary, #related, ytd-watch-next-secondary-results-renderer, ytd-watch-flexy #secondary',
         500
       );
