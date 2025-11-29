@@ -27,7 +27,6 @@ export const fi = (a, f) => a?.findIndex(f);
 export const sm = (a, f) => a?.some(f);
 export const ev = (a, f) => a?.every(f);
 export const sp = (a, b, e) => a?.splice(b, e);
-export const jn = (a, s) => a?.join(s);
 export const cn = (a, ...v) => a?.concat(...v);
 export const rv = a => a?.reverse();
 export const st = (a, f) => a?.sort(f);
@@ -39,7 +38,6 @@ export const tr = s => s?.trim();
 export const lc = s => s?.toLowerCase();
 export const sw = (s, n) => s?.startsWith(n);
 export const ew = (s, n) => s?.endsWith(n);
-export const mt = (s, r) => s?.match(r);
 
 // JSON aliases
 export const isS = s => typeof s === 'string';
