@@ -1,9 +1,8 @@
 import { fetchTranscript } from '../../services/transcript/fetcher.js';
-import { l, e } from '../../utils/shortcuts/log.js';
-import { cw } from '../../utils/shortcuts/windows.js';
+import { lg, wn, er } from '../../utils/shortcuts/log.js';
 import { jp } from '../../utils/shortcuts/core.js';
 import { st } from '../../utils/shortcuts/time.js';
-import { on, qsa as $$ } from '../../utils/shortcuts/dom.js';
+import { on, $$ } from '../../utils/shortcuts/dom.js';
 
 class TranscriptExtractor {
   constructor() {
@@ -20,13 +19,13 @@ class TranscriptExtractor {
     try {
       this.log('info', 'Intercepted transcript data from Main World');
     } catch (x) {
-      e('Error handling intercepted transcript:', x);
+      er('Error handling intercepted transcript:', x);
     }
   }
 
   log(lvl, msg) {
     const i = { info: 'ℹ️', success: '✅', warn: '⚠️', error: '❌' };
-    const f = lvl === 'error' ? e : lvl === 'warn' ? cw : l;
+    const f = lvl === 'error' ? er : lvl === 'warn' ? wn : lg;
     f(`[TranscriptExtractor] ${i[lvl] || ''} ${msg}`);
   }
 

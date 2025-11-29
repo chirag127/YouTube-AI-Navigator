@@ -3,11 +3,11 @@ import { injectWidget } from '../ui/widget.js';
 import { startAnalysis } from './analyzer.js';
 import { isWidgetProperlyVisible } from '../utils/dom.js';
 import { l, e } from '../../utils/shortcuts/log.js';
-import { st, ct as co } from '../../utils/shortcuts/time.js';
-import { loc } from '../../utils/shortcuts/dom.js';
+import { delay as st, clearDelay as co } from '../../utils/shortcuts/time.js';
+import { loc } from '../../utils/shortcuts/platform_api.js';
 import { on, id } from '../../utils/shortcuts/dom.js';
 
-let lastUrl = st.loc.href;
+let lastUrl = loc.href;
 let dt = null;
 
 export function initObserver() {

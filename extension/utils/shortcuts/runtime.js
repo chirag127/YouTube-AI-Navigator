@@ -1,10 +1,1 @@
-export const msg = (m, c) => chrome.runtime.sendMessage(m, c);
-export const listen = l => chrome.runtime.onMessage.addListener(l);
-export const url = p => chrome.runtime.getURL(p);
-export const rt = chrome.runtime;
-export const ru = chrome.runtime.getURL;
-export const ri = chrome.runtime.id;
-export const rom = chrome.runtime.onMessage;
-export const rco = chrome.runtime.connect;
-export const rrl = chrome.runtime.reload;
-export const rg = chrome.runtime.getManifest;
+export const msg=(m,c)=>chrome.runtime.sendMessage(m,c);export const lis=l=>chrome.runtime.onMessage.addListener(l);export const url=p=>chrome.runtime.getURL(p);export const rt=chrome.runtime;export const rrl=()=>chrome.runtime.reload();export const rgm=()=>chrome.runtime.getManifest();

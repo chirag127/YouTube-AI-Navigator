@@ -1,11 +1,1 @@
-export const sg = k => chrome.storage.sync.get(k);
-export const ss = (k, v) => chrome.storage.sync.set(typeof k === 'string' ? { [k]: v } : k);
-export const sr = k => chrome.storage.sync.remove(k);
-export const sc = () => chrome.storage.sync.clear();
-export const slg = k => chrome.storage.local.get(k);
-export const sls = (k, v) => chrome.storage.local.set(typeof k === 'string' ? { [k]: v } : k);
-export const slr = k => chrome.storage.local.remove(k);
-export const slc = () => chrome.storage.local.clear();
-export const sl = (k, v) => chrome.storage.local.set({ [k]: v });
-export const sync = chrome.storage.sync;
-export const local = chrome.storage.local;
+export const sg=k=>chrome.storage.sync.get(k);export const ss=(k,v)=>chrome.storage.sync.set(typeof k==='string'?{[k]:v}:k);export const sr=k=>chrome.storage.sync.remove(k);export const sc=()=>chrome.storage.sync.clear();export const slg=k=>chrome.storage.local.get(k);export const sls=(k,v)=>chrome.storage.local.set(typeof k==='string'?{[k]:v}:k);export const slr=k=>chrome.storage.local.remove(k);export const slc=()=>chrome.storage.local.clear();
