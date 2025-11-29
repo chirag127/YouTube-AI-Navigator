@@ -73,16 +73,7 @@ cr.onMessage.addListener((q, s, r) => {
           await h(n, r);
           break;
         }
-        case 'FETCH_INVIDIOUS_TRANSCRIPT': {
-          const { handleFetchInvidiousTranscript: h } = await import('./handlers/invidious.js');
-          r(await h(n));
-          break;
-        }
-        case 'FETCH_INVIDIOUS_METADATA': {
-          const { handleFetchInvidiousMetadata: h } = await import('./handlers/invidious.js');
-          r(await h(n));
-          break;
-        }
+
         case 'GET_CACHED_DATA': {
           const { handleGetCachedData: h } = await import('./handlers/cache.js');
           await h(n, r);

@@ -1,4 +1,3 @@
-import { handleFetchInvidiousTranscript } from './invidious.js';
 import { rep, tr, pF, jp, fl, mp, jn, tf } from '../../utils/shortcuts/index.js';
 
 function dec(t) {
@@ -59,13 +58,7 @@ async function fYT(vid, l = 'en') {
 
 export async function handleFetchTranscript(req, rsp) {
   const { videoId, lang = 'en' } = req;
-  const ms = [
-    {
-      name: 'Invidious API',
-      fn: () => handleFetchInvidiousTranscript(req),
-    },
-    { name: 'YouTube Direct API', fn: () => fYT(videoId, lang) },
-  ];
+  const ms = [{ name: 'YouTube Direct API', fn: () => fYT(videoId, lang) }];
   for (const m of ms) {
     try {
       const r = await m.fn();

@@ -1,4 +1,4 @@
-import { $ as qs, ce } from '../../utils/shortcuts/dom.js';
+import { ce } from '../../utils/shortcuts/dom.js';
 
 export function findSecondaryColumn() {
   const s = [

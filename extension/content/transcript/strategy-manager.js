@@ -1,5 +1,4 @@
 import * as xhrIntercept from './strategies/xhr-intercept.js';
-import * as invidious from './strategies/invidious.js';
 import * as youtubeDirect from './strategies/youtube-direct.js';
 import * as backgroundProxy from './strategies/background-proxy.js';
 import * as domParser from './strategies/dom-parser.js';

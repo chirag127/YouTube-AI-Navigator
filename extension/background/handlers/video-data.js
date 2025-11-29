@@ -1,4 +1,3 @@
-import { handleGetTranscript, handleGetVideoInfo, handleGetComments } from './innertube.js';
 import { getHistory } from '../../services/storage/comprehensive-history.js';
 import { slg, sls, slr, l, e, now } from '../../utils/shortcuts/index.js';
 

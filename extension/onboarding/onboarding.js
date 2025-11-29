@@ -6,7 +6,7 @@ import {
   ss,
   nt,
   js,
-  jp,
+  js,
   ft,
   tab as ctab,
   rt,

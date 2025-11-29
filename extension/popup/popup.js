@@ -1,7 +1,7 @@
 import { id } from '../utils/shortcuts/dom.js';
-import { ss, sg, sls, slg } from '../utils/shortcuts/storage.js';
-import { l, w } from '../utils/shortcuts/logging.js';
-import { cw, cr } from '../utils/shortcuts/chrome.js';
+import { sg, slg } from '../utils/shortcuts/storage.js';
+import { w } from '../utils/shortcuts/logging.js';
+import { cr } from '../utils/shortcuts/chrome.js';
 import { tab as ct } from '../utils/shortcuts/tabs.js';
 import { url } from '../utils/shortcuts/runtime.js';
 import { to } from '../utils/shortcuts/global.js';

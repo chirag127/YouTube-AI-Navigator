@@ -77,36 +77,7 @@ class CommentsExtractor {
       return this.comments;
     }
     l('[CommentsExtractor] ⏭️ Strategy 1: No intercepted comments available');
-    try {
-      l('[CommentsExtractor] 🔧 Strategy 2: Trying InnerTube API...', { videoId: vid, limit: 20 });
-      const pl = { action: 'INNERTUBE_GET_COMMENTS', videoId: vid, limit: 20 };
-      l('[CommentsExtractor] 📤 Sending message to background:', pl);
-      const r = await msg(pl);
-      l('[CommentsExtractor] 📥 Received response from background:', {
-        success: r?.success,
-        hasComments: !!r?.comments,
-        commentsCount: r?.comments?.length || 0,
-        error: r?.error,
-        fullResponse: r,
-      });
-      if (r.success && r.comments?.length > 0) {
-        l(
-          `[CommentsExtractor] ✅ Strategy 2: InnerTube fetched ${r.comments.length} comments - NO SCROLL`
-        );
-        return r.comments;
-      } else
-        w(`[CommentsExtractor] ⚠️ Strategy 2: InnerTube returned no comments`, {
-          success: r?.success,
-          error: r?.error,
-        });
-    } catch (x) {
-      e('[CommentsExtractor] ❌ Strategy 2: InnerTube fetch failed:', {
-        errorType: x.constructor.name,
-        errorMessage: x.message,
-        errorStack: x.stack,
-      });
-    }
-    l('[CommentsExtractor] 🔧 Strategy 3: DOM scraping');
+    l('[CommentsExtractor] 🔧 Strategy 2: DOM scraping');
     if (cfg.scroll?.autoScrollToComments) {
       l('[CommentsExtractor] 📜 Auto-scroll enabled - scrolling to comments');
       await this.scrollToComments();

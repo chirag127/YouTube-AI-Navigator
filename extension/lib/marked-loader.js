@@ -4,11 +4,7 @@ import { rp, sw } from '../utils/shortcuts/string.js';
 export async function parseMarkdown(m) {
   if (!m) return '';
   let h = m;
-  const eh = t => {
-    const d = cr('div');
-    d.textContent = t;
-    return d.innerHTML;
-  };
+  let h = m;
   h = rp(h, /^### (.*$)/gim, '<h3>$1</h3>');
   h = rp(h, /^## (.*$)/gim, '<h2>$1</h2>');
   h = rp(h, /^# (.*$)/gim, '<h1>$1</h1>');
