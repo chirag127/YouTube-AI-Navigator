@@ -13,13 +13,29 @@ class OnboardingFlow {
     }
 
     async loadSettings() {
-        const result = await chrome.storage.sync.get(null);
-        this.settings = result || {};
+        const result = await chrome.storage.sync.get('config');
+        this.settings = result.config || this.getDefaults();
     }
 
-    async saveSettings(updates) {
-        this.settings = { ...this.settings, ...updates };
-        await chrome.storage.sync.set(updates);
+    async saveSettings(path, value) {
+        const keys = path.split('.');
+        const last = keys.pop();
+        const target = keys.reduce((obj, key) => {
+            obj[key] = obj[key] || {};
+            return obj[key];
+        }, this.settings);
+        target[last] = value;
+        await chrome.storage.sync.set({ config: this.settings });
+    }
+
+    getDefaults() {
+        return {
+            ai: { apiKey: '', model: 'gemini-2.0-flash-exp' },
+            automation: { autoAnalyze: true },
+            segments: { enabled: true },
+            ui: { outputLanguage: 'en' },
+            _meta: { onboardingCompleted: false, version: '1.0.0', lastUpdated: Date.now() }
+        };
     }
 
     setupEventListeners() {
@@ -52,17 +68,17 @@ class OnboardingFlow {
         document
             .getElementById("outputLanguage")
             ?.addEventListener("change", (e) => {
-                this.saveSettings({ outputLanguage: e.target.value });
+                this.saveSettings('ui.outputLanguage', e.target.value);
             });
         document
             .getElementById("autoAnalyze")
             ?.addEventListener("change", (e) => {
-                this.saveSettings({ autoAnalyze: e.target.checked });
+                this.saveSettings('automation.autoAnalyze', e.target.checked);
             });
         document
             .getElementById("enableSegments")
             ?.addEventListener("change", (e) => {
-                this.saveSettings({ enableSegments: e.target.checked });
+                this.saveSettings('segments.enabled', e.target.checked);
             });
 
         // Step 3: Final actions
@@ -82,7 +98,7 @@ class OnboardingFlow {
         input.type = input.type === "password" ? "text" : "password";
     }
 
-    onApiKeyInput(e) {
+    onApiKeyInput() {
         const status = document.getElementById("apiKeyStatus");
         status.className = "status-message";
         status.textContent = "";
@@ -131,7 +147,7 @@ class OnboardingFlow {
                 throw new Error(errorMessage);
             }
 
-            await this.saveSettings({ apiKey });
+            await this.saveSettings('ai.apiKey', apiKey);
             status.className = "status-message success";
             status.textContent = "✓ Connection successful! API key saved.";
 
@@ -201,21 +217,21 @@ class OnboardingFlow {
     async loadStepData() {
         if (this.currentStep === 1) {
             const input = document.getElementById("apiKeyInput");
-            if (this.settings.apiKey) {
-                input.value = this.settings.apiKey;
+            if (this.settings.ai?.apiKey) {
+                input.value = this.settings.ai.apiKey;
             }
         } else if (this.currentStep === 2) {
             document.getElementById("outputLanguage").value =
-                this.settings.outputLanguage || "en";
+                this.settings.ui?.outputLanguage || "en";
             document.getElementById("autoAnalyze").checked =
-                this.settings.autoAnalyze || false;
+                this.settings.automation?.autoAnalyze || false;
             document.getElementById("enableSegments").checked =
-                this.settings.enableSegments !== false;
+                this.settings.segments?.enabled !== false;
         }
     }
 
     async completeOnboarding() {
-        await this.saveSettings({ onboardingCompleted: true });
+        await this.saveSettings('_meta.onboardingCompleted', true);
         window.close();
     }
 }
