@@ -8,11 +8,11 @@
     "48": "assets/icon48.png",
     "128": "assets/icon128.png"
   },
-  "permissions": ["storage", "cookies"],
+  "permissions": [
+    "storage",
+    "cookies"
+  ],
   "host_permissions": [
-    "*://*.youtube.com/*",
-    "https://generativelanguage.googleapis.com/*",
-    "https://*.invidious.io/*",
     "*://*/*"
   ],
   "background": {
@@ -21,14 +21,24 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://*.youtube.com/*"],
-      "js": ["content/inject.js"],
+      "matches": [
+        "*://*.youtube.com/*"
+      ],
+      "js": [
+        "content/inject.js"
+      ],
       "run_at": "document_start"
     },
     {
-      "matches": ["*://*.youtube.com/*"],
-      "js": ["content/main.js"],
-      "css": ["content/content.css"],
+      "matches": [
+        "*://*.youtube.com/*"
+      ],
+      "js": [
+        "content/main.js"
+      ],
+      "css": [
+        "content/content.css"
+      ],
       "run_at": "document_idle"
     }
   ],
@@ -57,9 +67,12 @@
         "onboarding/*.css",
         "onboarding/*.js",
         "assets/*",
-        "utils/*.js"
+        "utils/*.js",
+        "utils/**/*.js"
       ],
-      "matches": ["*://*.youtube.com/*"]
+      "matches": [
+        "*://*.youtube.com/*"
+      ]
     }
   ]
 }

@@ -1,19 +1,19 @@
 import { startAnalysis } from '../core/analyzer.js';
 import { state } from '../core/state.js';
 import { sendChatMessage } from './chat.js';
-export function attachEventListeners(w) {
-  console.log('[Events] Attaching listeners to widget');
+import { l, on } from '../../utils/shortcuts.js';
 
+export function attachEventListeners(w) {
+  l('[Events] Attaching listeners to widget');
   const c = w.querySelector('#yt-ai-chat-send');
   if (c)
-    c.addEventListener('click', () => {
-      console.log('[Events] Chat send clicked');
+    on(c, 'click', () => {
+      l('[Events] Chat send clicked');
       sendChatMessage();
     });
-
   const i = w.querySelector('#yt-ai-chat-input');
   if (i)
-    i.addEventListener('keypress', e => {
+    on(i, 'keypress', e => {
       if (e.key === 'Enter') sendChatMessage();
     });
 }
