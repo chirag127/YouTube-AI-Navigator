@@ -3,30 +3,35 @@
         return;
     }
 
+    // Import shortcuts
+    const { l, e, w, url, rt, _cr, ap } = await import(
+        chrome.runtime.getURL("utils/shortcuts.js")
+    );
+
     // Inject Main World Extractor
-    const script = document.createElement("script");
-    script.src = chrome.runtime.getURL("content/youtube-extractor.js");
+    const script = _cr("script");
+    script.src = url("content/youtube-extractor.js");
     script.onload = function () {
         this.remove();
     };
-    (document.head || document.documentElement).appendChild(script);
+    ap(document.head || document.documentElement, script);
 
-    console.log("YouTube AI Master: Starting...");
+    l("YouTube AI Master: Starting...");
 
     try {
         const { initializeExtension, waitForPageReady } = await import(
-            chrome.runtime.getURL("content/core/init.js")
+            url("content/core/init.js")
         );
         await waitForPageReady();
         const success = await initializeExtension();
 
         if (success) {
-            console.log("YouTube AI Master: Ready ✓");
+            l("YouTube AI Master: Ready ✓");
         } else {
-            console.error("YouTube AI Master: Initialization failed");
+            e("YouTube AI Master: Initialization failed");
         }
     } catch (error) {
-        console.error("YouTube AI Master: Fatal error", error);
+        e("YouTube AI Master: Fatal error", error);
     }
 })();
 
@@ -165,7 +170,11 @@ async function checkTranscriptCache(videoId) {
             const maxAge = 24 * 60 * 60 * 1000; // 24 hours
 
             if (age < maxAge && cached.data?.length > 0) {
-                console.log(`[Transcript] Cache exists (age: ${Math.round(age / 1000 / 60)}min)`);
+                console.log(
+                    `[Transcript] Cache exists (age: ${Math.round(
+                        age / 1000 / 60
+                    )}min)`
+                );
                 return true;
             }
         }

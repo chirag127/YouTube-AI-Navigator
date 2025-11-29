@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "YouTube AI Navigator",
     "version": "2.0.0",
-    "description": "Navigate YouTube smarter with AI-powered insights, smart segmentation, and instant context from 10+ data sources. Free, private, zero-config.",
+    "description": "AI-powered YouTube insights with smart segmentation",
     "icons": {
         "16": "assets/icon16.png",
         "48": "assets/icon48.png",
@@ -13,38 +13,28 @@
         "cookies"
     ],
     "host_permissions": [
-        "https://www.youtube.com/*",
-        "https://youtube.com/*",
+        "*://*.youtube.com/*",
         "https://generativelanguage.googleapis.com/*",
         "https://*.invidious.io/*",
-        "https://inv.perditum.com/*",
-        "https://invidious.privacyredirect.com/*",
-        "https://invidious.fdn.fr/*",
-        "https://iv.ggtyler.dev/*",
-        "https://invidious.protokolla.fi/*",
-        "https://api.invidious.io/*",
-        "https://raw.githubusercontent.com/*",
         "*://*/*"
     ],
     "background": {
-        "service_worker": "background/service-worker.js",
+        "service_worker": "background/sw.js",
         "type": "module"
     },
     "content_scripts": [
         {
             "matches": [
-                "https://www.youtube.com/*",
-                "https://youtube.com/*"
+                "*://*.youtube.com/*"
             ],
             "js": [
-                "content/interceptor-injector.js"
+                "content/inject.js"
             ],
             "run_at": "document_start"
         },
         {
             "matches": [
-                "https://www.youtube.com/*",
-                "https://youtube.com/*"
+                "*://*.youtube.com/*"
             ],
             "js": [
                 "content/main.js"
@@ -63,7 +53,7 @@
             "128": "assets/icon128.png"
         }
     },
-    "options_page": "options/options.html",
+    "options_page": "options/opts.html",
     "web_accessible_resources": [
         {
             "resources": [
@@ -73,18 +63,17 @@
                 "services/**/*.js",
                 "lib/*.js",
                 "api/*.js",
-                "sidepanel/sidepanel.html",
-                "sidepanel/sidepanel.css",
-                "sidepanel/sidepanel.js",
-                "onboarding/onboarding.html",
-                "onboarding/onboarding.css",
-                "onboarding/onboarding.js",
+                "sidepanel/*.html",
+                "sidepanel/*.css",
+                "sidepanel/*.js",
+                "onboarding/*.html",
+                "onboarding/*.css",
+                "onboarding/*.js",
                 "assets/*",
                 "utils/*.js"
             ],
             "matches": [
-                "https://www.youtube.com/*",
-                "https://youtube.com/*"
+                "*://*.youtube.com/*"
             ]
         }
     ]
