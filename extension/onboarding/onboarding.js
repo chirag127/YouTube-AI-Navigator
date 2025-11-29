@@ -1,4 +1,4 @@
-import { ge, on, $, $$ } from '../utils/shortcuts/dom.js';
+import { ge, on, $$ } from '../utils/shortcuts/dom.js';
 import { sg, ss } from '../utils/shortcuts/storage.js';
 import { nw as nt, js } from '../utils/shortcuts/core.js';
 import { ft } from '../utils/shortcuts/network.js';

@@ -46,4 +46,4 @@ export const re = off;
 
 export const ael = on;
 export const rel = off;
-export const rm = (e) => e?.remove();
+export const rm = e => e?.remove();

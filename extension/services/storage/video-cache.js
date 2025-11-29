@@ -66,14 +66,13 @@ export async function saveMetadataCache(v, m) {
   return saveVideoData(v, { metadata: m });
 }
 
-
 export const videoCache = {
   async get(v, t) {
     const d = await getVideoData(v);
     return d?.[t] || null;
   },
   async set(v, t, val) {
-    const d = await getVideoData(v) || {};
+    const d = (await getVideoData(v)) || {};
     d[t] = val;
     await saveVideoData(v, d);
   },

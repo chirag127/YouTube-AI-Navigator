@@ -8,6 +8,6 @@ export const usp = URLSearchParams;
 export const sf = fetch;
 export const tf = fetch;
 export const jf = async (...args) => {
-    const r = await fetch(...args);
-    return r.json();
+  const r = await fetch(...args);
+  return r.json();
 };

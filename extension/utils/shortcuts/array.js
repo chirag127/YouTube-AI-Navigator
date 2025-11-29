@@ -20,5 +20,5 @@ export const flt = (a, d) => a.flat(d);
 export const fm = (a, f) => a.flatMap(f);
 
 export const ia = (a, v) => a?.indexOf(v);
-export const us = (a) => [...new Set(a)];
+export const us = a => [...new Set(a)];
 export const ic = (a, v) => a?.includes(v);
