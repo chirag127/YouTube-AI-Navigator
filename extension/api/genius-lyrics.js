@@ -1,4 +1,3 @@
-
 import { l, w } from '../utils/shortcuts/log.js';
 import { en as enc } from '../utils/shortcuts/global.js';
 import { tf as ftx, jf as fj } from '../utils/shortcuts/network.js';

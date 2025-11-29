@@ -1,4 +1,3 @@
-
 export const type = 'interaction';
 export const description = 'Explicit reminders to like, subscribe, or interact';
 

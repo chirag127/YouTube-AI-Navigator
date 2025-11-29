@@ -2,9 +2,9 @@ import { getHistory } from '../../services/storage/comprehensive-history.js';
 import { slg, sls, slr } from '../../utils/shortcuts/storage.js';
 import { l, e } from '../../utils/shortcuts/logging.js';
 import { nw } from '../../utils/shortcuts/core.js';
-import { handleGetVideoInfo } from './video-info.js'; 
+import { handleGetVideoInfo } from './video-info.js';
 import { handleFetchTranscript as handleGetTranscript } from './fetch-transcript.js';
-import { handleGetComments } from './comments.js'; 
+import { handleGetComments } from './comments.js';
 
 const CV = 1;
 const CE = 864e5;
@@ -44,7 +44,6 @@ export const handleGetVideoData = async req => {
   try {
     switch (dataType) {
       case 'metadata':
-        
         r = await handleGetVideoInfo({ videoId });
         if (r.success) {
           await setCache(videoId, dataType, r.metadata);
@@ -59,7 +58,6 @@ export const handleGetVideoData = async req => {
         }
         break;
       case 'comments':
-        
         r = await handleGetComments({ videoId, limit: options.limit || 20 });
         if (r.success) {
           await setCache(videoId, dataType, r.comments);

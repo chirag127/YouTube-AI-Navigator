@@ -1,6 +1,5 @@
 import { js, rep } from '../../utils/shortcuts/index.js';
 
-
 const ALLOWED = new Set([
   'TEST',
   'GET_SETTINGS',
@@ -21,7 +20,7 @@ const ALLOWED = new Set([
   'OPEN_OPTIONS',
 ]);
 
-const MAX_TS = 5 * 1024 * 1024; 
+const MAX_TS = 5 * 1024 * 1024;
 const MAX_SL = 10000;
 const VID_RX = /^[a-zA-Z0-9_-]{11}$/;
 

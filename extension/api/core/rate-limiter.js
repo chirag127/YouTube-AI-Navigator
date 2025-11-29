@@ -1,5 +1,3 @@
-
-
 import { l } from '../../utils/shortcuts/log.js';
 import { to } from '../../utils/shortcuts/global.js';
 import { nw, np } from '../../utils/shortcuts/core.js';
@@ -25,7 +23,6 @@ export class RateLimiter {
 
     const now = nw();
 
-
     this.timestamps = this.timestamps.filter(ts => now - ts < this.windowMs);
 
     if (this.timestamps.length < this.maxRequests) {
@@ -33,12 +30,10 @@ export class RateLimiter {
       const resolve = this.queue.shift();
       resolve();
 
-
       if (this.queue.length > 0) {
         to(() => this._processQueue(), 0);
       }
     } else {
-
       const oldestTimestamp = this.timestamps[0];
       const waitTime = this.windowMs - (now - oldestTimestamp) + 100;
 

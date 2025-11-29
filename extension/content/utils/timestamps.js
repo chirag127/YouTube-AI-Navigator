@@ -1,5 +1,4 @@
 import { seekVideo } from './dom.js';
-import { seekVideo } from './dom.js';
 import { on, fc, ap, tx, tc } from '../../utils/shortcuts/doc.js';
 import { rt as cr } from '../../utils/shortcuts/runtime.js';
 import { pI } from '../../utils/shortcuts/platform_api.js';

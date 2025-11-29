@@ -1,5 +1,3 @@
-
-
 export const CAPTION_KIND = {
   ASR: 'asr',
   MANUAL: 'manual',

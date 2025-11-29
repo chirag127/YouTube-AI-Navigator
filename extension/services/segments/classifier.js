@@ -6,7 +6,6 @@ export async function classifyTranscript(context, g) {
 
   const annotatedTranscript = annotateTranscript(transcript, metadata);
 
-  
   const annotatedContext = {
     ...context,
     transcript: annotatedTranscript,
@@ -15,7 +14,6 @@ export async function classifyTranscript(context, g) {
   try {
     const result = await g.extractSegments(annotatedContext);
 
-    
     if (Array.isArray(result)) {
       return { segments: result, fullVideoLabel: null };
     }

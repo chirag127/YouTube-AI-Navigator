@@ -1,6 +1,3 @@
-
-
-
 export function parseXML(xmlText) {
   const segments = [];
   const regex = /<text start="([\d.]+)"(?:\s+dur="([\d.]+)")?[^>]*>([^<]*)<\/text>/g;

@@ -40,9 +40,7 @@ on(document, 'DOMContentLoaded', async () => {
   scs = new SegmentClassificationService(gs, cs);
   try {
     await gs.fetchAvailableModels();
-  } catch (x) {
-    
-  }
+  } catch (x) {}
   for (const b of tbs) {
     on(b, 'click', () => {
       for (const x of tbs) x.classList.remove('active');
@@ -101,7 +99,7 @@ function appendMsg(r, t) {
 }
 
 async function updateMsg(id, t) {
-  const d = document.getElementById(id); 
+  const d = document.getElementById(id);
   if (d) {
     d.innerHTML = await parseMarkdown(t);
     ch.scrollTop = ch.scrollHeight;
@@ -305,9 +303,7 @@ async function seekVideo(s) {
   try {
     const [t] = await ct.query({ active: true, currentWindow: true });
     if (t?.id) await ct.sendMessage(t.id, { action: 'SEEK_TO', timestamp: s });
-  } catch (x) {
-    
-  }
+  } catch (x) {}
 }
 
 function fmtTime(s) {

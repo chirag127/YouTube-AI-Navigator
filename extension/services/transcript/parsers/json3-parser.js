@@ -1,7 +1,3 @@
-
-
-
-
 export function parseJSON3(data) {
   if (!data?.events) return [];
 
@@ -15,5 +11,5 @@ export function parseJSON3(data) {
         .join('')
         .trim(),
     }))
-    .filter(seg => seg.text.length > 0); 
+    .filter(seg => seg.text.length > 0);
 }

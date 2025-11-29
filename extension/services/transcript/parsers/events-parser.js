@@ -1,6 +1,3 @@
-
-
-
 export function parseEvents(data) {
   if (!data?.events) return [];
 

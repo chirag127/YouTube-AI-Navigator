@@ -2,9 +2,7 @@ import { showPlaceholder } from '../components/loading.js';
 import { makeTimestampsClickable } from '../../utils/timestamps.js';
 import { parseMarkdown } from '../../../lib/marked-loader.js';
 
-
 function processHighlights(html) {
-  
   return html.replace(/==(.*?)==/g, '<mark class="yt-ai-highlight">$1</mark>');
 }
 
@@ -18,7 +16,6 @@ export async function renderSummary(c, d) {
   let insightsHtml = await parseMarkdown(d.insights || 'No insights available.');
   let faqHtml = await parseMarkdown(d.faq || 'No FAQ available.');
 
-  
   summaryHtml = processHighlights(summaryHtml);
   insightsHtml = processHighlights(insightsHtml);
   faqHtml = processHighlights(faqHtml);

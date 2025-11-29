@@ -1,4 +1,3 @@
-
 export const type = 'filler';
 export const description = 'Non-essential off-topic content, jokes, fake sponsors';
 

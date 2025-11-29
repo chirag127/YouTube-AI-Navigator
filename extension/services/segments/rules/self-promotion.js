@@ -1,4 +1,3 @@
-
 export const type = 'selfpromo';
 export const description = 'Promoting own merchandise or monetized platforms';
 

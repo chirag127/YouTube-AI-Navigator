@@ -1,5 +1,3 @@
-
-
 export class ErrorHandler {
   static classify(error) {
     const status = error.status || error.code;

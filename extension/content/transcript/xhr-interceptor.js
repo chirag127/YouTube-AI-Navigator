@@ -1,6 +1,6 @@
-import { l, w, e, d } from '../../utils/shortcuts/logging.js';
+import { l, w, e } from '../../utils/shortcuts/log.js';
 import { jp, js } from '../../utils/shortcuts/core.js';
-import { ce } from '../../utils/shortcuts/dom.js';
+import { ce } from '../../utils/shortcuts/doc.js';
 class TranscriptInterceptor {
   constructor() {
     this.it = new Map();

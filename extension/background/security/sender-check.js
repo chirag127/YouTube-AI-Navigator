@@ -1,8 +1,6 @@
 import { cr } from '../../utils/shortcuts/index.js';
 
-
 export const verifySender = s => {
-
   if (!s || !s.id) return false;
   if (s.id !== cr.id) return false;
 

@@ -1,12 +1,11 @@
 import { ModelManager } from '../../api/gemini.js';
-import { ModelManager } from '../../api/gemini.js';
 import { gebi as i, on, ce, ap, tc, ih, rc, vl } from '../../utils/shortcuts/doc.js';
 import { ft } from '../../utils/shortcuts/network.js';
 import { js, jp, isS } from '../../utils/shortcuts/core.js';
 import { ce as cr } from '../../utils/shortcuts/doc.js';
-import { sl as sw } from '../../utils/shortcuts/storage.js';
+import { sl } from '../../utils/shortcuts/storage.js';
 import { inc, fe } from '../../utils/shortcuts/array.js';
-import { mt, rp, tr, sw as sws } from '../../utils/shortcuts/string.js';
+import { mt, rp, tr, sw } from '../../utils/shortcuts/string.js';
 
 export class AIConfig {
   constructor(s, a) {
@@ -31,7 +30,7 @@ export class AIConfig {
     };
     if (els.ak)
       on(els.ak, 'change', async e => {
-        const k = tr(val(e.target));
+        const k = tr(vl(e.target));
         await this.a.save('ai.apiKey', k);
         this.mm = new ModelManager(k, 'https://generativelanguage.googleapis.com/v1beta');
         if (k) await this.loadModels(els.ms);
@@ -43,7 +42,7 @@ export class AIConfig {
     if (els.cp) this.a.attachToInput(els.cp, 'ai.customPrompt');
     if (els.ms)
       on(els.ms, 'change', e => {
-        let m = val(e.target);
+        let m = vl(e.target);
         if (sw(m, 'models/')) m = rp(m, 'models/', '');
         this.a.save('ai.model', m);
       });
@@ -99,7 +98,7 @@ export class AIConfig {
     st.className = 'status-indicator hidden';
     try {
       if (!c.apiKey) throw new Error('API Key missing');
-      let m = val(ms) || c.model || 'gemini-2.0-flash-exp';
+      let m = vl(ms) || c.model || 'gemini-2.0-flash-exp';
       if (sw(m, 'models/')) m = rp(m, 'models/', '');
       if (
         !inc(m, '-latest') &&

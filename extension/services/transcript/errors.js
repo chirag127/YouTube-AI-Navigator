@@ -1,5 +1,3 @@
-
-
 export class TranscriptError extends Error {
   constructor(message) {
     super(message);

@@ -1,9 +1,7 @@
-
 export const type = 'highlight';
 export const description = 'Most important part of video (ONE timestamp only)';
 
 export const detect = (text, context) => {
-  
   const { title = '' } = context.metadata || {};
   const titleWords = title.toLowerCase().split(/\s+/);
   const textLower = text.toLowerCase();
@@ -12,14 +10,12 @@ export const detect = (text, context) => {
 };
 
 export const validate = segments => {
-  
   const highlights = segments.filter(s => s.category === 'highlight');
   if (highlights.length > 1) {
-    
     highlights.sort((a, b) => (b.confidence || 0) - (a.confidence || 0));
     highlights.slice(1).forEach(h => (h.category = 'content'));
   }
   return true;
 };
 
-export const isSingleTimestamp = true; 
+export const isSingleTimestamp = true;

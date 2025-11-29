@@ -1,5 +1,3 @@
-
-
 import { l } from '../../utils/shortcuts/log.js';
 import { to, co } from '../../utils/shortcuts/global.js';
 import { mn } from '../../utils/shortcuts/math.js';
@@ -36,7 +34,6 @@ export class HttpClient {
           return response;
         }
 
-
         if (!RETRYABLE_STATUS.has(response.status)) {
           throw await this._createError(response);
         }
@@ -55,7 +52,6 @@ export class HttpClient {
 
         l(`[HttpClient] Attempt ${attempt + 1}/${this.maxRetries + 1} failed: ${error.message}`);
       }
-
 
       if (attempt < this.maxRetries) {
         await this._sleep(delay);
