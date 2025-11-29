@@ -1,7 +1,6 @@
 import { l, e, w } from '../utils/shortcuts/log.js';
-import { rt as cr } from '../utils/shortcuts/runtime.js';
+import { rt as cr, url, rgm as rg } from '../utils/shortcuts/runtime.js';
 import { tab } from '../utils/shortcuts/tabs.js';
-import { url, rg } from '../utils/shortcuts/runtime.js';
 cr.onInstalled.addListener(async d => {
   if (d.reason === 'install') {
     l('YAM installed');

@@ -5,6 +5,7 @@ export class GeneralSettings {
   constructor(s, a) {
     this.s = s;
     this.a = a;
+    this.dragSrc = null;
   }
   init() {
     const c = this.s.get();
@@ -15,6 +16,9 @@ export class GeneralSettings {
     this.chk('autoDetectLanguage', c.automation?.autoDetectLanguage ?? true);
     this.chk('autoLoadTranscript', c.automation?.autoLoadTranscript ?? true);
     this.chk('saveHistory', c.advanced?.saveHistory ?? true);
+
+    this.renderStrategies(c.transcript?.strategyOrder || ['dom-automation', 'genius', 'speech-to-text']);
+
     this.a.attachToAll({
       outputLanguage: { path: 'ai.outputLanguage' },
       autoAnalyze: { path: 'automation.autoAnalyze' },
@@ -40,5 +44,65 @@ export class GeneralSettings {
   chk(id, v) {
     const el = i(id);
     if (el) el.checked = v;
+  }
+  renderStrategies(order) {
+    const list = i('strategyList');
+    if (!list) return;
+    list.innerHTML = '';
+    const names = {
+      'dom-automation': 'DOM Automation',
+      'genius': 'Genius Lyrics',
+      'speech-to-text': 'Speech to Text'
+    };
+    order.forEach(key => {
+      if (!names[key]) return;
+      const li = document.createElement('li');
+      li.className = 'sortable-item';
+      li.draggable = true;
+      li.dataset.key = key;
+      li.innerHTML = `<span class="drag-handle">☰</span> <span>${names[key]}</span>`;
+      this.addDnD(li);
+      list.appendChild(li);
+    });
+  }
+  addDnD(el) {
+    on(el, 'dragstart', e => {
+      this.dragSrc = el;
+      el.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    on(el, 'dragend', () => {
+      this.dragSrc = null;
+      el.classList.remove('dragging');
+      this.saveOrder();
+    });
+    on(el, 'dragover', e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      return false;
+    });
+    on(el, 'dragenter', () => {
+      if (this.dragSrc !== el) el.classList.add('over');
+    });
+    on(el, 'dragleave', () => {
+      el.classList.remove('over');
+    });
+    on(el, 'drop', e => {
+      e.stopPropagation();
+      if (this.dragSrc !== el) {
+        const list = i('strategyList');
+        const items = [...list.querySelectorAll('.sortable-item')];
+        const srcIdx = items.indexOf(this.dragSrc);
+        const tgtIdx = items.indexOf(el);
+        if (srcIdx < tgtIdx) el.after(this.dragSrc);
+        else el.before(this.dragSrc);
+      }
+      return false;
+    });
+  }
+  async saveOrder() {
+    const list = i('strategyList');
+    const order = [...list.querySelectorAll('.sortable-item')].map(el => el.dataset.key);
+    await this.s.update('transcript.strategyOrder', order);
   }
 }

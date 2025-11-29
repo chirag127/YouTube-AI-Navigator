@@ -1,6 +1,7 @@
-export const lg = console.log;
-export const wn = console.warn;
-export const er = console.error;
-export const db = console.debug;
-export const tr = console.trace;
-export const cl = console.clear;
+export const l = (...a) => console.log(...a);
+export const e = (...a) => console.error(...a);
+export const w = (...a) => console.warn(...a);
+export const i = (...a) => console.info(...a);
+export const d = (...a) => console.debug(...a);
+export const t = (...a) => console.trace(...a);
+export const cl = () => console.clear();

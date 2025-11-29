@@ -29,15 +29,12 @@
   <div class="card">
     <h3>Transcript Settings</h3>
     <div class="form-group">
-      <label for="transcriptMethod">Transcript Method</label>
-      <select id="transcriptMethod" class="form-select">
-        <option value="auto">Auto (Best Available)</option>
-        <option value="dom-automation">DOM Automation</option>
-        <option value="genius">Genius Lyrics</option>
-        <option value="speech-to-text">Speech to Text</option>
-      </select>
+      <label>Transcript Strategy Priority (Drag to Reorder)</label>
+      <ul id="strategyList" class="sortable-list">
+        <!-- Populated by JS -->
+      </ul>
       <p class="help-text">
-        Choose how to fetch transcripts. 'YouTube Internal API' is recommended for accurate timing.
+        Drag items to change the priority order of transcript extraction strategies.
       </p>
     </div>
     <div class="form-group">
