@@ -8,7 +8,7 @@ import { l, e, js } from '../utils/shortcuts/index.js';
 export class GeminiClient {
   constructor(apiKey, config = {}) {
     this.apiKey = apiKey;
-    this.baseUrl = config.baseUrl || 'https:
+    this.baseUrl = config.baseUrl || 'https://generativelanguage.googleapis.com/v1beta';
     this.httpClient = new HttpClient({
       maxRetries: config.maxRetries ?? 2,
       initialDelay: config.initialDelay ?? 1000,

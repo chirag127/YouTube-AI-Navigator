@@ -1,7 +1,7 @@
 import { l, w } from '../utils/shortcuts/logging.js';
 import { ft } from '../utils/shortcuts/network.js';
 
-const BASE_URL = 'https:
+const BASE_URL = 'https://api.igdb.com/v4';
 
 export class IgdbAPI {
   constructor(clientId, accessToken) {

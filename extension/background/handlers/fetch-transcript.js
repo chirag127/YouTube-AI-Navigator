@@ -29,7 +29,7 @@ async function fYT(vid, lNg = 'en') {
   const fs = ['json3', 'srv3'];
   for (const f of fs) {
     try {
-      const u = `https:
+      const u = `https://www.youtube.com/api/timedtext?v=${vid}&lang=${lNg}&fmt=${f}`;
       if (f === 'json3') {
         const t = await tf(u);
         if (!t) continue;

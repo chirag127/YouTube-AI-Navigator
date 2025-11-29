@@ -4,7 +4,7 @@ import { js, ok as ks } from '../utils/shortcuts/core.js';
 import { mp, jn } from '../utils/shortcuts/array.js';
 import { ce } from '../utils/shortcuts/dom.js';
 
-const API_BASE = 'https:
+const API_BASE = 'https://sponsor.ajay.app/api';
 const CM = {
   sponsor: 'Sponsor',
   selfpromo: 'Self Promotion',

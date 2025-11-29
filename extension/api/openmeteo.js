@@ -2,7 +2,7 @@ import { l } from '../utils/shortcuts/logging.js';
 import { en as enc } from '../utils/shortcuts/global.js';
 import { sf as safeFetch } from '../utils/shortcuts/network.js';
 
-const BASE_URL = 'https:
+const BASE_URL = 'https://api.open-meteo.com/v1';
 
 export class OpenMeteoAPI {
   async getWeather(lat, lon) {
@@ -16,7 +16,7 @@ export class OpenMeteoAPI {
   async getCoordinates(city) {
     l(`[OpenMeteo] Geocoding: ${city}`);
     const data = await safeFetch(
-      `https:
+      `https://geocoding-api.open-meteo.com/v1/search?name=${enc(
         city
       )}&count=1&language=en&format=json`
     );

@@ -16,7 +16,7 @@ export class AIConfig {
   async init() {
     const c = this.s.get().ai || {};
     if (ModelManager && c.apiKey)
-      this.mm = new ModelManager(c.apiKey, 'https:
+      this.mm = new ModelManager(c.apiKey, 'https://generativelanguage.googleapis.com/v1beta');
     this.set('apiKey', c.apiKey || '');
     this.set('customPrompt', c.customPrompt || '');
     if (c.model) this.set('modelSelect', c.model);
@@ -32,7 +32,7 @@ export class AIConfig {
       on(els.ak, 'change', async e => {
         const k = tr(val(e.target));
         await this.a.save('ai.apiKey', k);
-        this.mm = new ModelManager(k, 'https:
+        this.mm = new ModelManager(k, 'https://generativelanguage.googleapis.com/v1beta');
         if (k) await this.loadModels(els.ms);
       });
     if (els.tak)
@@ -109,7 +109,7 @@ export class AIConfig {
       )
         m += '-latest';
       const r = await ft(
-        `https:
+        `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${c.apiKey}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

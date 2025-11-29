@@ -8,7 +8,7 @@ export { ModelManager };
 export class GeminiService {
   constructor(apiKey) {
     this.client = new GeminiClient(apiKey);
-    this.models = new ModelManager(apiKey, 'https:
+    this.models = new ModelManager(apiKey, 'https://generativelanguage.googleapis.com/v1beta');
   }
   async fetchAvailableModels() {
     return this.models.fetch();

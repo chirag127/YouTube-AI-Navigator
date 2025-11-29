@@ -23,7 +23,6 @@ export const isF = v => typeof v === 'function';
 export const isB = v => typeof v === 'boolean';
 export const isU = v => v === undefined;
 export const isNl = v => v === null;
-export const isA = Array.isArray;
 export const E = Error;
 export const TE = TypeError;
 export const RE = ReferenceError;

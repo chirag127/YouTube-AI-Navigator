@@ -118,7 +118,7 @@ async function deleteVideo(v) {
   if (si.value) handleSearch({ target: si });
 }
 function openVideo() {
-  if (cid) tab({ url: `https:
+  if (cid) tab({ url: `https://www.youtube.com/watch?v=${cid}` });
 }
 async function handleExport() {
   try {

@@ -2,7 +2,7 @@ import { state } from '../core/state.js';
 import { addChatMessage } from '../ui/renderers/chat.js';
 import { parseMarkdown } from '../../lib/marked-loader.js';
 import metadataExtractor from '../metadata/extractor.js';
-import { id as ge } from '../../utils/shortcuts/dom.js';
+import { gebi as ge } from '../../utils/shortcuts/doc.js';
 import { msg } from '../../utils/shortcuts/runtime.js';
 import { mp, jn } from '../../utils/shortcuts/array.js';
 

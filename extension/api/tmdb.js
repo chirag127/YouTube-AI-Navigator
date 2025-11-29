@@ -2,7 +2,7 @@ import { l } from '../utils/shortcuts/logging.js';
 import { en as enc } from '../utils/shortcuts/global.js';
 import { sf as safeFetch } from '../utils/shortcuts/network.js';
 
-const BASE_URL = 'https:
+const BASE_URL = 'https://api.themoviedb.org/3';
 
 export class TmdbAPI {
   constructor(apiKey) {

@@ -55,7 +55,7 @@ class OnboardingFlow {
     if (tak) on(tak, 'click', this.toggleApiKeyVisibility.bind(this));
     if (tst) on(tst, 'click', this.testApiKey.bind(this));
     if (aki) on(aki, 'input', this.onApiKeyInput.bind(this));
-    if (oak) on(oak, 'click', () => ctab({ url: 'https:
+    if (oak) on(oak, 'click', () => ctab({ url: 'https://aistudio.google.com/app/apikey' }));
     if (ol) on(ol, 'change', e => this.saveSettings('ui.outputLanguage', e.target.value));
     if (aa) on(aa, 'change', e => this.saveSettings('automation.autoAnalyze', e.target.checked));
     if (es) on(es, 'change', e => this.saveSettings('segments.enabled', e.target.checked));
@@ -92,7 +92,7 @@ class OnboardingFlow {
     try {
       const m = 'gemini-2.5-pro';
       const r = await ft(
-        `https:
+        `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${k}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -105,7 +105,7 @@ class OnboardingFlow {
           const ed = await r.json();
           em = ed.error?.message || em;
         } catch (e) {
-          em = `Connection failed (${r.status}: ${r.statusText})`;
+          em = `Connection failed(${r.status}: ${r.statusText})`;
         }
         throw new Error(em);
       }
@@ -149,7 +149,7 @@ class OnboardingFlow {
       if (i === this.currentStep) dt.classList.add('active');
       else if (i < this.currentStep) dt.classList.add('completed');
     });
-    pf.style.width = `${((this.currentStep + 1) / this.totalSteps) * 100}%`;
+    pf.style.width = `${((this.currentStep + 1) / this.totalSteps) * 100}% `;
     bb.disabled = this.currentStep === 0;
     nb.style.display = this.currentStep === this.totalSteps - 1 ? 'none' : 'block';
     this.loadStepData();

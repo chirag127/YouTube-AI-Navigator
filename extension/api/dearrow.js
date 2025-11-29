@@ -4,8 +4,8 @@ import { sb as sbs } from '../utils/shortcuts/dom.js';
 import { mp, jn } from '../utils/shortcuts/array.js';
 import { tr, rp } from '../utils/shortcuts/string.js';
 
-const DAB = 'https:
-const DTB = 'https:
+const DAB = 'https://sponsor.ajay.app';
+const DTB = 'https://dearrow-thumb.ajay.app';
 
 export async function fetchBranding(vid, opt = {}) {
   const { returnUserID = false, fetchAll = false, timeout = 5000 } = opt;

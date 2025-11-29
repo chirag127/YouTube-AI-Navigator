@@ -13,7 +13,7 @@ export class ComprehensiveHistory {
     const n = {
       videoId: v,
       timestamp: nt(),
-      url: `https:
+      url: `https://www.youtube.com/watch?v=${v}`,
       metadata: d.metadata || {},
       transcript: d.transcript || [],
       comments: { raw: d.comments || [], analysis: d.commentAnalysis || null },

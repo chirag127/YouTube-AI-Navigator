@@ -7,8 +7,8 @@ import { mp, jn } from '../utils/shortcuts/array.js';
 
 export class GeniusLyricsAPI {
   constructor() {
-    this.baseUrl = 'https:
-    this.searchUrl = 'https:
+    this.baseUrl = 'https://genius.com';
+    this.searchUrl = 'https://genius.com/api/search/multi';
   }
 
   async getLyrics(title, artist) {

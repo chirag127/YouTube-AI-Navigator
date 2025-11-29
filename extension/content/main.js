@@ -3,7 +3,7 @@
   const { l, e } = await import(chrome.runtime.getURL('utils/shortcuts/logging.js'));
   const { url } = await import(chrome.runtime.getURL('utils/shortcuts/runtime.js'));
   const { cr } = await import(chrome.runtime.getURL('utils/shortcuts/chrome.js'));
-  const { ce, ap, $, qs } = await import(chrome.runtime.getURL('utils/shortcuts/dom.js'));
+  const { ce, ap, $ } = await import(chrome.runtime.getURL('utils/shortcuts/dom.js'));
   const { slg: cl, to, nw } = await import(chrome.runtime.getURL('utils/shortcuts/storage.js'));
   const { dc: doc } = await import(chrome.runtime.getURL('utils/shortcuts/global.js'));
 
@@ -91,7 +91,7 @@
           to(() => cTW(), 1e3);
           l('[Tr] Auto-close');
         } catch {
-          
+
         }
       }
       p({ success: true, transcript: t });
