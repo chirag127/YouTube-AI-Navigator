@@ -1,6 +1,5 @@
 import { ft } from '../../../utils/shortcuts/network.js';
 import { l, e } from '../../../utils/shortcuts/log.js';
-import { mp } from '../../../utils/shortcuts/array.js';
 import { parse } from '../../../services/transcript/parsers/vtt.js';
 
 export const name = 'Invidious API';
