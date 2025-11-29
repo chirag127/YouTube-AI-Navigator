@@ -3,7 +3,8 @@ const gu = p => chrome.runtime.getURL(p);
 const { state, resetState } = await import(gu('content/core/state.js'));
 const { injectWidget } = await import(gu('content/ui/widget.js'));
 const { isWidgetProperlyVisible } = await import(gu('content/utils/dom.js'));
-const { err: e, to: st, ct } = await import(gu('utils/shortcuts/core.js'));
+const { err: e, ct } = await import(gu('utils/shortcuts/core.js'));
+const { to: st } = await import(gu('utils/shortcuts/global.js'));
 const { on: ae, qs, mo } = await import(gu('utils/shortcuts/dom.js'));
 
 let lastUrl = location.href;

@@ -1,8 +1,9 @@
 import { ge, on, $$ } from '../utils/shortcuts/dom.js';
 import { sg, ss } from '../utils/shortcuts/storage.js';
-import { nw as nt, js } from '../utils/shortcuts/core.js';
+import { nw as nt } from '../utils/shortcuts/core.js';
+import { js } from '../utils/shortcuts/global.js';
 import { ft } from '../utils/shortcuts/network.js';
-import { ct as ctab } from '../utils/shortcuts/chrome.js';
+import { cht as ctab } from '../utils/shortcuts/chrome.js';
 import { rt } from '../utils/shortcuts/runtime.js';
 import { to as st, wn as win } from '../utils/shortcuts/global.js';
 class OnboardingFlow {

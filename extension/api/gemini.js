@@ -2,9 +2,9 @@ import { GeminiClient } from './gemini-client.js';
 import { ModelManager } from './models.js';
 import { prompts } from './prompts/index.js';
 import { l, w, e } from '../utils/shortcuts/log.js';
-import { jp, js } from '../utils/shortcuts/core.js';
+import { jp, js } from '../utils/shortcuts/global.js';
 import { sb as sub, tr, rp as rep } from '../utils/shortcuts/string.js';
-import { mp } from '../utils/shortcuts/array.js';
+import { am } from '../utils/shortcuts/array.js';
 
 export { ModelManager };
 

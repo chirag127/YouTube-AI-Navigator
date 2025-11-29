@@ -1,14 +1,14 @@
 import { StorageService } from '../services/storage/index.js';
 import { parseMarkdown } from '../lib/marked-loader.js';
 import { ge, on, ce, $ } from '../utils/shortcuts/dom.js';
-import { ct as tab } from '../utils/shortcuts/chrome.js';
-import { js, jp } from '../utils/shortcuts/core.js';
+import { cht as tab } from '../utils/shortcuts/chrome.js';
+import { jp, js } from '../utils/shortcuts/global.js';
 import { mf as mfl } from '../utils/shortcuts/math.js';
 import { pI } from '../utils/shortcuts/global.js';
 import { pd } from '../utils/shortcuts/string.js';
 import { lc } from '../utils/shortcuts/string.js';
 import { ic as inc } from '../utils/shortcuts/string.js';
-import { fl } from '../utils/shortcuts/array.js';
+import { afl } from '../utils/shortcuts/array.js';
 
 const s = new StorageService(),
   vl = ge('video-list'),
@@ -47,7 +47,7 @@ async function handleSearch(e) {
     renderList(hd);
     return;
   }
-  const f = fl(hd, x => inc(lc(x.title || ''), q) || inc(lc(x.author || ''), q));
+  const f = afl(hd, x => inc(lc(x.title || ''), q) || inc(lc(x.author || ''), q));
   renderList(f);
 }
 function renderList(items) {

@@ -1,5 +1,6 @@
 import { sg, ss } from './shortcuts/storage.js';
-import { nw, js, jp } from './shortcuts/core.js';
+import { nw } from './shortcuts/core.js';
+import { js, jp } from './shortcuts/global.js';
 export const DC = {
   ca: { en: 1, ttl: 864e5, tr: 1, co: 1, md: 1 },
   sc: { as: 0, sb: 1, sn: 1, sm: 1 },

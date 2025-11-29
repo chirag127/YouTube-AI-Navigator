@@ -1,5 +1,5 @@
 import { sg, ss } from './shortcuts/storage.js';
-import { l, e } from './../../utils/shortcuts/log.js';
+import { l, e } from './shortcuts/log.js';
 export async function migrateModelNames() {
   try {
     const d = await sg(['model']);

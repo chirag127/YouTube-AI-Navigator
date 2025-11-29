@@ -11,7 +11,7 @@ import { OpenMeteoAPI } from '../api/openmeteo.js';
 import { l, w } from '../utils/shortcuts/log.js';
 import { ps } from '../utils/shortcuts/async.js';
 import { ok } from '../utils/shortcuts/core.js';
-import { ia } from '../utils/shortcuts/array.js';
+import { aia } from '../utils/shortcuts/array.js';
 
 export class ContextManager {
   constructor(s) {
@@ -79,9 +79,9 @@ export class ContextManager {
     r.forEach(res => {
       if (res.status === 'fulfilled') {
         const { n, res: d } = res.value;
-        if (d && (ia(d) ? d.length > 0 : true)) {
+        if (d && (aia(d) ? d.length > 0 : true)) {
           ctx[n] = d;
-          l(`[ContextManager] ✓ ${n}: ${ia(d) ? d.length + ' items' : 'data received'}`);
+          l(`[ContextManager] ✓ ${n}: ${aia(d) ? d.length + ' items' : 'data received'}`);
         } else l(`[ContextManager] - ${n}: no valid data returned`);
       } else {
         const { n, err: e } = res.reason;

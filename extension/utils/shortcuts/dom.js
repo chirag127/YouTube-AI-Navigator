@@ -30,14 +30,13 @@ export const gebi = id;
 export const ap = (p, c) => p?.appendChild(c);
 export const tc = txt;
 export const ih = html;
-export const vl = e => e.value;
+export const v = e => e.value;
 export const rc = (e, c) => e.classList.remove(c);
 export const ac = (e, c) => e.classList.add(c);
 export const dc = document;
 export const tx = t => document.createTextNode(t);
 export const fc = (n, f) => n.forEach(f);
 
-export const sb = (s, a, b) => s?.substring(a, b);
 export const ge = id;
 export const $ = qs;
 export const $$ = qsa;

@@ -2,6 +2,9 @@ const gu = p => chrome.runtime.getURL(p);
 
 const { log: l, warn: w, err: e, vals } = await import(gu('utils/shortcuts/core.js'));
 const { getCfg } = await import(gu('utils/config.js'));
+const domAutomation = await import(gu('content/transcript/strategies/dom-automation.js'));
+const genius = await import(gu('content/transcript/strategies/genius.js'));
+const speechToText = await import(gu('content/transcript/strategies/speech-to-text.js'));
 const strategyMap = {
   'dom-automation': domAutomation,
   genius: genius,

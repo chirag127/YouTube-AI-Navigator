@@ -1,7 +1,8 @@
 import { l } from '../utils/shortcuts/log.js';
 import { cw } from '../utils/shortcuts/chrome.js';
-import { js, ok as ks } from '../utils/shortcuts/core.js';
-import { mp, jn } from '../utils/shortcuts/array.js';
+import { ok as ks } from '../utils/shortcuts/core.js';
+import { js } from '../utils/shortcuts/global.js';
+import { am, ajn } from '../utils/shortcuts/array.js';
 import { ce } from '../utils/shortcuts/dom.js';
 
 const API_BASE = 'https://sponsor.ajay.app/api';
@@ -24,7 +25,7 @@ async function _gh(vid) {
   const d = e.encode(vid);
   const hb = await crypto.subtle.digest('SHA-256', d);
   const ha = Array.from(new Uint8Array(hb));
-  const hh = mp(ha, b => b.toString(16).padStart(2, '0')).join('');
+  const hh = am(ha, b => b.toString(16).padStart(2, '0')).join('');
   return hh.substring(0, 4);
 }
 
@@ -41,8 +42,8 @@ export async function fetchSegments(vid) {
     l(`[SB] Fetch: ${vid}`);
     const hp = await _gh(vid);
     const c = ks(CM);
-    const cp = jn(
-      mp(c, x => `category=${x}`),
+    const cp = ajn(
+      am(c, x => `category=${x}`),
       '&'
     );
     const u = `${API_BASE}/skipSegments/${hp}?service=YouTube&${cp}`;
@@ -64,7 +65,7 @@ export async function fetchSegments(vid) {
       l('[SB] No segs');
       return [];
     }
-    const s = mp(vd.segments, sg => ({
+    const s = am(vd.segments, sg => ({
       start: sg.segment[0],
       end: sg.segment[1],
       category: _mc(sg.category),

@@ -1,6 +1,6 @@
 import { w } from '../utils/shortcuts/log.js';
 import { jf as fj } from '../utils/shortcuts/network.js';
-import { fl, mp } from '../utils/shortcuts/array.js';
+import { afl, am } from '../utils/shortcuts/array.js';
 import { rp } from '../utils/shortcuts/string.js';
 
 export class ModelManager {
@@ -14,8 +14,8 @@ export class ModelManager {
     try {
       const data = await fj(`${this.baseUrl}/models?key=${this.apiKey}`);
       if (data?.models)
-        this.models = mp(
-          fl(data.models, m => m.supportedGenerationMethods?.includes('generateContent')),
+        this.models = am(
+          afl(data.models, m => m.supportedGenerationMethods?.includes('generateContent')),
           m => rp(m.name, 'models/', '')
         );
     } catch (e) {

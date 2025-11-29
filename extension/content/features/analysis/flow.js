@@ -10,8 +10,7 @@ const { injectSegmentMarkers } = await import(gu('content/segments/markers.js'))
 const { setupAutoSkip } = await import(gu('content/segments/autoskip.js'));
 const { renderTimeline } = await import(gu('content/segments/timeline.js'));
 const { analyzeVideo } = await import(gu('content/features/analysis/service.js'));
-const { l } = await import(gu('utils/shortcuts/log.js'));
-const { cw } = await import(gu('utils/shortcuts/windows.js'));
+const { l, w } = await import(gu('utils/shortcuts/log.js'));
 const { id: i, $ } = await import(gu('utils/shortcuts/dom.js'));
 const { msg } = await import(gu('utils/shortcuts/runtime.js'));
 const { E: Er } = await import(gu('utils/shortcuts/core.js'));
@@ -28,7 +27,7 @@ export async function startAnalysis() {
       const result = await extractTranscript(state.currentVideoId);
       ts = result.success ? result.data : [];
     } catch (e) {
-      cw('[Flow] Transcript extraction failed:', e);
+      w('[Flow] Transcript extraction failed:', e);
     }
     state.currentTranscript = ts || [];
     showLoading(ca, 'Extracting comments...');
@@ -36,7 +35,7 @@ export async function startAnalysis() {
     try {
       cm = await getComments();
     } catch (e) {
-      cw('[Flow] Comments extraction failed:', e);
+      w('[Flow] Comments extraction failed:', e);
     }
     showLoading(ca, `Analyzing content with AI...`);
     l('[Flow] Starting AI analysis...', {
@@ -68,7 +67,7 @@ export async function startAnalysis() {
         chatHistory: state.chatHistory || [],
       });
     } catch (e) {
-      cw('[Flow] History save failed:', e);
+      w('[Flow] History save failed:', e);
     }
     switchTab('summary');
   } catch (e) {

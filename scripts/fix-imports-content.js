@@ -13,7 +13,6 @@ files.forEach(file => {
     return;
   }
 
-
   const imports = [];
   const lines = content.split('\n');
   let firstNonImportLine = 0;

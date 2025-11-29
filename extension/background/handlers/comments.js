@@ -1,13 +1,13 @@
 import { initializeServices, getServices } from '../services.js';
 import { getApiKey } from '../utils/api-key.js';
 import { l } from '../../utils/shortcuts/log.js';
-import { sl } from '../../utils/shortcuts/array.js';
+import { asl } from '../../utils/shortcuts/array.js';
 import { sb as sub } from '../../utils/shortcuts/string.js';
 export async function handleAnalyzeComments(req, rsp) {
   const { comments: c } = req;
   l('[AC] Cnt:', c?.length);
   l('[AC] 1st:', c?.[0]);
-  l('[AC] Smp:', sl(c, 0, 3));
+  l('[AC] Smp:', asl(c, 0, 3));
   const k = await getApiKey();
   if (!k) {
     rsp({ success: false, error: 'API Key not configured' });

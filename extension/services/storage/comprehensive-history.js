@@ -1,6 +1,7 @@
 import { l, e } from '../../utils/shortcuts/log.js';
-import { fl, fn, us, ic as inc } from '../../utils/shortcuts/array.js';
-import { js, jp, nw as nt } from '../../utils/shortcuts/core.js';
+import { afl, afn, aus, aic as inc } from '../../utils/shortcuts/array.js';
+import { nw as nt } from '../../utils/shortcuts/core.js';
+import { js, jp } from '../../utils/shortcuts/global.js';
 import { lc } from '../../utils/shortcuts/string.js';
 import { sl, slc } from '../../utils/shortcuts/storage.js';
 export class ComprehensiveHistory {
@@ -31,8 +32,8 @@ export class ComprehensiveHistory {
       },
     };
     const h = await this.getAll(),
-      f = fl(h, x => x.videoId !== v);
-    us(f, n);
+      f = afl(h, x => x.videoId !== v);
+    aus(f, n);
     const t = slc(f, 0, this.m);
     await sl({ [this.k]: t });
     l(`[History] Saved comprehensive data for ${v}`);
@@ -40,7 +41,7 @@ export class ComprehensiveHistory {
   }
   async get(v) {
     const h = await this.getAll();
-    return fn(h, x => x.videoId === v);
+    return afn(h, x => x.videoId === v);
   }
   async getAll() {
     const r = await sl(this.k);
@@ -48,7 +49,7 @@ export class ComprehensiveHistory {
   }
   async delete(v) {
     const h = await this.getAll(),
-      f = fl(h, x => x.videoId !== v);
+      f = afl(h, x => x.videoId !== v);
     await sl({ [this.k]: f });
   }
   async clear() {
@@ -57,7 +58,7 @@ export class ComprehensiveHistory {
   async search(q) {
     const h = await this.getAll(),
       lq = lc(q);
-    return fl(
+    return afl(
       h,
       e =>
         (e.metadata?.title && inc(lc(e.metadata.title), lq)) ||
@@ -69,10 +70,10 @@ export class ComprehensiveHistory {
     const h = await this.getAll();
     return {
       totalVideos: h.length,
-      totalTranscripts: fl(h, x => x.transcript?.length > 0).length,
-      totalComments: fl(h, x => x.comments?.raw?.length > 0).length,
-      totalSegments: fl(h, x => x.segments?.detected?.length > 0).length,
-      totalAnalyses: fl(h, x => x.analysis?.summary).length,
+      totalTranscripts: afl(h, x => x.transcript?.length > 0).length,
+      totalComments: afl(h, x => x.comments?.raw?.length > 0).length,
+      totalSegments: afl(h, x => x.segments?.detected?.length > 0).length,
+      totalAnalyses: afl(h, x => x.analysis?.summary).length,
       storageSize: js(h).length,
     };
   }

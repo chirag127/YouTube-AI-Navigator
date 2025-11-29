@@ -1,9 +1,9 @@
 import { ModelManager } from '../../api/gemini.js';
-import { qs as i, on, ap, tc, ih, rc, vl, ce as cr } from '../../utils/shortcuts/dom.js';
-import { js, isS } from '../../utils/shortcuts/core.js';
-import { jp } from '../../utils/shortcuts/global.js';
+import { qs as i, on, ap, tc, ih, rc, v as vl, ce as cr } from '../../utils/shortcuts/dom.js';
+import { isS } from '../../utils/shortcuts/core.js';
+import { jp, js } from '../../utils/shortcuts/global.js';
 import { inc, rp, tr, sw } from '../../utils/shortcuts/string.js';
-import { fe } from '../../utils/shortcuts/array.js';
+import { afe } from '../../utils/shortcuts/array.js';
 import { ft } from '../../utils/shortcuts/network.js';
 export class AIConfig {
   constructor(s, a) {
@@ -60,7 +60,7 @@ export class AIConfig {
         ih(sel, '<option value="" disabled>No models found</option>');
         return;
       }
-      fe(m, x => {
+      afe(m, x => {
         const n = isS(x) ? rp(x, 'models/', '') : rp(x.name, 'models/', '') || x;
         const o = cr('option');
         o.value = n;

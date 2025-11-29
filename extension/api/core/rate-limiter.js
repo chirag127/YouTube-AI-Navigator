@@ -1,6 +1,7 @@
 import { l } from '../../utils/shortcuts/log.js';
 import { to } from '../../utils/shortcuts/global.js';
-import { nw, np } from '../../utils/shortcuts/core.js';
+import { nw } from '../../utils/shortcuts/core.js';
+import { np } from '../../utils/shortcuts/async.js';
 import { mc } from '../../utils/shortcuts/math.js';
 
 export class RateLimiter {

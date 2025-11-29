@@ -2,7 +2,7 @@ import { l, w } from '../utils/shortcuts/log.js';
 import { en as enc } from '../utils/shortcuts/global.js';
 import { tf as ftx, jf as fj } from '../utils/shortcuts/network.js';
 import { rp, tr } from '../utils/shortcuts/string.js';
-import { mp, jn } from '../utils/shortcuts/array.js';
+import { am, ajn } from '../utils/shortcuts/array.js';
 
 export class GeniusLyricsAPI {
   constructor() {
@@ -52,8 +52,8 @@ export class GeniusLyricsAPI {
     const lyricsMatch = html.match(/<div[^>]*data-lyrics-container="true"[^>]*>(.*?)<\/div>/gs);
     if (lyricsMatch) {
       return tr(
-        jn(
-          mp(lyricsMatch, div => {
+        ajn(
+          am(lyricsMatch, div => {
             let text = rp(div, /<br\s*\/?>/gi, '\n');
             text = rp(text, /<[^>]*>/g, '');
             return this.decodeHtml(text);

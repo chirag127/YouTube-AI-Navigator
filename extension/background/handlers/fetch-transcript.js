@@ -1,7 +1,7 @@
 import { rp as rep, tr } from '../../utils/shortcuts/string.js';
 import { l } from '../../utils/shortcuts/log.js';
 import { pf as pF, jp } from '../../utils/shortcuts/global.js';
-import { fl, mp, jn } from '../../utils/shortcuts/array.js';
+import { afl, am, ajn } from '../../utils/shortcuts/array.js';
 import { ft as tf } from '../../utils/shortcuts/network.js';
 function dec(t) {
   const e = {
@@ -34,13 +34,13 @@ async function fYT(vid, lNg = 'en') {
         if (!t) continue;
         const d = jp(t);
         if (d.events) {
-          const s = mp(
-            fl(d.events, e => e.segs),
+          const s = am(
+            afl(d.events, e => e.segs),
             e => ({
               start: e.tStartMs / 1000,
               duration: (e.dDurationMs || 0) / 1000,
-              text: jn(
-                mp(e.segs, s => s.utf8),
+              text: ajn(
+                am(e.segs, s => s.utf8),
                 ''
               ),
             })

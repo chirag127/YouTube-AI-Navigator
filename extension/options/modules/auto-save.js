@@ -1,5 +1,5 @@
 import { l, e } from '../../utils/shortcuts/log.js';
-import { to, ct } from '../../utils/shortcuts/global.js';
+import { to, clt } from '../../utils/shortcuts/global.js';
 import { on, qs as i } from '../../utils/shortcuts/dom.js';
 import { oe } from '../../utils/shortcuts/core.js';
 export class AutoSave {
@@ -11,7 +11,7 @@ export class AutoSave {
     this.c = 0;
   }
   async save(p, v) {
-    ct(this.t);
+    clt(this.t);
     if (this.n) this.n.saving('Saving...');
     this.t = to(async () => {
       try {

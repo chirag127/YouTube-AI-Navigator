@@ -11,6 +11,9 @@ vi.mock('../extension/utils/shortcuts/global.js', () => ({
 
 vi.mock('../extension/utils/shortcuts/core.js', () => ({
   nw: vi.fn(() => Date.now()),
+}));
+
+vi.mock('../extension/utils/shortcuts/async.js', () => ({
   np: vi.fn(fn => new Promise(fn)),
 }));
 

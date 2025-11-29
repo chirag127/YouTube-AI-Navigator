@@ -1,5 +1,5 @@
 export const st = setTimeout;
-export const ct = clearTimeout;
+export const clt = clearTimeout;
 export const si = setInterval;
 export const ci = clearInterval;
 export const delay = (f, d) => setTimeout(f, d);
