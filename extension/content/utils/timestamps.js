@@ -1,5 +1,5 @@
 import { seekVideo } from './dom.js';
-import { on, fc, ap } from '../../utils/shortcuts/dom.js';
+import { on, fc, ap, tx } from '../../utils/shortcuts/dom.js';
 import { cr } from '../../utils/shortcuts/chrome.js';
 import { pI } from '../../utils/shortcuts/core.js';
 import { tc } from '../../utils/shortcuts/dom.js';
@@ -29,7 +29,7 @@ export function makeTimestampsClickable(c) {
       ap(f, lnk);
       l = o + m.length;
     });
-    if (l < txt.length) ap(f, ctx(sbs(txt, l)));
+    if (l < txt.length) ap(f, tx(sbs(txt, l)));
     t.parentNode.replaceChild(f, t);
   });
 }

@@ -1,6 +1,5 @@
 import { l, w, e } from '../../utils/shortcuts/logging.js';
 import { on, $$, $ } from '../../utils/shortcuts/dom.js';
-import { msg } from '../../utils/shortcuts/runtime.js';
 import { sg, slg as lg } from '../../utils/shortcuts/storage.js';
 import { ft } from '../../utils/shortcuts/network.js';
 import { js } from '../../utils/shortcuts/core.js';

@@ -1,4 +1,3 @@
-import { cr } from '../utils/shortcuts/chrome.js';
 import { rp, sw } from '../utils/shortcuts/string.js';
 
 export async function parseMarkdown(m) {

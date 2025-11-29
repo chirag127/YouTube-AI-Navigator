@@ -1,8 +1,11 @@
-import { l, e, w, d } from '../utils/shortcuts/logging.js';
-import { $ } from '../utils/shortcuts/dom.js';
-import { jp } from '../utils/shortcuts/core.js';
-import { uc } from '../utils/shortcuts/string.js';
-import { to as st } from '../utils/shortcuts/global.js';
+const w = window,
+  d = document,
+  l = console.log.bind(console),
+  e = console.error.bind(console);
+const $ = s => document.querySelector(s);
+const jp = JSON.parse;
+const uc = s => s.toUpperCase();
+const st = setTimeout;
 class YTE {
   constructor() {
     this.of = w.fetch.bind(w);

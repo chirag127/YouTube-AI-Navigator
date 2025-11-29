@@ -1,18 +1,10 @@
-import {
-  ge,
-  $$,
-  on,
-  sg,
-  ss,
-  nt,
-  js,
-
-  ft,
-  tab as ctab,
-  rt,
-  st,
-  win,
-} from '../utils/shortcuts.js';
+import { ge, on, $ } from '../utils/shortcuts/dom.js';
+import { sg, ss } from '../utils/shortcuts/storage.js';
+import { nw as nt, js } from '../utils/shortcuts/core.js';
+import { ft } from '../utils/shortcuts/network.js';
+import { ct as ctab } from '../utils/shortcuts/chrome.js';
+import { rt } from '../utils/shortcuts/runtime.js';
+import { to as st, wn as win } from '../utils/shortcuts/global.js';
 class OnboardingFlow {
   constructor() {
     this.currentStep = 0;
@@ -142,8 +134,8 @@ class OnboardingFlow {
     }
   }
   updateUI() {
-    const s = $$('.step'),
-      d = $$('.step-dot'),
+    const s = $('.step'),
+      d = $('.step-dot'),
       pf = ge('progressFill'),
       bb = ge('backBtn'),
       nb = ge('nextBtn');

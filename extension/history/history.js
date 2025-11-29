@@ -1,6 +1,14 @@
 import { StorageService } from '../services/storage/index.js';
 import { parseMarkdown } from '../lib/marked-loader.js';
-import { ge, on, ce, $$, tab, js, jp, mfl, pI, pd, lc, inc, fl } from '../utils/shortcuts.js';
+import { ge, on, ce, $ } from '../utils/shortcuts/dom.js';
+import { ct as tab } from '../utils/shortcuts/chrome.js';
+import { js, jp } from '../utils/shortcuts/core.js';
+import { mf as mfl } from '../utils/shortcuts/math.js';
+import { pI } from '../utils/shortcuts/global.js';
+import { pd } from '../utils/shortcuts/string.js';
+import { lc } from '../utils/shortcuts/string.js';
+import { ic as inc } from '../utils/shortcuts/string.js';
+import { fl } from '../utils/shortcuts/array.js';
 
 const s = new StorageService(),
   vl = ge('video-list'),
@@ -74,7 +82,7 @@ function renderList(items) {
 }
 async function viewVideo(v) {
   cid = v;
-  $$('.video-item').forEach(x => {
+  $('.video-item').forEach(x => {
     x.classList.remove('active');
     if (x.querySelector(`[data-id="${v}"]`)) x.classList.add('active');
   });

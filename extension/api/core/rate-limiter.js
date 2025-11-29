@@ -3,7 +3,10 @@
  * Prevents exceeding API rate limits
  */
 
-import { l, to, nw, mc, np } from '../../utils/shortcuts.js';
+import { l } from '../../utils/shortcuts/logging.js';
+import { to } from '../../utils/shortcuts/global.js';
+import { nw, np } from '../../utils/shortcuts/core.js';
+import { mc } from '../../utils/shortcuts/math.js';
 
 export class RateLimiter {
   constructor(config = {}) {

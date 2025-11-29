@@ -76,7 +76,7 @@ export class ContextManager {
     l(`[ContextManager] Starting ${tasks.length} parallel API calls...`);
     const r = await ps(tasks);
     l(`[ContextManager] Processing ${r.length} API call results...`);
-    r.forEach((res, i) => {
+    r.forEach(res => {
       if (res.status === 'fulfilled') {
         const { n, res: d } = res.value;
         if (d && (ia(d) ? d.length > 0 : true)) {

@@ -1,5 +1,4 @@
-export const $ = (s, p = document) => p.querySelector(s);
-export const $$ = (s, p = document) => [...p.querySelectorAll(s)];
+export const $ = (s, p = document) => [...p.querySelectorAll(s)];
 export const id = i => document.getElementById(i);
 export const cn = c => document.getElementsByClassName(c);
 export const tn = t => document.getElementsByTagName(t);
