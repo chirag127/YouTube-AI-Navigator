@@ -69,6 +69,25 @@ export async function startAnalysis() {
             }
         }
 
+        // 6. Save to Comprehensive History
+        try {
+            await saveToHistory({
+                videoId: state.currentVideoId,
+                metadata,
+                transcript,
+                comments,
+                commentAnalysis: state.analysisData.commentAnalysis,
+                segments: state.analysisData.segments,
+                summary: state.analysisData.summary,
+                comprehensiveReview: state.analysisData.comprehensive,
+                faq: state.analysisData.faq,
+                keyPoints: state.analysisData.keyPoints,
+                chatHistory: state.chatHistory || []
+            });
+        } catch (e) {
+            console.warn('[Flow] History save failed:', e);
+        }
+
         // Switch to Summary tab by default
         switchTab("summary");
     } catch (error) {
@@ -76,4 +95,11 @@ export async function startAnalysis() {
     } finally {
         state.isAnalyzing = false;
     }
+}
+
+async function saveToHistory(data) {
+    await chrome.runtime.sendMessage({
+        action: 'SAVE_HISTORY',
+        data
+    });
 }

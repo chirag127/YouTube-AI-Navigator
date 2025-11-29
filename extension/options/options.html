@@ -90,22 +90,13 @@
                     <div class="form-group">
                         <label for="transcriptMethod">Transcript Method</label>
                         <select id="transcriptMethod" class="form-select">
-                            <option value="auto">
-                                Auto (Best Available)
-                            </option>
-                            <option value="youtube-direct">
-                                YouTube Internal API (Best Timing)
-                            </option>
-                            <option value="dom-automation">
-                                DOM Automation
-                            </option>
-                            <option value="xhr">XHR Interceptor</option>
+                            <option value="auto">Auto (Best Available)</option>
+                            <option value="innertube">InnerTube API (Primary)</option>
+                            <option value="invidious">Invidious API</option>
+                            <option value="dom">DOM Parser</option>
+                            <option value="piped">Piped API</option>
                         </select>
-                        <p class="help-text">
-                            Choose how to fetch transcripts. 'YouTube
-                            Internal API' is recommended for accurate
-                            timing.
-                        </p>
+                        <p class="help-text">Choose transcript extraction method</p>
                     </div>
                     <div class="form-group">
                         <label for="transcriptLanguage">Transcript Language</label>
@@ -123,10 +114,211 @@
                             <option value="ar">Arabic</option>
                             <option value="hi">Hindi</option>
                         </select>
-                        <p class="help-text">
-                            Preferred language for the video transcript
-                            source.
-                        </p>
+                        <p class="help-text">Preferred language for transcripts</p>
+                    </div>
+                    <div class="form-group checkbox-row">
+                        <div class="checkbox-label">
+                            <label for="transcriptAutoClose">Auto-Close Widget</label>
+                            <p class="help-text">Automatically collapse widget after transcript loads</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="transcriptAutoClose" />
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="transcriptAutoCloseDelay">Auto-Close Delay (ms)</label>
+                        <input type="number" id="transcriptAutoCloseDelay" class="form-input" min="0" max="5000"
+                            step="100" value="1000" />
+                        <p class="help-text">Delay before auto-closing (0-5000ms)</p>
+                    </div>
+                    <div class="form-group checkbox-row">
+                        <div class="checkbox-label">
+                            <label for="transcriptAutoCloseOnCached">Auto-Close on Cached Data</label>
+                            <p class="help-text">Also close widget when showing cached transcripts</p>
+                        </div>
+                        <label class="switch sm">
+                            <input type="checkbox" id="transcriptAutoCloseOnCached" />
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="form-group checkbox-row">
+                        <div class="checkbox-label">
+                            <label for="includeTimestamps">Include Timestamps</label>
+                            <p class="help-text">Show timestamps in transcript display</p>
+                        </div>
+                        <label class="switch sm">
+                            <input type="checkbox" id="includeTimestamps" />
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Cache Settings</h3>
+                    <div class="form-group checkbox-row">
+                        <div class="checkbox-label">
+                            <label for="cacheEnabled">Enable Caching</label>
+                            <p class="help-text">Store fetched data locally to avoid re-fetching</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="cacheEnabled" />
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="cacheTTL">Cache Duration (hours)</label>
+                        <input type="number" id="cacheTTL" class="form-input" min="1" max="168" value="24" />
+                        <p class="help-text">How long to keep cached data (1-168 hours)</p>
+                    </div>
+                    <div class="form-group checkbox-row">
+                        <div class="checkbox-label">
+                            <label for="cacheTranscripts">Cache Transcripts</label>
+                        </div>
+                        <label class="switch sm">
+                            <input type="checkbox" id="cacheTranscripts" />
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="form-group checkbox-row">
+                        <div class="checkbox-label">
+                            <label for="cacheComments">Cache Comments</label>
+                        </div>
+                        <label class="switch sm">
+                            <input type="checkbox" id="cacheComments" />
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="form-group checkbox-row">
+                        <div class="checkbox-label">
+                            <label for="cacheMetadata">Cache Metadata</label>
+                        </div>
+                        <label class="switch sm">
+                            <input type="checkbox" id="cacheMetadata" />
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Scroll Behavior</h3>
+                    <div class="form-group checkbox-row">
+                        <div class="checkbox-label">
+                            <label for="autoScrollToComments">Auto-Scroll to Comments</label>
+                            <p class="help-text">Automatically scroll down when extracting comments (DISABLED by
+                                default)</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="autoScrollToComments" />
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="form-group checkbox-row">
+                        <div class="checkbox-label">
+                            <label for="scrollBackAfterComments">Scroll Back After Comments</label>
+                            <p class="help-text">Return to top after comment extraction</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="scrollBackAfterComments" />
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="form-group checkbox-row">
+                        <div class="checkbox-label">
+                            <label for="showScrollNotification">Show Scroll Notification</label>
+                            <p class="help-text">Display "Scrolled to top" notification</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="showScrollNotification" />
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Comments Settings</h3>
+                    <div class="form-group checkbox-row">
+                        <div class="checkbox-label">
+                            <label for="commentsEnabled">Enable Comments</label>
+                            <p class="help-text">Extract and analyze video comments</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="commentsEnabled" />
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="commentsLimit">Comments Limit</label>
+                        <input type="number" id="commentsLimit" class="form-input" min="5" max="100" value="20" />
+                        <p class="help-text">Maximum number of comments to fetch (5-100)</p>
+                    </div>
+                    <div class="form-group checkbox-row">
+                        <div class="checkbox-label">
+                            <label for="analyzeSentiment">Analyze Sentiment</label>
+                            <p class="help-text">Perform AI sentiment analysis on comments</p>
+                        </div>
+                        <label class="switch sm">
+                            <input type="checkbox" id="analyzeSentiment" />
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Metadata Inclusion</h3>
+                    <div class="form-group checkbox-row">
+                        <div class="checkbox-label">
+                            <label for="includeTitle">Include Title</label>
+                        </div>
+                        <label class="switch sm">
+                            <input type="checkbox" id="includeTitle" />
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="form-group checkbox-row">
+                        <div class="checkbox-label">
+                            <label for="includeAuthor">Include Author</label>
+                        </div>
+                        <label class="switch sm">
+                            <input type="checkbox" id="includeAuthor" />
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="form-group checkbox-row">
+                        <div class="checkbox-label">
+                            <label for="includeViews">Include Views</label>
+                        </div>
+                        <label class="switch sm">
+                            <input type="checkbox" id="includeViews" />
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="form-group checkbox-row">
+                        <div class="checkbox-label">
+                            <label for="includeDuration">Include Duration</label>
+                        </div>
+                        <label class="switch sm">
+                            <input type="checkbox" id="includeDuration" />
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="form-group checkbox-row">
+                        <div class="checkbox-label">
+                            <label for="includeDescription">Include Description</label>
+                        </div>
+                        <label class="switch sm">
+                            <input type="checkbox" id="includeDescription" />
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="form-group checkbox-row">
+                        <div class="checkbox-label">
+                            <label for="includeTags">Include Tags</label>
+                        </div>
+                        <label class="switch sm">
+                            <input type="checkbox" id="includeTags" />
+                            <span class="slider round"></span>
+                        </label>
                     </div>
                 </div>
 
@@ -135,63 +327,12 @@
                     <div class="form-group checkbox-row">
                         <div class="checkbox-label">
                             <label for="autoAnalyze">Auto-Analyze Videos</label>
-                            <p class="help-text">
-                                Automatically start analysis when a video
-                                page loads.
-                            </p>
+                            <p class="help-text">Automatically start analysis when a video page loads</p>
                         </div>
                         <label class="switch">
                             <input type="checkbox" id="autoAnalyze" />
                             <span class="slider round"></span>
                         </label>
-                    </div>
-
-                    <div class="divider"></div>
-
-                    <div class="form-group checkbox-row">
-                        <div class="checkbox-label">
-                            <label for="autoLike">Auto-Like Videos</label>
-                            <p class="help-text">
-                                Automatically like videos when you watch
-                                them.
-                            </p>
-                        </div>
-                        <label class="switch">
-                            <input type="checkbox" id="autoLike" />
-                            <span class="slider round"></span>
-                        </label>
-                    </div>
-
-                    <div id="autoLikeSettings" class="nested-settings hidden">
-                        <div class="form-group">
-                            <label for="autoLikeThreshold">Watch Threshold:
-                                <span id="thresholdValue">50%</span></label>
-                            <input type="range" id="autoLikeThreshold" class="form-range" min="0" max="100"
-                                value="50" />
-                            <p class="help-text">
-                                Percentage of video to watch before liking.
-                            </p>
-                        </div>
-
-                        <div class="form-group checkbox-row">
-                            <div class="checkbox-label">
-                                <label for="likeIfNotSubscribed">Like if not subscribed</label>
-                            </div>
-                            <label class="switch sm">
-                                <input type="checkbox" id="likeIfNotSubscribed" />
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-
-                        <div class="form-group checkbox-row">
-                            <div class="checkbox-label">
-                                <label for="autoLikeLive">Like Live Streams</label>
-                            </div>
-                            <label class="switch sm">
-                                <input type="checkbox" id="autoLikeLive" />
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
                     </div>
                 </div>
 

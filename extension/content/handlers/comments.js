@@ -65,15 +65,24 @@ class CommentsExtractor {
         console.log("[CommentsExtractor] 💬 === STARTING COMMENT EXTRACTION ===");
         const videoId = this.getCurrentVideoId();
 
+        // Check if comments are enabled
+        const config = await this.getConfig();
+        if (!config.comments?.enabled) {
+            console.log("[CommentsExtractor] ⏭️ Comments disabled in settings");
+            return [];
+        }
+
         // Strategy 0: Check Cache First (NO SCROLL)
-        try {
-            const cached = await this.checkCache(videoId);
-            if (cached && cached.length > 0) {
-                console.log(`[CommentsExtractor] ✅ Strategy 0: Using cached comments (${cached.length}) - NO SCROLL`);
-                return cached;
+        if (config.cache?.enabled && config.cache?.comments) {
+            try {
+                const cached = await this.checkCache(videoId);
+                if (cached && cached.length > 0) {
+                    console.log(`[CommentsExtractor] ✅ Strategy 0: Using cached comments (${cached.length}) - NO SCROLL`);
+                    return cached;
+                }
+            } catch (e) {
+                console.warn("[CommentsExtractor] ⚠️ Cache check failed:", e.message);
             }
-        } catch (e) {
-            console.warn("[CommentsExtractor] ⚠️ Cache check failed:", e.message);
         }
 
         // Strategy 1: Intercepted Comments (Passive - NO SCROLL)
@@ -127,9 +136,27 @@ class CommentsExtractor {
         }
 
         // Strategy 3: DOM Scraping (LAST RESORT - REQUIRES SCROLL)
-        console.log("[CommentsExtractor] 🔧 Strategy 3: DOM scraping - WILL SCROLL");
-        await this.scrollToComments();
+        console.log("[CommentsExtractor] 🔧 Strategy 3: DOM scraping");
+
+        // Only scroll if enabled in config
+        if (config.scroll?.autoScrollToComments) {
+            console.log("[CommentsExtractor] 📜 Auto-scroll enabled - scrolling to comments");
+            await this.scrollToComments();
+        } else {
+            console.log("[CommentsExtractor] ⏭️ Auto-scroll DISABLED - skipping scroll");
+        }
+
         return this.fetchCommentsFromDOM();
+    }
+
+    async getConfig() {
+        try {
+            const result = await chrome.storage.sync.get('config');
+            return result.config || {};
+        } catch (e) {
+            console.warn("[CommentsExtractor] Config load failed:", e);
+            return {};
+        }
     }
 
     async checkCache(videoId) {

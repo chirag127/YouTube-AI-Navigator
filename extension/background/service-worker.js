@@ -22,7 +22,7 @@ import { handleSaveComments } from "./handlers/comments-storage.js";
 import { handleTranscribeAudio } from "./handlers/transcribe-audio.js";
 import { handleGetLyrics } from "./handlers/get-lyrics.js";
 import { handleGetTranscript as handleInnertubeTranscript, handleGetVideoInfo, handleGetComments } from "./handlers/innertube.js";
-import { handleGetVideoData } from "./handlers/video-data.js";
+import { handleGetVideoData, handleSaveHistory } from "./handlers/video-data.js";
 
 import { migrateModelNames } from "../utils/migrate-model-names.js";
 
@@ -84,6 +84,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     break;
                 case "SAVE_TO_HISTORY":
                     await handleSaveToHistory(sanitized, sendResponse);
+                    break;
+                case "SAVE_HISTORY":
+                    sendResponse(await handleSaveHistory(sanitized));
                     break;
                 case "GET_METADATA":
                     await handleGetMetadata(sanitized, sendResponse);

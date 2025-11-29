@@ -2,6 +2,7 @@
 // Centralized handler for all video data requests with caching
 
 import { handleGetTranscript, handleGetVideoInfo, handleGetComments } from './innertube.js';
+import { getHistory } from '../../services/storage/comprehensive-history.js';
 
 const CACHE_VERSION = 1;
 const CACHE_EXPIRY = 24 * 60 * 60 * 1000; // 24 hours
@@ -31,6 +32,13 @@ async function setCache(videoId, dataType, data) {
         }
     });
     console.log(`[VideoData] Cached: ${key}`);
+}
+
+export async function handleSaveHistory(request) {
+    const { data } = request;
+    const history = getHistory();
+    await history.save(data.videoId, data);
+    return { success: true };
 }
 
 export async function handleGetVideoData(request) {

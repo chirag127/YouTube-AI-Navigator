@@ -26,8 +26,11 @@ export async function renderComments(c) {
             comments: cm,
         });
         if (r.success) {
-            // IMMEDIATE scroll to top - before rendering
-            scrollBackToTop();
+            // Check config for scroll-back behavior
+            const config = await getConfig();
+            if (config.scroll?.scrollBackAfterComments) {
+                scrollBackToTop(config.scroll?.showScrollNotification ?? true);
+            }
 
             if (!state.analysisData) state.analysisData = {};
             state.analysisData.commentAnalysis = r.analysis;
@@ -46,7 +49,16 @@ export async function renderComments(c) {
     }
 }
 
-function scrollBackToTop() {
+async function getConfig() {
+    try {
+        const result = await chrome.storage.sync.get('config');
+        return result.config || {};
+    } catch (e) {
+        return {};
+    }
+}
+
+function scrollBackToTop(showNotification = true) {
     console.log("[CommentsRenderer] 📜 IMMEDIATE scroll to top");
 
     // Triple-force instant scroll
@@ -68,8 +80,10 @@ function scrollBackToTop() {
         console.log("[CommentsRenderer] ✅ Final scroll position:", window.scrollY);
     });
 
-    // Visual feedback
-    showScrollNotification();
+    // Visual feedback (if enabled)
+    if (showNotification) {
+        showScrollNotification();
+    }
 }
 
 function showScrollNotification() {

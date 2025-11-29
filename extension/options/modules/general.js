@@ -5,101 +5,128 @@ export class GeneralSettings {
     }
 
     init() {
-        const els = {
-            outputLanguage: document.getElementById("outputLanguage"),
-            transcriptMethod: document.getElementById("transcriptMethod"),
-            transcriptLanguage: document.getElementById("transcriptLanguage"),
-            autoAnalyze: document.getElementById("autoAnalyze"),
-            saveHistory: document.getElementById("saveHistory"),
-            clearHistory: document.getElementById("clearHistory"),
-            // Auto-Liker
-            autoLike: document.getElementById("autoLike"),
-            autoLikeThreshold: document.getElementById("autoLikeThreshold"),
-            thresholdValue: document.getElementById("thresholdValue"),
-            autoLikeLive: document.getElementById("autoLikeLive"),
-            likeIfNotSubscribed: document.getElementById("likeIfNotSubscribed"),
-            autoLikeSettings: document.getElementById("autoLikeSettings"),
+        this.loadSettings();
+        this.attachListeners();
+    }
+
+    loadSettings() {
+        const config = this.settings.get();
+
+        // Language
+        this.setValue('outputLanguage', config.ai?.outputLanguage || 'en');
+        this.setValue('transcriptLanguage', config.transcript?.language || 'en');
+
+        // Transcript
+        this.setValue('transcriptMethod', config.transcript?.method || 'auto');
+        this.setChecked('transcriptAutoClose', config.transcript?.autoClose ?? true);
+        this.setValue('transcriptAutoCloseDelay', config.transcript?.autoCloseDelay || 1000);
+        this.setChecked('transcriptAutoCloseOnCached', config.transcript?.autoCloseOnCached ?? false);
+        this.setChecked('includeTimestamps', config.transcript?.includeTimestamps ?? true);
+
+        // Cache
+        this.setChecked('cacheEnabled', config.cache?.enabled ?? true);
+        this.setValue('cacheTTL', (config.cache?.ttl || 86400000) / 3600000); // Convert ms to hours
+        this.setChecked('cacheTranscripts', config.cache?.transcripts ?? true);
+        this.setChecked('cacheComments', config.cache?.comments ?? true);
+        this.setChecked('cacheMetadata', config.cache?.metadata ?? true);
+
+        // Scroll
+        this.setChecked('autoScrollToComments', config.scroll?.autoScrollToComments ?? false);
+        this.setChecked('scrollBackAfterComments', config.scroll?.scrollBackAfterComments ?? true);
+        this.setChecked('showScrollNotification', config.scroll?.showScrollNotification ?? true);
+
+        // Comments
+        this.setChecked('commentsEnabled', config.comments?.enabled ?? true);
+        this.setValue('commentsLimit', config.comments?.limit || 20);
+        this.setChecked('analyzeSentiment', config.comments?.analyzeSentiment ?? true);
+
+        // Metadata
+        this.setChecked('includeTitle', config.metadata?.includeTitle ?? true);
+        this.setChecked('includeAuthor', config.metadata?.includeAuthor ?? true);
+        this.setChecked('includeViews', config.metadata?.includeViews ?? true);
+        this.setChecked('includeDuration', config.metadata?.includeDuration ?? true);
+        this.setChecked('includeDescription', config.metadata?.includeDescription ?? true);
+        this.setChecked('includeTags', config.metadata?.includeTags ?? true);
+
+        // Automation
+        this.setChecked('autoAnalyze', config.automation?.autoAnalyze ?? false);
+
+        // Data & Privacy
+        this.setChecked('saveHistory', config.advanced?.saveHistory ?? true);
+    }
+
+    attachListeners() {
+        // Language
+        this.onChange('outputLanguage', (v) => this.settings.update('ai.outputLanguage', v));
+        this.onChange('transcriptLanguage', (v) => this.settings.update('transcript.language', v));
+
+        // Transcript
+        this.onChange('transcriptMethod', (v) => this.settings.update('transcript.method', v));
+        this.onChange('transcriptAutoClose', (v) => this.settings.update('transcript.autoClose', v));
+        this.onChange('transcriptAutoCloseDelay', (v) => this.settings.update('transcript.autoCloseDelay', parseInt(v)));
+        this.onChange('transcriptAutoCloseOnCached', (v) => this.settings.update('transcript.autoCloseOnCached', v));
+        this.onChange('includeTimestamps', (v) => this.settings.update('transcript.includeTimestamps', v));
+
+        // Cache
+        this.onChange('cacheEnabled', (v) => this.settings.update('cache.enabled', v));
+        this.onChange('cacheTTL', (v) => this.settings.update('cache.ttl', parseInt(v) * 3600000)); // Convert hours to ms
+        this.onChange('cacheTranscripts', (v) => this.settings.update('cache.transcripts', v));
+        this.onChange('cacheComments', (v) => this.settings.update('cache.comments', v));
+        this.onChange('cacheMetadata', (v) => this.settings.update('cache.metadata', v));
+
+        // Scroll
+        this.onChange('autoScrollToComments', (v) => this.settings.update('scroll.autoScrollToComments', v));
+        this.onChange('scrollBackAfterComments', (v) => this.settings.update('scroll.scrollBackAfterComments', v));
+        this.onChange('showScrollNotification', (v) => this.settings.update('scroll.showScrollNotification', v));
+
+        // Comments
+        this.onChange('commentsEnabled', (v) => this.settings.update('comments.enabled', v));
+        this.onChange('commentsLimit', (v) => this.settings.update('comments.limit', parseInt(v)));
+        this.onChange('analyzeSentiment', (v) => this.settings.update('comments.analyzeSentiment', v));
+
+        // Metadata
+        this.onChange('includeTitle', (v) => this.settings.update('metadata.includeTitle', v));
+        this.onChange('includeAuthor', (v) => this.settings.update('metadata.includeAuthor', v));
+        this.onChange('includeViews', (v) => this.settings.update('metadata.includeViews', v));
+        this.onChange('includeDuration', (v) => this.settings.update('metadata.includeDuration', v));
+        this.onChange('includeDescription', (v) => this.settings.update('metadata.includeDescription', v));
+        this.onChange('includeTags', (v) => this.settings.update('metadata.includeTags', v));
+
+        // Automation
+        this.onChange('autoAnalyze', (v) => this.settings.update('automation.autoAnalyze', v));
+
+        // Data & Privacy
+        this.onChange('saveHistory', (v) => this.settings.update('advanced.saveHistory', v));
+
+        // Clear History
+        document.getElementById('clearHistory')?.addEventListener('click', async () => {
+            if (confirm('Clear all history? This cannot be undone.')) {
+                await chrome.storage.local.remove('history');
+                this.ui.showToast('History cleared');
+            }
+        });
+    }
+
+    setValue(id, value) {
+        const el = document.getElementById(id);
+        if (el) el.value = value;
+    }
+
+    setChecked(id, checked) {
+        const el = document.getElementById(id);
+        if (el) el.checked = checked;
+    }
+
+    onChange(id, callback) {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        const handler = (e) => {
+            const value = el.type === 'checkbox' ? el.checked : el.value;
+            callback(value);
         };
 
-        // Load values
-        const s = this.settings.get();
-        if (els.outputLanguage) els.outputLanguage.value = s.outputLanguage || "en";
-        if (els.transcriptMethod) els.transcriptMethod.value = s.transcriptMethod || "auto";
-        if (els.transcriptLanguage) els.transcriptLanguage.value = s.transcriptLanguage || "en";
-        if (els.autoAnalyze) els.autoAnalyze.checked = s.autoAnalyze;
-        if (els.saveHistory) els.saveHistory.checked = s.saveHistory;
-
-        // Auto-Liker Load
-        if (els.autoLike) {
-            els.autoLike.checked = s.autoLike || false;
-            if (els.autoLikeSettings) {
-                els.autoLikeSettings.classList.toggle("hidden", !s.autoLike);
-            }
-        }
-        if (els.autoLikeThreshold) {
-            els.autoLikeThreshold.value = s.autoLikeThreshold || 50;
-            if (els.thresholdValue) els.thresholdValue.textContent = `${s.autoLikeThreshold || 50}%`;
-        }
-        if (els.autoLikeLive) els.autoLikeLive.checked = s.autoLikeLive || false;
-        if (els.likeIfNotSubscribed) els.likeIfNotSubscribed.checked = s.likeIfNotSubscribed || false;
-
-        // Listeners
-        if (els.outputLanguage)
-            els.outputLanguage.addEventListener("change", (e) =>
-                this.settings.save({ outputLanguage: e.target.value })
-            );
-        if (els.transcriptMethod)
-            els.transcriptMethod.addEventListener("change", (e) =>
-                this.settings.save({ transcriptMethod: e.target.value })
-            );
-        if (els.transcriptLanguage)
-            els.transcriptLanguage.addEventListener("change", (e) =>
-                this.settings.save({ transcriptLanguage: e.target.value })
-            );
-        if (els.autoAnalyze)
-            els.autoAnalyze.addEventListener("change", (e) =>
-                this.settings.save({ autoAnalyze: e.target.checked })
-            );
-        if (els.saveHistory)
-            els.saveHistory.addEventListener("change", (e) =>
-                this.settings.save({ saveHistory: e.target.checked })
-            );
-
-        // Auto-Liker Listeners
-        if (els.autoLike) {
-            els.autoLike.addEventListener("change", (e) => {
-                const checked = e.target.checked;
-                this.settings.save({ autoLike: checked });
-                if (els.autoLikeSettings) {
-                    els.autoLikeSettings.classList.toggle("hidden", !checked);
-                }
-            });
-        }
-        if (els.autoLikeThreshold) {
-            els.autoLikeThreshold.addEventListener("input", (e) => {
-                const val = e.target.value;
-                if (els.thresholdValue) els.thresholdValue.textContent = `${val}%`;
-                this.settings.save({ autoLikeThreshold: parseInt(val) });
-            });
-        }
-        if (els.autoLikeLive) {
-            els.autoLikeLive.addEventListener("change", (e) =>
-                this.settings.save({ autoLikeLive: e.target.checked })
-            );
-        }
-        if (els.likeIfNotSubscribed) {
-            els.likeIfNotSubscribed.addEventListener("change", (e) =>
-                this.settings.save({ likeIfNotSubscribed: e.target.checked })
-            );
-        }
-
-        if (els.clearHistory) {
-            els.clearHistory.addEventListener("click", async () => {
-                if (confirm("Are you sure? This cannot be undone.")) {
-                    await chrome.storage.local.remove("summaryHistory");
-                    this.ui.showToast("History cleared");
-                }
-            });
-        }
+        el.addEventListener('change', handler);
+        el.addEventListener('input', handler);
     }
 }
