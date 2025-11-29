@@ -1,4 +1,4 @@
-import { st } from '../../utils/shortcuts/global.js';
+import { to } from '../../utils/shortcuts/global.js';
 import { raf } from '../../utils/shortcuts/async.js';
 import { ce as cr, ap } from '../../utils/shortcuts/dom.js';
 export class NotificationManager {

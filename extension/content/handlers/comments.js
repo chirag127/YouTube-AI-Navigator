@@ -1,4 +1,5 @@
-import { l, w, e, js } from '../../utils/shortcuts/global.js';
+import { l, w, e } from '../../utils/shortcuts/log.js';
+import { js } from '../../utils/shortcuts/global.js';
 import { ae, qs as $ } from '../../utils/shortcuts/dom.js';
 import { sg, slg as lg } from '../../utils/shortcuts/storage.js';
 import { ft } from '../../utils/shortcuts/network.js';

@@ -36,3 +36,10 @@ export const ac = (e, c) => e.classList.add(c);
 export const dc = document;
 export const tx = t => document.createTextNode(t);
 export const fc = (n, f) => n.forEach(f);
+
+export const sb = (s, a, b) => s?.substring(a, b);
+export const ge = id;
+export const $ = qs;
+export const $$ = qsa;
+export const ae = on;
+export const re = off;

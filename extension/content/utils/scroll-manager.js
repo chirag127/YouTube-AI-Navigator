@@ -1,5 +1,6 @@
 import { qs as $, qsa as $$ } from '../../utils/shortcuts/dom.js';
-import { l, w, e, st } from '../../utils/shortcuts/global.js';
+import { l, w, e } from '../../utils/shortcuts/log.js';
+import { to } from '../../utils/shortcuts/global.js';
 export class ScrollManager {
   constructor() {
     this.originalScrollPosition = 0;

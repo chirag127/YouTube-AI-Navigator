@@ -1,4 +1,5 @@
-import { st, ct, l, e } from '../../utils/shortcuts/global.js';
+import { l, e } from '../../utils/shortcuts/log.js';
+import { to, ct } from '../../utils/shortcuts/global.js';
 import { on, qs as i } from '../../utils/shortcuts/dom.js';
 import { oe } from '../../utils/shortcuts/core.js';
 export class AutoSave {

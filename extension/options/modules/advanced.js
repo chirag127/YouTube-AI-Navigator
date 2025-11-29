@@ -1,6 +1,7 @@
 import { qs as i, on, ce } from '../../utils/shortcuts/dom.js';
 import { js, jp } from '../../utils/shortcuts/core.js';
-import { st, e as err } from '../../utils/shortcuts/global.js';
+import { e as err } from '../../utils/shortcuts/log.js';
+import { to } from '../../utils/shortcuts/global.js';
 export class AdvancedSettings {
   constructor(s, a) {
     this.s = s;

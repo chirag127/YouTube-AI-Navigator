@@ -58,3 +58,9 @@ export const usp = URLSearchParams;
 export const js = JSON.stringify;
 export const jp = JSON.parse;
 export const isS = s => typeof s === 'string';
+
+// Additional exports
+export const nw = Date.now;
+export const np = Promise;
+export const ok = Object.keys;
+export const oe = Object.entries;

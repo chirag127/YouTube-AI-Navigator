@@ -1,6 +1,7 @@
 import { qs as i, rc } from '../utils/shortcuts/dom.js';
 import { slg as sl, sg } from '../utils/shortcuts/storage.js';
-import { w, st as to } from '../utils/shortcuts/global.js';
+import { w } from '../utils/shortcuts/log.js';
+import { to as to } from '../utils/shortcuts/global.js';
 import { tq, tm, tc } from '../utils/shortcuts/tabs.js';
 import { ru as url, ro as oop } from '../utils/shortcuts/runtime.js';
 const a = i('#api-status'),
