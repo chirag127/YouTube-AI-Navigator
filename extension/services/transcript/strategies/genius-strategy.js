@@ -1,11 +1,11 @@
-import { $, l, w, rt } from '../../../utils/shortcuts.js';
+import { $, l, cw, rt } from '../../../utils/shortcuts.js';
 import geniusAPI from '../../../api/genius-lyrics.js';
 import { isMusicVideo } from '../utils/music-classifier.js';
 async function fetchViaGenius(videoId, lang = 'en') {
   const title = $('h1.ytd-watch-metadata')?.textContent?.trim();
   const channel = $('.ytd-channel-name a')?.textContent?.trim();
   if (!title) {
-    w('[Genius Strategy] Could not find video title');
+    cw('[Genius Strategy] Could not find video title');
     return null;
   }
   l(`[Genius Strategy] Checking if music video: "${title}" by ${channel}`);
@@ -18,7 +18,7 @@ async function fetchViaGenius(videoId, lang = 'en') {
   const result = await new Promise(resolve => {
     rt.sendMessage({ type: 'GET_LYRICS', title, artist: channel || '' }, response => {
       if (rt.lastError) {
-        w('[Genius Strategy] Message error:', rt.lastError);
+        cw('[Genius Strategy] Message error:', rt.lastError);
         resolve(null);
         return;
       }

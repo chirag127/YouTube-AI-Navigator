@@ -1,41 +1,25 @@
-export const $ = (s, p = document) => p.querySelector(s);
-export const $$ = (s, p = document) => [...p.querySelectorAll(s)];
+// DOM utilities
+export const qs = (s, p = document) => p.querySelector(s);
+export const qsa = (s, p = document) => [...p.querySelectorAll(s)];
 export const ge = i => document.getElementById(i);
 export const gc = c => document.getElementsByClassName(c);
 export const gt = t => document.getElementsByTagName(t);
-export const gn = n => document.getElementsByName(n);
-export const cr = t => document.createElement(t);
+export const cel = t => document.createElement(t); // renamed from cr to avoid conflict with chrome.runtime
 export const ctx = t => document.createTextNode(t);
-export const on = (el, ev, fn, o) => el.addEventListener(ev, fn, o);
-export const off = (el, ev, fn, o) => el.removeEventListener(ev, fn, o);
+export const on = (e, v, f, o) => e.addEventListener(v, f, o);
+export const off = (e, v, f, o) => e.removeEventListener(v, f, o);
 export const ap = (p, c) => p.appendChild(c);
-export const rm = (p, c) => p.removeChild(c);
-export const ac = (el, c) => el.classList.add(c);
-export const rc = (el, c) => el.classList.remove(c);
-export const tgl = (el, c) => el.classList.toggle(c);
-export const hc = (el, c) => el.classList.contains(c);
-export const sa = (el, k, v) => el.setAttribute(k, v);
-export const ga = (el, k) => el.getAttribute(k);
-export const ra = (el, k) => el.removeAttribute(k);
-export const ha = (el, k) => el.hasAttribute(k);
+export const rmc = (p, c) => p.removeChild(c); // renamed from rm to avoid conflict
+export const ac = (e, c) => e.classList.add(c);
+export const rc = (e, c) => e.classList.remove(c);
+export const tgl = (e, c) => e.classList.toggle(c);
+export const hc = (e, c) => e.classList.contains(c);
+export const sa = (e, k, v) => e.setAttribute(k, v);
+export const ga = (e, k) => e.getAttribute(k);
+export const ra = (e, k) => e.removeAttribute(k);
 export const ih = (e, h) => (e.innerHTML = h);
 export const tc = (e, t) => (e.textContent = t);
-export const val = (e, v) => {
-  if (v === undefined) return e.value;
-  e.value = v;
-};
-export const ds = (e, k, v) => {
-  if (v === undefined) return e.dataset[k];
-  e.dataset[k] = v;
-};
-export const stl = (e, k, v) => {
-  if (v === undefined) return e.style[k];
-  e.style[k] = v;
-};
+export const val = (e, v) => (v === undefined ? e.value : (e.value = v));
+export const stl = (e, k, v) => (v === undefined ? e.style[k] : (e.style[k] = v));
 export const show = e => (e.style.display = 'block');
 export const hide = e => (e.style.display = 'none');
-export const tog = e => (e.style.display = e.style.display === 'none' ? 'block' : 'none');
-export const viz = (e, v) => (e.style.visibility = v ? 'visible' : 'hidden');
-export const op = (e, o) => (e.style.opacity = o);
-export const dw = (e, w) => (e.style.width = w);
-export const dh = (e, h) => (e.style.height = h);

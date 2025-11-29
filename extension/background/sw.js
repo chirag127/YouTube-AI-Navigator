@@ -1,16 +1,20 @@
-import { l, e, cw, cr, ct, url } from '../utils/shortcuts.js';
+import { l, e, w } from '../utils/shortcuts/logging.js';
+import { cr, ct } from '../utils/shortcuts/chrome.js';
+import { rurl, rman } from '../utils/shortcuts/runtime.js';
+
 cr.onInstalled.addListener(async d => {
   if (d.reason === 'install') {
     l('YouTube AI Master installed');
     try {
-      await ct.create({ url: url('onboarding/onboarding.html') });
+      await ct.create({ url: rurl('onboarding/onboarding.html') });
     } catch (x) {
       e('Failed to open onboarding:', x);
     }
   } else if (d.reason === 'update') {
-    l('YouTube AI Master updated to version', cr.getManifest().version);
+    l('YouTube AI Master updated to version', rman().version);
   }
 });
+
 cr.onMessage.addListener((req, snd, rsp) => {
   const act = req.action || req.type;
   l('Background received message:', act);
@@ -30,10 +34,7 @@ cr.onMessage.addListener((req, snd, rsp) => {
       const san = sanitizeRequest(req);
       switch (act) {
         case 'TEST':
-          rsp({
-            success: true,
-            message: 'Background script is running',
-          });
+          rsp({ success: true, message: 'Background script is running' });
           break;
         case 'GET_SETTINGS': {
           const { handleGetSettings } = await import('./handlers/settings.js');
@@ -120,7 +121,7 @@ cr.onMessage.addListener((req, snd, rsp) => {
           rsp({ success: true });
           break;
         default:
-          cw('Unknown message type:', act);
+          w('Unknown message type:', act);
           rsp({ success: false, error: 'Unknown message type' });
       }
     } catch (err) {

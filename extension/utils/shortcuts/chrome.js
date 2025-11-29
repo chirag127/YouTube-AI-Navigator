@@ -1,16 +1,23 @@
-export const rt = chrome.runtime;
-export const sync = chrome.storage.sync;
-export const local = chrome.storage.local;
-export const sg = k => sync.get(k);
-export const ss = (k, v) => sync.set(typeof k === 'string' ? { [k]: v } : k);
-export const sr = k => sync.remove(k);
-export const scl = () => sync.clear();
-export const lg = k => local.get(k);
-export const ls = (k, v) => local.set(typeof k === 'string' ? { [k]: v } : k);
-export const lr = k => local.remove(k);
-export const lcl = () => local.clear();
-export const url = p => chrome.runtime.getURL(p);
-export const msg = (m, d) => chrome.runtime.sendMessage({ action: m, ...d });
-export const tab = o => chrome.tabs.create(o);
-export const tq = (q, cb) => chrome.tabs.query(q, cb);
-export const tsm = (id, m, cb) => chrome.tabs.sendMessage(id, m, cb);
+// Chrome API shortcuts (main APIs only, runtime has its own file)
+export const cr = chrome.runtime;
+export const ct = chrome.tabs;
+export const cs = chrome.storage;
+export const csl = chrome.storage.local;
+export const css = chrome.storage.sync;
+export const ca = chrome.action;
+export const cwin = chrome.windows; // renamed from cw to avoid conflict with console.warn
+export const cid = chrome.identity; // renamed from ci to avoid conflict with clearInterval
+export const cn = chrome.notifications;
+export const cm = chrome.contextMenus;
+export const csc = chrome.scripting;
+export const cbr = chrome.browsingData;
+export const cck = chrome.cookies;
+export const cdl = chrome.downloads;
+export const ch = chrome.history;
+export const ci18 = chrome.i18n;
+export const cp = chrome.permissions;
+export const cpr = chrome.privacy;
+export const ctt = chrome.tts;
+export const ctts = chrome.ttsEngine;
+export const cweb = chrome.webNavigation;
+export const cwr = chrome.webRequest;

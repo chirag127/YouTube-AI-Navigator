@@ -1,17 +1,6 @@
-export const up = u => new URL(u);
-export const gp = (u, k) => new URL(u).searchParams.get(k);
-export const spu = (u, k, v) => {
-  const x = new URL(u);
-  x.searchParams.set(k, v);
-  return x.toString();
-};
-export const apu = (u, k, v) => {
-  const x = new URL(u);
-  x.searchParams.append(k, v);
-  return x.toString();
-};
-export const dpu = (u, k) => {
-  const x = new URL(u);
-  x.searchParams.delete(k);
-  return x.toString();
-};
+export const U = URL;
+export const USP = URLSearchParams;
+export const uo = u => new URL(u);
+export const usp = s => new URLSearchParams(s);
+export const urev = u => URL.revokeObjectURL(u);
+export const uobj = o => URL.createObjectURL(o);

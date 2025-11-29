@@ -1,5 +1,5 @@
 import { GeminiClient } from '../../../api/gemini-client.js';
-import { sg, w, sw, rp, tr, lc } from '../../../utils/shortcuts.js';
+import { sg, cw, sw, rp, tr, lc } from '../../../utils/shortcuts.js';
 
 export async function isMusicVideo(t, c) {
   try {
@@ -12,7 +12,7 @@ export async function isMusicVideo(t, c) {
     const r = await cl.generateContent(p, m);
     return lc(tr(r)) === 'true';
   } catch (e) {
-    w('[MusicClassifier] Failed to classify:', e);
+    cw('[MusicClassifier] Failed to classify:', e);
     return false;
   }
 }

@@ -1,4 +1,4 @@
-import { $, $$, l, w, e as er, d, sl, nt, spt, mp, tr } from '../../../utils/shortcuts.js';
+import { $, $$, l, cw, ce, cd, st, nt, spt, mp, tr } from '../../../utils/shortcuts.js';
 class DOMAutomationStrategy {
   constructor() {
     this.name = 'DOM Automation';
@@ -9,9 +9,9 @@ class DOMAutomationStrategy {
     return {
       info: (m, ...a) => l(`[${p}]ℹ️${m}`, ...a),
       success: (m, ...a) => l(`[${p}]✅${m}`, ...a),
-      warn: (m, ...a) => w(`[${p}]⚠️${m}`, ...a),
-      error: (m, ...a) => er(`[${p}]❌${m}`, ...a),
-      debug: (m, ...a) => d(`[${p}]🔍${m}`, ...a),
+      warn: (m, ...a) => cw(`[${p}]⚠️${m}`, ...a),
+      error: (m, ...a) => ce(`[${p}]❌${m}`, ...a),
+      debug: (m, ...a) => cd(`[${p}]🔍${m}`, ...a),
     };
   }
   async fetch(v, lg = 'en') {
@@ -99,7 +99,7 @@ class DOMAutomationStrategy {
     return 0;
   }
   _wait(ms) {
-    return sl(ms);
+    return new Promise(r => st(r, ms));
   }
 }
 export const strategy = new DOMAutomationStrategy();

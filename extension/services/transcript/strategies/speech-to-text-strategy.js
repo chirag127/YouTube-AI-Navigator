@@ -1,4 +1,4 @@
-import { l, w, rt } from '../../../utils/shortcuts.js';
+import { l, cw, rt } from '../../../utils/shortcuts.js';
 const getAudioUrl = () => {
   try {
     const pr = window.ytInitialPlayerResponse;
@@ -9,7 +9,7 @@ const getAudioUrl = () => {
     );
     return audioFormat?.url || null;
   } catch (e) {
-    w('[SpeechToText] Failed to extract audio URL:', e);
+    cw('[SpeechToText] Failed to extract audio URL:', e);
     return null;
   }
 };
@@ -17,14 +17,14 @@ async function fetchViaSpeechToText(videoId, lang = 'en') {
   l(`[SpeechToText] Starting extraction for ${videoId}, lang: ${lang}`);
   const audioUrl = getAudioUrl();
   if (!audioUrl) {
-    w('[SpeechToText] No audio URL found');
+    cw('[SpeechToText] No audio URL found');
     return null;
   }
   l('[SpeechToText] Found audio URL, requesting transcription...');
   return new Promise(resolve => {
     rt.sendMessage({ type: 'TRANSCRIBE_AUDIO', audioUrl, lang }, response => {
       if (rt.lastError) {
-        w('[SpeechToText] Message error:', rt.lastError);
+        cw('[SpeechToText] Message error:', rt.lastError);
         resolve(null);
         return;
       }
@@ -32,7 +32,7 @@ async function fetchViaSpeechToText(videoId, lang = 'en') {
         l(`[SpeechToText] ✅ Success: ${response.segments.length} segments`);
         resolve(response.segments);
       } else {
-        w('[SpeechToText] Failed:', response?.error);
+        cw('[SpeechToText] Failed:', response?.error);
         resolve(null);
       }
     });

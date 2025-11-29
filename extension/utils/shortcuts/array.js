@@ -1,20 +1,15 @@
+// Array utilities
+export const af = Array.from;
+export const ia = Array.isArray;
+export const fe = (a, f) => a.forEach(f);
 export const mp = (a, f) => a.map(f);
 export const fl = (a, f) => a.filter(f);
 export const rd = (a, f, i) => a.reduce(f, i);
-export const fn = (a, f) => a.find(f);
-export const fi = (a, f) => a.findIndex(f);
-export const sm = (a, f) => a.some(f);
-export const ev = (a, f) => a.every(f);
-export const fc = (a, f) => a.forEach(f);
-export const slc = (a, s, n) => a.slice(s, n);
+export const fnd = (a, f) => a.find(f);
+export const inca = (a, v) => a.includes(v); // renamed from inc to avoid conflict with string
+export const ps = (a, v) => a.push(v);
+export const sl = (a, s, e) => a.slice(s, e);
+export const sp = (a, s, d) => a.splice(s, d);
+export const jn = (a, s) => a.join(s);
 export const srt = (a, f) => a.sort(f);
-export const rv = a => a.reverse();
-export const jn = (a, d = '') => a.join(d);
-export const ps = (a, ...i) => a.push(...i);
-export const pp = a => a.pop();
-export const sh = a => a.shift();
-export const us = (a, ...i) => a.unshift(...i);
-export const spl = (a, s, d, ...i) => a.splice(s, d, ...i);
-export const inc = (a, v, s) => a.includes(v, s);
-export const io = (a, v, s) => a.indexOf(v, s);
-export const lo = (a, v, s) => a.lastIndexOf(v, s);
+export const len = a => a.length;
