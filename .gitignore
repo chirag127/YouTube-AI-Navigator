@@ -8,3 +8,6 @@ build/
 *.zip
 package-lock.json
 lint_output.txt
+extension/options/modules/auto-save.js
+MIGRATION.md
+test-results.json

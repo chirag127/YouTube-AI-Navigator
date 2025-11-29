@@ -7,7 +7,7 @@ import {
   ih,
   rc,
   v as vl,
-  ce as cr
+  ce as cr,
 } from '../../utils/shortcuts/dom.js';
 import { isS, jp, js, sw } from '../../utils/shortcuts/core.js';
 import { inc, rp, trm } from '../../utils/shortcuts/string.js';

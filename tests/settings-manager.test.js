@@ -23,13 +23,13 @@ describe('SettingsManager', () => {
   });
 
   it('should load settings from storage', async () => {
-    const mockSettings = { config: { ai: { apiKey: 'test-key' } } };
+    const mockSettings = { config: { ai: { GAK: 'test-key' } } };
     sg.mockResolvedValue(mockSettings);
 
     await settingsManager.load();
 
     expect(sg).toHaveBeenCalledWith('config');
-    expect(settingsManager.get('ai.apiKey')).toBe('test-key');
+    expect(settingsManager.get('ai.GAK')).toBe('test-key');
   });
 
   it('should use defaults if storage is empty', async () => {
@@ -45,7 +45,7 @@ describe('SettingsManager', () => {
     sg.mockResolvedValue({});
     await settingsManager.load(); // Load defaults first
 
-    settingsManager.set('ai.apiKey', 'new-key');
+    settingsManager.set('ai.GAK', 'new-key');
     await settingsManager.save();
 
     expect(ss).toHaveBeenCalledWith(

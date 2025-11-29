@@ -21,7 +21,7 @@ export class AutoSave {
         if (this.n) this.n.success(`Setting saved: ${p.split('.').pop()}`);
         l(`[AutoSave] ✓ Saved successfully (count: ${this.c})`);
       } catch (x) {
-        e('[AutoSave] Failed:', x);
+        e(`[AutoSave] Failed to save ${p}:`, x);
         if (this.n) this.n.error(`Failed to save: ${x.message}`);
       }
     }, this.d);
@@ -29,8 +29,12 @@ export class AutoSave {
   attachToInput(el, p, tr = v => v) {
     if (!el) return;
     const h = () => {
-      const v = el.type === 'checkbox' ? el.checked : el.value;
-      this.save(p, tr(v));
+      try {
+        const v = el.type === 'checkbox' ? el.checked : el.value;
+        this.save(p, tr(v));
+      } catch (x) {
+        e('[AutoSave] Error in event handler:', x);
+      }
     };
     on(el, 'change', h);
     on(el, 'input', h);
@@ -38,7 +42,12 @@ export class AutoSave {
   attachToAll(m) {
     oe(m).forEach(([id, c]) => {
       const el = i(`#${id}`);
-      if (el) this.attachToInput(el, c.path, c.transform);
+      if (el) {
+        l(`[AutoSave] Attaching to #${id}`);
+        this.attachToInput(el, c.path, c.transform);
+      } else {
+        e(`[AutoSave] Element #${id} not found, skipping auto-save`);
+      }
     });
   }
 }

@@ -74,7 +74,7 @@ describe('AIConfig', () => {
 
   it('should test connection successfully', async () => {
     mockSettingsManager.get.mockReturnValue({
-      ai: { apiKey: 'test-key', model: 'gemini-2.0-flash-exp' },
+      ai: { GAK: 'test-key', model: 'gemini-2.0-flash-exp' },
     });
     const mockBtn = { disabled: false };
     const mockStatus = { className: '' };

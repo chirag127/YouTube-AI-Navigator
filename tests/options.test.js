@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 vi.mock('../extension/options/modules/settings-manager.js', () => ({
   SettingsManager: vi.fn().mockImplementation(() => ({
     load: vi.fn().mockResolvedValue(true),
-    get: vi.fn(() => ({ _meta: { onboardingCompleted: true }, ai: { apiKey: 'test-key' } })),
+    get: vi.fn(() => ({ _meta: { onboardingCompleted: true }, ai: { GAK: 'test-key' } })),
   })),
 }));
 
