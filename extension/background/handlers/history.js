@@ -1,4 +1,5 @@
-import { slg, sls, now } from '../../utils/shortcuts/index.js';
+import { slg, sls } from '../../utils/shortcuts/storage.js';
+import { now } from '../../utils/shortcuts/time.js';
 
 export async function handleSaveToHistory(req, rsp) {
   const { videoId, title, summary, timestamp } = req.data || req;

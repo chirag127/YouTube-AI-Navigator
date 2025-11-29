@@ -15,10 +15,9 @@ import { TranscriptSettings } from './modules/transcript-settings.js';
 import { CommentsSettings } from './modules/comments-settings.js';
 import { MetadataSettings } from './modules/metadata-settings.js';
 import { ScrollSettings } from './modules/scroll-settings.js';
-import { on, id as i, ce, vs } from '../utils/shortcuts/dom.js';
-import { l } from '../utils/../../utils/shortcuts/log.js';
-import { url } from '../utils/shortcuts/runtime.js';
-import { tc } from '../utils/shortcuts/tabs.js';
+import { on, id as i } from '../utils/shortcuts/dom.js';
+import { log as l, err as e, vals as vs } from '../utils/shortcuts/core.js';
+import { url, tc } from '../utils/shortcuts/runtime.js';
 
 on(document, 'DOMContentLoaded', async () => {
   l('[Options] Initializing...');
@@ -69,7 +68,7 @@ on(document, 'DOMContentLoaded', async () => {
       m.init();
       l(`[Options] Initialized ${m.constructor.name}`);
     } catch (x) {
-      ce(`[Options] Failed to init ${m.constructor.name}:`, x);
+      e(`[Options] Failed to init ${m.constructor.name}:`, x);
     }
   });
   l('[Options] ✓ Fully initialized with auto-save');

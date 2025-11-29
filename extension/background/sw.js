@@ -1,6 +1,7 @@
 import { l, e, w } from '../utils/shortcuts/log.js';
 import { rt as cr, url, rgm as rg, oop } from '../utils/shortcuts/runtime.js';
 import { tc } from '../utils/shortcuts/tabs.js';
+
 cr.onInstalled.addListener(async d => {
   if (d.reason === 'install') {
     l('YAM installed');
@@ -72,7 +73,6 @@ cr.onMessage.addListener((q, s, r) => {
           await h(n, r);
           break;
         }
-
         case 'GET_CACHED_DATA': {
           const { handleGetCachedData: h } = await import('./handlers/cache.js');
           await h(n, r);

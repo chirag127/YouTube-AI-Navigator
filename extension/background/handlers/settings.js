@@ -1,4 +1,4 @@
-import { ssg } from '../../utils/shortcuts/index.js';
+import { sg as ssg } from '../../utils/shortcuts/storage.js';
 export async function handleGetSettings(rsp) {
   const s = await ssg([
     'apiKey',

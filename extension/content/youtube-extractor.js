@@ -1,27 +1,11 @@
 const w = window,
   d = document;
-
 (async () => {
   const extId = document.currentScript?.src.split('://')[1]?.split('/')[0];
   const baseUrl = extId ? `chrome-extension://${extId}/` : '';
-
-  // Minimal local shortcuts if import fails or for speed, but trying to use the "Singularity"
-  // Since this is injected, we might not have easy access to the extension context's modules without full URL.
-  // However, the user wants "Direct Import Protocol".
-  // I will use local aliases for now to ensure it works without complex build steps, as this is a "Shortcut Singularity" refactor.
-  // Wait, the user said "REPLACE ALL verbose native calls with your ultra-short aliases".
-  // And "Implement modular shortcuts... STRICTLY FORBIDDEN to duplicate aliases".
-  // So I MUST import them.
-
-  // Assuming the extension ID is available or passed.
-  // The `main.js` injects this script. It sets `src`.
-  // We can get the base URL from `import.meta.url` if it was an ES module loaded via import, but it is a script tag with type module.
-
-  const { log: l, err: e, parse: jp, to: st } = await import(baseUrl + 'utils/shortcuts/core.js');
-  const { qs: $, on } = await import(baseUrl + 'utils/shortcuts/dom.js');
-
+  const { l, e, jp, st } = await import(baseUrl + 'utils/shortcuts/global.js');
+  const { qs: $, ae: on } = await import(baseUrl + 'utils/shortcuts/dom.js');
   const uc = s => s.toUpperCase();
-
   class YTE {
     constructor() {
       this.of = w.fetch.bind(w);
@@ -36,7 +20,6 @@ const w = window,
       w._ytExtractor = this;
       l('[YTE] Init');
     }
-
     ii() {
       w.fetch = async (...a) => {
         const [r, c] = a;
@@ -47,7 +30,6 @@ const w = window,
         return res;
       };
     }
-
     async pr(u, r) {
       if (u.includes('/youtubei/v1/player')) {
         try {
@@ -77,7 +59,6 @@ const w = window,
         }
       }
     }
-
     async htu(u) {
       if (this.iu.has(u)) return;
       l('[YTE] Cap tr:', u);
@@ -98,7 +79,6 @@ const w = window,
         this.iu.delete(u);
       }
     }
-
     inl() {
       on(d, 'yt-navigate-finish', ev => {
         const vid = ev.detail?.response?.playerResponse?.videoDetails?.videoId;
@@ -106,7 +86,6 @@ const w = window,
         this.e('navigation', { videoId: vid, detail: ev.detail });
       });
     }
-
     gid() {
       let pr = w.ytInitialPlayerResponse;
       if (!pr) {
@@ -143,17 +122,14 @@ const w = window,
         cfg: w.ytcfg?.data_,
       };
     }
-
     on(e, c) {
       if (!this.ls.has(e)) this.ls.set(e, []);
       this.ls.get(e)?.push(c);
     }
-
     e(ev, d) {
       this.ls.get(ev)?.forEach(c => c(d));
       w.postMessage({ type: `YT_${uc(ev)}`, payload: d }, '*');
     }
-
     em() {
       const pr = w.ytInitialPlayerResponse;
       if (!pr) return null;
@@ -172,7 +148,6 @@ const w = window,
         uploadDate: m?.uploadDate || '',
       };
     }
-
     esm() {
       const as = $('ytd-reel-video-renderer[is-active]');
       if (!as) return null;

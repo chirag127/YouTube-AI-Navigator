@@ -2,10 +2,8 @@ import { showPlaceholder } from '../components/loading.js';
 import { seekVideo } from '../../utils/dom.js';
 import { formatTime } from '../../utils/time.js';
 import { id as ge, on, qs as $, qsa as $$ } from '../../utils/shortcuts/dom.js';
-import { l } from '../../utils/shortcuts/log.js';
-
+import { log as l } from '../../utils/shortcuts/core.js';
 let autoCloseEnabled = true;
-
 export function renderTranscript(c, s) {
   if (!s?.length) {
     showPlaceholder(c, 'No transcript available.');
@@ -30,11 +28,9 @@ export function renderTranscript(c, s) {
     });
   }
 }
-
 export function shouldAutoClose() {
   return autoCloseEnabled;
 }
-
 export function collapseTranscriptWidget() {
   const w = ge('yt-ai-master-widget');
   if (w && autoCloseEnabled) {

@@ -2,9 +2,9 @@ import { findSecondaryColumn, isWidgetProperlyVisible } from '../utils/dom.js';
 import { initTabs } from './tabs.js';
 import { attachEventListeners } from '../handlers/events.js';
 import { createWidgetHTML } from './components/widget/structure.js';
-import { qs as $, id as ge, on, ce, wfe } from '../../utils/shortcuts/dom.js';
-import { si, csi, st } from '../../utils/shortcuts/time.js';
-import { l as log, e as logError } from '../../utils/shortcuts/log.js';
+import { qs as $, id as ge, on, el as ce, wfe, mo } from '../../utils/shortcuts/dom.js';
+import { ti as si, ci as csi, to as st } from '../../utils/shortcuts/core.js';
+import { log, err as logError } from '../../utils/shortcuts/core.js';
 
 let widgetContainer = null,
   resizeObserver = null,
@@ -163,7 +163,7 @@ function setupObservers(c) {
     resizeObserver.observe(p);
   }
   if (containerObserver) containerObserver.disconnect();
-  containerObserver = new MutationObserver(m => {
+  containerObserver = mo(m => {
     for (const mu of m) {
       if (mu.type === 'childList') {
         if (Array.from(mu.removedNodes).includes(widgetContainer)) {
@@ -180,7 +180,7 @@ function setupObservers(c) {
     }
   });
   containerObserver.observe(c, { childList: true, subtree: false });
-  const bo = new MutationObserver(() => {
+  const bo = mo(() => {
     if (!document.contains(widgetContainer)) {
       log('Widget lost from DOM tree, reattaching...');
       reattachWidget();

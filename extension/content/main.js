@@ -1,17 +1,15 @@
 (async () => {
   if (window.location.hostname !== 'www.youtube.com') return;
-  const { runtime: r, getUrl: gu } = await import(chrome.runtime.getURL('utils/shortcuts/runtime.js'));
-  const { el, qs } = await import(gu('utils/shortcuts/dom.js'));
-  const { log: l, err: e, to } = await import(gu('utils/shortcuts/core.js'));
-  const { local: sl } = await import(gu('utils/shortcuts/runtime.js'));
-
+  const { r, ru: gu } = await import(chrome.runtime.getURL('utils/shortcuts/runtime.js'));
+  const { ce: el, qs } = await import(gu('utils/shortcuts/dom.js'));
+  const { l, e, st: to } = await import(gu('utils/shortcuts/global.js'));
+  const { sl } = await import(gu('utils/shortcuts/storage.js'));
   const s = el('script');
   s.type = 'module';
   s.src = gu('content/youtube-extractor.js');
   s.onload = () => s.remove();
   (document.head || document.documentElement).appendChild(s);
   l('YAM: Start');
-
   try {
     const { initializeExtension: ie, waitForPageReady: wp } = await import(gu('content/core/init.js'));
     await wp();
@@ -20,7 +18,6 @@
   } catch (x) {
     e('YAM: Fatal', x);
   }
-
   r.onMessage.addListener((m, _, p) => {
     const a = m.action || m.type;
     switch (a) {
@@ -57,7 +54,6 @@
         return false;
     }
   });
-
   const hGM = async (m, p) => {
     try {
       const { MetadataExtractor: ME } = await import(gu('content/metadata/extractor.js'));
@@ -75,7 +71,6 @@
       });
     }
   };
-
   const hGT = async (m, p) => {
     try {
       const { videoId: v } = m;
@@ -102,7 +97,6 @@
       p({ error: msg });
     }
   };
-
   const hGC = async (_, p) => {
     try {
       const { getComments: gC } = await import(gu('content/handlers/comments.js'));
@@ -112,7 +106,6 @@
       p({ comments: [] });
     }
   };
-
   const cTC = async v => {
     try {
       const k = `v_${v}_t`;
@@ -130,7 +123,6 @@
       return false;
     }
   };
-
   const hST = (m, p) => {
     try {
       const v = qs('video');
@@ -143,7 +135,6 @@
       p({ success: false, error: x.message });
     }
   };
-
   const hSS = async (_, p) => {
     try {
       p({ success: true });
@@ -152,7 +143,6 @@
       p({ success: false, error: x.message });
     }
   };
-
   const hGVD = async (m, p) => {
     try {
       const { VideoDataExtractor: VDE } = await import(gu('content/metadata/video-data.js'));

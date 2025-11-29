@@ -1,8 +1,5 @@
-import { $, $$ } from '../../../utils/shortcuts/dom.js';
-import { l, e, d } from '../../../utils/shortcuts/log.js';
-import { to } from '../../../utils/shortcuts/global.js';
-import { nw } from '../../../utils/shortcuts/core.js';
-import { tr } from '../../../utils/shortcuts/string.js';
+import { qs as $, qsa as $$ } from '../../../utils/shortcuts/dom.js';
+import { log as l, err as e, dbg as d, to, nw, tr } from '../../../utils/shortcuts/core.js';
 
 export const name = 'DOM Automation';
 export const priority = 10;

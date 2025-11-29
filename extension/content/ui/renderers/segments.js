@@ -1,8 +1,7 @@
 import { showPlaceholder } from '../components/loading.js';
 import { seekVideo } from '../../utils/dom.js';
 import { formatTime } from '../../utils/time.js';
-import { id as ge, on, qsa as $$ } from '../../utils/shortcuts/dom.js';
-
+import { qs, ae, qsa as $$ } from '../../utils/shortcuts/dom.js';
 const colors = {
   Sponsor: '#00d26a',
   'Self Promotion': '#ffff00',
@@ -16,11 +15,10 @@ const colors = {
   'Hook/Greetings': '#4169e1',
   'Tangents/Jokes': '#9400d3',
 };
-
 export function renderSegments(c, data) {
   const s = Array.isArray(data) ? data : data?.segments || [];
   const fl = !Array.isArray(data) ? data?.fullVideoLabel : null;
-  const b = ge('yt-ai-full-video-label');
+  const b = qs('#yt-ai-full-video-label');
   if (b) {
     if (fl) {
       b.textContent = fl;
@@ -57,7 +55,7 @@ export function renderSegments(c, data) {
   $$('.yt-ai-timestamp', c).forEach(e => {
     e.style.cursor = 'pointer';
     e.style.textDecoration = 'underline';
-    on(e, 'click', evt => {
+    ae(e, 'click', evt => {
       evt.stopPropagation();
       seekVideo(parseFloat(e.dataset.time));
     });

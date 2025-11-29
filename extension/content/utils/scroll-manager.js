@@ -1,7 +1,5 @@
 import { qs as $, qsa as $$ } from '../../utils/shortcuts/dom.js';
-import { l, w, e } from '../../utils/shortcuts/log.js';
-import { st } from '../../utils/shortcuts/time.js';
-
+import { l, w, e, st } from '../../utils/shortcuts/global.js';
 export class ScrollManager {
   constructor() {
     this.originalScrollPosition = 0;
@@ -9,34 +7,34 @@ export class ScrollManager {
   }
   savePosition() {
     this.originalScrollPosition = window.scrollY;
-    l('[ScrollManager] Saved scroll position:', this.originalScrollPosition);
+    l('[SM] Saved pos:', this.originalScrollPosition);
   }
   restorePosition() {
-    l('[ScrollManager] Restoring scroll position:', this.originalScrollPosition);
+    l('[SM] Restoring pos:', this.originalScrollPosition);
     window.scrollTo({ top: this.originalScrollPosition, behavior: 'smooth' });
   }
   scrollToTop(i = false) {
-    l('[ScrollManager] Scrolling to top', i ? '(instant)' : '(smooth)');
+    l('[SM] Scroll top', i ? '(inst)' : '(smth)');
     window.scrollTo({ top: 0, behavior: i ? 'auto' : 'smooth' });
   }
   scrollToTopInstant() {
-    l('[ScrollManager] Instant scroll to top');
+    l('[SM] Inst scroll top');
     window.scrollTo(0, 0);
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
   }
   async scrollToComments() {
     if (this.isScrolling) {
-      w('[ScrollManager] Already scrolling, skipping');
+      w('[SM] Skip');
       return false;
     }
     this.isScrolling = true;
-    l('[ScrollManager] 📜 Scrolling to comments section...');
+    l('[SM] Scroll comments...');
     try {
       this.savePosition();
       const cs = $('ytd-comments#comments');
       if (!cs) {
-        w('[ScrollManager] ⚠️ Comments section not found');
+        w('[SM] No comments sec');
         this.isScrolling = false;
         return false;
       }
@@ -44,37 +42,37 @@ export class ScrollManager {
       await this.waitForScroll(1000);
       window.scrollBy({ top: -100, behavior: 'smooth' });
       await this.waitForScroll(500);
-      l('[ScrollManager] ✅ Scrolled to comments section');
+      l('[SM] ✅ Scrolled');
       await this.waitForCommentsToLoad();
       this.isScrolling = false;
       return true;
     } catch (x) {
-      e('[ScrollManager] ❌ Error scrolling to comments:', x);
+      e('[SM] Err scroll:', x);
       this.isScrolling = false;
       return false;
     }
   }
   async waitForCommentsToLoad() {
-    l('[ScrollManager] Waiting for comments to load...');
+    l('[SM] Wait comments...');
     const max = 5000,
       int = 200;
     let el = 0;
     while (el < max) {
       const ce = $$('ytd-comment-thread-renderer');
       if (ce.length > 0) {
-        l(`[ScrollManager] ✅ Comments loaded: ${ce.length} found`);
+        l(`[SM] ✅ Loaded: ${ce.length}`);
         return true;
       }
       await this.waitForScroll(int);
       el += int;
     }
-    w('[ScrollManager] ⚠️ Timeout waiting for comments to load');
+    w('[SM] Timeout');
     return false;
   }
   async scrollToElement(sel, opt = {}) {
     const el = $(sel);
     if (!el) {
-      w(`[ScrollManager] Element not found: ${sel}`);
+      w(`[SM] Not found: ${sel}`);
       return false;
     }
     el.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest', ...opt });

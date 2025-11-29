@@ -1,6 +1,8 @@
 import { initializeServices, getServices } from '../services.js';
 import { getApiKey } from '../utils/api-key.js';
-import { mf, mp, jn } from '../../utils/shortcuts/index.js';
+import { mf } from '../../utils/shortcuts/math.js';
+import { mp } from '../../utils/shortcuts/array.js';
+import { jn } from '../../utils/shortcuts/array.js';
 
 export async function handleGenerateSummary(req, rsp) {
   const { transcript, settings, metadata } = req;
@@ -18,9 +20,9 @@ export async function handleGenerateSummary(req, rsp) {
   };
   const ts = Array.isArray(transcript)
     ? jn(
-        mp(transcript, t => `[${ft(t.start)}] ${t.text}`),
-        '\n'
-      )
+      mp(transcript, t => `[${ft(t.start)}] ${t.text}`),
+      '\n'
+    )
     : transcript;
   const ctx = `Video Metadata:\nTitle: ${metadata?.title || 'Unknown'}\nChannel: ${metadata?.author || 'Unknown'}\n\nTranscript:\n${ts}\n`;
   const sum = await gemini.generateSummary(ctx, settings?.customPrompt, settings?.model, {

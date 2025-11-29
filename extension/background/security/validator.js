@@ -1,4 +1,5 @@
-import { js, rep } from '../../utils/shortcuts/index.js';
+import { js } from '../../utils/shortcuts/core.js';
+import { rp as rep } from '../../utils/shortcuts/string.js';
 
 const ALLOWED = new Set([
   'TEST',

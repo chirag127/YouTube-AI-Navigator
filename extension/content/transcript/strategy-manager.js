@@ -1,14 +1,16 @@
 import * as domAutomation from './strategies/dom-automation.js';
 import * as genius from './strategies/genius.js';
 import * as speechToText from './strategies/speech-to-text.js';
-import { l, w, e } from '../../utils/shortcuts/global.js';
+import { log as l, warn as w, err as e, vals } from '../../utils/shortcuts/core.js';
 import { getCfg } from '../../utils/config.js';
+
 const strategyMap = {
   'dom-automation': domAutomation,
   'genius': genius,
   'speech-to-text': speechToText
 };
 const defaultOrder = ['dom-automation', 'genius', 'speech-to-text'];
+
 export const extractTranscript = async (vid, lang = 'en') => {
   l(`[Tr] Extr ${vid}, ${lang}`);
   const cfg = await getCfg().load();
@@ -33,8 +35,9 @@ export const extractTranscript = async (vid, lang = 'en') => {
   e('[Tr] All fail');
   return { success: false, error: err?.message || 'All fail' };
 };
+
 export const getAvailableStrategies = () =>
-  Object.values(strategyMap).map(s => ({
+  vals(strategyMap).map(s => ({
     name: s.name,
     priority: s.priority,
   }));

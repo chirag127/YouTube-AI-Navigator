@@ -1,5 +1,4 @@
-import { ce } from '../../utils/shortcuts/dom.js';
-
+import { ce, qs } from '../../utils/shortcuts/dom.js';
 export function findSecondaryColumn() {
   const s = [
     '#secondary-inner',
@@ -10,11 +9,11 @@ export function findSecondaryColumn() {
     'ytd-watch-flexy #secondary',
   ];
   for (const sel of s) {
-    const e = document.querySelector(sel);
+    const e = qs(sel);
     if (e && (e.offsetWidth > 0 || e.offsetHeight > 0 || e.getClientRects().length > 0)) return e;
   }
   for (const sel of s) {
-    const e = document.querySelector(sel);
+    const e = qs(sel);
     if (e) return e;
   }
   return null;
@@ -30,14 +29,14 @@ export function isWidgetProperlyVisible(w) {
   return true;
 }
 export function seekVideo(t) {
-  const v = document.querySelector('video');
+  const v = qs('video');
   if (v) {
     v.currentTime = t;
     v.play();
   }
 }
 export function getVideoElement() {
-  return document.querySelector('video');
+  return qs('video');
 }
 export function decodeHTML(h) {
   const t = ce('textarea');

@@ -1,9 +1,8 @@
 import { id } from '../utils/shortcuts/dom.js';
-import { sg, slg } from '../utils/shortcuts/storage.js';
-import { w } from '../utils/shortcuts/log.js';
-import { tq, tm, tc } from '../utils/shortcuts/tabs.js';
-import { url, oop } from '../utils/shortcuts/runtime.js';
-import { to } from '../utils/shortcuts/global.js';
+import { local as sl, sync as sg } from '../utils/shortcuts/runtime.js';
+import { warn as w } from '../utils/shortcuts/core.js';
+import { tq, tm, tc, url, oop } from '../utils/shortcuts/runtime.js';
+import { to } from '../utils/shortcuts/core.js';
 
 const a = id('api-status'),
   p = id('page-status'),
@@ -21,8 +20,8 @@ function showMsg(t, y = 'info') {
 
 async function checkApi() {
   try {
-    const s = await sg(['apiKey', 'onboardingCompleted']),
-      lc = await slg('geminiApiKey'),
+    const s = await sg.get(['apiKey', 'onboardingCompleted']),
+      lc = await sl.get('geminiApiKey'),
       k = s.apiKey || lc.geminiApiKey;
     if (k) {
       a.innerHTML = '<span>✅ Configured</span>';

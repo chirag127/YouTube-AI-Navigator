@@ -1,8 +1,7 @@
 import { seekVideo } from './dom.js';
-import { on, fc, ap, tx, tc, dc as doc } from '../../utils/shortcuts/dom.js';
-import { rt as cr, pI } from '../../utils/shortcuts/runtime.js';
+import { on, fc, ap, tx, tc, dc as doc, ce } from '../../utils/shortcuts/dom.js';
+import { pi as pI } from '../../utils/shortcuts/global.js';
 import { sb as sbs, rp } from '../../utils/shortcuts/string.js';
-
 export function makeTimestampsClickable(c) {
   const p = /(\[|[(])?(\d{1,2}):(\d{2})(\]|[)])?/g,
     w = doc.createTreeWalker(c, NodeFilter.SHOW_TEXT),
@@ -14,9 +13,9 @@ export function makeTimestampsClickable(c) {
       f = doc.createDocumentFragment();
     let l = 0;
     rp(txt, p, (m, p1, mins, secs, p4, o) => {
-      if (o > l) ap(f, doc.createTextNode(sbs(txt, l, o)));
+      if (o > l) ap(f, tx(sbs(txt, l, o)));
       const s = pI(mins) * 60 + pI(secs),
-        lnk = cr('span');
+        lnk = ce('span');
       tc(lnk, m);
       lnk.className = 'yt-ai-clickable-timestamp';
       lnk.style.cssText =

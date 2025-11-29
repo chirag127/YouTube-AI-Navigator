@@ -2,13 +2,12 @@ import { state } from '../../core/state.js';
 import { showLoading, showPlaceholder } from '../components/loading.js';
 import { getComments } from '../../handlers/comments.js';
 import { parseMarkdown } from '../../../lib/marked-loader.js';
-import { msg } from '../../utils/shortcuts/runtime.js';
-import { sg, slc } from '../../utils/shortcuts/storage.js';
-import { st } from '../../utils/shortcuts/time.js';
-import { l, w } from '../../utils/shortcuts/log.js';
-import { mp, jn } from '../../utils/shortcuts/array.js';
+import { rs } from '../../utils/shortcuts/runtime.js';
+import { sg } from '../../utils/shortcuts/storage.js';
+import { st } from '../../utils/shortcuts/global.js';
+import { l, w } from '../../utils/shortcuts/global.js';
+import { mp, jn, slc } from '../../utils/shortcuts/array.js';
 import { ce, tc, ap, ih, dc as doc } from '../../utils/shortcuts/dom.js';
-
 export async function renderComments(c) {
   if (state.analysisData?.commentAnalysis) {
     const html = await parseMarkdown(state.analysisData.commentAnalysis);
@@ -19,12 +18,12 @@ export async function renderComments(c) {
   try {
     const cm = await getComments();
     if (!cm.length) {
-      showPlaceholder(c, 'No comments found. Comments may be disabled for this video.');
+      showPlaceholder(c, 'No comments found.');
       return;
     }
-    showLoading(c, 'Analyzing comment sentiment...');
-    l('[CommentsRenderer] Sending comments for analysis:', cm);
-    const r = await msg({ action: 'ANALYZE_COMMENTS', comments: cm });
+    showLoading(c, 'Analyzing...');
+    l('[CR] Sending comments');
+    const r = await rs({ action: 'ANALYZE_COMMENTS', comments: cm });
     if (r.success) {
       const cfg = await getConfig();
       if (cfg.scroll?.scrollBackAfterComments)
@@ -48,7 +47,6 @@ export async function renderComments(c) {
     ih(c, `<div class="yt-ai-error-msg">Failed: ${x.message}</div>`);
   }
 }
-
 async function getConfig() {
   try {
     const r = await sg('config');
@@ -57,25 +55,23 @@ async function getConfig() {
     return {};
   }
 }
-
 function scrollBackToTop(sn = true) {
-  l('[CommentsRenderer] 📜 IMMEDIATE scroll to top');
+  l('[CR] Scroll top');
   window.scrollTo(0, 0);
   document.documentElement.scrollTop = 0;
   document.body.scrollTop = 0;
   void document.body.offsetHeight;
   requestAnimationFrame(() => {
     if (window.scrollY > 0) {
-      w('[CommentsRenderer] ⚠️ Scroll failed, retrying...');
+      w('[CR] Scroll fail, retry');
       window.scrollTo(0, 0);
       document.documentElement.scrollTop = 0;
       document.body.scrollTop = 0;
     }
-    l('[CommentsRenderer] ✅ Final scroll position:', window.scrollY);
+    l('[CR] Final scroll:', window.scrollY);
   });
   if (sn) showScrollNotification();
 }
-
 function showScrollNotification() {
   const n = ce('div');
   n.id = 'yt-ai-scroll-notification';

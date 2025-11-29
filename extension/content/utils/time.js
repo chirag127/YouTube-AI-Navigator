@@ -1,5 +1,4 @@
 import { fl as mf } from '../../utils/shortcuts/math.js';
-
 export function formatTime(s) {
   const h = mf(s / 3600),
     m = mf((s % 3600) / 60),

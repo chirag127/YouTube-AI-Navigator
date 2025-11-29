@@ -1,2 +1,9 @@
+export const wn = window;
+export const loc = location;
+export const to = setTimeout;
+export const co = clearTimeout;
+export const raf = requestAnimationFrame;
 export const jp = JSON.parse;
 export const js = JSON.stringify;
+export const pi = parseInt;
+export const pf = parseFloat;

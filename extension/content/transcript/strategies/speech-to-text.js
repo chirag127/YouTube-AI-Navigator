@@ -1,4 +1,4 @@
-import { l, w } from '../../../utils/shortcuts/log.js';
+import { log as l, warn as w } from '../../../utils/shortcuts/core.js';
 import { msg } from '../../../utils/shortcuts/runtime.js';
 
 export const name = 'Speech to Text';

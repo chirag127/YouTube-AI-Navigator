@@ -34,3 +34,4 @@ export const th = Math.tanh;
 export const ash = Math.asinh;
 export const ach = Math.acosh;
 export const ath = Math.atanh;
+export const mf = fl;
