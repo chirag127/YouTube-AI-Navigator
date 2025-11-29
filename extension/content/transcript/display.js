@@ -1,54 +1,30 @@
-// Display transcript in UI
+import { ce } from '../../utils/shortcuts.js';
 
-/**
- * Create transcript display element
- * @param {Array} segments - Transcript segments
- * @returns {HTMLElement} Display element
- */
-export function createTranscriptDisplay(segments) {
-  const container = document.createElement('div');
-  container.className = 'ytai-transcript-display';
-
-  for (const segment of segments) {
-    const line = createTranscriptLine(segment);
-    container.appendChild(line);
-  }
-
-  return container;
+export function createTranscriptDisplay(s) {
+  const c = ce('div');
+  c.className = 'ytai-transcript-display';
+  for (const seg of s) c.appendChild(createTranscriptLine(seg));
+  return c;
 }
 
-/**
- * Create single transcript line
- * @param {Object} segment - Transcript segment
- * @returns {HTMLElement} Line element
- */
-function createTranscriptLine(segment) {
-  const line = document.createElement('div');
-  line.className = 'ytai-transcript-line';
-  line.dataset.start = segment.start;
-  line.dataset.duration = segment.duration;
-
-  const timestamp = document.createElement('span');
-  timestamp.className = 'ytai-transcript-timestamp';
-  timestamp.textContent = formatTimestamp(segment.start);
-
-  const text = document.createElement('span');
-  text.className = 'ytai-transcript-text';
-  text.textContent = segment.text;
-
-  line.appendChild(timestamp);
-  line.appendChild(text);
-
-  return line;
+function createTranscriptLine(s) {
+  const l = ce('div');
+  l.className = 'ytai-transcript-line';
+  l.dataset.start = s.start;
+  l.dataset.duration = s.duration;
+  const ts = ce('span');
+  ts.className = 'ytai-transcript-timestamp';
+  ts.textContent = formatTimestamp(s.start);
+  const tx = ce('span');
+  tx.className = 'ytai-transcript-text';
+  tx.textContent = s.text;
+  l.appendChild(ts);
+  l.appendChild(tx);
+  return l;
 }
 
-/**
- * Format timestamp for display
- * @param {number} seconds - Time in seconds
- * @returns {string} Formatted timestamp
- */
-function formatTimestamp(seconds) {
-  const m = Math.floor(seconds / 60);
-  const s = Math.floor(seconds % 60);
-  return `${m}:${s.toString().padStart(2, '0')}`;
+function formatTimestamp(s) {
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return `${m}:${sec.toString().padStart(2, '0')}`;
 }

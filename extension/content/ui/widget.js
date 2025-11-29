@@ -3,272 +3,109 @@ import { initTabs } from './tabs.js';
 import { attachEventListeners } from '../handlers/events.js';
 import { log, logError, waitForElement } from '../core/debug.js';
 import { createWidgetHTML } from './components/widget/structure.js';
+import { qs, ge, ce, on, si, ci, st } from '../../utils/shortcuts.js';
 
-let widgetContainer = null;
-let resizeObserver = null;
-let containerObserver = null;
-let positionCheckInterval = null;
-let lastKnownContainer = null;
+let widgetContainer = null, resizeObserver = null, containerObserver = null, positionCheckInterval = null, lastKnownContainer = null;
 
 function updateWidgetHeight() {
   if (!widgetContainer) return;
-
-  // Don't set fixed height - let it be dynamic based on content
-  // Only set max-height to prevent it from being too tall
-  const player =
-    document.querySelector('#movie_player') || document.querySelector('.html5-video-player');
-  if (player) {
-    const height = player.offsetHeight;
-    if (height > 0) {
-      widgetContainer.style.maxHeight = `${height}px`;
-    }
-  }
+  const p = qs('#movie_player') || qs('.html5-video-player');
+  if (p) { const h = p.offsetHeight; if (h > 0) widgetContainer.style.maxHeight = `${h}px`; }
 }
 
-function ensureWidgetAtTop(container) {
+function ensureWidgetAtTop(c) {
   if (!widgetContainer) return;
-
-  // If no container provided, try to find it
-  if (!container) {
-    container = widgetContainer.parentElement;
-    if (!container) {
-      log('Widget has no parent, attempting re-injection...');
-      reattachWidget();
-      return;
-    }
-  }
-
-  // Store last known container
-  lastKnownContainer = container;
-
-  // If widget is not the first child, move it
-  if (container.firstChild !== widgetContainer) {
-    log('Widget displaced, moving to top...');
-    container.insertBefore(widgetContainer, container.firstChild);
-  }
-
-  // Ensure proper stacking order
-  if (!widgetContainer.style.order || widgetContainer.style.order !== '-9999') {
-    widgetContainer.style.order = '-9999';
-  }
+  if (!c) { c = widgetContainer.parentElement; if (!c) { log('Widget has no parent, attempting re-injection...'); reattachWidget(); return; } }
+  lastKnownContainer = c;
+  if (c.firstChild !== widgetContainer) { log('Widget displaced, moving to top...'); c.insertBefore(widgetContainer, c.firstChild); }
+  if (!widgetContainer.style.order || widgetContainer.style.order !== '-9999') widgetContainer.style.order = '-9999';
 }
 
 function reattachWidget() {
   if (!widgetContainer) return;
-
   log('Attempting to reattach widget...');
-  const secondaryColumn = findSecondaryColumn();
-
-  if (secondaryColumn) {
-    secondaryColumn.insertBefore(widgetContainer, secondaryColumn.firstChild);
-    lastKnownContainer = secondaryColumn;
-    setupObservers(secondaryColumn);
-    log('Widget reattached successfully');
-  } else {
-    logError('Cannot reattach widget: secondary column not found');
-  }
+  const sc = findSecondaryColumn();
+  if (sc) { sc.insertBefore(widgetContainer, sc.firstChild); lastKnownContainer = sc; setupObservers(sc); log('Widget reattached successfully'); }
+  else logError('Cannot reattach widget: secondary column not found');
 }
 
 function startPositionMonitoring() {
-  // Clear existing interval
-  if (positionCheckInterval) {
-    clearInterval(positionCheckInterval);
-  }
-
-  // Aggressively check position every 500ms
-  positionCheckInterval = setInterval(() => {
-    if (!widgetContainer) {
-      clearInterval(positionCheckInterval);
-      return;
-    }
-
-    // Check if widget is still in DOM
-    if (!document.contains(widgetContainer)) {
-      log('Widget removed from DOM, attempting reattachment...');
-      reattachWidget();
-      return;
-    }
-
-    // Check if widget is at top
-    const parent = widgetContainer.parentElement;
-    if (parent && parent.firstChild !== widgetContainer) {
-      ensureWidgetAtTop(parent);
-    }
+  if (positionCheckInterval) ci(positionCheckInterval);
+  positionCheckInterval = si(() => {
+    if (!widgetContainer) { ci(positionCheckInterval); return; }
+    if (!document.contains(widgetContainer)) { log('Widget removed from DOM, attempting reattachment...'); reattachWidget(); return; }
+    const p = widgetContainer.parentElement;
+    if (p && p.firstChild !== widgetContainer) ensureWidgetAtTop(p);
   }, 500);
 }
 
 export async function injectWidget() {
   log('Attempting to inject widget...');
-
-  // 1. Cleanup existing
-  const existing = document.getElementById('yt-ai-master-widget');
-  if (existing) {
-    if (isWidgetProperlyVisible(existing)) {
-      // Widget exists and is properly visible, just ensure observers are active
-      widgetContainer = existing;
-      const container = existing.parentElement;
-      lastKnownContainer = container;
-      ensureWidgetAtTop(container);
-      setupObservers(container);
-      startPositionMonitoring();
-      log('Widget already properly visible, reusing existing');
-      return;
-    }
-    // Widget exists but not properly visible, remove and re-inject
-    log('Widget exists but not properly visible, removing and re-injecting');
-    existing.remove();
+  const ex = ge('yt-ai-master-widget');
+  if (ex) {
+    if (isWidgetProperlyVisible(ex)) { widgetContainer = ex; const c = ex.parentElement; lastKnownContainer = c; ensureWidgetAtTop(c); setupObservers(c); startPositionMonitoring(); log('Widget already properly visible, reusing existing'); return; }
+    log('Widget exists but not properly visible, removing and re-injecting'); ex.remove();
   }
-
-  if (resizeObserver) {
-    resizeObserver.disconnect();
-    resizeObserver = null;
+  if (resizeObserver) { resizeObserver.disconnect(); resizeObserver = null; }
+  if (containerObserver) { containerObserver.disconnect(); containerObserver = null; }
+  let sc = findSecondaryColumn(), att = 0;
+  while (!sc && att < 20) {
+    if (att % 5 === 0) log(`Waiting for secondary column... (${att}/20)`);
+    try { sc = await waitForElement('#secondary-inner, #secondary, #related, ytd-watch-next-secondary-results-renderer, ytd-watch-flexy #secondary', 500); if (sc) break; } catch (e) {}
+    att++; await new Promise(r => st(r, 200));
   }
-  if (containerObserver) {
-    containerObserver.disconnect();
-    containerObserver = null;
-  }
-
-  // 2. Find Container
-  let secondaryColumn = findSecondaryColumn();
-  let attempts = 0;
-  const maxAttempts = 20; // Increased attempts
-
-  while (!secondaryColumn && attempts < maxAttempts) {
-    if (attempts % 5 === 0) log(`Waiting for secondary column... (${attempts}/${maxAttempts})`);
-
-    try {
-      secondaryColumn = await waitForElement(
-        '#secondary-inner, #secondary, #related, ytd-watch-next-secondary-results-renderer, ytd-watch-flexy #secondary',
-        500
-      );
-      if (secondaryColumn) break;
-    } catch (e) {}
-
-    attempts++;
-    await new Promise(r => setTimeout(r, 200));
-  }
-
-  if (!secondaryColumn) {
-    // Fallback to columns if secondary is absolutely missing (rare on watch page)
-    secondaryColumn = document.querySelector('#columns');
-    if (!secondaryColumn) {
-      logError('Target container not found. Widget injection aborted.');
-      return;
-    }
-    log('Using fallback #columns container');
-  }
-
-  // 3. Create Widget
+  if (!sc) { sc = qs('#columns'); if (!sc) { logError('Target container not found. Widget injection aborted.'); return; } log('Using fallback #columns container'); }
   log('Creating widget element...');
-  widgetContainer = document.createElement('div');
+  widgetContainer = ce('div');
   widgetContainer.id = 'yt-ai-master-widget';
-  widgetContainer.style.order = '-9999'; // Ensure it's first in flex layouts
+  widgetContainer.style.order = '-9999';
   widgetContainer.innerHTML = createWidgetHTML();
-
-  // 4. Inject at absolute top
   log('Inserting widget into DOM...');
-  secondaryColumn.insertBefore(widgetContainer, secondaryColumn.firstChild);
-  lastKnownContainer = secondaryColumn;
-
-  // 5. Setup Logic
+  sc.insertBefore(widgetContainer, sc.firstChild);
+  lastKnownContainer = sc;
   setupWidgetLogic(widgetContainer);
-  setupObservers(secondaryColumn);
+  setupObservers(sc);
   startPositionMonitoring();
-
   log('Widget injection complete ✓');
 }
 
-function setupWidgetLogic(container) {
-  // Close/Collapse Button - Toggle between expanded and collapsed states
-  const closeBtn = container.querySelector('#yt-ai-close-btn');
-  if (closeBtn) {
-    closeBtn.addEventListener('click', () => {
-      const isCollapsed = container.classList.contains('yt-ai-collapsed');
-
-      if (isCollapsed) {
-        // Expand the widget
-        log('Expanding widget...');
-        container.classList.remove('yt-ai-collapsed');
-        closeBtn.textContent = '❌';
-        closeBtn.title = 'Collapse';
-      } else {
-        // Collapse the widget
-        log('Collapsing widget...');
-        container.classList.add('yt-ai-collapsed');
-        closeBtn.textContent = '⬇️';
-        closeBtn.title = 'Expand';
-      }
+function setupWidgetLogic(c) {
+  const cb = qs('#yt-ai-close-btn', c);
+  if (cb) {
+    on(cb, 'click', () => {
+      const ic = c.classList.contains('yt-ai-collapsed');
+      if (ic) { log('Expanding widget...'); c.classList.remove('yt-ai-collapsed'); cb.textContent = '❌'; cb.title = 'Collapse'; }
+      else { log('Collapsing widget...'); c.classList.add('yt-ai-collapsed'); cb.textContent = '⬇️'; cb.title = 'Expand'; }
     });
   }
-
-  // Tabs & Events
-  initTabs(container);
-  attachEventListeners(container);
+  initTabs(c);
+  attachEventListeners(c);
 }
 
-function setupObservers(container) {
-  // 1. Height Sync
+function setupObservers(c) {
   updateWidgetHeight();
-  const player =
-    document.querySelector('#movie_player') || document.querySelector('.html5-video-player');
-
+  const p = qs('#movie_player') || qs('.html5-video-player');
   if (resizeObserver) resizeObserver.disconnect();
-  if (player) {
-    resizeObserver = new ResizeObserver(() => updateWidgetHeight());
-    resizeObserver.observe(player);
-  }
-
-  // 2. Position Enforcement (Keep at top) - Enhanced
+  if (p) { resizeObserver = new ResizeObserver(() => updateWidgetHeight()); resizeObserver.observe(p); }
   if (containerObserver) containerObserver.disconnect();
-  containerObserver = new MutationObserver(mutations => {
-    for (const mutation of mutations) {
-      if (mutation.type === 'childList') {
-        // Check if widget was removed
-        const removedNodes = Array.from(mutation.removedNodes);
-        if (removedNodes.includes(widgetContainer)) {
-          log('Widget was removed, reattaching...');
-          setTimeout(() => reattachWidget(), 100);
-          return;
-        }
-
-        // Check if we are still the first child
-        if (container.firstChild !== widgetContainer) {
-          // Avoid infinite loops by checking if we are just being moved
-          const addedNodes = Array.from(mutation.addedNodes);
-          if (!addedNodes.includes(widgetContainer)) {
-            ensureWidgetAtTop(container);
-          }
-        }
+  containerObserver = new MutationObserver(m => {
+    for (const mu of m) {
+      if (mu.type === 'childList') {
+        if (Array.from(mu.removedNodes).includes(widgetContainer)) { log('Widget was removed, reattaching...'); st(() => reattachWidget(), 100); return; }
+        if (c.firstChild !== widgetContainer && !Array.from(mu.addedNodes).includes(widgetContainer)) ensureWidgetAtTop(c);
       }
     }
   });
-
-  containerObserver.observe(container, {
-    childList: true,
-    subtree: false,
-  });
-
-  // 3. Watch for container replacement (YouTube SPA navigation)
-  const bodyObserver = new MutationObserver(() => {
-    if (!document.contains(widgetContainer)) {
-      log('Widget lost from DOM tree, reattaching...');
-      reattachWidget();
-    } else if (widgetContainer.parentElement !== lastKnownContainer) {
+  containerObserver.observe(c, { childList: true, subtree: false });
+  const bo = new MutationObserver(() => {
+    if (!document.contains(widgetContainer)) { log('Widget lost from DOM tree, reattaching...'); reattachWidget(); }
+    else if (widgetContainer.parentElement !== lastKnownContainer) {
       log('Widget parent changed, updating observers...');
-      const newParent = widgetContainer.parentElement;
-      if (newParent) {
-        lastKnownContainer = newParent;
-        setupObservers(newParent);
-      }
+      const np = widgetContainer.parentElement;
+      if (np) { lastKnownContainer = np; setupObservers(np); }
     }
   });
-
-  bodyObserver.observe(document.body, {
-    childList: true,
-    subtree: true,
-  });
+  bo.observe(document.body, { childList: true, subtree: true });
 }
 
-export function getWidget() {
-  return widgetContainer;
-}
+export function getWidget() { return widgetContainer; }

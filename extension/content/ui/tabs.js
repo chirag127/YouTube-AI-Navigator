@@ -4,24 +4,21 @@ import { renderTranscript } from './renderers/transcript.js';
 import { renderSegments } from './renderers/segments.js';
 import { renderChat } from './renderers/chat.js';
 import { renderComments } from './renderers/comments.js';
+import { qs, qsa, ge, on, e } from '../../utils/shortcuts.js';
+
 export function initTabs(c) {
-  c.querySelectorAll('.yt-ai-tab').forEach(t =>
-    t.addEventListener('click', () => switchTab(t.dataset.tab, c))
-  );
+  qsa('.yt-ai-tab', c).forEach(t => on(t, 'click', () => switchTab(t.dataset.tab, c)));
 }
+
 export function switchTab(n, container) {
-  const c = container || document.getElementById('yt-ai-master-widget');
+  const c = container || ge('yt-ai-master-widget');
   if (!c) return;
-
-  c.querySelectorAll('.yt-ai-tab').forEach(t => t.classList.remove('active'));
-  c.querySelector(`[data-tab="${n}"]`)?.classList.add('active');
-
-  const i = c.querySelector('#yt-ai-chat-input-area');
+  qsa('.yt-ai-tab', c).forEach(t => t.classList.remove('active'));
+  qs(`[data-tab="${n}"]`, c)?.classList.add('active');
+  const i = qs('#yt-ai-chat-input-area', c);
   if (i) i.style.display = n === 'chat' ? 'flex' : 'none';
-
-  const a = c.querySelector('#yt-ai-content-area');
+  const a = qs('#yt-ai-content-area', c);
   if (!a) return;
-
   try {
     switch (n) {
       case 'summary':
@@ -40,8 +37,8 @@ export function switchTab(n, container) {
         renderComments(a);
         break;
     }
-  } catch (e) {
-    console.error('Error switching tab:', e);
+  } catch (x) {
+    e('Error switching tab:', x);
     a.innerHTML = `<div class="yt-ai-error">Error loading tab content</div>`;
   }
 }

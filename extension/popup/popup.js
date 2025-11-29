@@ -1,11 +1,11 @@
-import { _id, sg, lg, l, w, tq, tsm, url, rt, tab } from '../utils/shortcuts.js';
-const a = _id('api-status'),
-  p = _id('page-status'),
-  b = _id('analyze-btn'),
-  h = _id('history-btn'),
-  o = _id('options-btn'),
-  m = _id('message'),
-  g = _id('setup-guide-btn');
+import { ge, sg, lg, l, w, tq, tsm, url, rt, tab } from '../utils/shortcuts.js';
+const a = ge('api-status'),
+  p = ge('page-status'),
+  b = ge('analyze-btn'),
+  h = ge('history-btn'),
+  o = ge('options-btn'),
+  m = ge('message'),
+  g = ge('setup-guide-btn');
 function showMsg(t, y = 'info') {
   m.textContent = t;
   m.className = `show ${y}`;

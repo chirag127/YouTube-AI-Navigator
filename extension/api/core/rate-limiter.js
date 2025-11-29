@@ -3,7 +3,7 @@
  * Prevents exceeding API rate limits
  */
 
-import { cl, cw, st, nt, mcl, prom } from '../../utils/shortcuts.js';
+import { l, w, st, nt, mcl, prom } from '../../utils/shortcuts.js';
 
 export class RateLimiter {
   constructor(config = {}) {

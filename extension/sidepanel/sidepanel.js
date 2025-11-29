@@ -3,25 +3,25 @@ import { GeminiService } from '../api/gemini.js';
 import { SegmentClassificationService } from '../services/segments/index.js';
 import { StorageService } from '../services/storage/index.js';
 import { parseMarkdown } from '../lib/marked-loader.js';
-import { _id, $$, _on, lg, l, w, e, tq, tsm } from '../utils/shortcuts.js';
+import { ge, $$, on, lg, l, w, e, tq, tsm } from '../utils/shortcuts.js';
 const ss = new StorageService(),
   cs = new ChunkingService();
 let gs = null,
   scs = null,
   ctx = '',
   segs = [];
-const ab = _id('analyze-btn'),
-  st = _id('status'),
-  aw = _id('auth-warning'),
+const ab = ge('analyze-btn'),
+  st = ge('status'),
+  aw = ge('auth-warning'),
   tbs = $$('.tab-btn'),
   tcs = $$('.tab-content'),
-  sc = _id('summary-content'),
-  ic = _id('insights-content'),
-  tc = _id('transcript-container'),
-  ci = _id('chat-input'),
-  csb = _id('chat-send-btn'),
-  ch = _id('chat-history');
-_on(document, 'DOMContentLoaded', async () => {
+  sc = ge('summary-content'),
+  ic = ge('insights-content'),
+  tc = ge('transcript-container'),
+  ci = ge('chat-input'),
+  csb = ge('chat-send-btn'),
+  ch = ge('chat-history');
+on(document, 'DOMContentLoaded', async () => {
   const { geminiApiKey } = await lg('geminiApiKey');
   if (!geminiApiKey) {
     aw.style.display = 'block';
@@ -32,23 +32,23 @@ _on(document, 'DOMContentLoaded', async () => {
   scs = new SegmentClassificationService(gs, cs);
   try {
     await gs.fetchAvailableModels();
-  } catch (x) {}
+  } catch (x) { }
   for (const b of tbs) {
-    _on(b, 'click', () => {
+    on(b, 'click', () => {
       for (const x of tbs) x.classList.remove('active');
       for (const x of tcs) x.classList.remove('active');
       b.classList.add('active');
-      _id(`${b.getAttribute('data-tab')}-tab`).classList.add('active');
+      ge(`${b.getAttribute('data-tab')}-tab`).classList.add('active');
     });
   }
-  _on(csb, 'click', handleChat);
-  _on(ci, 'keypress', e => {
+  on(csb, 'click', handleChat);
+  on(ci, 'keypress', e => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleChat();
     }
   });
-  _on(document, 'click', e => {
+  on(document, 'click', e => {
     if (e.target.classList.contains('timestamp-btn')) {
       const timeStr = e.target.getAttribute('data-time');
       if (timeStr) {
@@ -88,13 +88,13 @@ function appendMsg(r, t) {
   return d.id;
 }
 async function updateMsg(id, t) {
-  const d = _id(id);
+  const d = ge(id);
   if (d) {
     d.innerHTML = await parseMarkdown(t);
     ch.scrollTop = ch.scrollHeight;
   }
 }
-_on(ab, 'click', () => analyzeVideo());
+on(ab, 'click', () => analyzeVideo());
 async function analyzeVideo(retryCount = 0) {
   const maxRetries = 2;
   try {
@@ -226,7 +226,7 @@ function showLoadingState() {
     '<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M14 17H4v2h10v-2zm6-8H4v2h16V9zM4 15h16v-2H4v2zM4 5v2h16V5H4z"/></svg><p class="empty-state-title">Loading transcript...</p></div>';
 }
 function showError(title, message) {
-  const errorHtml = `<div class="error-container"><svg class="error-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg><h3 class="error-title">${title}</h3><p class="error-message">${message}</p><button class="retry-btn" onclick="_id('analyze-btn').click()">Try Again</button></div>`;
+  const errorHtml = `<div class="error-container"><svg class="error-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg><h3 class="error-title">${title}</h3><p class="error-message">${message}</p><button class="retry-btn" onclick="document.getElementById('analyze-btn').click()">Try Again</button></div>`;
   sc.innerHTML = errorHtml;
   setStatus('error', `Error: ${title}`);
 }
@@ -253,7 +253,7 @@ function renderTranscript(sg) {
     }
     d.appendChild(tm);
     d.appendChild(tx);
-    _on(d, 'click', () => seekVideo(s.start));
+    on(d, 'click', () => seekVideo(s.start));
     tc.appendChild(d);
   }
 }
@@ -289,7 +289,7 @@ async function seekVideo(sec) {
   try {
     const [tab] = await tq({ active: true, currentWindow: true });
     if (tab?.id) await tsm(tab.id, { action: 'SEEK_TO', timestamp: sec });
-  } catch (x) {}
+  } catch (x) { }
 }
 function fmtTime(s) {
   const m = Math.floor(s / 60),

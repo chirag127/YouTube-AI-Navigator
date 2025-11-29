@@ -1,15 +1,10 @@
-// Method 4: Background Proxy (CORS Fallback)
+import { msg } from '../../../utils/shortcuts.js';
+
 export const name = 'Background Proxy';
 export const priority = 4;
 
-export const extract = async (videoId, lang = 'en') => {
-  // Proxy through background to bypass CORS
-  const response = await chrome.runtime.sendMessage({
-    action: 'FETCH_TRANSCRIPT',
-    videoId,
-    lang,
-    useProxy: true,
-  });
-  if (!response.success) throw new Error(response.error || 'Proxy failed');
-  return response.data;
+export const extract = async (vid, lang = 'en') => {
+  const r = await msg({ action: 'FETCH_TRANSCRIPT', videoId: vid, lang, useProxy: true });
+  if (!r.success) throw new Error(r.error || 'Proxy failed');
+  return r.data;
 };

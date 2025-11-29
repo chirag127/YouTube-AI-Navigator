@@ -8,7 +8,7 @@ import { GoogleFactCheckAPI } from '../api/google-factcheck.js';
 import { WikidataAPI } from '../api/wikidata.js';
 import { DatamuseAPI } from '../api/datamuse.js';
 import { OpenMeteoAPI } from '../api/openmeteo.js';
-import { cl, cw } from '../utils/shortcuts.js';
+import { l, w } from '../utils/shortcuts.js';
 
 export class ContextManager {
   constructor(settings) {
@@ -28,7 +28,7 @@ export class ContextManager {
   }
 
   async fetchContext(metadata) {
-    cl('[ContextManager] Fetching context for:', metadata.title);
+    l('[ContextManager] Fetching context for:', metadata.title);
     const tasks = [];
     const context = {};
 
@@ -105,8 +105,7 @@ export class ContextManager {
         if (res && (Array.isArray(res) ? res.length > 0 : true)) {
           context[name] = res;
           console.log(
-            `[ContextManager] ✓ ${name}: ${
-              Array.isArray(res) ? res.length + ' items' : 'data received'
+            `[ContextManager] ✓ ${name}: ${Array.isArray(res) ? res.length + ' items' : 'data received'
             }`
           );
         } else {
@@ -131,7 +130,7 @@ export class ContextManager {
       }
     });
 
-    cl('[ContextManager] Context fetched:', Object.keys(context));
+    l('[ContextManager] Context fetched:', Object.keys(context));
     return context;
   }
 }

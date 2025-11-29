@@ -1,13 +1,10 @@
-// Method 2: Invidious API (Primary Backup)
+import { msg } from '../../../utils/shortcuts.js';
+
 export const name = 'Invidious API';
 export const priority = 2;
 
-export const extract = async (videoId, lang = 'en') => {
-  const response = await chrome.runtime.sendMessage({
-    action: 'FETCH_INVIDIOUS_TRANSCRIPT',
-    videoId,
-    lang,
-  });
-  if (!response.success) throw new Error(response.error || 'Invidious failed');
-  return response.data;
+export const extract = async (vid, lang = 'en') => {
+  const r = await msg({ action: 'FETCH_INVIDIOUS_TRANSCRIPT', videoId: vid, lang });
+  if (!r.success) throw new Error(r.error || 'Invidious failed');
+  return r.data;
 };

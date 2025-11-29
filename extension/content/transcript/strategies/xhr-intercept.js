@@ -1,25 +1,25 @@
-// Method 1: XHR Interceptor (Fastest - Main World Injection)
+import { on, off, st } from '../../../utils/shortcuts.js';
+
 export const name = 'XHR Interceptor';
 export const priority = 1;
 
-export const extract = async (videoId, lang = 'en') => {
-  // Check if interceptor captured data
-  const event = await waitForInterceptedData(videoId, lang, 3000);
-  if (event?.detail?.segments) return event.detail.segments;
+export const extract = async (vid, lang = 'en') => {
+  const ev = await waitForInterceptedData(vid, lang, 3000);
+  if (ev?.detail?.segments) return ev.detail.segments;
   throw new Error('No intercepted transcript data');
 };
 
-const waitForInterceptedData = (videoId, lang, timeout) =>
-  new Promise(resolve => {
-    const handler = e => {
-      if (e.detail?.videoId === videoId || e.detail?.lang === lang) {
-        window.removeEventListener('transcriptIntercepted', handler);
-        resolve(e);
+const waitForInterceptedData = (vid, lang, t) =>
+  new Promise(r => {
+    const h = e => {
+      if (e.detail?.videoId === vid || e.detail?.lang === lang) {
+        off(window, 'transcriptIntercepted', h);
+        r(e);
       }
     };
-    window.addEventListener('transcriptIntercepted', handler);
-    setTimeout(() => {
-      window.removeEventListener('transcriptIntercepted', handler);
-      resolve(null);
-    }, timeout);
+    on(window, 'transcriptIntercepted', h);
+    st(() => {
+      off(window, 'transcriptIntercepted', h);
+      r(null);
+    }, t);
   });

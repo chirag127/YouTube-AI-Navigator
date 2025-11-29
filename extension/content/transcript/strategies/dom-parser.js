@@ -1,93 +1,81 @@
-// Method 5: DOM Parser (Last Resort)
+import { qs, qsa, ft } from '../../../utils/shortcuts.js';
+
 export const name = 'DOM Parser';
 export const priority = 5;
 
-export const extract = async (videoId, lang = 'en') => {
-  // Try ytInitialPlayerResponse
+export const extract = async (vid, lang = 'en') => {
   if (window.ytInitialPlayerResponse?.captions) {
-    const captions = window.ytInitialPlayerResponse.captions;
-    const tracks = captions.playerCaptionsTracklistRenderer?.captionTracks;
-    if (tracks) {
-      const track = tracks.find(t => t.languageCode === lang) || tracks[0];
-      if (track?.baseUrl) {
-        const segments = await fetchAndParse(track.baseUrl);
-        if (segments.length > 0) return segments;
+    const c = window.ytInitialPlayerResponse.captions;
+    const ts = c.playerCaptionsTracklistRenderer?.captionTracks;
+    if (ts) {
+      const t = ts.find(x => x.languageCode === lang) || ts[0];
+      if (t?.baseUrl) {
+        const s = await fetchAndParse(t.baseUrl);
+        if (s.length > 0) return s;
       }
     }
   }
-
-  // Try transcript panel if open
-  const panel = document.querySelector('#segments-container');
-  if (panel) {
-    const segments = parseTranscriptPanel(panel);
-    if (segments.length > 0) return segments;
+  const p = qs('#segments-container');
+  if (p) {
+    const s = parseTranscriptPanel(p);
+    if (s.length > 0) return s;
   }
-
   throw new Error('DOM parsing failed');
 };
 
-const fetchAndParse = async url => {
+const fetchAndParse = async u => {
   try {
-    const res = await fetch(url);
-    const text = await res.text();
-    return parseVTT(text);
+    const r = await ft(u);
+    const t = await r.text();
+    return parseVTT(t);
   } catch (e) {
     return [];
   }
 };
 
-const parseVTT = vtt => {
-  const segments = [];
-  const lines = vtt.split('\n');
+const parseVTT = v => {
+  const s = [],
+    l = v.split('\n');
   let i = 0;
-  while (i < lines.length) {
-    const line = lines[i].trim();
-    if (line.includes('-->')) {
-      const [start, end] = line.split('-->').map(t => parseTime(t.trim()));
+  while (i < l.length) {
+    const ln = l[i].trim();
+    if (ln.includes('-->')) {
+      const [st, en] = ln.split('-->').map(t => parseTime(t.trim()));
       i++;
-      let text = '';
-      while (i < lines.length && lines[i].trim() && !lines[i].includes('-->')) {
-        text += lines[i].trim() + ' ';
+      let t = '';
+      while (i < l.length && l[i].trim() && !l[i].includes('-->')) {
+        t += l[i].trim() + ' ';
         i++;
       }
-      text = text.trim().replace(/<[^>]+>/g, '');
-      if (text) segments.push({ start, duration: end - start, text });
+      t = t.trim().replace(/<[^>]+>/g, '');
+      if (t) s.push({ start: st, duration: en - st, text: t });
     }
     i++;
   }
-  return segments;
+  return s;
 };
 
 const parseTime = t => {
-  const parts = t.split(':');
-  if (parts.length === 3) {
-    const [h, m, s] = parts;
-    return parseFloat(h) * 3600 + parseFloat(m) * 60 + parseFloat(s);
-  }
-  if (parts.length === 2) {
-    const [m, s] = parts;
-    return parseFloat(m) * 60 + parseFloat(s);
-  }
-  return parseFloat(parts[0]);
+  const p = t.split(':');
+  if (p.length === 3) return parseFloat(p[0]) * 3600 + parseFloat(p[1]) * 60 + parseFloat(p[2]);
+  if (p.length === 2) return parseFloat(p[0]) * 60 + parseFloat(p[1]);
+  return parseFloat(p[0]);
 };
 
-const parseTranscriptPanel = panel => {
-  const segments = [];
-  const items = panel.querySelectorAll('ytd-transcript-segment-renderer');
-  items.forEach(item => {
-    const timeEl = item.querySelector('[class*="time"]');
-    const textEl = item.querySelector('[class*="segment-text"]');
-    if (timeEl && textEl) {
-      const start = parseTimeString(timeEl.textContent);
-      segments.push({ start, duration: 0, text: textEl.textContent.trim() });
-    }
+const parseTranscriptPanel = p => {
+  const s = [];
+  qsa('ytd-transcript-segment-renderer', p).forEach(i => {
+    const te = qs('[class*="time"]', i),
+      xe = qs('[class*="segment-text"]', i);
+    if (te && xe)
+      s.push({ start: parseTimeString(te.textContent), duration: 0, text: xe.textContent.trim() });
   });
-  return segments;
+  return s;
 };
 
-const parseTimeString = str => {
-  const parts = str.split(':').map(p => parseInt(p, 10));
-  if (parts.length === 2) return parts[0] * 60 + parts[1];
-  if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+const parseTimeString = s => {
+  const p = s.split(':').map(x => parseInt(x, 10));
+  if (p.length === 2) return p[0] * 60 + p[1];
+  if (p.length === 3) return p[0] * 3600 + p[1] * 60 + p[2];
   return 0;
 };

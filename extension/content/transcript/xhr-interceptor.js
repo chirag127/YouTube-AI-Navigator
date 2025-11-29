@@ -1,11 +1,4 @@
-/**
- * XHR/Fetch Interception for Transcript Capture
- * Implements Method 3 from TRANSCRIPT_EXTRACTION_METHODS.md
- *
- * This script intercepts network requests to capture transcript data
- * as YouTube loads it, providing a fallback method when direct API
- * access fails due to CORS or other issues.
- */
+import { l, w, e, d, ce, jp, js } from '../../utils/shortcuts.js';
 
 class TranscriptInterceptor {
   constructor() {
@@ -15,306 +8,199 @@ class TranscriptInterceptor {
     this.logger = this._createLogger('XHR-Interceptor');
   }
 
-  _createLogger(prefix) {
+  _createLogger(p) {
     return {
-      info: (msg, ...args) => console.log(`[${prefix}] ℹ️ ${msg}`, ...args),
-      success: (msg, ...args) => console.log(`[${prefix}] ✅ ${msg}`, ...args),
-      warn: (msg, ...args) => console.warn(`[${prefix}] ⚠️ ${msg}`, ...args),
-      error: (msg, ...args) => console.error(`[${prefix}] ❌ ${msg}`, ...args),
-      debug: (msg, ...args) => console.debug(`[${prefix}] 🔍 ${msg}`, ...args),
+      info: (m, ...a) => l(`[${p}] ℹ️ ${m}`, ...a),
+      success: (m, ...a) => l(`[${p}] ✅ ${m}`, ...a),
+      warn: (m, ...a) => w(`[${p}] ⚠️ ${m}`, ...a),
+      error: (m, ...a) => e(`[${p}] ❌ ${m}`, ...a),
+      debug: (m, ...a) => d(`[${p}] 🔍 ${m}`, ...a),
     };
   }
 
-  /**
-   * Initialize XHR and Fetch interception
-   */
   init() {
     if (this.isInitialized) {
       this.logger.warn('Already initialized');
       return;
     }
     const self = this;
-    const originalOpen = XMLHttpRequest.prototype.open;
-    const originalSend = XMLHttpRequest.prototype.send;
-
-    XMLHttpRequest.prototype.open = function (method, url, ...args) {
-      this._interceptedUrl = url;
-      this._interceptedMethod = method;
-      return originalOpen.apply(this, [method, url, ...args]);
+    const oo = XMLHttpRequest.prototype.open;
+    const os = XMLHttpRequest.prototype.send;
+    XMLHttpRequest.prototype.open = function (m, u, ...a) {
+      this._interceptedUrl = u;
+      this._interceptedMethod = m;
+      return oo.apply(this, [m, u, ...a]);
     };
-
-    XMLHttpRequest.prototype.send = function (body) {
-      const xhr = this;
-
-      // Add load event listener
-      xhr.addEventListener('readystatechange', function () {
+    XMLHttpRequest.prototype.send = function (b) {
+      const x = this;
+      x.addEventListener('readystatechange', function () {
         if (this.readyState === 4 && this.status === 200) {
-          let responseBody;
+          let rb;
           try {
-            if (xhr.responseType === '' || xhr.responseType === 'text') {
-              responseBody = xhr.responseText;
-            } else if (xhr.responseType === 'json') {
-              responseBody = JSON.stringify(xhr.response);
-            }
-          } catch (e) {
-            // ignore
-          }
-
-          if (responseBody) {
-            self._processResponse(xhr._interceptedUrl, responseBody, xhr.responseURL);
-          }
+            if (x.responseType === '' || x.responseType === 'text') rb = x.responseText;
+            else if (x.responseType === 'json') rb = js(x.response);
+          } catch (e) {}
+          if (rb) self._processResponse(x._interceptedUrl, rb, x.responseURL);
         }
       });
-
-      return originalSend.apply(this, [body]);
+      return os.apply(this, [b]);
     };
-
     this.logger.debug('XHR interception installed');
   }
 
-  /**
-   * Intercept Fetch API
-   */
   _interceptFetch() {
     const self = this;
-    const originalFetch = window.fetch;
-
-    window.fetch = async function (resource) {
-      const url = typeof resource === 'string' ? resource : resource.url;
-
-      const response = await originalFetch.apply(this, arguments);
-
-      // Clone response to avoid consuming it
-      const clonedResponse = response.clone();
-
-      // Process in background
-      self._processFetchResponse(url, clonedResponse).catch(e => {
-        self.logger.debug('Error processing fetch response:', e.message);
-      });
-
-      return response;
+    const of = window.fetch;
+    window.fetch = async function (r) {
+      const u = typeof r === 'string' ? r : r.url;
+      const res = await of.apply(this, arguments);
+      const cr = res.clone();
+      self
+        ._processFetchResponse(u, cr)
+        .catch(e => self.logger.debug('Error processing fetch response:', e.message));
+      return res;
     };
-
     this.logger.debug('Fetch interception installed');
   }
 
-  /**
-   * Process XHR response
-   */
-  _processResponse(url, responseText, responseURL) {
-    if (!url) return;
-
+  _processResponse(u, rt, ru) {
+    if (!u) return;
     try {
-      // Check if this is a timedtext request (transcript)
-      if (url.includes('/timedtext') || url.includes('/api/timedtext')) {
-        this._handleTranscriptResponse(url, responseText);
-      }
-      // Check if this is a player response (metadata)
-      else if (url.includes('/player') || url.includes('ytInitialPlayerResponse')) {
-        this._handlePlayerResponse(url, responseText);
-      }
-    } catch (e) {
-      this.logger.debug('Error processing response:', e.message);
+      if (u.includes('/timedtext') || u.includes('/api/timedtext'))
+        this._handleTranscriptResponse(u, rt);
+      else if (u.includes('/player') || u.includes('ytInitialPlayerResponse'))
+        this._handlePlayerResponse(u, rt);
+    } catch (x) {
+      this.logger.debug('Error processing response:', x.message);
     }
   }
 
-  /**
-   * Process Fetch response
-   */
-  async _processFetchResponse(url, response) {
-    if (!url) return;
-
+  async _processFetchResponse(u, r) {
+    if (!u) return;
     try {
-      // Check if this is a timedtext request
-      if (url.includes('/timedtext') || url.includes('/api/timedtext')) {
-        const text = await response.text();
-        this._handleTranscriptResponse(url, text);
+      if (u.includes('/timedtext') || u.includes('/api/timedtext')) {
+        const t = await r.text();
+        this._handleTranscriptResponse(u, t);
+      } else if (u.includes('/player') || u.includes('ytInitialPlayerResponse')) {
+        const t = await r.text();
+        this._handlePlayerResponse(u, t);
       }
-      // Check if this is a player response
-      else if (url.includes('/player') || url.includes('ytInitialPlayerResponse')) {
-        const text = await response.text();
-        this._handlePlayerResponse(url, text);
-      }
-    } catch (e) {
-      this.logger.debug('Error profetch response:', e.message);
+    } catch (x) {
+      this.logger.debug('Error profetch response:', x.message);
     }
   }
 
-  /**
-   * Handle transcript response
-   */
-  _handleTranscriptResponse(url, responseText) {
+  _handleTranscriptResponse(u, rt) {
     try {
-      const urlObj = new URL(url, window.location.origin);
-      const lang = urlObj.searchParams.get('lang') || urlObj.searchParams.get('tlang') || 'en';
-      const videoId = urlObj.searchParams.get('v');
-
-      this.logger.debug(`Captured transcript: lang=${lang}, videoId=${videoId}`);
-
-      // Store the raw response
-      const key = `${videoId || 'current'}_${lang}`;
-      this.interceptedTranscripts.set(key, {
+      const uo = new URL(u, window.location.origin);
+      const lang = uo.searchParams.get('lang') || uo.searchParams.get('tlang') || 'en';
+      const vid = uo.searchParams.get('v');
+      this.logger.debug(`Captured transcript: lang=${lang}, videoId=${vid}`);
+      const k = `${vid || 'current'}_${lang}`;
+      this.interceptedTranscripts.set(k, {
         lang,
-        videoId,
-        data: responseText,
+        videoId: vid,
+        data: rt,
         timestamp: Date.now(),
-        url,
+        url: u,
       });
-
-      // Parse and store segments
-      const segments = this._parseTranscriptResponse(responseText, url);
-      if (segments.length > 0) {
-        this.interceptedTranscripts.set(`${key}_parsed`, segments);
-        this.logger.success(`Parsed ${segments.length} transcript segments for ${lang}`);
+      const s = this._parseTranscriptResponse(rt, u);
+      if (s.length > 0) {
+        this.interceptedTranscripts.set(`${k}_parsed`, s);
+        this.logger.success(`Parsed ${s.length} transcript segments for ${lang}`);
       }
-
-      // Dispatch custom event for other parts of the extension
       window.dispatchEvent(
-        new CustomEvent('transcriptIntercepted', {
-          detail: { lang, videoId, segments },
-        })
+        new CustomEvent('transcriptIntercepted', { detail: { lang, videoId: vid, segments: s } })
       );
-    } catch (e) {
-      this.logger.error('Error handling transcript response:', e.message);
+    } catch (x) {
+      this.logger.error('Error handling transcript response:', x.message);
     }
   }
 
-  /**
-   * Handle player response
-   */
-  _handlePlayerResponse(url, responseText) {
+  _handlePlayerResponse(u, rt) {
     try {
-      const data = JSON.parse(responseText);
-
-      if (data.videoDetails) {
-        const videoId = data.videoDetails.videoId;
-        this.logger.debug(`Captured metadata for video: ${videoId}`);
-
-        this.interceptedMetadata.set(videoId, {
-          videoDetails: data.videoDetails,
-          captions: data.captions,
+      const d = jp(rt);
+      if (d.videoDetails) {
+        const vid = d.videoDetails.videoId;
+        this.logger.debug(`Captured metadata for video: ${vid}`);
+        this.interceptedMetadata.set(vid, {
+          videoDetails: d.videoDetails,
+          captions: d.captions,
           timestamp: Date.now(),
         });
-
-        // Dispatch custom event
         window.dispatchEvent(
-          new CustomEvent('metadataIntercepted', {
-            detail: { videoId, metadata: data },
-          })
+          new CustomEvent('metadataIntercepted', { detail: { videoId: vid, metadata: d } })
         );
       }
-    } catch (e) {
-      this.logger.debug('Error handling player response:', e.message);
+    } catch (x) {
+      this.logger.debug('Error handling player response:', x.message);
     }
   }
 
-  /**
-   * Parse transcript response based on format
-   */
-  _parseTranscriptResponse(responseText, url) {
+  _parseTranscriptResponse(rt, u) {
     try {
-      // Try JSON format first
-      const data = JSON.parse(responseText);
-
-      if (data.events) {
-        // JSON3 format
-        return data.events
+      const d = jp(rt);
+      if (d.events)
+        return d.events
           .filter(e => e.segs)
           .map(e => ({
             start: e.tStartMs / 1000,
             duration: (e.dDurationMs || 0) / 1000,
             text: e.segs.map(s => s.utf8).join(''),
           }));
-      }
     } catch (e) {
-      // Not JSON, try XML
-      return this._parseXMLTranscript(responseText);
+      return this._parseXMLTranscript(rt);
     }
-
     return [];
   }
 
-  /**
-   * Parse XML format transcript
-   */
-  _parseXMLTranscript(xmlText) {
-    const segments = [];
-    const regex = /<text start="([\d.]+)"(?:\s+dur="([\d.]+)")?[^>]*>([^<]*)<\/text>/g;
-    let match;
-
-    while ((match = regex.exec(xmlText)) !== null) {
-      const start = parseFloat(match[1]);
-      const duration = match[2] ? parseFloat(match[2]) : 0;
-      const text = this._decodeHTML(match[3]);
-
-      if (text.trim()) {
-        segments.push({ start, duration, text });
-      }
+  _parseXMLTranscript(xt) {
+    const s = [];
+    const r = /<text start="([\d.]+)"(?:\s+dur="([\d.]+)")?[^>]*>([^<]*)<\/text>/g;
+    let m;
+    while ((m = r.exec(xt)) !== null) {
+      const st = parseFloat(m[1]),
+        d = m[2] ? parseFloat(m[2]) : 0,
+        t = this._decodeHTML(m[3]);
+      if (t.trim()) s.push({ start: st, duration: d, text: t });
     }
-
-    return segments;
+    return s;
   }
 
-  /**
-   * Decode HTML entities
-   */
-  _decodeHTML(text) {
-    const textarea = document.createElement('textarea');
-    textarea.innerHTML = text;
-    return textarea.value;
+  _decodeHTML(t) {
+    const ta = ce('textarea');
+    ta.innerHTML = t;
+    return ta.value;
   }
 
-  /**
-   * Get intercepted transcript
-   */
-  getTranscript(videoId, lang = 'en') {
-    const key = `${videoId}_${lang}_parsed`;
-    const transcript = this.interceptedTranscripts.get(key);
-
-    if (transcript) {
-      this.logger.debug(`Retrieved intercepted transcript: ${lang}, ${transcript.length} segments`);
-      return transcript;
+  getTranscript(vid, lang = 'en') {
+    const k = `${vid}_${lang}_parsed`;
+    const t = this.interceptedTranscripts.get(k);
+    if (t) {
+      this.logger.debug(`Retrieved intercepted transcript: ${lang}, ${t.length} segments`);
+      return t;
     }
-
-    // Try without videoId (current video)
-    const currentKey = `current_${lang}_parsed`;
-    return this.interceptedTranscripts.get(currentKey);
+    const ck = `current_${lang}_parsed`;
+    return this.interceptedTranscripts.get(ck);
   }
 
-  /**
-   * Get intercepted metadata
-   */
-  getMetadata(videoId) {
-    return this.interceptedMetadata.get(videoId);
+  getMetadata(vid) {
+    return this.interceptedMetadata.get(vid);
   }
 
-  /**
-   * Get all available languages
-   */
-  getAvailableLanguages(videoId) {
-    const languages = new Set();
-
-    for (const [key, value] of this.interceptedTranscripts.entries()) {
-      if (key.includes(videoId) && value.lang) {
-        languages.add(value.lang);
-      }
+  getAvailableLanguages(vid) {
+    const l = new Set();
+    for (const [k, v] of this.interceptedTranscripts.entries()) {
+      if (k.includes(vid) && v.lang) l.add(v.lang);
     }
-
-    return Array.from(languages);
+    return Array.from(l);
   }
 
-  /**
-   * Clear cached data
-   */
   clear() {
     this.interceptedTranscripts.clear();
     this.interceptedMetadata.clear();
     this.logger.info('Cleared intercepted data');
   }
-
-  /**
-   * Get statistics
-   */
   getStats() {
     return {
       transcripts: this.interceptedTranscripts.size,
@@ -324,12 +210,7 @@ class TranscriptInterceptor {
   }
 }
 
-// Create singleton instance
-const transcriptInterceptor = new TranscriptInterceptor();
-
-// Auto-initialize immediately when loaded
-transcriptInterceptor.init();
-
-// Export for use in other scripts
-export default transcriptInterceptor;
+const ti = new TranscriptInterceptor();
+ti.init();
+export default ti;
 export { TranscriptInterceptor };

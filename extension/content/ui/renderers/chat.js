@@ -1,14 +1,15 @@
 import { parseMarkdown } from '../../../lib/marked-loader.js';
+import { qs, ge, ce } from '../../utils/shortcuts.js';
 
 export function renderChat(c) {
-  if (!c.querySelector('.yt-ai-chat-messages')) {
+  if (!qs('.yt-ai-chat-messages', c)) {
     c.innerHTML = `<div class="yt-ai-chat-messages" id="yt-ai-chat-messages"><div class="yt-ai-chat-msg ai">👋 Hi! Ask me anything about this video.</div></div>`;
   }
 }
 export async function addChatMessage(r, t) {
-  const m = document.getElementById('yt-ai-chat-messages');
+  const m = ge('yt-ai-chat-messages');
   if (!m) return;
-  const d = document.createElement('div');
+  const d = ce('div');
   d.className = `yt-ai-chat-msg ${r}`;
   d.innerHTML = r === 'ai' ? await parseMarkdown(t) : t;
   m.appendChild(d);

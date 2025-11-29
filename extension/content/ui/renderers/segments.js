@@ -1,6 +1,7 @@
 import { showPlaceholder } from '../components/loading.js';
 import { seekVideo } from '../../utils/dom.js';
 import { formatTime } from '../../utils/time.js';
+import { ge, qsa, on } from '../../utils/shortcuts.js';
 
 const colors = {
   Sponsor: '#00d26a',
@@ -18,63 +19,45 @@ const colors = {
 
 export function renderSegments(c, data) {
   const s = Array.isArray(data) ? data : data?.segments || [];
-  const fullLabel = !Array.isArray(data) ? data?.fullVideoLabel : null;
-
-  // Update Full Video Label Badge
-  const badge = document.getElementById('yt-ai-full-video-label');
-  if (badge) {
-    if (fullLabel) {
-      badge.textContent = fullLabel;
-      badge.style.display = 'inline-block';
-      badge.style.backgroundColor = colors[fullLabel] || '#444';
-      badge.style.color = '#000'; // Ensure readability
-      badge.style.marginLeft = '8px';
-      badge.style.fontSize = '0.8em';
-      badge.style.padding = '2px 6px';
-      badge.style.borderRadius = '4px';
-    } else {
-      badge.style.display = 'none';
-    }
+  const fl = !Array.isArray(data) ? data?.fullVideoLabel : null;
+  const b = ge('yt-ai-full-video-label');
+  if (b) {
+    if (fl) {
+      b.textContent = fl;
+      b.style.display = 'inline-block';
+      b.style.backgroundColor = colors[fl] || '#444';
+      b.style.color = '#000';
+      b.style.marginLeft = '8px';
+      b.style.fontSize = '0.8em';
+      b.style.padding = '2px 6px';
+      b.style.borderRadius = '4px';
+    } else b.style.display = 'none';
   }
   if (!s?.length) {
     showPlaceholder(c, 'No segments detected.');
     return;
   }
-
   const h = s
     .map(x => {
-      const color = colors[x.label] || '#fff';
-
-      // Use the pre-calculated timestamps from validator if available, otherwise fallback
-      const timestamps = x.timestamps || [
+      const cl = colors[x.label] || '#fff';
+      const ts = x.timestamps || [
         { type: 'start', time: x.start },
         { type: 'end', time: x.end },
       ];
-
-      const timeHtml = timestamps
-        .map(ts => {
-          return `<span class="yt-ai-timestamp" data-time="${
-            ts.time
-          }" title="Click to seek to ${formatTime(ts.time)}">${formatTime(ts.time)}</span>`;
-        })
+      const th = ts
+        .map(
+          t =>
+            `<span class="yt-ai-timestamp" data-time="${t.time}" title="Click to seek to ${formatTime(t.time)}">${formatTime(t.time)}</span>`
+        )
         .join(' - ');
-
-      return `<div class="yt-ai-segment-item" style="border-left:4px solid ${color}">
-      <div class="yt-ai-segment-label">${x.label}</div>
-      <div class="yt-ai-segment-time">${timeHtml}</div>
-      ${x.title ? `<div class="yt-ai-segment-title">${x.title}</div>` : ''}
-      <div class="yt-ai-segment-desc">${x.description || x.text || ''}</div>
-    </div>`;
+      return `<div class="yt-ai-segment-item" style="border-left:4px solid ${cl}"><div class="yt-ai-segment-label">${x.label}</div><div class="yt-ai-segment-time">${th}</div>${x.title ? `<div class="yt-ai-segment-title">${x.title}</div>` : ''}<div class="yt-ai-segment-desc">${x.description || x.text || ''}</div></div>`;
     })
     .join('');
-
   c.innerHTML = `<div class="yt-ai-segments-list">${h}</div>`;
-
-  // Make all timestamps clickable
-  c.querySelectorAll('.yt-ai-timestamp').forEach(e => {
+  qsa('.yt-ai-timestamp', c).forEach(e => {
     e.style.cursor = 'pointer';
     e.style.textDecoration = 'underline';
-    e.addEventListener('click', evt => {
+    on(e, 'click', evt => {
       evt.stopPropagation();
       seekVideo(parseFloat(e.dataset.time));
     });
