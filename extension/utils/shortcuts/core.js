@@ -7,3 +7,5 @@ export const now = Date.now;
 export const log = console.log;
 export const err = console.error;
 export const warn = console.warn;
+export const to = setTimeout;
+export const ti = setInterval;
