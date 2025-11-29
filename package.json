@@ -6,8 +6,8 @@
     "format": "prettier --write \"**/*.{js,json,html,css,md}\"",
     "format:check": "prettier --check \"**/*.{js,json,html,css,md}\"",
     "lint": "eslint \"extension/**/*.js\"",
-    "lint:fix": "eslint \"extension/**/*.js\" --fix",
-    "test": "vitest run"
+    "lint:fix": "eslint \"extension/**/*.*\" --fix",
+    "test": "vitest run --reporter=default --passWithNoTests=false"
   },
   "devDependencies": {
     "eslint": "^8.55.0",

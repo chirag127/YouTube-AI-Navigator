@@ -2,7 +2,8 @@
   if (window.location.hostname !== 'www.youtube.com') return;
   const { r, ru: gu } = await import(chrome.runtime.getURL('utils/shortcuts/runtime.js'));
   const { ce: el, qs } = await import(gu('utils/shortcuts/dom.js'));
-  const { l, e, st: to } = await import(gu('utils/shortcuts/global.js'));
+  const { l, e } = await import(gu('utils/shortcuts/log.js'));
+  const { to } = await import(gu('utils/shortcuts/global.js'));
   const { sl } = await import(gu('utils/shortcuts/storage.js'));
   const s = el('script');
   s.type = 'module';
