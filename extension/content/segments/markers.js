@@ -1,6 +1,6 @@
 import { getVideoElement } from '../utils/dom.js';
-import { id as i, $ } from '../../utils/shortcuts/dom.js';
-import { cr } from '../../utils/shortcuts/chrome.js';
+import { id as i, qs as $ } from '../../utils/shortcuts/dom.js';
+import { rt as cr } from '../../utils/shortcuts/core.js';
 
 export function injectSegmentMarkers(s) {
   if (!s?.length) return;

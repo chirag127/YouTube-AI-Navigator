@@ -1,10 +1,6 @@
 import { l, w, e } from '../../utils/shortcuts/log.js';
-import { on } from '../../utils/shortcuts/event.js';
-import { qa as $$ } from '../../utils/shortcuts/doc.js';
-import { sg, slg as lg } from '../../utils/shortcuts/storage.js';
-import { ft } from '../../utils/shortcuts/network.js';
-import { js } from '../../utils/shortcuts/core.js';
-import { mp, jn } from '../../utils/shortcuts/array.js';
+import { msg, sg, slc, st, log as l, warn as w, mp, jn } from '../../utils/shortcuts/core.js';
+import { ce, tc, ap, ih, dc as doc } from '../../utils/shortcuts/dom.js';
 
 class CommentsExtractor {
   constructor() {

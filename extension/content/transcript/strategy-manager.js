@@ -2,8 +2,7 @@ import * as xhrIntercept from './strategies/xhr-intercept.js';
 import * as youtubeDirect from './strategies/youtube-direct.js';
 import * as backgroundProxy from './strategies/background-proxy.js';
 import * as domParser from './strategies/dom-parser.js';
-import { l, e } from '../../utils/shortcuts/logging.js';
-import { cw } from '../../utils/shortcuts/chrome.js';
+import { log as l, err as e, cw } from '../../utils/shortcuts/core.js';
 
 const strategies = [xhrIntercept, youtubeDirect, backgroundProxy, domParser].sort(
   (a, b) => a.priority - b.priority

@@ -1,24 +1,22 @@
 import { log, logError } from './debug.js';
 
-import { rt } from '../../utils/shortcuts/runtime.js';
-import { on } from '../../utils/shortcuts/dom.js';
-
 export async function initializeExtension() {
+  const { ru } = await import(chrome.runtime.getURL('utils/shortcuts/runtime.js'));
   log('=== YouTube AI Master Initialization ===');
   try {
     log('Step 1: Loading settings...');
-    const { loadSettings } = await import(rt.getURL('content/core/state.js'));
+    const { loadSettings } = await import(ru('content/core/state.js'));
     await loadSettings();
     log('Settings loaded ✓');
 
     log('Step 2: Initializing observer...');
-    const { initObserver } = await import(rt.getURL('content/core/observer.js'));
+    const { initObserver } = await import(ru('content/core/observer.js'));
     initObserver();
     log('Observer initialized ✓');
 
     log('Step 3: Initializing transcript service...');
     try {
-      const { initTranscriptLoader } = await import(rt.getURL('content/transcript-loader.js'));
+      const { initTranscriptLoader } = await import(ru('content/transcript-loader.js'));
       initTranscriptLoader();
       log('Transcript service initialized ✓');
     } catch (e) {
@@ -28,7 +26,7 @@ export async function initializeExtension() {
 
     log('Step 4: Initializing Auto-Liker...');
     try {
-      const { autoLiker } = await import(rt.getURL('content/features/auto-liker.js'));
+      const { autoLiker } = await import(ru('content/features/auto-liker.js'));
       autoLiker.init();
       log('Auto-Liker initialized ✓');
     } catch (e) {
@@ -43,9 +41,12 @@ export async function initializeExtension() {
   }
 }
 
-export function waitForPageReady() {
+export async function waitForPageReady() {
+  const { ru } = await import(chrome.runtime.getURL('utils/shortcuts/runtime.js'));
+  const { dc, wn } = await import(ru('utils/shortcuts/global.js'));
+  const { on } = await import(ru('utils/shortcuts/dom.js'));
   return new Promise(r => {
-    if (document.readyState === 'complete') r();
-    else on(window, 'load', r);
+    if (dc.readyState === 'complete') r();
+    else on(wn, 'load', r);
   });
 }

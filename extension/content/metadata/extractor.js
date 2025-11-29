@@ -1,9 +1,7 @@
+```javascript
 import deArrowAPI from '../../api/dearrow.js';
-import { l, e } from '../../utils/shortcuts/logging.js';
-import { cw } from '../../utils/shortcuts/chrome.js';
-import { $, on } from '../../utils/shortcuts/dom.js';
-import { to as st } from '../../utils/shortcuts/global.js';
-import { jp } from '../../utils/shortcuts/core.js';
+import { log as l, err as e, cw, jp, st } from '../../utils/shortcuts/core.js';
+import { on, qsa as $$ } from '../../utils/shortcuts/dom.js';
 
 class MetadataExtractor {
   constructor() {

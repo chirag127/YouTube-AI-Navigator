@@ -1,5 +1,5 @@
 import { on, of as off } from '../../../utils/shortcuts/dom.js';
-import { to as st } from '../../../utils/shortcuts/global.js';
+import { st } from '../../../utils/shortcuts/core.js';
 
 export const name = 'XHR Interceptor';
 export const priority = 1;
