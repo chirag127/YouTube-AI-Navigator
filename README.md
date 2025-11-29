@@ -38,16 +38,28 @@ cd YouTube-AI-Navigator
 
 Alternatively, download the repository as a ZIP file from GitHub and extract it to a folder on your computer.
 
-**Step 2: Enable Developer Mode in Chrome**
+**Step 2: Install Dependencies & Build**
+
+```bash
+npm install
+```
+
+This will:
+
+-   Install YouTube.js (InnerTube API client)
+-   Install build tools
+-   Automatically bundle YouTube.js to `extension/lib/youtubei.js`
+
+**Step 3: Enable Developer Mode in Chrome**
 
 1. Open Google Chrome
 2. Navigate to `chrome://extensions/` (or click the three-dot menu → Extensions → Manage Extensions)
 3. In the top-right corner, toggle **Developer mode** ON (the switch will turn blue)
 
-**Step 3: Load the Extension**
+**Step 4: Load the Extension**
 
 1. Click the **Load unpacked** button that appears after enabling Developer mode
-2. Navigate to the folder where you cloned/extracted the repository
+2. Navigate to the `extension` folder inside the repository
 3. Select the `extension` folder (not the root folder)
 4. Click **Select Folder**
 

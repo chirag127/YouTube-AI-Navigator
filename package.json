@@ -1,0 +1,30 @@
+{
+    "name": "youtube-ai-navigator",
+    "version": "2.0.0",
+    "description": "Navigate YouTube smarter with AI-powered insights, smart segmentation, and instant context from 10+ data sources",
+    "type": "module",
+    "scripts": {
+        "install-deps": "npm install",
+        "build": "node build.js",
+        "build:watch": "node build.js --watch",
+        "clean": "rimraf extension/lib/youtubei.js",
+        "verify": "node verify-build.js",
+        "prepare": "npm run build"
+    },
+    "dependencies": {
+        "youtubei.js": "^16.0.1"
+    },
+    "devDependencies": {
+        "esbuild": "^0.25.6",
+        "rimraf": "^6.0.1"
+    },
+    "keywords": [
+        "youtube",
+        "chrome-extension",
+        "ai",
+        "innertube",
+        "transcript"
+    ],
+    "author": "Chirag Singhal",
+    "license": "MIT"
+}

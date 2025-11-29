@@ -1,6 +1,7 @@
 // Transcript Fetcher - Strategy Orchestrator
 // Implements priority-based fallback system
 
+import { strategy as innertubeStrategy } from "./strategies/innertube-strategy.js";
 import { strategy as youtubeDirectStrategy } from "./strategies/youtube-direct-strategy.js";
 import { strategy as xhrStrategy } from "./strategies/xhr-strategy.js";
 import { strategy as backgroundProxyStrategy } from "./strategies/background-proxy-strategy.js";
@@ -13,6 +14,7 @@ import { strategy as geniusStrategy } from "./strategies/genius-strategy.js";
 
 // Prioritize strategies that work from content script context
 const STRATEGIES = [
+    innertubeStrategy, // Priority 0: YouTube.js InnerTube API (PRIMARY)
     domAutomationStrategy, // Priority 1: Automates UI to open/scrape transcript
     // youtubeDirectStrategy, // Priority 2: Uses ytInitialPlayerResponse caption URLs
     // xhrStrategy, // Priority 3: Intercepts live network requests
@@ -51,6 +53,8 @@ export async function fetchTranscript(videoId, lang = "en", timeout = 30000) {
 
     if (preferredMethod !== "auto") {
         const preferredStrategy = strategiesToTry.find((s) => {
+            if (preferredMethod === "innertube")
+                return s.name === "InnerTube API";
             if (preferredMethod === "youtube-direct")
                 return s.name === "YouTube Direct API";
             if (preferredMethod === "dom-automation")
