@@ -1,5 +1,7 @@
-import { parseMarkdown } from '../../../lib/marked-loader.js';
-import { ce, qs as $ } from '../../utils/shortcuts/dom.js';
+const gu = p => chrome.runtime.getURL(p);
+
+const { parseMarkdown } = await import(gu('lib/marked-loader.js'));
+const { ce, qs: $ } = await import(gu('utils/shortcuts/dom.js'));
 export function renderChat(c) {
   if (!$('.yt-ai-chat-messages', c)) {
     c.innerHTML = `<div class="yt-ai-chat-messages" id="yt-ai-chat-messages"><div class="yt-ai-chat-msg ai">👋 Hi! Ask me anything about this video.</div></div>`;

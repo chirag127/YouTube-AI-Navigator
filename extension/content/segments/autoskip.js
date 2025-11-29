@@ -1,7 +1,9 @@
-import { getVideoElement } from '../utils/dom.js';
-import { sg } from '../../utils/shortcuts/storage.js';
-import { to } from '../../utils/shortcuts/global.js';
-import { qs, ae, re, ce } from '../../utils/shortcuts/dom.js';
+const gu = p => chrome.runtime.getURL(p);
+
+const { getVideoElement } = await import(gu('content/utils/dom.js'));
+const { sg } = await import(gu('utils/shortcuts/storage.js'));
+const { to } = await import(gu('utils/shortcuts/global.js'));
+const { qs, ae, re, ce } = await import(gu('utils/shortcuts/dom.js'));
 let as = [];
 let en = false;
 let opr = 1;

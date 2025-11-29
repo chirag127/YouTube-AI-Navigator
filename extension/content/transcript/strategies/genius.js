@@ -1,7 +1,8 @@
-import { qs as $ } from '../../../utils/shortcuts/dom.js';
-import { log as l, warn as w } from '../../../utils/shortcuts/core.js';
-import { msg } from '../../../utils/shortcuts/runtime.js';
+const gu = p => chrome.runtime.getURL(p);
 
+const { qs as $ } = await import(gu('utils/shortcuts/dom.js'));
+const { log as l, warn as w } = await import(gu('utils/shortcuts/core.js'));
+const { msg } = await import(gu('utils/shortcuts/runtime.js'));
 export const name = 'Genius Lyrics';
 export const priority = 20;
 

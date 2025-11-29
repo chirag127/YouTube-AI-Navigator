@@ -1,8 +1,10 @@
-import { showPlaceholder } from '../components/loading.js';
-import { seekVideo } from '../../utils/dom.js';
-import { formatTime } from '../../utils/time.js';
-import { id as ge, on, qs as $, qsa as $$ } from '../../utils/shortcuts/dom.js';
-import { log as l } from '../../utils/shortcuts/core.js';
+const gu = p => chrome.runtime.getURL(p);
+
+const { showPlaceholder } = await import(gu('content/ui/components/loading.js'));
+const { seekVideo } = await import(gu('content/utils/dom.js'));
+const { formatTime } = await import(gu('content/utils/time.js'));
+const { id: ge, on, qs: $, qsa: $$ } = await import(gu('utils/shortcuts/dom.js'));
+const { log: l } = await import(gu('utils/shortcuts/core.js'));
 let autoCloseEnabled = true;
 export function renderTranscript(c, s) {
   if (!s?.length) {

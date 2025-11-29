@@ -1,5 +1,7 @@
-import { getVideoElement } from '../utils/dom.js';
-import { qs as $, ce } from '../../utils/shortcuts/dom.js';
+const gu = p => chrome.runtime.getURL(p);
+
+const { getVideoElement } = await import(gu('content/utils/dom.js'));
+const { qs as $, ce } = await import(gu('utils/shortcuts/dom.js'));
 export function injectSegmentMarkers(s) {
   if (!s?.length) return;
   const p = $('.ytp-progress-bar');

@@ -1,4 +1,6 @@
-import { to } from '../../utils/shortcuts/global.js';
+const gu = p => chrome.runtime.getURL(p);
+
+const { to } = await import(gu('utils/shortcuts/global.js'));
 export async function retry(fn, max = 3, d = 1000) {
   for (let i = 1; i <= max; i++) {
     try {

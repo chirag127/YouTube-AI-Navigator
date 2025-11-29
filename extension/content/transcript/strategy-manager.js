@@ -1,9 +1,7 @@
-import * as domAutomation from './strategies/dom-automation.js';
-import * as genius from './strategies/genius.js';
-import * as speechToText from './strategies/speech-to-text.js';
-import { log as l, warn as w, err as e, vals } from '../../utils/shortcuts/core.js';
-import { getCfg } from '../../utils/config.js';
+const gu = p => chrome.runtime.getURL(p);
 
+const { log as l, warn as w, err as e, vals } = await import(gu('utils/shortcuts/core.js'));
+const { getCfg } = await import(gu('utils/config.js'));
 const strategyMap = {
   'dom-automation': domAutomation,
   genius: genius,

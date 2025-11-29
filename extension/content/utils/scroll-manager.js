@@ -1,6 +1,8 @@
-import { qs as $, qsa as $$ } from '../../utils/shortcuts/dom.js';
-import { l, w, e } from '../../utils/shortcuts/log.js';
-import { to } from '../../utils/shortcuts/global.js';
+const gu = p => chrome.runtime.getURL(p);
+
+const { qs as $, qsa as $$ } = await import(gu('utils/shortcuts/dom.js'));
+const { l, w, e } = await import(gu('utils/shortcuts/log.js'));
+const { to } = await import(gu('utils/shortcuts/global.js'));
 export class ScrollManager {
   constructor() {
     this.originalScrollPosition = 0;

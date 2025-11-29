@@ -1,13 +1,15 @@
-import { state } from '../../core/state.js';
-import { showLoading, showPlaceholder } from '../components/loading.js';
-import { getComments } from '../../handlers/comments.js';
-import { parseMarkdown } from '../../../lib/marked-loader.js';
-import { rs } from '../../utils/shortcuts/runtime.js';
-import { sg } from '../../utils/shortcuts/storage.js';
-import { to } from '../../utils/shortcuts/global.js';
-import { l, w } from '../../utils/shortcuts/log.js';
-import { mp, jn, slc } from '../../utils/shortcuts/array.js';
-import { ce, tc, ap, ih, dc as doc } from '../../utils/shortcuts/dom.js';
+const gu = p => chrome.runtime.getURL(p);
+
+const { state } = await import(gu('content/core/state.js'));
+const { showLoading, showPlaceholder } = await import(gu('content/ui/components/loading.js'));
+const { getComments } = await import(gu('content/handlers/comments.js'));
+const { parseMarkdown } = await import(gu('lib/marked-loader.js'));
+const { rs } = await import(gu('utils/shortcuts/runtime.js'));
+const { sg } = await import(gu('utils/shortcuts/storage.js'));
+const { to } = await import(gu('utils/shortcuts/global.js'));
+const { l, w } = await import(gu('utils/shortcuts/log.js'));
+const { mp, jn, slc } = await import(gu('utils/shortcuts/array.js'));
+const { ce, tc, ap, ih, dc: doc } = await import(gu('utils/shortcuts/dom.js'));
 export async function renderComments(c) {
   if (state.analysisData?.commentAnalysis) {
     const html = await parseMarkdown(state.analysisData.commentAnalysis);

@@ -1,7 +1,9 @@
 import { showPlaceholder } from '../components/loading.js';
-import { seekVideo } from '../../utils/dom.js';
-import { formatTime } from '../../utils/time.js';
-import { qs, ae, qsa as $$ } from '../../utils/shortcuts/dom.js';
+const gu = p => chrome.runtime.getURL(p);
+
+const { seekVideo } = await import(gu('content/utils/dom.js'));
+const { formatTime } = await import(gu('content/utils/time.js'));
+const { qs, ae, qsa: $$ } = await import(gu('utils/shortcuts/dom.js'));
 const colors = {
   Sponsor: '#00d26a',
   'Self Promotion': '#ffff00',

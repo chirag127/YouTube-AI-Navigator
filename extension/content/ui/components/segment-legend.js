@@ -1,6 +1,8 @@
-import { oe } from '../../../utils/shortcuts/core.js';
-import { mp, jn } from '../../../utils/shortcuts/array.js';
-import { qs, ce } from '../../../utils/shortcuts/dom.js';
+const gu = p => chrome.runtime.getURL(p);
+
+const { oe } = await import(gu('utils/shortcuts/core.js'));
+const { mp, jn } = await import(gu('utils/shortcuts/array.js'));
+const { qs, ce } = await import(gu('utils/shortcuts/dom.js'));
 const colors = {
   Sponsor: '#00d26a',
   'Self Promotion': '#ffff00',

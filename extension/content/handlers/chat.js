@@ -1,9 +1,11 @@
-import { state } from '../core/state.js';
-import { addChatMessage } from '../ui/renderers/chat.js';
-import { parseMarkdown } from '../../lib/marked-loader.js';
-import { qs } from '../../utils/shortcuts/dom.js';
-import { rs } from '../../utils/shortcuts/runtime.js';
-import { mp, jn } from '../../utils/shortcuts/array.js';
+const gu = p => chrome.runtime.getURL(p);
+
+const { state } = await import(gu('content/core/state.js'));
+const { addChatMessage } = await import(gu('content/ui/renderers/chat.js'));
+const { parseMarkdown } = await import(gu('lib/marked-loader.js'));
+const { qs } = await import(gu('utils/shortcuts/dom.js'));
+const { rs } = await import(gu('utils/shortcuts/runtime.js'));
+const { mp, jn } = await import(gu('utils/shortcuts/array.js'));
 export async function sendChatMessage() {
   const i = qs('#yt-ai-chat-input'),
     q = i?.value?.trim();

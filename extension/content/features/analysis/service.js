@@ -1,6 +1,7 @@
-import { msg } from '../../../utils/shortcuts/runtime.js';
-import { l } from '../../../utils/shortcuts/log.js';
+const gu = p => chrome.runtime.getURL(p);
 
+const { msg } = await import(gu('utils/shortcuts/runtime.js'));
+const { l } = await import(gu('utils/shortcuts/log.js'));
 export async function analyzeVideo(t, m, c = [], o = { length: 'Medium' }) {
   l('[Service] Sending ANALYZE_VIDEO message', {
     transcriptLength: t?.length,

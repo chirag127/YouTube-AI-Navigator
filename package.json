@@ -7,10 +7,12 @@
     "format:check": "prettier --check \"**/*.{js,json,html,css,md}\"",
     "lint": "eslint \"extension/**/*.js\"",
     "lint:fix": "eslint \"extension/**/*.js\" --fix",
-    "test": "vitest run"
+    "test": "vitest run --reporter=json --outputFile=test-results.json --silent && node scripts/test-summary.js || node scripts/test-summary.js",
+    "test:watch": "vitest"
   },
   "devDependencies": {
     "eslint": "^8.55.0",
+    "glob": "^13.0.0",
     "jsdom": "^27.2.0",
     "prettier": "^3.1.0",
     "vitest": "^4.0.14"

@@ -1,8 +1,10 @@
-import { deArrowAPI } from '../../api/dearrow.js';
-import { l, e, w } from '../../utils/shortcuts/log.js';
-import { jp } from '../../utils/shortcuts/core.js';
-import { to } from '../../utils/shortcuts/global.js';
-import { ae, qs as $ } from '../../utils/shortcuts/dom.js';
+const gu = p => chrome.runtime.getURL(p);
+
+const { deArrowAPI } = await import(gu('api/dearrow.js'));
+const { l, e, w } = await import(gu('utils/shortcuts/log.js'));
+const { jp } = await import(gu('utils/shortcuts/core.js'));
+const { to } = await import(gu('utils/shortcuts/global.js'));
+const { ae, qs as $ } = await import(gu('utils/shortcuts/dom.js'));
 class MetadataExtractor {
   constructor() {
     this.cache = new Map();

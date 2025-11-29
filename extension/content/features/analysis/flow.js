@@ -1,19 +1,20 @@
-import { state } from '../../core/state.js';
-import { extractTranscript } from '../../transcript/strategy-manager.js';
-import { metadataExtractor } from '../../metadata/extractor.js';
-import { getComments } from '../../handlers/comments.js';
-import { showLoading, showError } from '../../ui/components/loading.js';
-import { switchTab } from '../../ui/tabs.js';
-import { injectSegmentMarkers } from '../../segments/markers.js';
-import { setupAutoSkip } from '../../segments/autoskip.js';
-import { renderTimeline } from '../../segments/timeline.js';
-import { analyzeVideo } from './service.js';
-import { l } from '../../utils/shortcuts/log.js';
-import { cw } from '../../utils/shortcuts/windows.js';
-import { id as i, $ } from '../../utils/shortcuts/dom.js';
-import { msg } from '../../../utils/shortcuts/runtime.js';
-import { E as Er } from '../../../utils/shortcuts/core.js';
+const gu = p => chrome.runtime.getURL(p);
 
+const { state } = await import(gu('content/core/state.js'));
+const { extractTranscript } = await import(gu('content/transcript/strategy-manager.js'));
+const { metadataExtractor } = await import(gu('content/metadata/extractor.js'));
+const { getComments } = await import(gu('content/handlers/comments.js'));
+const { showLoading, showError } = await import(gu('content/ui/components/loading.js'));
+const { switchTab } = await import(gu('content/ui/tabs.js'));
+const { injectSegmentMarkers } = await import(gu('content/segments/markers.js'));
+const { setupAutoSkip } = await import(gu('content/segments/autoskip.js'));
+const { renderTimeline } = await import(gu('content/segments/timeline.js'));
+const { analyzeVideo } = await import(gu('content/features/analysis/service.js'));
+const { l } = await import(gu('utils/shortcuts/log.js'));
+const { cw } = await import(gu('utils/shortcuts/windows.js'));
+const { id as i, $ } = await import(gu('utils/shortcuts/dom.js'));
+const { msg } = await import(gu('utils/shortcuts/runtime.js'));
+const { E as Er } = await import(gu('utils/shortcuts/core.js'));
 export async function startAnalysis() {
   if (state.isAnalyzing || !state.currentVideoId) return;
   state.isAnalyzing = true;

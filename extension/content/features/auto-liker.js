@@ -1,6 +1,8 @@
-import { state } from '../core/state.js';
-import { ae, re, qs, qsa } from '../../utils/shortcuts/dom.js';
-import { l, e } from '../../utils/shortcuts/log.js';
+const gu = p => chrome.runtime.getURL(p);
+
+const { state } = await import(gu('content/core/state.js'));
+const { ae, re, qs, qsa } = await import(gu('utils/shortcuts/dom.js'));
+const { l, e } = await import(gu('utils/shortcuts/log.js'));
 export class AutoLiker {
   constructor() {
     this.video = null;

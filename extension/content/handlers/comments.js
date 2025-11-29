@@ -1,9 +1,11 @@
-import { l, w, e } from '../../utils/shortcuts/log.js';
-import { js } from '../../utils/shortcuts/global.js';
-import { ae, qs as $ } from '../../utils/shortcuts/dom.js';
-import { sg, slg as lg } from '../../utils/shortcuts/storage.js';
-import { ft } from '../../utils/shortcuts/network.js';
-import { mp, jn } from '../../utils/shortcuts/array.js';
+const gu = p => chrome.runtime.getURL(p);
+
+const { l, w, e } = await import(gu('utils/shortcuts/log.js'));
+const { js } = await import(gu('utils/shortcuts/global.js'));
+const { ae, qs as $ } = await import(gu('utils/shortcuts/dom.js'));
+const { sg, slg as lg } = await import(gu('utils/shortcuts/storage.js'));
+const { ft } = await import(gu('utils/shortcuts/network.js'));
+const { mp, jn } = await import(gu('utils/shortcuts/array.js'));
 class CommentsExtractor {
   constructor() {
     this.comments = [];

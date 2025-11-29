@@ -1,6 +1,7 @@
-import { qs as $, qsa as $$ } from '../../../utils/shortcuts/dom.js';
-import { log as l, err as e, dbg as d, to, nw, tr } from '../../../utils/shortcuts/core.js';
+const gu = p => chrome.runtime.getURL(p);
 
+const { qs as $, qsa as $$ } = await import(gu('utils/shortcuts/dom.js'));
+const { log as l, err as e, dbg as d, to, nw, tr } = await import(gu('utils/shortcuts/core.js'));
 export const name = 'DOM Automation';
 export const priority = 10;
 
