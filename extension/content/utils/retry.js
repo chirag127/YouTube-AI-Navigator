@@ -10,5 +10,5 @@ export async function retry(fn, max = 3, d = 1000) {
   }
 }
 export function sleep(ms) {
-  return new Promise(r => st(r, ms));
+  return new Promise(r => to(r, ms));
 }

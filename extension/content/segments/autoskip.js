@@ -1,6 +1,6 @@
 import { getVideoElement } from '../utils/dom.js';
 import { sg } from '../../utils/shortcuts/storage.js';
-
+import { to } from '../../utils/shortcuts/global.js';
 import { qs, ae, re, ce } from '../../utils/shortcuts/dom.js';
 let as = [];
 let en = false;

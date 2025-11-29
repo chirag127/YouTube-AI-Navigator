@@ -81,7 +81,7 @@ export class ScrollManager {
     return true;
   }
   waitForScroll(ms) {
-    return new Promise(r => st(r, ms));
+    return new Promise(r => to(r, ms));
   }
   isInViewport(el) {
     const r = el.getBoundingClientRect();

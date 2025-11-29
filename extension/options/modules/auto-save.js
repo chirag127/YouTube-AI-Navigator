@@ -13,7 +13,7 @@ export class AutoSave {
   async save(p, v) {
     ct(this.t);
     if (this.n) this.n.saving('Saving...');
-    this.t = st(async () => {
+    this.t = to(async () => {
       try {
         l(`[AutoSave] Saving ${p} =`, v);
         await this.s.update(p, v);

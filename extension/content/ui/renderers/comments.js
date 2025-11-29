@@ -79,8 +79,8 @@ function showScrollNotification() {
   n.style.cssText =
     "position:fixed;top:80px;right:20px;background:#3ea6ff;color:white;padding:12px 20px;border-radius:8px;font-family:'Roboto',Arial,sans-serif;font-size:14px;font-weight:500;z-index:10000;box-shadow:0 4px 12px rgba(0,0,0,0.3);animation:slideIn 0.3s ease-out;";
   ap(doc.body, n);
-  st(() => {
+  to(() => {
     n.style.animation = 'slideOut 0.3s ease-in';
-    st(() => n.remove(), 300);
+    to(() => n.remove(), 300);
   }, 2000);
 }

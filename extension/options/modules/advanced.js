@@ -37,7 +37,7 @@ export class AdvancedSettings {
             const i = jp(ev.target.result);
             if (await this.s.import(js(i))) {
               this.a.notifications?.success('Settings imported');
-              st(() => window.location.reload(), 1000);
+              to(() => window.location.reload(), 1000);
             } else throw new Error('Import failed');
           } catch (x) {
             err('Import failed:', x);
@@ -51,7 +51,7 @@ export class AdvancedSettings {
         if (confirm('Reset all settings to default? This cannot be undone.')) {
           await this.s.reset();
           this.a.notifications?.success('Settings reset');
-          st(() => window.location.reload(), 1000);
+          to(() => window.location.reload(), 1000);
         }
       });
   }
