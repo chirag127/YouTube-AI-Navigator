@@ -1,4 +1,7 @@
-import { w, fj, fl, mp, rp } from '../utils/shortcuts.js';
+import { w } from '../utils/shortcuts/logging.js';
+import { jf as fj } from '../utils/shortcuts/network.js';
+import { fl, mp } from '../utils/shortcuts/array.js';
+import { rp } from '../utils/shortcuts/string.js';
 
 export class ModelManager {
   constructor(apiKey, baseUrl) {

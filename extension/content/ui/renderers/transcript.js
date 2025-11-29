@@ -1,7 +1,8 @@
 import { showPlaceholder } from '../components/loading.js';
 import { seekVideo } from '../../utils/dom.js';
 import { formatTime } from '../../utils/time.js';
-import { qs, qsa, ge, on, l, $, $$ } from '../../utils/shortcuts.js';
+import { id as ge, on, $, $$ } from '../../utils/shortcuts/dom.js';
+import { l } from '../../utils/shortcuts/logging.js';
 
 let autoCloseEnabled = true;
 

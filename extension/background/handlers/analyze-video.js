@@ -57,7 +57,9 @@ export async function handleAnalyzeVideo(q, r) {
     if (im || !t?.length) {
       try {
         ly = await gl.getLyrics(m.title, m.author);
-      } catch (x) {}
+      } catch (x) {
+        // intentional
+      }
     }
     let sb2 = [];
     if (v) {
@@ -122,7 +124,9 @@ export async function handleAnalyzeVideo(q, r) {
           segments: sg2,
           timestamps: an.timestamps,
         });
-      } catch (x) {}
+      } catch (x) {
+        // intentional
+      }
     }
     r({
       success: true,

@@ -1,25 +1,11 @@
 import { ModelManager } from '../../api/gemini.js';
-import {
-  i,
-  on,
-  ft,
-  js,
-  ce,
-  cr,
-  sw,
-  inc,
-  mt,
-  fe,
-  ap,
-  tc,
-  ih,
-  rc,
-  val,
-  isS,
-  rp,
-  tr,
-  jp,
-} from '../../utils/shortcuts.js';
+import { id as i, on, ce, ap, tc, ih, rc, vl as val } from '../../utils/shortcuts/dom.js';
+import { ft } from '../../utils/shortcuts/network.js';
+import { js, jp, isS } from '../../utils/shortcuts/core.js';
+import { cr } from '../../utils/shortcuts/chrome.js';
+import { sl as sw } from '../../utils/shortcuts/storage.js';
+import { ic as inc, fe } from '../../utils/shortcuts/array.js';
+import { mt, rp, tr } from '../../utils/shortcuts/string.js';
 
 export class AIConfig {
   constructor(s, a) {

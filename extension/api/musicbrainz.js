@@ -1,4 +1,6 @@
-import { safeFetch, l, enc } from '../utils/shortcuts.js';
+import { l } from '../utils/shortcuts/logging.js';
+import { en as enc } from '../utils/shortcuts/global.js';
+import { sf as safeFetch } from '../utils/shortcuts/network.js';
 
 const BASE_URL = 'https://musicbrainz.org/ws/2';
 const UA = 'YouTubeAIMaster/1.0.0 ( contact@example.com )';

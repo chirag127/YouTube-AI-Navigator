@@ -1,4 +1,8 @@
-import { l, e, $, $$, jp, uc, st, w, d } from '../utils/shortcuts.js';
+import { l, e, w, d } from '../utils/shortcuts/logging.js';
+import { $, $$ } from '../utils/shortcuts/dom.js';
+import { jp } from '../utils/shortcuts/core.js';
+import { uc } from '../utils/shortcuts/string.js';
+import { to as st } from '../utils/shortcuts/global.js';
 class YTE {
   constructor() {
     this.of = w.fetch.bind(w);

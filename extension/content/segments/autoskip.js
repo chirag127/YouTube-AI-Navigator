@@ -1,6 +1,7 @@
-import { state } from '../core/state.js';
 import { getVideoElement } from '../utils/dom.js';
-import { sg, i, on, off, st, cr } from '../../utils/shortcuts.js';
+import { sg } from '../../utils/shortcuts/storage.js';
+import { id as i, on, of as off } from '../../utils/shortcuts/dom.js';
+import { to as st } from '../../utils/shortcuts/global.js';
 
 let as = [];
 let en = false;
@@ -79,7 +80,7 @@ function showNotification(tx) {
   const id = 'yt-ai-skip-notif';
   let n = i(id);
   if (n) n.remove();
-  n = cr('div');
+  n = ce('div');
   n.id = id;
   n.style.cssText =
     'position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.8);color:white;padding:10px 20px;border-radius:20px;font-size:14px;z-index:9999;pointer-events:none;font-family:sans-serif;backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,0.1);';

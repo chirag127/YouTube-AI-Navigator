@@ -8,7 +8,11 @@ import { injectSegmentMarkers } from '../../segments/markers.js';
 import { setupAutoSkip } from '../../segments/autoskip.js';
 import { renderTimeline } from '../../segments/timeline.js';
 import { analyzeVideo } from './service.js';
-import { l, cw, i, $, msg, E } from '../../utils/shortcuts.js';
+import { l } from '../../utils/shortcuts/logging.js';
+import { cw } from '../../utils/shortcuts/chrome.js';
+import { id as i, $ } from '../../utils/shortcuts/dom.js';
+import { msg } from '../../utils/shortcuts/runtime.js';
+import { E } from '../../utils/shortcuts/core.js';
 
 export async function startAnalysis() {
   if (state.isAnalyzing || !state.currentVideoId) return;

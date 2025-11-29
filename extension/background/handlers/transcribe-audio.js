@@ -1,11 +1,15 @@
 import { GeminiClient } from '../../api/gemini-client.js';
-import { l, w, e, js, jp, rep, tr, ssg, ft, E } from '../../utils/shortcuts/index.js';
+import { l, w, e } from '../../utils/shortcuts/logging.js';
+import { jp, E } from '../../utils/shortcuts/core.js';
+import { rep, tr } from '../../utils/shortcuts/string.js';
+import { sg } from '../../utils/shortcuts/storage.js';
+import { ft } from '../../utils/shortcuts/network.js';
 
 export async function handleTranscribeAudio(req, rsp) {
   try {
     const { audioUrl, lang } = req;
     if (!audioUrl) throw new E('No audio URL provided');
-    const s = await ssg(['apiKey', 'model']);
+    const s = await sg(['apiKey', 'model']);
     if (!s.apiKey) throw new E('Gemini API key not found');
     let m = s.model || 'gemini-2.5-flash-preview-09-2025';
     if (m.startsWith('models/')) m = rep(m, 'models/', '');

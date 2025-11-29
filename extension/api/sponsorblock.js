@@ -1,4 +1,8 @@
-import { l, cw, js, ks, mp, jn, ce } from '../utils/shortcuts.js';
+import { l } from '../utils/shortcuts/logging.js';
+import { cw } from '../utils/shortcuts/chrome.js';
+import { js, ok as ks } from '../utils/shortcuts/core.js';
+import { mp, jn } from '../utils/shortcuts/array.js';
+import { ce } from '../utils/shortcuts/dom.js';
 
 const API_BASE = 'https://sponsor.ajay.app/api';
 const CM = {

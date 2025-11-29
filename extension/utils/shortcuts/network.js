@@ -34,3 +34,12 @@ export const pc = (u, d, o) =>
     body: js(d),
     headers: { 'Content-Type': 'application/json', ...o?.headers },
   });
+export const sf = async (u, o) => {
+  try {
+    const r = await ft(u, o);
+    if (!r.ok) return null;
+    return await r.json();
+  } catch {
+    return null;
+  }
+};

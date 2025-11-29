@@ -1,4 +1,6 @@
-import { $, $$, l, w, e, st } from '../utils/shortcuts.js';
+import { $, $$ } from '../../utils/shortcuts/dom.js';
+import { l, w, e } from '../../utils/shortcuts/logging.js';
+import { to as st } from '../../utils/shortcuts/global.js';
 
 export class ScrollManager {
   constructor() {

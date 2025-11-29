@@ -1,4 +1,4 @@
-import { msg } from '../../../utils/shortcuts.js';
+import { msg } from '../../../utils/shortcuts/runtime.js';
 
 export const name = 'YouTube Direct API';
 export const priority = 3;

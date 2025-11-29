@@ -1,5 +1,5 @@
 import { parseMarkdown } from '../../../lib/marked-loader.js';
-import { qs, ge, ce, $ } from '../../utils/shortcuts.js';
+import { id as ge, ce, $ } from '../../utils/shortcuts/dom.js';
 
 export function renderChat(c) {
   if (!$('.yt-ai-chat-messages', c)) {

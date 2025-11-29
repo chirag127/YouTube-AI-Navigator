@@ -1,7 +1,7 @@
 import { showPlaceholder } from '../components/loading.js';
 import { seekVideo } from '../../utils/dom.js';
 import { formatTime } from '../../utils/time.js';
-import { ge, qsa, on, $$ } from '../../utils/shortcuts.js';
+import { id as ge, on, $$ } from '../../utils/shortcuts/dom.js';
 
 const colors = {
   Sponsor: '#00d26a',

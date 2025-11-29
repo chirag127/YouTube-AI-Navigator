@@ -2,22 +2,12 @@ import { state } from '../../core/state.js';
 import { showLoading, showPlaceholder } from '../components/loading.js';
 import { getComments } from '../../handlers/comments.js';
 import { parseMarkdown } from '../../../lib/marked-loader.js';
-import {
-  msg,
-  sg,
-  st,
-  l,
-  w,
-  cr as ce,
-  tc,
-  ap,
-  ih,
-  slc,
-  mp,
-  jn,
-  raf,
-  doc,
-} from '../../utils/shortcuts.js';
+import { msg } from '../../utils/shortcuts/runtime.js';
+import { sg, slc } from '../../utils/shortcuts/storage.js';
+import { to as st, dc as doc } from '../../utils/shortcuts/global.js';
+import { l, w } from '../../utils/shortcuts/logging.js';
+import { ce, tc, ap, ih } from '../../utils/shortcuts/dom.js';
+import { mp, jn } from '../../utils/shortcuts/array.js';
 
 export async function renderComments(c) {
   if (state.analysisData?.commentAnalysis) {

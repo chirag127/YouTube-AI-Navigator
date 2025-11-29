@@ -1,4 +1,4 @@
-import { sg } from '../utils/shortcuts.js';
+import { sg } from '../../utils/shortcuts/storage.js';
 
 export const state = {
   currentVideoId: null,

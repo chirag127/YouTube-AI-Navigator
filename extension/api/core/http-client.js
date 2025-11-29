@@ -3,7 +3,10 @@
  * Implements exponential backoff for transient failures
  */
 
-import { l, to, co, mn, np } from '../../utils/shortcuts.js';
+import { l } from '../../utils/shortcuts/logging.js';
+import { to, co } from '../../utils/shortcuts/global.js';
+import { mn } from '../../utils/shortcuts/math.js';
+import { np } from '../../utils/shortcuts/async.js';
 
 const RETRYABLE_STATUS = new Set([408, 429, 500, 502, 503, 504]);
 const RETRYABLE_ERRORS = new Set(['ECONNRESET', 'ETIMEDOUT', 'ENOTFOUND']);
@@ -71,7 +74,9 @@ export class HttpClient {
     try {
       const data = await response.json();
       message = data.error?.message || data.message || message;
-    } catch {}
+    } catch {
+      // intentional empty block
+    }
 
     const error = new Error(message);
     error.status = response.status;

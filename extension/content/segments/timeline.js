@@ -1,4 +1,5 @@
-import { i, cr, $ } from '../../utils/shortcuts.js';
+import { id as i, $ } from '../../utils/shortcuts/dom.js';
+import { cr } from '../../utils/shortcuts/chrome.js';
 
 const colors = {
   Sponsor: '#00d26a',

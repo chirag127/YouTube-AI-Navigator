@@ -4,7 +4,8 @@ import { renderTranscript } from './renderers/transcript.js';
 import { renderSegments } from './renderers/segments.js';
 import { renderChat } from './renderers/chat.js';
 import { renderComments } from './renderers/comments.js';
-import { $, $$, ge, on, e } from '../../utils/shortcuts.js';
+import { $, $$, id as ge, on } from '../../utils/shortcuts/dom.js';
+import { e } from '../../utils/shortcuts/logging.js';
 
 export function initTabs(c) {
   $$('.yt-ai-tab', c).forEach(t => on(t, 'click', () => switchTab(t.dataset.tab, c)));

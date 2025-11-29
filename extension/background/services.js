@@ -27,7 +27,9 @@ export async function initializeServices(apiKey) {
 
   try {
     await services.gemini.fetchAvailableModels();
-  } catch (e) {}
+  } catch (err) {
+    console.warn('[Services] Failed to fetch models:', err.message);
+  }
 
   services.initialized = true;
   return services;

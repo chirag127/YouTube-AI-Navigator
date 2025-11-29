@@ -1,8 +1,14 @@
 import { seekVideo } from './dom.js';
-import { on, cr, pI, fc, tc, sbs, rp, ap, doc, ctx } from '../../utils/shortcuts.js';
+import { on, fc, ap } from '../../utils/shortcuts/dom.js';
+import { cr } from '../../utils/shortcuts/chrome.js';
+import { pI } from '../../utils/shortcuts/core.js';
+import { tc } from '../../utils/shortcuts/dom.js';
+import { sb as sbs } from '../../utils/shortcuts/dom.js';
+import { rp } from '../../utils/shortcuts/string.js';
+import { dc as doc } from '../../utils/shortcuts/global.js';
 
 export function makeTimestampsClickable(c) {
-  const p = /(\[|\()?(\d{1,2}):(\d{2})(\]|\))?/g,
+  const p = /(\[|[(])?(\d{1,2}):(\d{2})(\]|[)])?/g,
     w = doc.createTreeWalker(c, NodeFilter.SHOW_TEXT),
     n = [];
   let node;
@@ -12,7 +18,7 @@ export function makeTimestampsClickable(c) {
       f = doc.createDocumentFragment();
     let l = 0;
     rp(txt, p, (m, p1, mins, secs, p4, o) => {
-      if (o > l) ap(f, ctx(sbs(txt, l, o)));
+      if (o > l) ap(f, doc.createTextNode(sbs(txt, l, o)));
       const s = pI(mins) * 60 + pI(secs),
         lnk = cr('span');
       tc(lnk, m);

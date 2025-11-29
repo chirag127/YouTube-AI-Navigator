@@ -2,7 +2,11 @@
  * Genius Lyrics API / Scraper
  * Fetches lyrics from Genius.com for music videos
  */
-import { l, w, enc, ftx, fj, rp, tr, mp, jn } from '../utils/shortcuts.js';
+import { l, w } from '../utils/shortcuts/logging.js';
+import { en as enc } from '../utils/shortcuts/global.js';
+import { tf as ftx, jf as fj } from '../utils/shortcuts/network.js';
+import { rp, tr } from '../utils/shortcuts/string.js';
+import { mp, jn } from '../utils/shortcuts/array.js';
 
 export class GeniusLyricsAPI {
   constructor() {

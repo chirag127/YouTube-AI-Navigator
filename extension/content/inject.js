@@ -1,6 +1,10 @@
 (async () => {
   try {
-    const { url, ce, ap, l, dc } = await import(chrome.runtime.getURL('utils/shortcuts/index.js'));
+    const { url } = await import(chrome.runtime.getURL('utils/shortcuts/runtime.js'));
+    const { ce, ap } = await import(chrome.runtime.getURL('utils/shortcuts/dom.js'));
+    const { l } = await import(chrome.runtime.getURL('utils/shortcuts/logging.js'));
+    const { dc } = await import(chrome.runtime.getURL('utils/shortcuts/global.js'));
+
     const s = ce('script');
     s.src = url('content/transcript/xhr-interceptor.js');
     s.type = 'module';

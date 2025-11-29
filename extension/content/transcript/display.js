@@ -1,4 +1,4 @@
-import { cr } from '../../utils/shortcuts.js';
+import { cr } from '../../utils/shortcuts/chrome.js';
 
 export function createTranscriptDisplay(s) {
   const c = cr('div');

@@ -1,4 +1,8 @@
-import { w, st, cst, sbs, mp, jn, tr, rp } from '../utils/shortcuts.js';
+import { w } from '../utils/shortcuts/logging.js';
+import { to as st, co as cst } from '../utils/shortcuts/global.js';
+import { sb as sbs } from '../utils/shortcuts/dom.js';
+import { mp, jn } from '../utils/shortcuts/array.js';
+import { tr, rp } from '../utils/shortcuts/string.js';
 
 const DAB = 'https://sponsor.ajay.app';
 const DTB = 'https://dearrow-thumb.ajay.app';

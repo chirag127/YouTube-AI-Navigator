@@ -1,6 +1,7 @@
 import { to as st, co as ct } from '../../utils/shortcuts/global.js';
 import { l } from '../../utils/shortcuts/logging.js';
 import { ce, on, id as i } from '../../utils/shortcuts/dom.js';
+import { oe } from '../../utils/shortcuts/core.js';
 
 export class AutoSave {
   constructor(sm, d = 500, nm = null) {
@@ -28,7 +29,7 @@ export class AutoSave {
   }
   attachToInput(el, p, tr = v => v) {
     if (!el) return;
-    const h = e => {
+    const h = () => {
       const v = el.type === 'checkbox' ? el.checked : el.value;
       this.save(p, tr(v));
     };
@@ -36,7 +37,7 @@ export class AutoSave {
     on(el, 'input', h);
   }
   attachToAll(m) {
-    es(m).forEach(([id, c]) => {
+    oe(m).forEach(([id, c]) => {
       const el = i(id);
       if (el) this.attachToInput(el, c.path, c.transform);
     });

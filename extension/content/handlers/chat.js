@@ -2,7 +2,9 @@ import { state } from '../core/state.js';
 import { addChatMessage } from '../ui/renderers/chat.js';
 import { parseMarkdown } from '../../lib/marked-loader.js';
 import metadataExtractor from '../metadata/extractor.js';
-import { ge, msg, mp, jn } from '../utils/shortcuts.js';
+import { id as ge } from '../../utils/shortcuts/dom.js';
+import { msg } from '../../utils/shortcuts/runtime.js';
+import { mp, jn } from '../../utils/shortcuts/array.js';
 
 export async function sendChatMessage() {
   const i = ge('yt-ai-chat-input'),

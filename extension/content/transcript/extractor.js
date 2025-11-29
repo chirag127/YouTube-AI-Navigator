@@ -1,5 +1,9 @@
 import { fetchTranscript } from '../../services/transcript/fetcher.js';
-import { l, cw, e, on, jp, st, $$ } from '../../utils/shortcuts.js';
+import { l, e } from '../../utils/shortcuts/logging.js';
+import { cw } from '../../utils/shortcuts/chrome.js';
+import { on, $$ } from '../../utils/shortcuts/dom.js';
+import { jp } from '../../utils/shortcuts/core.js';
+import { to as st } from '../../utils/shortcuts/global.js';
 
 class TranscriptExtractor {
   constructor() {
@@ -12,7 +16,7 @@ class TranscriptExtractor {
     });
   }
 
-  handleInterceptedTranscript(d) {
+  handleInterceptedTranscript() {
     try {
       this.log('info', 'Intercepted transcript data from Main World');
     } catch (x) {

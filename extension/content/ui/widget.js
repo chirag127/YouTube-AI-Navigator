@@ -3,7 +3,9 @@ import { initTabs } from './tabs.js';
 import { attachEventListeners } from '../handlers/events.js';
 import { log, logError, waitForElement } from '../core/debug.js';
 import { createWidgetHTML } from './components/widget/structure.js';
-import { $, ge, cr, on, si, csi, st } from '../utils/shortcuts.js';
+import { $, id as ge, on, ce } from '../../utils/shortcuts/dom.js';
+import { si, co as csi } from '../../utils/shortcuts/global.js';
+import { to as st } from '../../utils/shortcuts/global.js';
 
 let widgetContainer = null,
   resizeObserver = null,
@@ -103,7 +105,9 @@ export async function injectWidget() {
         500
       );
       if (sc) break;
-    } catch (e) {}
+    } catch (e) {
+      // intentional
+    }
     att++;
     await new Promise(r => st(r, 200));
   }
@@ -116,7 +120,7 @@ export async function injectWidget() {
     log('Using fallback #columns container');
   }
   log('Creating widget element...');
-  widgetContainer = cr('div');
+  widgetContainer = ce('div');
   widgetContainer.id = 'yt-ai-master-widget';
   widgetContainer.style.order = '-9999';
   widgetContainer.innerHTML = createWidgetHTML();

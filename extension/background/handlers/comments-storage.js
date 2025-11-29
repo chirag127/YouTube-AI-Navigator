@@ -2,7 +2,6 @@ import { initializeServices, getServices } from '../services.js';
 import { getApiKey } from '../utils/api-key.js';
 
 export async function handleSaveComments(req, rsp) {
-  const { videoId, comments } = req;
   const k = await getApiKey();
   if (k) await initializeServices(k);
   const { storage } = getServices();

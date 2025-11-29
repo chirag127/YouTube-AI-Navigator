@@ -2,9 +2,8 @@ import { sg } from '../../utils/shortcuts/storage.js';
 import { l } from '../../utils/shortcuts/logging.js';
 import { cw } from '../../utils/shortcuts/chrome.js';
 import { to as st } from '../../utils/shortcuts/global.js';
-import { pr } from '../../utils/shortcuts/async.js';
+import { pr, np } from '../../utils/shortcuts/async.js';
 import { strategy as s1 } from './strategies/dom-automation-strategy.js';
-import { strategy as s2 } from './strategies/invidious-strategy.js';
 import { strategy as s3 } from './strategies/speech-to-text-strategy.js';
 import { strategy as s4 } from './strategies/genius-strategy.js';
 
@@ -32,7 +31,7 @@ export async function fetchTranscript(v, lg = 'en', to = 30000) {
   for (const stg of tryS) {
     try {
       l(`[Fetcher] Trying ${stg.name}...`);
-      const r = await pr([stg.fetch(v, pl), p((_, r) => st(() => r(new Error('Timeout')), to))]);
+      const r = await pr([stg.fetch(v, pl), np((_, r) => st(() => r(new Error('Timeout')), to))]);
       if (r?.length) {
         l(`[Fetcher] ✅ ${stg.name} succeeded: ${r.length} segments`);
         return r;

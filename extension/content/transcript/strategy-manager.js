@@ -3,9 +3,10 @@ import * as invidious from './strategies/invidious.js';
 import * as youtubeDirect from './strategies/youtube-direct.js';
 import * as backgroundProxy from './strategies/background-proxy.js';
 import * as domParser from './strategies/dom-parser.js';
-import { l, cw, e } from '../../utils/shortcuts.js';
+import { l, e } from '../../utils/shortcuts/logging.js';
+import { cw } from '../../utils/shortcuts/chrome.js';
 
-const strategies = [xhrIntercept, invidious, youtubeDirect, backgroundProxy, domParser].sort(
+const strategies = [xhrIntercept, youtubeDirect, backgroundProxy, domParser].sort(
   (a, b) => a.priority - b.priority
 );
 
