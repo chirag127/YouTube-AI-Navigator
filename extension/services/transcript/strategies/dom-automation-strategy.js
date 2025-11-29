@@ -1,6 +1,5 @@
-import { $, $$, ce } from '../../../utils/shortcuts/dom.js';
-import { l, d as cd } from '../../../utils/shortcuts/logging.js';
-import { cw } from '../../../utils/shortcuts/chrome.js';
+import { $, $$ } from '../../../utils/shortcuts/dom.js';
+import { l, d as cd, w } from '../../../utils/shortcuts/logging.js';
 import { to as st } from '../../../utils/shortcuts/global.js';
 import { nw as nt } from '../../../utils/shortcuts/core.js';
 import { sp as spt, mp } from '../../../utils/shortcuts/array.js';
@@ -15,7 +14,7 @@ class DOMAutomationStrategy {
     return {
       info: (m, ...a) => l(`[${p}]ℹ️${m}`, ...a),
       success: (m, ...a) => l(`[${p}]✅${m}`, ...a),
-      warn: (m, ...a) => cw(`[${p}]⚠️${m}`, ...a),
+      warn: (m, ...a) => w(`[${p}]⚠️${m}`, ...a),
       error: (m, ...a) => ce(`[${p}]❌${m}`, ...a),
       debug: (m, ...a) => cd(`[${p}]🔍${m}`, ...a),
     };

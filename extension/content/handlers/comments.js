@@ -138,7 +138,7 @@ class CommentsExtractor {
       setTimeout(() => {
         window.removeEventListener('message', lis);
         r(null);
-      }, 1000);
+      }, 1e3);
     });
   }
 
@@ -152,8 +152,6 @@ class CommentsExtractor {
           selector: 'ytd-comment-thread-renderer',
           elementsFound: el.length,
           documentReady: document.readyState,
-          commentsSection: !!$('ytd-comments'),
-          commentsExpanded: !!$('ytd-comments[expanded]'),
         });
         if (el.length === 0)
           w('[CommentsExtractor] ⚠️ No comment elements found. Possible reasons:', {
@@ -166,11 +164,11 @@ class CommentsExtractor {
             l(`[CommentsExtractor] 🛑 Reached limit of 20 comments`);
             break;
           }
-          const e = el[i];
+          const elm = el[i];
           try {
-            const a = e.querySelector('#author-text')?.textContent?.trim();
-            const t = e.querySelector('#content-text')?.textContent?.trim();
-            const lk = e.querySelector('#vote-count-middle')?.textContent?.trim() || '0';
+            const a = elm.querySelector('#author-text')?.textContent?.trim();
+            const t = elm.querySelector('#content-text')?.textContent?.trim();
+            const lk = elm.querySelector('#vote-count-middle')?.textContent?.trim() || '0';
             l(`[CommentsExtractor] 🔍 Comment ${i + 1}/${el.length}:`, {
               hasAuthor: !!a,
               hasText: !!t,
@@ -188,7 +186,7 @@ class CommentsExtractor {
             e(`[CommentsExtractor] ❌ Error parsing comment ${i + 1}:`, {
               errorType: x.constructor.name,
               errorMessage: x.message,
-              element: e,
+              element: elm,
             });
           }
         }
@@ -198,7 +196,7 @@ class CommentsExtractor {
           failed: el.length - c.length,
         });
         r(c);
-      }, 1000)
+      }, 1e3)
     );
   }
 

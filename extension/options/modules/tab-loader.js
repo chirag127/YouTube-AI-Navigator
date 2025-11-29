@@ -1,6 +1,8 @@
 import { url } from '../../utils/shortcuts/runtime.js';
 import { $, ce } from '../../utils/shortcuts/dom.js';
-import { l } from '../../utils/shortcuts/logging.js';
+import { l, e as ce2 } from '../../utils/shortcuts/logging.js';
+import { pa } from '../../utils/shortcuts/async.js';
+import { ok } from '../../utils/shortcuts/core.js';
 
 export class TabLoader {
   constructor() {
@@ -28,11 +30,11 @@ export class TabLoader {
       l(`[TabLoader] Loaded ${id}`);
       return true;
     } catch (x) {
-      ce(`[TabLoader] Failed to load ${id}:`, x);
+      ce2(`[TabLoader] Failed to load ${id}:`, x);
       return false;
     }
   }
   async loadAll() {
-    await Promise.all(Object.keys(this.tabs).map(id => this.load(id)));
+    await pa(ok(this.tabs).map(id => this.load(id)));
   }
 }

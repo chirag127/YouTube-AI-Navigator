@@ -2,7 +2,7 @@
 
 import { getPlayerResponse, extractCaptionTracks } from './parser.js';
 import { fetchTranscript as fetchTranscriptFromFetcher } from './fetcher.js';
-import { selectBestTrack } from './selector.js';
+
 import { formatAsPlainText, formatWithTimestamps } from './formatter.js';
 
 /**

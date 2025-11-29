@@ -1,5 +1,4 @@
-import { l } from '../../utils/shortcuts/logging.js';
-import { ce } from '../../utils/shortcuts/dom.js';
+import { l, e } from '../../utils/shortcuts/logging.js';
 import { fl, fn, us, ic as inc } from '../../utils/shortcuts/array.js';
 import { js, jp, nw as nt } from '../../utils/shortcuts/core.js';
 import { lc } from '../../utils/shortcuts/string.js';
@@ -89,7 +88,7 @@ export class ComprehensiveHistory {
       await sl({ [this.k]: i });
       return true;
     } catch (x) {
-      ce('[History] Import failed:', x);
+      e('[History] Import failed:', x);
       return false;
     }
   }

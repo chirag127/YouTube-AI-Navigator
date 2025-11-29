@@ -4,7 +4,7 @@ export const description = 'Most important part of video (ONE timestamp only)';
 
 export const detect = (text, context) => {
   // Detect based on title/thumbnail references
-  const { title = '', description = '' } = context.metadata || {};
+  const { title = '' } = context.metadata || {};
   const titleWords = title.toLowerCase().split(/\s+/);
   const textLower = text.toLowerCase();
   const matches = titleWords.filter(w => w.length > 3 && textLower.includes(w));

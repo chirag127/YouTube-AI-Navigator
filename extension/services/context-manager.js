@@ -8,8 +8,10 @@ import { GoogleFactCheckAPI } from '../api/google-factcheck.js';
 import { WikidataAPI } from '../api/wikidata.js';
 import { DatamuseAPI } from '../api/datamuse.js';
 import { OpenMeteoAPI } from '../api/openmeteo.js';
-import { l } from '../utils/shortcuts/logging.js';
-import { cw } from '../utils/shortcuts/chrome.js';
+import { l, w } from '../utils/shortcuts/logging.js';
+import { ps } from '../utils/shortcuts/async.js';
+import { ok } from '../utils/shortcuts/core.js';
+import { ia } from '../utils/shortcuts/array.js';
 
 export class ContextManager {
   constructor(s) {
@@ -72,27 +74,27 @@ export class ContextManager {
       );
     }
     l(`[ContextManager] Starting ${tasks.length} parallel API calls...`);
-    const r = await Promise.allSettled(tasks);
+    const r = await ps(tasks);
     l(`[ContextManager] Processing ${r.length} API call results...`);
     r.forEach((res, i) => {
       if (res.status === 'fulfilled') {
         const { n, res: d } = res.value;
-        if (d && (Array.isArray(d) ? d.length > 0 : true)) {
+        if (d && (ia(d) ? d.length > 0 : true)) {
           ctx[n] = d;
-          l(`[ContextManager] ✓ ${n}: ${Array.isArray(d) ? d.length + ' items' : 'data received'}`);
+          l(`[ContextManager] ✓ ${n}: ${ia(d) ? d.length + ' items' : 'data received'}`);
         } else l(`[ContextManager] - ${n}: no valid data returned`);
       } else {
         const { n, err: e } = res.reason;
-        cw(`[ContextManager] ✗ ${n}:`, e.message || e);
-        if (e.message?.includes('timeout')) cw(`[ContextManager] ${n} timeout`);
+        w(`[ContextManager] ✗ ${n}:`, e.message || e);
+        if (e.message?.includes('timeout')) w(`[ContextManager] ${n} timeout`);
         else if (e.message?.includes('Failed to fetch') || e.message?.includes('NetworkError'))
-          cw(`[ContextManager] ${n} network error`);
+          w(`[ContextManager] ${n} network error`);
         else if (e.message?.includes('401') || e.message?.includes('403'))
-          cw(`[ContextManager] ${n} auth error`);
-        else cw(`[ContextManager] ${n} unexpected error`);
+          w(`[ContextManager] ${n} auth error`);
+        else w(`[ContextManager] ${n} unexpected error`);
       }
     });
-    l('[ContextManager] Context fetched:', Object.keys(ctx));
+    l('[ContextManager] Context fetched:', ok(ctx));
     return ctx;
   }
 }

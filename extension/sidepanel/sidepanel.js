@@ -5,8 +5,7 @@ import { StorageService } from '../services/storage/index.js';
 import { parseMarkdown } from '../lib/marked-loader.js';
 import { id, $$, on, ce } from '../utils/shortcuts/dom.js';
 import { sl } from '../utils/shortcuts/storage.js';
-import { l, e } from '../utils/shortcuts/logging.js';
-import { cw } from '../utils/shortcuts/chrome.js';
+import { l, e, w } from '../utils/shortcuts/logging.js';
 import { tab as ct } from '../utils/shortcuts/tabs.js';
 import { to as st } from '../utils/shortcuts/global.js';
 import { mf } from '../utils/shortcuts/math.js';
@@ -41,7 +40,9 @@ on(document, 'DOMContentLoaded', async () => {
   scs = new SegmentClassificationService(gs, cs);
   try {
     await gs.fetchAvailableModels();
-  } catch (x) {}
+  } catch (x) {
+    // intentional
+  }
   for (const b of tbs) {
     on(b, 'click', () => {
       for (const x of tbs) x.classList.remove('active');
@@ -128,7 +129,7 @@ async function analyzeVideo(rc = 0) {
       if (r.error) throw new Error(r.error);
       md = r.metadata;
     } catch (x) {
-      cw('Metadata fetch failed, using fallback:', x);
+      w('Metadata fetch failed, using fallback:', x);
       md = { title: 'Unknown Title', author: 'Unknown Channel', videoId: v };
     }
     setStatus('loading', 'Fetching transcript...');
@@ -154,10 +155,10 @@ async function analyzeVideo(rc = 0) {
       segs = cls;
       renderTranscript(cls);
       ct.sendMessage(tab.id, { action: 'SHOW_SEGMENTS', segments: cls }).catch(x =>
-        cw('Failed to send segments:', x)
+        w('Failed to send segments:', x)
       );
     } catch (x) {
-      cw('Segment classification failed:', x);
+      w('Segment classification failed:', x);
       renderTranscript(ts.map(t => ({ ...t, label: null })));
     }
     const opts = await sl.get(['summaryLength', 'targetLanguage']);
@@ -186,7 +187,7 @@ async function analyzeVideo(rc = 0) {
         e('Comment analysis failed:', x);
         ca = `Failed to analyze comments: ${x.message}`;
       }
-    } else cw('[Sidepanel] No comments found to analyze');
+    } else w('[Sidepanel] No comments found to analyze');
     const ih = await parseMarkdown(an.insights),
       ch = await parseMarkdown(ca),
       fh = await parseMarkdown(an.faq);
@@ -195,7 +196,7 @@ async function analyzeVideo(rc = 0) {
     try {
       await ss.saveTranscript(v, md, ts, an.summary);
     } catch (x) {
-      cw('Failed to save to history:', x);
+      w('Failed to save to history:', x);
     }
   } catch (x) {
     e('Analysis error:', x);
@@ -304,7 +305,9 @@ async function seekVideo(s) {
   try {
     const [t] = await ct.query({ active: true, currentWindow: true });
     if (t?.id) await ct.sendMessage(t.id, { action: 'SEEK_TO', timestamp: s });
-  } catch (x) {}
+  } catch (x) {
+    // intentional
+  }
 }
 
 function fmtTime(s) {

@@ -3,16 +3,15 @@
   const { l, e } = await import(chrome.runtime.getURL('utils/shortcuts/logging.js'));
   const { url } = await import(chrome.runtime.getURL('utils/shortcuts/runtime.js'));
   const { cr } = await import(chrome.runtime.getURL('utils/shortcuts/chrome.js'));
-  const { ce, ap, $: qs } = await import(chrome.runtime.getURL('utils/shortcuts/dom.js'));
-  const { cl, dc, to, nw } = await import(chrome.runtime.getURL('utils/shortcuts/global.js'));
+  const { ce, ap, $, qs } = await import(chrome.runtime.getURL('utils/shortcuts/dom.js'));
+  const { slg: cl, to, nw } = await import(chrome.runtime.getURL('utils/shortcuts/storage.js'));
+  const { dc: doc } = await import(chrome.runtime.getURL('utils/shortcuts/global.js'));
 
   const s = ce('script');
   s.type = 'module';
   s.src = url('content/youtube-extractor.js');
-  s.onload = function () {
-    this.remove();
-  };
-  ap(dc.head || dc.documentElement, s);
+  s.onload = () => s.remove();
+  ap(doc.head || doc.documentElement, s);
   l('YAM: Start');
   try {
     const { initializeExtension: ie, waitForPageReady: wp } = await import(
@@ -24,7 +23,7 @@
   } catch (x) {
     e('YAM: Fatal', x);
   }
-  cr.onMessage.addListener((r, s, p) => {
+  cr.onMessage.addListener((r, _, p) => {
     const a = r.action || r.type;
     switch (a) {
       case 'START_ANALYSIS':
@@ -60,7 +59,7 @@
         return false;
     }
   });
-  async function hGM(r, p) {
+  const hGM = async (r, p) => {
     try {
       const { MetadataExtractor: ME } = await import(url('content/metadata/extractor.js'));
       p({ success: true, metadata: await ME.extract(r.videoId) });
@@ -69,15 +68,15 @@
       p({
         success: true,
         metadata: {
-          title: dc.title.replace(' - YouTube', '') || 'YouTube Video',
+          title: doc.title.replace(' - YouTube', '') || 'YouTube Video',
           author: 'Unknown',
           viewCount: 'Unknown',
           videoId: r.videoId,
         },
       });
     }
-  }
-  async function hGT(r, p) {
+  };
+  const hGT = async (r, p) => {
     try {
       const { videoId: v } = r;
       const wc = await cTC(v);
@@ -91,7 +90,7 @@
           );
           to(() => cTW(), 1e3);
           l('[Tr] Auto-close');
-        } catch (e) {
+        } catch {
           // intentional
         }
       }
@@ -103,8 +102,8 @@
       else if (m.includes('No transcript found')) m = 'No caps avail';
       p({ error: m });
     }
-  }
-  async function hGC(r, p) {
+  };
+  const hGC = async (_, p) => {
     try {
       const { getComments: gC } = await import(url('content/handlers/comments.js'));
       p({ success: true, comments: await gC() });
@@ -112,11 +111,11 @@
       e('Comm err:', x);
       p({ comments: [] });
     }
-  }
-  async function cTC(v) {
+  };
+  const cTC = async v => {
     try {
       const k = `v_${v}_t`;
-      const r = await cl.get(k);
+      const r = await cl(k);
       if (r[k]) {
         const c = r[k],
           a = nw() - c.timestamp;
@@ -126,13 +125,13 @@
         }
       }
       return false;
-    } catch (e) {
+    } catch {
       return false;
     }
-  }
-  function hST(r, p) {
+  };
+  const hST = (r, p) => {
     try {
-      const v = qs('video');
+      const v = $('video');
       if (v) {
         v.currentTime = r.timestamp;
         p({ success: true });
@@ -141,16 +140,16 @@
       e('Seek err:', x);
       p({ success: false, error: x.message });
     }
-  }
-  async function hSS(r, p) {
+  };
+  const hSS = async (_, p) => {
     try {
       p({ success: true });
     } catch (x) {
       e('Seg err:', x);
       p({ success: false, error: x.message });
     }
-  }
-  async function hGVD(r, p) {
+  };
+  const hGVD = async (r, p) => {
     try {
       const { VideoDataExtractor: VDE } = await import(url('content/metadata/video-data.js'));
       p({ success: true, data: await VDE.extract(r.videoId) });
@@ -158,5 +157,5 @@
       e('GVD err:', x);
       p({ success: false, error: x.message });
     }
-  }
+  };
 })();

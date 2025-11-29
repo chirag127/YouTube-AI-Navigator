@@ -2,7 +2,7 @@
 export const type = 'sponsor';
 export const description = 'Paid promotion of product/service not directly related to creator';
 
-export const detect = (text, context) => {
+export const detect = (text, _context) => {
   const keywords = ['sponsor', 'brought to you by', 'thanks to', 'partnered with', 'affiliate'];
   const score = keywords.reduce((s, k) => s + (text.toLowerCase().includes(k) ? 1 : 0), 0);
   return score > 0;

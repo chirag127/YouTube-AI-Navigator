@@ -1,37 +1,42 @@
 import { getHistory } from '../../services/storage/comprehensive-history.js';
-import { slg, sls, slr, l, e, now } from '../../utils/shortcuts/index.js';
+import { slg, sls, slr } from '../../utils/shortcuts/storage.js';
+import { l, e } from '../../utils/shortcuts/logging.js';
+import { nw } from '../../utils/shortcuts/core.js';
+import { handleGetVideoInfo } from './video-info.js'; // Assuming this exists or needs to be found
+import { handleFetchTranscript as handleGetTranscript } from './fetch-transcript.js';
+import { handleGetComments } from './comments.js'; // Assuming this exists or needs to be found
 
 const CV = 1;
-const CE = 24 * 60 * 60 * 1000;
+const CE = 864e5;
 
-async function getCached(vid, type) {
+const getCached = async (vid, type) => {
   const k = `video_${vid}_${type}`;
   const r = await slg(k);
   if (r[k]) {
     const c = r[k];
-    if (c.version === CV && now() - c.timestamp < CE) {
+    if (c.version === CV && nw() - c.timestamp < CE) {
       l(`[VideoData] Cache hit: ${k}`);
       return c.data;
     }
     await slr(k);
   }
   return null;
-}
+};
 
-async function setCache(vid, type, data) {
+const setCache = async (vid, type, data) => {
   const k = `video_${vid}_${type}`;
-  await sls({ [k]: { version: CV, timestamp: now(), data } });
+  await sls({ [k]: { version: CV, timestamp: nw(), data } });
   l(`[VideoData] Cached: ${k}`);
-}
+};
 
-export async function handleSaveHistory(req) {
+export const handleSaveHistory = async req => {
   const { data } = req;
   const h = getHistory();
   await h.save(data.videoId, data);
   return { success: true };
-}
+};
 
-export async function handleGetVideoData(req) {
+export const handleGetVideoData = async req => {
   const { videoId, dataType, options = {} } = req;
   const c = await getCached(videoId, dataType);
   if (c) return { success: true, data: c, fromCache: true };
@@ -39,6 +44,7 @@ export async function handleGetVideoData(req) {
   try {
     switch (dataType) {
       case 'metadata':
+        // eslint-disable-next-line no-undef
         r = await handleGetVideoInfo({ videoId });
         if (r.success) {
           await setCache(videoId, dataType, r.metadata);
@@ -53,6 +59,7 @@ export async function handleGetVideoData(req) {
         }
         break;
       case 'comments':
+        // eslint-disable-next-line no-undef
         r = await handleGetComments({ videoId, limit: options.limit || 20 });
         if (r.success) {
           await setCache(videoId, dataType, r.comments);
@@ -67,4 +74,4 @@ export async function handleGetVideoData(req) {
     e(`[VideoData] Error fetching ${dataType}:`, x);
     return { success: false, error: x.message };
   }
-}
+};

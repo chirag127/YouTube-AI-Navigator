@@ -3,7 +3,7 @@ import { rp, sw } from '../utils/shortcuts/string.js';
 
 export async function parseMarkdown(m) {
   if (!m) return '';
-  let h = m;
+
   let h = m;
   h = rp(h, /^### (.*$)/gim, '<h3>$1</h3>');
   h = rp(h, /^## (.*$)/gim, '<h2>$1</h2>');

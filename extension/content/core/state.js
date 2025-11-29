@@ -1,4 +1,5 @@
 import { sg } from '../../utils/shortcuts/storage.js';
+import { oa } from '../../utils/shortcuts/core.js';
 
 export const state = {
   currentVideoId: null,
@@ -31,7 +32,7 @@ export async function loadSettings() {
       'autoLikeLive',
       'likeIfNotSubscribed',
     ]);
-    Object.assign(state.settings, r);
+    oa(state.settings, r);
     return state.settings;
   } catch (e) {
     return state.settings;

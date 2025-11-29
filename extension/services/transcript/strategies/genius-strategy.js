@@ -1,6 +1,5 @@
 import { $ } from '../../../utils/shortcuts/dom.js';
-import { l } from '../../../utils/shortcuts/logging.js';
-import { cw } from '../../../utils/shortcuts/chrome.js';
+import { l, w } from '../../../utils/shortcuts/logging.js';
 import { rt } from '../../../utils/shortcuts/runtime.js';
 import geniusAPI from '../../../api/genius-lyrics.js';
 import { isMusicVideo } from '../utils/music-classifier.js';
@@ -21,7 +20,7 @@ async function fetchViaGenius(videoId, lang = 'en') {
   const result = await new Promise(resolve => {
     rt.sendMessage({ type: 'GET_LYRICS', title, artist: channel || '' }, response => {
       if (rt.lastError) {
-        cw('[Genius Strategy] Message error:', rt.lastError);
+        w('[Genius Strategy] Message error:', rt.lastError);
         resolve(null);
         return;
       }

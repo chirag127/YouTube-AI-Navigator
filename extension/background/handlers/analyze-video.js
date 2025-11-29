@@ -4,14 +4,15 @@ import gl from '../../api/genius-lyrics.js';
 import sb from '../../api/sponsorblock.js';
 import { ContextManager as CM } from '../../services/context-manager.js';
 import { l, w, e } from '../../utils/shortcuts/logging.js';
-import { si, ci } from '../../utils/shortcuts/global.js';
+import { si, ci, to } from '../../utils/shortcuts/global.js';
 import { cr, css } from '../../utils/shortcuts/chrome.js';
 import { sg } from '../../utils/shortcuts/storage.js';
 import { ok, E } from '../../utils/shortcuts/core.js';
 import { ic, lc } from '../../utils/shortcuts/string.js';
+import { np, pc } from '../../utils/shortcuts/async.js';
 let ka = null;
 const ska = () => {
-  if (!ka) ka = si(() => cr.getPlatformInfo(() => {}), 2e4);
+  if (!ka) ka = si(() => cr.getPlatformInfo(() => { }), 2e4);
 };
 const stka = () => {
   if (ka) {
@@ -79,8 +80,8 @@ export async function handleAnalyzeVideo(q, r) {
       if (!m) throw new E('No meta');
       const cm = new CM(st);
       const fp = cm.fetchContext(m);
-      const tp = new Promise((_, j) => setTimeout(() => j(new E('TO')), 1e4));
-      ec = await Promise.race([fp, tp]);
+      const tp = np((_, j) => to(() => j(new E('TO')), 1e4));
+      ec = await pc([fp, tp]);
       l('[AV]Ctx ok');
     } catch (x) {
       e('[AV]Ctx:', x.message);

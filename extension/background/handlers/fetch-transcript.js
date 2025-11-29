@@ -1,4 +1,6 @@
-import { rep, tr, pF, jp, fl, mp, jn, tf } from '../../utils/shortcuts/index.js';
+import { rep, tr, pF, jp, fl, mp, jn } from '../../utils/shortcuts/core.js';
+import { tf } from '../../utils/shortcuts/network.js';
+import { l } from '../../utils/shortcuts/logging.js';
 
 function dec(t) {
   const e = {
@@ -23,11 +25,11 @@ function pXML(x) {
   return s;
 }
 
-async function fYT(vid, l = 'en') {
+async function fYT(vid, lNg = 'en') {
   const fs = ['json3', 'srv3'];
   for (const f of fs) {
     try {
-      const u = `https://www.youtube.com/api/timedtext?v=${vid}&lang=${l}&fmt=${f}`;
+      const u = `https://www.youtube.com/api/timedtext?v=${vid}&lang=${lNg}&fmt=${f}`;
       if (f === 'json3') {
         const t = await tf(u);
         if (!t) continue;
@@ -51,7 +53,9 @@ async function fYT(vid, l = 'en') {
         const s = pXML(x);
         if (s.length) return { success: true, data: s };
       }
-    } catch (e) {}
+    } catch (e) {
+      l(`[FetchTranscript] Error with format ${f}:`, e);
+    }
   }
   return { success: false, error: 'YouTube Direct API failed' };
 }
@@ -66,7 +70,9 @@ export async function handleFetchTranscript(req, rsp) {
         rsp(r);
         return;
       }
-    } catch (e) {}
+    } catch (e) {
+      l(`[FetchTranscript] Method ${m.name} failed:`, e);
+    }
   }
   rsp({ success: false, error: 'All transcript fetch methods failed' });
 }
