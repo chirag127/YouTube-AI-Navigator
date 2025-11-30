@@ -46,3 +46,5 @@ global.document = {
   addEventListener: vi.fn(),
   removeEventListener: vi.fn(),
 };
+
+console.log('Setup: document.body exists:', !!global.document.body);
