@@ -12,20 +12,24 @@ let isu = false;
 export async function setupAutoSkip(s) {
   try {
     if (!s?.length) return;
-    const st = await sg(null);
-    const set = st.segments || {};
-    const me = st.enableSegments !== false;
+    const st = await sg('config');
+    const cfg = st.config || {};
+    const me = cfg.segments?.enabled !== false;
     if (!me) {
       disableAutoSkip();
-
       return;
     }
+    const cats = cfg.segments?.categories || {};
     as = s
       .filter(x => {
-        const c = set[x.label];
+        const lk = getLabelKey(x.label);
+        const c = cats[lk];
         return c && c.action && c.action !== 'ignore';
       })
-      .map(x => ({ ...x, config: set[x.label] }));
+      .map(x => {
+        const lk = getLabelKey(x.label);
+        return { ...x, config: cats[lk] };
+      });
     if (as.length > 0) {
       en = true;
       const v = getVideoElement();
@@ -38,6 +42,23 @@ export async function setupAutoSkip(s) {
   } catch (err) {
     e('Err:setupAutoSkip', err);
   }
+}
+function getLabelKey(l) {
+  const m = {
+    Sponsor: 'sponsor',
+    'Self Promotion': 'selfpromo',
+    'Interaction Reminder': 'interaction',
+    'Intermission/Intro Animation': 'intro',
+    'Endcards/Credits': 'outro',
+    'Preview/Recap': 'preview',
+    'Tangents/Jokes': 'filler',
+    Highlight: 'poi_highlight',
+    'Exclusive Access': 'exclusive_access',
+    'Unpaid Promotion': 'music_offtopic',
+    'Hook/Greetings': 'intro',
+    Content: 'content',
+  };
+  return m[l] || l.toLowerCase().replace(/\s+/g, '_');
 }
 function disableAutoSkip() {
   try {

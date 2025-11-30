@@ -150,14 +150,12 @@ async function analyzeVideo(rc = 0) {
       throw new Error('Transcript text is empty. Please try a different video or language.');
     setStatus('loading', 'Classifying segments...');
     try {
-      const cls = await scs.classifyTranscript(ts);
-      renderTranscript(cls);
-      ct.sendMessage(tab.id, { action: 'SHOW_SEGMENTS', segments: cls }).catch(x =>
+      const cls = await scs.classifyTranscript({ transcript: ts, metadata: md });
+      ct.sendMessage(tab.id, { action: 'SHOW_SEGMENTS', segments: cls.segments }).catch(x =>
         w('Failed to send segments:', x)
       );
     } catch (x) {
       w('Segment classification failed:', x);
-      renderTranscript(ts.map(t => ({ ...t, label: null })));
     }
     const cfg = await sl.get([
       'summaryLength',
@@ -238,8 +236,6 @@ function showLoadingState() {
     '<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg><p class="empty-state-title">Generating summary...</p></div>';
   ic.innerHTML =
     '<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg><p class="empty-state-title">Generating insights...</p></div>';
-  tc.innerHTML =
-    '<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M14 17H4v2h10v-2zm6-8H4v2h16V9zM4 15h16v-2H4v2zM4 5v2h16V5H4z"/></svg><p class="empty-state-title">Loading transcript...</p></div>';
 }
 
 function showError(t, m) {
@@ -249,61 +245,6 @@ function showError(t, m) {
 
 async function renderMd(t, el) {
   el.innerHTML = await parseMarkdown(t);
-}
-
-function renderTranscript(sg) {
-  tc.innerHTML = '';
-  for (const s of sg) {
-    const d = ce('div');
-    d.className = `transcript-segment ${getSgClass(s.label)}`;
-    const tm = ce('span');
-    tm.className = 'timestamp';
-    tm.textContent = fmtTime(s.start);
-    const tx = ce('span');
-    tx.className = 'text';
-    tx.textContent = s.text;
-    if (s.label) {
-      const lb = ce('span');
-      lb.className = 'segment-label';
-      lb.textContent = s.label;
-      lb.title = getSgDesc(s.label);
-      d.appendChild(lb);
-    }
-    d.appendChild(tm);
-    d.appendChild(tx);
-    on(d, 'click', () => seekVideo(s.start));
-    tc.appendChild(d);
-  }
-}
-
-function getSgClass(l) {
-  const m = {
-    Sponsor: 'segment-sponsor',
-    'Interaction Reminder': 'segment-interaction',
-    'Self Promotion': 'segment-self-promo',
-    'Unpaid Promotion': 'segment-unpaid-promo',
-    Highlight: 'segment-highlight',
-    'Preview/Recap': 'segment-preview',
-    'Hook/Greetings': 'segment-hook',
-    'Tangents/Jokes': 'segment-tangent',
-    Content: 'segment-content',
-  };
-  return m[l] || 'segment-unknown';
-}
-
-function getSgDesc(l) {
-  const d = {
-    Sponsor: 'Paid advertisement or sponsorship',
-    'Interaction Reminder': 'Asking viewers to like/subscribe/share',
-    'Self Promotion': "Promoting creator's own products/services",
-    'Unpaid Promotion': 'Shout-outs to other creators/channels',
-    Highlight: 'Most important or interesting part',
-    'Preview/Recap': 'Coming up next or previously on',
-    'Hook/Greetings': 'Video introduction or greeting',
-    'Tangents/Jokes': 'Off-topic content or humor',
-    Content: 'Main video content',
-  };
-  return d[l] || 'Unknown segment type';
 }
 
 async function seekVideo(s) {

@@ -91,6 +91,13 @@
           e('[Tr] Auto-close err:', x);
         }
       }
+      to(() => {
+        try {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } catch (x) {
+          e('[Tr] Scroll err:', x);
+        }
+      }, 1500);
       p({ success: true, transcript: t });
     } catch (x) {
       e('Err:hGT', x);

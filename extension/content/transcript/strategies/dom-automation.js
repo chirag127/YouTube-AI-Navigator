@@ -13,17 +13,31 @@ export const extract = async () => {
     let tc = $(
       'ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"]'
     );
-    if (!isVis(tc)) {
+    const wasOpen = isVis(tc);
+    if (!wasOpen) {
       await openPanel();
     }
     await waitSeg();
     const s = scrape();
     if (!s || s.length === 0) throw new Error('No segments found');
-
+    if (!wasOpen) {
+      await closePanel();
+    }
     return s;
   } catch (x) {
     e('Err:extract', x);
     throw x;
+  }
+};
+const closePanel = async () => {
+  try {
+    const cb = $('button[aria-label="Close transcript"]');
+    if (cb) {
+      cb.click();
+      await wait(300);
+    }
+  } catch (err) {
+    e('Err:closePanel', err);
   }
 };
 
