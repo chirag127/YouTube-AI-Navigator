@@ -1,5 +1,9 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { SettingsManager, SEGMENT_CATEGORIES, DEFAULT_SEGMENT_CONFIG } from '../extension/options/modules/settings-manager.js';
+import {
+  SettingsManager,
+  SEGMENT_CATEGORIES,
+  DEFAULT_SEGMENT_CONFIG,
+} from '../extension/options/modules/settings-manager.js';
 
 vi.mock('../extension/utils/shortcuts/storage.js', () => ({
   sg: vi.fn(() => Promise.resolve({ config: {} })),
@@ -28,19 +32,20 @@ describe('Comprehensive Segment Settings Tests', () => {
   });
 
   describe('Segment Categories Structure', () => {
-    it('should have Content category in SEGMENT_CATEGORIES', () => {
-      const content = SEGMENT_CATEGORIES.find(c => c.id === 'content');
-      expect(content).toBeDefined();
-      expect(content.label).toBe('Content');
-      expect(content.color).toBe('#1e90ff');
-    });
-
     it('should have all segment categories', () => {
       const expected = [
-        'sponsor', 'selfpromo', 'interaction', 'intro', 'outro', 'preview',
-        'music_offtopic', 'poi_highlight', 'filler', 'exclusive_access', 'content'
+        'sponsor',
+        'selfpromo',
+        'interaction',
+        'intro',
+        'outro',
+        'preview',
+        'music_offtopic',
+        'poi_highlight',
+        'filler',
+        'exclusive_access',
       ];
-      expect(SEGMENT_CATEGORIES.length).toBe(11);
+      expect(SEGMENT_CATEGORIES.length).toBe(10);
       const ids = SEGMENT_CATEGORIES.map(c => c.id);
       expected.forEach(id => expect(ids).toContain(id));
     });
@@ -56,11 +61,6 @@ describe('Comprehensive Segment Settings Tests', () => {
     it('should default to ignore for DEFAULT_SEGMENT_CONFIG', () => {
       expect(DEFAULT_SEGMENT_CONFIG.action).toBe('ignore');
       expect(DEFAULT_SEGMENT_CONFIG.speed).toBe(2);
-    });
-
-    it('should default content to ignore', () => {
-      const defs = sm.getDefaults();
-      expect(defs.segments.categories.content.action).toBe('ignore');
     });
 
     it('should default poi_highlight to ignore', () => {
@@ -108,7 +108,7 @@ describe('Comprehensive Segment Settings Tests', () => {
       sm.set('segments.categories.sponsor.action', 'speed');
       await sm.save();
       const cats = sm.get('segments.categories');
-      expect(Object.keys(cats).length).toBeGreaterThanOrEqual(11);
+      expect(Object.keys(cats).length).toBeGreaterThanOrEqual(10);
     });
   });
 
@@ -118,7 +118,7 @@ describe('Comprehensive Segment Settings Tests', () => {
       const merged = sm.mergeWithDefaults(loaded);
       expect(merged.segments.categories.sponsor.action).toBe('ignore');
       expect(merged.segments.categories.sponsor.speed).toBe(4);
-      expect(merged.segments.categories.content.action).toBe('ignore');
+      expect(merged.segments.categories.poi_highlight.action).toBe('ignore');
     });
 
     it('should preserve enabled flag', () => {
@@ -130,8 +130,8 @@ describe('Comprehensive Segment Settings Tests', () => {
 
   describe('Segment Actions Validation', () => {
     it('should support ignore action', () => {
-      sm.set('segments.categories.content.action', 'ignore');
-      expect(sm.get('segments.categories.content.action')).toBe('ignore');
+      sm.set('segments.categories.poi_highlight.action', 'ignore');
+      expect(sm.get('segments.categories.poi_highlight.action')).toBe('ignore');
     });
 
     it('should support skip action', () => {
@@ -153,7 +153,7 @@ describe('Comprehensive Segment Settings Tests', () => {
 
     it('should import settings from JSON', async () => {
       const cfg = sm.getDefaults();
-      cfg.segments.categories.content.action = 'skip';
+      cfg.segments.categories.sponsor.action = 'speed';
       const json = JSON.stringify(cfg);
       const result = await sm.import(json);
       expect(result).toBe(true);
@@ -162,9 +162,9 @@ describe('Comprehensive Segment Settings Tests', () => {
 
   describe('Settings Reset', () => {
     it('should reset all settings to defaults', async () => {
-      sm.set('segments.categories.content.action', 'skip');
+      sm.set('segments.categories.sponsor.action', 'ignore');
       await sm.reset();
-      expect(sm.get('segments.categories.content.action')).toBe('ignore');
+      expect(sm.get('segments.categories.sponsor.action')).toBe('skip');
     });
   });
 

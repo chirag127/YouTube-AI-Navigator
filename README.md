@@ -6,10 +6,11 @@ AI-powered YouTube analysis extension. Transcripts, insights, segments, comments
 
 - **AI Analysis**: Gemini-powered summaries, insights, FAQ (configurable length, insights count, FAQ count)
 - **Smart Transcripts**: Multi-strategy fetching (DOM Automation, Genius, Speech-to-Text) - auto-closes YouTube panel, scrolls to top
-- **Segment Classification**: Auto-detect sponsors, intros, content sections with skip/speed actions (12 categories: sponsor, selfpromo, interaction, intro, outro, preview, off-topic, highlight, filler, exclusive_access, content)
-  - **Smart Defaults**: Content/Highlight/Exclusive Access default to "ignore", Sponsors/Intros/Outros default to "skip", Filler defaults to "speed"
+- **Segment Classification**: Auto-detect sponsors, intros, off-topic sections with skip/speed actions (10 SponsorBlock categories: sponsor, unpaid/self promotion, interaction, intro, outro, preview, off-topic, highlight, filler, exclusive access)
+  - **Smart Defaults**: Highlight/Exclusive Access default to "ignore", Sponsors/Intros/Outros/Unpaid Promo default to "skip", Filler defaults to "speed"
   - **Granular Control**: Configure each segment type individually (ignore/skip/speed) with adjustable speed (1-16x)
   - **Bulk Operations**: Set all segments to skip/speed/ignore with one click
+  - **Unified Categories**: Self Promotion and Unpaid Promotion merged into single "selfpromo" key (matches SponsorBlock API)
 - **Comment Analysis**: Sentiment analysis, key themes
 - **Configurable Output**: Control summary length (short/medium/long), max insights (3-20), max FAQ (3-15), timestamps on/off
 - **DeArrow Integration**: Community-sourced clickbait-free titles
@@ -92,19 +93,19 @@ Load `extension/` folder in Chrome as unpacked extension.
 
 ## Segment Categories & Default Actions
 
-| Category | Label | Default Action | Description |
-| --- | --- | --- | --- |
-| `sponsor` | Sponsor | Skip | Paid sponsorships |
-| `selfpromo` | Self Promotion | Skip | Channel self-promotion |
-| `interaction` | Interaction Reminder | Skip | Like/subscribe reminders |
-| `intro` | Intermission/Intro | Skip | Intro animations |
-| `outro` | Endcards/Credits | Skip | End credits |
-| `preview` | Preview/Recap | Skip | Episode recaps |
-| `music_offtopic` | Off-Topic | Skip | Off-topic content |
-| `filler` | Filler/Tangent | Speed (2x) | Tangential discussions |
-| `poi_highlight` | Highlight | **Ignore** | Important moments |
-| `exclusive_access` | Exclusive Access | **Ignore** | Premium content |
-| `content` | Content | **Ignore** | Main video content |
+| Category           | Label                | Default Action | Description              |
+| ------------------ | -------------------- | -------------- | ------------------------ |
+| `sponsor`          | Sponsor              | Skip           | Paid sponsorships        |
+| `selfpromo`        | Self Promotion       | Skip           | Channel self-promotion   |
+| `interaction`      | Interaction Reminder | Skip           | Like/subscribe reminders |
+| `intro`            | Intermission/Intro   | Skip           | Intro animations         |
+| `outro`            | Endcards/Credits     | Skip           | End credits              |
+| `preview`          | Preview/Recap        | Skip           | Episode recaps           |
+| `music_offtopic`   | Off-Topic            | Skip           | Off-topic content        |
+| `filler`           | Filler/Tangent       | Speed (2x)     | Tangential discussions   |
+| `poi_highlight`    | Highlight            | **Ignore**     | Important moments        |
+| `exclusive_access` | Exclusive Access     | **Ignore**     | Premium content          |
+| `content`          | Content              | **Ignore**     | Main video content       |
 
 **Actions**: `ignore` = watch normally, `skip` = instant skip, `speed` = watch at higher playback speed (1-16x)
 
