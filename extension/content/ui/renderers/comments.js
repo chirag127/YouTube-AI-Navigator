@@ -34,12 +34,20 @@ export async function renderComments(c) {
     const origPos = window.scrollY;
     const retries = cfg.comments?.retries ?? 10;
 
+    // Scroll to comments and wait for them to load
     await forceLoadComments();
     showLoading(c, 'Waiting for comments...');
-    await to(() => {}, 800);
+    await to(() => {}, 1200); // Increased wait time for lazy-load
 
     try {
+      // Extract comments with retry logic - stay scrolled down during this process
       const cm = await getComments(retries);
+
+      // Scroll back AFTER extraction completes
+      if (cfg.scroll?.scrollBackAfterComments !== false) {
+        await to(() => {}, 300); // Brief delay before scroll-back
+        scrollBackToTop(origPos, cfg.scroll?.showScrollNotification ?? true);
+      }
 
       if (!cm.length) {
         showPlaceholder(c, 'No comments found.');
@@ -91,15 +99,13 @@ export async function renderComments(c) {
         );
       }
     } catch (x) {
-      // Don't scroll back on error - stay at comments section for debugging
-      ih(c, `<div class="yt-ai-error-msg">Failed: ${x.message}</div>`);
-      e('Err:renderComments', x);
-    } finally {
-      // Always scroll back after extraction attempt (success or fail after full retry)
+      // Scroll back even on error after full retry attempts
       if (cfg.scroll?.scrollBackAfterComments !== false) {
-        await to(() => {}, 500); // Small delay before scrolling back
+        await to(() => {}, 300);
         scrollBackToTop(origPos, cfg.scroll?.showScrollNotification ?? true);
       }
+      ih(c, `<div class="yt-ai-error-msg">Failed: ${x.message}</div>`);
+      e('Err:renderComments', x);
     }
   } catch (err) {
     e('Err:renderComments', err);

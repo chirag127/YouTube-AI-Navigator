@@ -33,17 +33,17 @@ export async function renderSummary(c, d) {
     c.innerHTML = `
       <div class="yt-ai-summary-container" style="display: flex; flex-direction: column; gap: 16px; padding: 0;">
 
-        <div class="yt-ai-card glass-panel" style="animation: slideUpFade 0.4s var(--ease-fluid)">
+        <div class="yt-ai-card glass-panel">
           <h3 class="yt-ai-card-title">📝 Summary</h3>
           <div class="yt-ai-card-content">${summaryHtml}</div>
         </div>
 
-        <div class="yt-ai-card glass-panel" style="animation: slideUpFade 0.4s var(--ease-fluid) 0.1s backwards">
+        <div class="yt-ai-card glass-panel">
           <h3 class="yt-ai-card-title">💡 Key Insights</h3>
           <div class="yt-ai-card-content">${insightsHtml}</div>
         </div>
 
-        <div class="yt-ai-card glass-panel" style="animation: slideUpFade 0.4s var(--ease-fluid) 0.2s backwards">
+        <div class="yt-ai-card glass-panel">
           <h3 class="yt-ai-card-title">❓ FAQ</h3>
           <div class="yt-ai-card-content">${faqHtml}</div>
         </div>

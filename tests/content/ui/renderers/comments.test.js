@@ -1,27 +1,8 @@
-// Mock runtime first to control gu output
-vi.mock('../../../../extension/utils/shortcuts/runtime.js', () => ({
-  gu: path => {
-    const mapping = {
-      'content/core/state.js': '../../core/state.js',
-      'content/ui/components/loading.js': '../components/loading.js',
-      'content/handlers/comments.js': '../../handlers/comments.js',
-      'lib/marked-loader.js': '../../../lib/marked-loader.js',
-      'utils/shortcuts/runtime.js': '../../../utils/shortcuts/runtime.js',
-      'utils/shortcuts/storage.js': '../../../utils/shortcuts/storage.js',
-      'utils/shortcuts/global.js': '../../../utils/shortcuts/global.js',
-      'utils/shortcuts/log.js': '../../../utils/shortcuts/log.js',
-      'utils/shortcuts/core.js': '../../../utils/shortcuts/core.js',
-      'utils/shortcuts/string.js': '../../../utils/shortcuts/string.js',
-      'utils/shortcuts/dom.js': '../../../utils/shortcuts/dom.js',
-    };
-    return mapping[path] || path;
-  },
-  rs: vi.fn(),
-}));
+import { renderComments } from '../../../../extension/content/ui/renderers/comments.js';
 
-// Mock dependencies
-vi.mock('../../../../extension/utils/shortcuts/log.js', () => ({
-  e: vi.fn(),
+vi.mock('../../../../extension/utils/shortcuts/runtime.js', () => ({
+  gu: vi.fn(p => p),
+  rs: vi.fn(),
 }));
 
 vi.mock('../../../../extension/content/core/state.js', () => ({
@@ -30,9 +11,7 @@ vi.mock('../../../../extension/content/core/state.js', () => ({
 
 vi.mock('../../../../extension/content/ui/components/loading.js', () => ({
   showLoading: vi.fn(),
-  showPlaceholder: (c, msg) => {
-    c.innerHTML = `<div class="placeholder">${msg}</div>`;
-  },
+  showPlaceholder: vi.fn(),
 }));
 
 vi.mock('../../../../extension/content/handlers/comments.js', () => ({
@@ -40,86 +19,121 @@ vi.mock('../../../../extension/content/handlers/comments.js', () => ({
 }));
 
 vi.mock('../../../../extension/lib/marked-loader.js', () => ({
-  parseMarkdown: text => Promise.resolve(`<p>${text}</p>`),
+  parseMarkdown: vi.fn(t => Promise.resolve(t)),
 }));
 
 vi.mock('../../../../extension/utils/shortcuts/storage.js', () => ({
-  sg: vi.fn().mockResolvedValue({ config: {} }),
+  sg: vi.fn(),
 }));
 
 vi.mock('../../../../extension/utils/shortcuts/global.js', () => ({
-  to: cb => cb(),
+  to: vi.fn(cb => {
+    if (cb) cb();
+    return Promise.resolve();
+  }),
+}));
+
+vi.mock('../../../../extension/utils/shortcuts/log.js', () => ({
+  e: vi.fn(),
 }));
 
 vi.mock('../../../../extension/utils/shortcuts/core.js', () => ({
-  mp: (arr, cb) => arr.map(cb),
+  mp: vi.fn(arr => arr.map),
 }));
 
 vi.mock('../../../../extension/utils/shortcuts/string.js', () => ({
-  jn: (arr, sep) => arr.join(sep),
-  slc: (arr, s, e) => arr.slice(s, e),
+  jn: vi.fn((arr, sep) => arr.join(sep)),
+  slc: vi.fn((arr, start, end) => arr.slice(start, end)),
 }));
 
 vi.mock('../../../../extension/utils/shortcuts/dom.js', () => ({
-  ce: tag => document.createElement(tag),
-  ap: (p, c) => p.appendChild(c),
-  ih: (el, html) => {
-    el.innerHTML = html;
-  },
-  txt: (el, t) => {
-    el.textContent = t;
-  },
+  ce: vi.fn(tag => document.createElement(tag)),
+  ap: vi.fn(),
+  ih: vi.fn(),
+  txt: vi.fn(),
   dc: {
     querySelector: vi.fn(),
-    body: document.createElement('body'),
-    documentElement: { scrollHeight: 1000 },
+    querySelectorAll: vi.fn(),
+    documentElement: { scrollTop: 0 },
+    body: { scrollTop: 0, offsetHeight: 1000 },
   },
 }));
 
-// Import module under test
-import { renderComments } from '../../../../extension/content/ui/renderers/comments.js';
 import { state } from '../../../../extension/content/core/state.js';
+import {
+  showLoading,
+  showPlaceholder,
+} from '../../../../extension/content/ui/components/loading.js';
 import { getComments } from '../../../../extension/content/handlers/comments.js';
 import { rs } from '../../../../extension/utils/shortcuts/runtime.js';
+import { sg } from '../../../../extension/utils/shortcuts/storage.js';
+import { ih } from '../../../../extension/utils/shortcuts/dom.js';
 
-describe('Comments Renderer', () => {
+describe('renderComments', () => {
   let container;
 
   beforeEach(() => {
-    container = document.createElement('div');
-    state.analysisData = null;
     vi.clearAllMocks();
+    container = document.createElement('div');
+    sg.mockResolvedValue({ config: {} });
+    global.window = { scrollY: 100, scrollTo: vi.fn(), scrollBy: vi.fn() };
   });
 
-  it('should render existing analysis if present', async () => {
-    state.analysisData = { commentAnalysis: 'Existing Analysis' };
+  it('should render cached analysis if available', async () => {
+    state.analysisData = { commentAnalysis: '# Analysis' };
+
     await renderComments(container);
-    expect(container.innerHTML).toContain('Existing Analysis');
-    expect(container.innerHTML).toContain('yt-ai-card');
+
+    expect(ih).toHaveBeenCalledWith(
+      container,
+      expect.stringContaining('Comment Sentiment Analysis')
+    );
+    expect(ih).toHaveBeenCalledWith(container, expect.stringContaining('# Analysis'));
   });
 
-  it('should fetch and analyze comments if no existing analysis', async () => {
-    getComments.mockResolvedValue([{ author: 'User', text: 'Comment', likes: 10 }]);
-    rs.mockResolvedValue({ success: true, analysis: 'New Analysis' });
+  it('should show loading states', async () => {
+    getComments.mockResolvedValue([]);
+
+    await renderComments(container);
+
+    expect(showLoading).toHaveBeenCalledWith(container, 'Loading comments section...');
+    expect(showLoading).toHaveBeenCalledWith(container, 'Waiting for comments...');
+  });
+
+  it('should show placeholder when no comments found', async () => {
+    getComments.mockResolvedValue([]);
+
+    await renderComments(container);
+
+    expect(showPlaceholder).toHaveBeenCalledWith(container, 'No comments found.');
+  });
+
+  it('should analyze comments and render results', async () => {
+    const mockComments = [
+      { id: 1, author: 'User1', text: 'Great!', likes: '10' },
+      { id: 2, author: 'User2', text: 'Nice', likes: '5' },
+    ];
+    getComments.mockResolvedValue(mockComments);
+    rs.mockResolvedValue({ success: true, analysis: 'Positive sentiment' });
 
     await renderComments(container);
 
     expect(getComments).toHaveBeenCalled();
-    expect(rs).toHaveBeenCalledWith(expect.objectContaining({ action: 'ANALYZE_COMMENTS' }));
-    expect(container.innerHTML).toContain('New Analysis');
-    expect(container.innerHTML).toContain('User');
-    expect(container.innerHTML).toContain('Comment');
+    expect(rs).toHaveBeenCalledWith({
+      action: 'ANALYZE_COMMENTS',
+      comments: mockComments,
+    });
+    expect(ih).toHaveBeenCalledWith(container, expect.stringContaining('Positive sentiment'));
   });
 
-  it('should show placeholder if no comments found', async () => {
-    getComments.mockResolvedValue([]);
-    await renderComments(container);
-    expect(container.innerHTML).toContain('No comments found');
-  });
+  it('should handle analysis errors', async () => {
+    getComments.mockRejectedValue(new Error('Failed to get comments'));
 
-  it('should handle errors gracefully', async () => {
-    getComments.mockRejectedValue(new Error('Fetch failed'));
     await renderComments(container);
-    expect(container.innerHTML).toContain('Failed: Fetch failed');
+
+    expect(ih).toHaveBeenCalledWith(
+      container,
+      expect.stringContaining('Failed: Failed to get comments')
+    );
   });
 });

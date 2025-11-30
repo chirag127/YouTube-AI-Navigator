@@ -1,143 +1,156 @@
-import { APIDetector } from '../../../extension/api/core/api-detector.js';
+import { APIDetector } from '../extension/api/core/api-detector.js';
 
-vi.mock('../../../extension/utils/shortcuts/log.js', () => ({
+global.fetch = vi.fn();
+global.AbortSignal = { timeout: vi.fn(() => ({})) };
+
+vi.mock('../extension/utils/shortcuts/log.js', () => ({
   e: vi.fn(),
   l: vi.fn(),
 }));
 
-describe('APIDetector', () => {
+describe('API Detector Tests', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  describe('checkSponsorBlock', () => {
-    it('should return true on ok response', async () => {
-      global.fetch = vi.fn().mockResolvedValue({ ok: true });
-
+  describe('SponsorBlock Detection', () => {
+    it('should detect available SponsorBlock', async () => {
+      global.fetch.mockResolvedValue({ ok: true, status: 200 });
       const result = await APIDetector.checkSponsorBlock();
-
       expect(result).toBe(true);
     });
 
-    it('should return true on 400 response', async () => {
-      global.fetch = vi.fn().mockResolvedValue({ ok: false, status: 400 });
-
+    it('should handle SponsorBlock 400 as available', async () => {
+      global.fetch.mockResolvedValue({ ok: false, status: 400 });
       const result = await APIDetector.checkSponsorBlock();
-
       expect(result).toBe(true);
     });
 
-    it('should return false on failure', async () => {
-      global.fetch = vi.fn().mockRejectedValue(new Error('error'));
-
+    it('should detect unavailable SponsorBlock', async () => {
+      global.fetch.mockRejectedValue(new Error('Network error'));
       const result = await APIDetector.checkSponsorBlock();
-
       expect(result).toBe(false);
     });
   });
 
-  describe('checkDeArrow', () => {
-    it('should return true on success', async () => {
-      global.fetch = vi.fn().mockResolvedValue({ ok: true });
-
+  describe('DeArrow Detection', () => {
+    it('should detect available DeArrow', async () => {
+      global.fetch.mockResolvedValue({ ok: true, status: 200 });
       const result = await APIDetector.checkDeArrow();
-
       expect(result).toBe(true);
     });
 
-    it('should return false on failure', async () => {
-      global.fetch = vi.fn().mockRejectedValue(new Error('error'));
-
+    it('should detect unavailable DeArrow', async () => {
+      global.fetch.mockRejectedValue(new Error('Timeout'));
       const result = await APIDetector.checkDeArrow();
-
       expect(result).toBe(false);
     });
   });
 
-  describe('checkGemini', () => {
-    it('should return true with apiKey and ok response', async () => {
-      global.fetch = vi.fn().mockResolvedValue({ ok: true });
+  describe('Gemini Detection', () => {
+    it('should return false without API key', async () => {
+      const result = await APIDetector.checkGemini(null);
+      expect(result).toBe(false);
+      expect(global.fetch).not.toHaveBeenCalled();
+    });
 
-      const result = await APIDetector.checkGemini('key');
-
+    it('should detect valid Gemini key', async () => {
+      global.fetch.mockResolvedValue({ ok: true, status: 200 });
+      const result = await APIDetector.checkGemini('test-key');
       expect(result).toBe(true);
     });
 
-    it('should return false without apiKey', async () => {
-      const result = await APIDetector.checkGemini('');
-
-      expect(result).toBe(false);
-    });
-
-    it('should return false on failure', async () => {
-      global.fetch = vi.fn().mockRejectedValue(new Error('error'));
-
-      const result = await APIDetector.checkGemini('key');
-
+    it('should detect invalid Gemini key', async () => {
+      global.fetch.mockRejectedValue(new Error('Invalid key'));
+      const result = await APIDetector.checkGemini('bad-key');
       expect(result).toBe(false);
     });
   });
 
-  describe('checkTMDB', () => {
-    it('should return true on success', async () => {
-      global.fetch = vi.fn().mockResolvedValue({ ok: true });
-
-      const result = await APIDetector.checkTMDB('key');
-
-      expect(result).toBe(true);
+  describe('TMDB Detection', () => {
+    it('should return false without API key', async () => {
+      const result = await APIDetector.checkTMDB(null);
+      expect(result).toBe(false);
     });
 
-    it('should return false without apiKey', async () => {
-      const result = await APIDetector.checkTMDB('');
-
-      expect(result).toBe(false);
+    it('should detect valid TMDB key', async () => {
+      global.fetch.mockResolvedValue({ ok: true });
+      const result = await APIDetector.checkTMDB('tmdb-key');
+      expect(result).toBe(true);
     });
   });
 
-  describe('checkNewsData', () => {
-    it('should return true on success', async () => {
-      global.fetch = vi.fn().mockResolvedValue({ ok: true });
-
-      const result = await APIDetector.checkNewsData('key');
-
-      expect(result).toBe(true);
-    });
-
-    it('should return false without apiKey', async () => {
+  describe('NewsData Detection', () => {
+    it('should return false without API key', async () => {
       const result = await APIDetector.checkNewsData('');
-
       expect(result).toBe(false);
     });
-  });
 
-  describe('checkGoogleFactCheck', () => {
-    it('should return true on success', async () => {
-      global.fetch = vi.fn().mockResolvedValue({ ok: true });
-
-      const result = await APIDetector.checkGoogleFactCheck('key');
-
+    it('should detect valid NewsData key', async () => {
+      global.fetch.mockResolvedValue({ ok: true });
+      const result = await APIDetector.checkNewsData('news-key');
       expect(result).toBe(true);
     });
+  });
 
-    it('should return false without apiKey', async () => {
-      const result = await APIDetector.checkGoogleFactCheck('');
-
+  describe('GoogleFactCheck Detection', () => {
+    it('should return false without API key', async () => {
+      const result = await APIDetector.checkGoogleFactCheck(undefined);
       expect(result).toBe(false);
+    });
+
+    it('should detect valid GoogleFactCheck key', async () => {
+      global.fetch.mockResolvedValue({ ok: true });
+      const result = await APIDetector.checkGoogleFactCheck('gfc-key');
+      expect(result).toBe(true);
     });
   });
 
-  describe('getAvailableAPIs', () => {
-    it('should return availability object', async () => {
-      global.fetch = vi.fn().mockResolvedValue({ ok: true });
+  describe('Get All Available APIs', () => {
+    it('should check all APIs with config', async () => {
+      global.fetch.mockResolvedValue({ ok: true });
+      const config = {
+        ai: { apiKey: 'gemini-key' },
+        externalApis: {
+          tmdb: 'tmdb-key',
+          newsData: 'news-key',
+          googleFactCheck: 'gfc-key',
+        },
+      };
+      const result = await APIDetector.getAvailableAPIs(config);
+      expect(result).toEqual({
+        sponsorBlock: true,
+        deArrow: true,
+        gemini: true,
+        tmdb: true,
+        newsData: true,
+        googleFactCheck: true,
+      });
+    });
 
-      const result = await APIDetector.getAvailableAPIs();
+    it('should handle empty config', async () => {
+      global.fetch.mockResolvedValue({ ok: true });
+      const result = await APIDetector.getAvailableAPIs({});
+      expect(result.sponsorBlock).toBe(true);
+      expect(result.gemini).toBe(false);
+      expect(result.tmdb).toBe(false);
+    });
 
-      expect(result).toHaveProperty('sponsorBlock');
-      expect(result).toHaveProperty('deArrow');
-      expect(result).toHaveProperty('gemini');
-      expect(result).toHaveProperty('tmdb');
-      expect(result).toHaveProperty('newsData');
-      expect(result).toHaveProperty('googleFactCheck');
+    it('should handle mixed availability', async () => {
+      let callCount = 0;
+      global.fetch.mockImplementation(() => {
+        callCount++;
+        if (callCount <= 2) return Promise.resolve({ ok: true });
+        return Promise.reject(new Error('Unavailable'));
+      });
+      const config = {
+        ai: { apiKey: 'key' },
+        externalApis: { tmdb: 'key', newsData: 'key' },
+      };
+      const result = await APIDetector.getAvailableAPIs(config);
+      expect(result.sponsorBlock).toBe(true);
+      expect(result.deArrow).toBe(true);
+      expect(result.gemini).toBe(false);
     });
   });
 });
