@@ -14,11 +14,15 @@ export class SectionLoader {
       comments: 'sections/comments.html',
       metadata: 'sections/metadata.html',
       scroll: 'sections/scroll.html',
-      performance: 'sections/performance.html',
-      notifications: 'sections/notifications.html',
-      prompts: 'sections/prompts.html',
-      integrations: 'sections/integrations.html',
       widget: 'sections/widget.html',
+      aiConfig: 'sections/ai-config.html',
+      segments: 'sections/segments.html',
+      performance: 'sections/performance.html',
+      externalApis: 'sections/external-apis.html',
+      integrations: 'sections/integrations.html',
+      prompts: 'sections/prompts.html',
+      notifications: 'sections/notifications.html',
+      advanced: 'sections/advanced.html',
     };
     this.loaded = new Set();
   }

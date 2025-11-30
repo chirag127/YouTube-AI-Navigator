@@ -6,11 +6,12 @@ export const comments = async commentList => {
     if (!commentList || !commentList.length) return '';
     const cfg = await sg('config');
     const pCfg = cfg.config?.prompts?.comments || {};
+    const cCfg = cfg.config?.comments || {};
     const role =
       pCfg.roleDescription ||
       'Elite Community Sentiment Analyst with expertise in YouTube audience psychology and engagement patterns';
-    const spamEnabled = pCfg.enableSpamFiltering !== false;
-    const sentEnabled = pCfg.enableSentimentLabeling !== false;
+    const spamEnabled = cCfg.filterSpam !== false;
+    const sentEnabled = cCfg.analyzeSentiment !== false;
     const minLikes = pCfg.minLikesForHighEngagement || 0;
     const maxThemes = pCfg.maxThemes || 7;
     const maxQuestions = pCfg.maxQuestions || 5;
