@@ -1,6 +1,6 @@
 const gu = p => chrome.runtime.getURL(p);
 
-const { l, e } = await import(gu('utils/shortcuts/logging.js'));
+const { l, e } = await import(gu('utils/shortcuts/log.js'));
 const { parseMarkdown } = await import(gu('lib/marked-loader.js'));
 const { ce, qs: $ } = await import(gu('utils/shortcuts/dom.js'));
 export function renderChat(c) {
@@ -31,3 +31,7 @@ export async function addChatMessage(r, t) {
     return null;
   }
 }
+
+
+
+

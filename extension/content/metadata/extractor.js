@@ -1,7 +1,7 @@
 const gu = p => chrome.runtime.getURL(p);
 
 const { deArrowAPI } = await import(gu('api/dearrow.js'));
-const { l, e } = await import(gu('utils/shortcuts/logging.js'));
+const { l, e } = await import(gu('utils/shortcuts/log.js'));
 const { jp } = await import(gu('utils/shortcuts/core.js'));
 const { to } = await import(gu('utils/shortcuts/global.js'));
 const { ae, qs: $ } = await import(gu('utils/shortcuts/dom.js'));
@@ -413,3 +413,7 @@ class MetadataExtractor {
 }
 export const metadataExtractor = new MetadataExtractor();
 export { MetadataExtractor };
+
+
+
+

@@ -10,7 +10,7 @@ const { injectSegmentMarkers } = await import(gu('content/segments/markers.js'))
 const { setupAutoSkip } = await import(gu('content/segments/autoskip.js'));
 const { renderTimeline } = await import(gu('content/segments/timeline.js'));
 const { analyzeVideo } = await import(gu('content/features/analysis/service.js'));
-const { l, e } = await import(gu('utils/shortcuts/logging.js'));
+const { l, e } = await import(gu('utils/shortcuts/log.js'));
 const { id: i, $ } = await import(gu('utils/shortcuts/dom.js'));
 const { msg } = await import(gu('utils/shortcuts/runtime.js'));
 const { E: Er } = await import(gu('utils/shortcuts/core.js'));
@@ -89,3 +89,7 @@ async function saveToHistory(d) {
     e('Err:saveToHistory', err);
   }
 }
+
+
+
+

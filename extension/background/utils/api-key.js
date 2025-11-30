@@ -1,5 +1,5 @@
 import { slg } from '../../utils/shortcuts/storage.js';
-import { l, e } from '../../utils/shortcuts/logging.js';
+import { l, e } from '../../utils/shortcuts/log.js';
 
 export async function getApiKey() {
   l('GetApiKey');
@@ -12,3 +12,7 @@ export async function getApiKey() {
     return null;
   }
 }
+
+
+
+

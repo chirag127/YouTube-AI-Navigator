@@ -1,6 +1,6 @@
 import { sg, ss } from './shortcuts/storage.js';
 import { url } from './shortcuts/runtime.js';
-import { tc } from './shortcuts/tabs.js';
+import { tbc as tc } from './shortcuts/tabs.js';
 import { w } from './shortcuts/log.js';
 
 export class OnboardingChecker {

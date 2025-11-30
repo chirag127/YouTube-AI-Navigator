@@ -1,6 +1,6 @@
 const gu = p => chrome.runtime.getURL(p);
 
-const { l, e } = await import(gu('utils/shortcuts/logging.js'));
+const { l, e } = await import(gu('utils/shortcuts/log.js'));
 const { getVideoElement } = await import(gu('content/utils/dom.js'));
 const { sg } = await import(gu('utils/shortcuts/storage.js'));
 const { to } = await import(gu('utils/shortcuts/global.js'));
@@ -123,3 +123,7 @@ function showNotification(tx) {
     e('Err:showNotification', err);
   }
 }
+
+
+
+

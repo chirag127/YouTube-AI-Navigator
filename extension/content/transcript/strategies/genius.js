@@ -1,7 +1,7 @@
 const gu = p => chrome.runtime.getURL(p);
 
 const { qs: $ } = await import(gu('utils/shortcuts/dom.js'));
-const { l, e } = await import(gu('utils/shortcuts/logging.js'));
+const { l, e } = await import(gu('utils/shortcuts/log.js'));
 const { msg } = await import(gu('utils/shortcuts/runtime.js'));
 export const name = 'Genius Lyrics';
 export const priority = 20;
@@ -29,3 +29,7 @@ export const extract = async () => {
     throw err;
   }
 };
+
+
+
+

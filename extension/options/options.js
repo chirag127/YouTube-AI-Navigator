@@ -18,7 +18,7 @@ import { ScrollSettings } from './modules/scroll-settings.js';
 import { on, id as i } from '../utils/shortcuts/dom.js';
 import { log as l, err as e, vl as vs } from '../utils/shortcuts/core.js';
 import { url } from '../utils/shortcuts/runtime.js';
-import { tc } from '../utils/shortcuts/tabs.js';
+import { tbc as tc } from '../utils/shortcuts/tabs.js';
 on(document, 'DOMContentLoaded', async () => {
   l('[Options] Initializing...');
   const settingsManager = new SettingsManager();

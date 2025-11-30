@@ -2,7 +2,7 @@ const gu = p => chrome.runtime.getURL(p);
 
 const { sendChatMessage } = await import(gu('content/handlers/chat.js'));
 const { ae, qs } = await import(gu('utils/shortcuts/dom.js'));
-const { l, e } = await import(gu('utils/shortcuts/logging.js'));
+const { l, e } = await import(gu('utils/shortcuts/log.js'));
 export function attachEventListeners(w) {
   l('attachEventListeners:Start');
   try {
@@ -23,3 +23,7 @@ export function attachEventListeners(w) {
     e('Err:attachEventListeners', err);
   }
 }
+
+
+
+

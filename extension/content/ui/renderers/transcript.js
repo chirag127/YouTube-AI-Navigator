@@ -4,7 +4,7 @@ const { showPlaceholder } = await import(gu('content/ui/components/loading.js'))
 const { seekVideo } = await import(gu('content/utils/dom.js'));
 const { formatTime } = await import(gu('content/utils/time.js'));
 const { id: ge, on, qs: $, qsa: $$ } = await import(gu('utils/shortcuts/dom.js'));
-const { l, e } = await import(gu('utils/shortcuts/logging.js'));
+const { l, e } = await import(gu('utils/shortcuts/log.js'));
 let autoCloseEnabled = true;
 export function renderTranscript(c, s) {
   l('renderTranscript:Start');
@@ -67,3 +67,7 @@ export function collapseTranscriptWidget() {
     e('Err:collapseTranscriptWidget', err);
   }
 }
+
+
+
+

@@ -37,3 +37,7 @@ export class TranscriptSettings {
     if (el) el.checked = v;
   }
 }
+
+
+
+

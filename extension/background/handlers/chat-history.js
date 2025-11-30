@@ -8,3 +8,7 @@ export async function handleSaveChatMessage(req, rsp) {
   if (storage) await storage.saveChatMessage(videoId, message);
   rsp({ success: true });
 }
+
+
+
+

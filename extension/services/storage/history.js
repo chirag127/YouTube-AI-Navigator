@@ -22,3 +22,7 @@ export async function searchHistory(q) {
     l = lc(q);
   return i.filter(x => (x.title && inc(lc(x.title), l)) || (x.author && inc(lc(x.author), l)));
 }
+
+
+
+

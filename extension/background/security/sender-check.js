@@ -1,5 +1,5 @@
 import { rt as cr } from '../../utils/shortcuts/runtime.js';
-import { l } from '../../utils/shortcuts/logging.js';
+import { l } from '../../utils/shortcuts/log.js';
 
 export const verifySender = s => {
   l('VerifySender');
@@ -32,3 +32,7 @@ export const isFromExtensionPage = s => {
   l('IsFromExtensionPage:Done');
   return result;
 };
+
+
+
+

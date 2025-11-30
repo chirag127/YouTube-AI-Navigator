@@ -16,3 +16,7 @@ export async function deleteTranscript(v) {
   if (!v) return;
   await sl(`video_${v}`, null);
 }
+
+
+
+

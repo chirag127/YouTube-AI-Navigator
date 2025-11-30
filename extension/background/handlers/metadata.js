@@ -1,4 +1,4 @@
-import { l, e, w } from '../../utils/shortcuts/logging.js';
+import { l, e, w } from '../../utils/shortcuts/log.js';
 export async function handleGetMetadata(req, rsp) {
   l('GetMetadata');
   try {
@@ -16,3 +16,7 @@ export async function handleGetMetadata(req, rsp) {
     l('GetMetadata:Done');
   }
 }
+
+
+
+

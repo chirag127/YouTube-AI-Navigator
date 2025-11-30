@@ -1,6 +1,6 @@
 import { slg, sls } from '../../utils/shortcuts/storage.js';
 import { nw as now } from '../../utils/shortcuts/core.js';
-import { l, e } from '../../utils/shortcuts/logging.js';
+import { l, e } from '../../utils/shortcuts/log.js';
 export async function handleSaveToHistory(req, rsp) {
   l('SaveHistory');
   try {
@@ -16,3 +16,7 @@ export async function handleSaveToHistory(req, rsp) {
     rsp({ success: false, error: x.message });
   }
 }
+
+
+
+

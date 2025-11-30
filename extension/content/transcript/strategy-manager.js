@@ -1,6 +1,6 @@
 const gu = p => chrome.runtime.getURL(p);
 
-const { l, e } = await import(gu('utils/shortcuts/logging.js'));
+const { l, e } = await import(gu('utils/shortcuts/log.js'));
 const { getCfg } = await import(gu('utils/config.js'));
 const { vals } = await import(gu('utils/shortcuts/core.js'));
 const domAutomation = await import(gu('content/transcript/strategies/dom-automation.js'));
@@ -57,3 +57,7 @@ export const getAvailableStrategies = () => {
     return [];
   }
 };
+
+
+
+

@@ -19,3 +19,7 @@ export const stp = stop;
 export const scr = scroll;
 export const scb = scrollBy;
 export const st2 = scrollTo;
+
+
+
+

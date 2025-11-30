@@ -3,7 +3,7 @@ const gu = p => chrome.runtime.getURL(p);
 const { state, resetState } = await import(gu('content/core/state.js'));
 const { injectWidget } = await import(gu('content/ui/widget.js'));
 const { isWidgetProperlyVisible } = await import(gu('content/utils/dom.js'));
-const { l, e } = await import(gu('utils/shortcuts/logging.js'));
+const { l, e } = await import(gu('utils/shortcuts/log.js'));
 const { ct } = await import(gu('utils/shortcuts/core.js'));
 const { to: st } = await import(gu('utils/shortcuts/global.js'));
 const { on: ae, qs, mo } = await import(gu('utils/shortcuts/dom.js'));
@@ -97,3 +97,7 @@ function checkCurrentPage() {
     e('Err:checkCurrentPage', err);
   }
 }
+
+
+
+

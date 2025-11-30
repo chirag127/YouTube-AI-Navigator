@@ -1,8 +1,6 @@
-import { l } from '../../utils/shortcuts/logging.js';
+import { l } from '../../utils/shortcuts/log.js';
 export function chunkSegments(s, sz = 20000) {
-  l('ENTRY:chunkSegments');
   if (!s || !s.length) {
-    l('EXIT:chunkSegments');
     return [];
   }
   const c = [];
@@ -16,6 +14,9 @@ export function chunkSegments(s, sz = 20000) {
     cur.end = seg.start + seg.duration;
   }
   if (cur.text.length > 0) c.push(cur);
-  l('EXIT:chunkSegments');
   return c;
 }
+
+
+
+

@@ -1,6 +1,6 @@
 const gu = p => chrome.runtime.getURL(p);
 
-const { l, e } = await import(gu('utils/shortcuts/logging.js'));
+const { l, e } = await import(gu('utils/shortcuts/log.js'));
 const { qs: $, ce } = await import(gu('utils/shortcuts/dom.js'));
 const colors = {
   Sponsor: '#00d26a',
@@ -54,3 +54,7 @@ export const clearTimeline = () => {
     e('Err:clearTimeline', err);
   }
 };
+
+
+
+

@@ -2,7 +2,7 @@ import { ChunkingService } from '../services/chunking/index.js';
 import { GeminiService } from '../api/gemini.js';
 import { SegmentClassificationService } from '../services/segments/index.js';
 import { StorageService } from '../services/storage/index.js';
-import { l, e, w } from '../utils/shortcuts/logging.js';
+import { l, e, w } from '../utils/shortcuts/log.js';
 let services = {
   gemini: null,
   chunking: null,
@@ -41,3 +41,7 @@ export function getServices() {
   l('GetServices:Done');
   return services;
 }
+
+
+
+

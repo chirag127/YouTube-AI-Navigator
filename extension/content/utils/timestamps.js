@@ -1,6 +1,6 @@
 const gu = p => chrome.runtime.getURL(p);
 
-const { l, e } = await import(gu('utils/shortcuts/logging.js'));
+const { l, e } = await import(gu('utils/shortcuts/log.js'));
 const { seekVideo } = await import(gu('content/utils/dom.js'));
 const { on, fc, ap, tx, txt, dc: doc, ce, tc } = await import(gu('utils/shortcuts/dom.js'));
 const { pi: pI } = await import(gu('utils/shortcuts/global.js'));
@@ -37,3 +37,7 @@ export function makeTimestampsClickable(c) {
     e('Err:makeTimestampsClickable', err);
   }
 }
+
+
+
+

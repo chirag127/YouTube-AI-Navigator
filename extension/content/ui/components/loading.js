@@ -1,6 +1,6 @@
 const gu = p => chrome.runtime.getURL(p);
 
-const { l, e } = await import(gu('utils/shortcuts/logging.js'));
+const { l, e } = await import(gu('utils/shortcuts/log.js'));
 export function showLoading(c, m) {
   l('showLoading:Start');
   try {
@@ -31,3 +31,7 @@ export function showPlaceholder(c, m) {
     e('Err:showPlaceholder', err);
   }
 }
+
+
+
+

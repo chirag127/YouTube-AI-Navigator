@@ -1,5 +1,5 @@
 import { geniusLyricsAPI as geniusAPI } from '../../api/genius-lyrics.js';
-import { l, e } from '../../utils/shortcuts/logging.js';
+import { l, e } from '../../utils/shortcuts/log.js';
 export async function handleGetLyrics(req, rsp) {
   l('GetLyrics');
   try {
@@ -13,3 +13,7 @@ export async function handleGetLyrics(req, rsp) {
     l('GetLyrics:Done');
   }
 }
+
+
+
+

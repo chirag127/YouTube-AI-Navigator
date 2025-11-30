@@ -1,7 +1,8 @@
 const gu = p => chrome.runtime.getURL(p);
 
-const { l, e } = await import(gu('utils/shortcuts/logging.js'));
+const { l, e } = await import(gu('utils/shortcuts/log.js'));
 const { msg } = await import(gu('utils/shortcuts/runtime.js'));
+const { to } = await import(gu('utils/shortcuts/global.js'));
 export const name = 'Speech to Text';
 export const priority = 30;
 
@@ -34,7 +35,7 @@ const getAudioUrl = async (retries = 3, delay = 1000) => {
         const pr = window.ytInitialPlayerResponse;
         if (!pr?.streamingData?.adaptiveFormats) {
           if (i < retries - 1) {
-            await new Promise(r => setTimeout(r, delay));
+            await new Promise(r => to(r, delay));
             continue;
           }
           l('getAudioUrl:End');
@@ -49,7 +50,7 @@ const getAudioUrl = async (retries = 3, delay = 1000) => {
         return result;
       } catch (err) {
         l('[STT] Failed to extract audio URL:', err);
-        if (i < retries - 1) await new Promise(r => setTimeout(r, delay));
+        if (i < retries - 1) await new Promise(r => to(r, delay));
       }
     }
     l('getAudioUrl:End');
@@ -59,3 +60,4 @@ const getAudioUrl = async (retries = 3, delay = 1000) => {
     return null;
   }
 };
+

@@ -1,14 +1,11 @@
 import { trm as tr, sb as sub, li as lio } from '../../utils/shortcuts/string.js';
-import { l } from '../../utils/shortcuts/logging.js';
+import { l } from '../../utils/shortcuts/log.js';
 
 export function chunkText(t, s = 20000, o = 500) {
-  l('ENTRY:chunkText');
   if (!t) {
-    l('EXIT:chunkText');
     return [];
   }
   if (t.length <= s) {
-    l('EXIT:chunkText');
     return [t];
   }
   const c = [];
@@ -26,6 +23,9 @@ export function chunkText(t, s = 20000, o = 500) {
     i = e - o;
     if (i >= e) i = e;
   }
-  l('EXIT:chunkText');
   return c;
 }
+
+
+
+

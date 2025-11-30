@@ -1,6 +1,6 @@
-import { l, e, w } from '../utils/shortcuts/logging.js';
+import { l, e, w } from '../utils/shortcuts/log.js';
 import { rt as cr, url, rgm as rg, oop } from '../utils/shortcuts/runtime.js';
-import { tc } from '../utils/shortcuts/tabs.js';
+import { tbc as tc } from '../utils/shortcuts/tabs.js';
 import { verifySender as vs } from './security/sender-check.js';
 import { validateMessage as vm, sanitizeRequest as sr } from './security/validator.js';
 import { handleGetSettings } from './handlers/settings.js';

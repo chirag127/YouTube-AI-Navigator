@@ -75,10 +75,13 @@ export class StorageService {
     return videoCache.set(v, 'comments', { c, cs });
   }
   async saveChatMessage(v, r, m) {
-    // Chat might need appending, but for now simple set
     return videoCache.set(v, 'chat', { r, m });
   }
   async saveMetadataCache(v, m) {
     return videoCache.set(v, 'metadata', m);
   }
 }
+
+
+
+

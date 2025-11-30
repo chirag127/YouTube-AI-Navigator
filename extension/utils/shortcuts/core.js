@@ -14,7 +14,6 @@ export const dbg = console.debug;
 export const ti = setInterval;
 export const ct = clearTimeout;
 
-// Array
 export const isA = Array.isArray;
 export const fr = Array.from;
 export const of = Array.of;
@@ -33,19 +32,20 @@ export const st = (a, f) => a?.sort(f);
 export const flt = (a, d) => a?.flat(d);
 export const fm = (a, f) => a?.flatMap(f);
 
-// String
 export const tr = s => s?.trim();
 export const lc = s => s?.toLowerCase();
 export const sw = (s, n) => s?.startsWith(n);
 export const ew = (s, n) => s?.endsWith(n);
 
-// JSON aliases
 export const isS = s => typeof s === 'string';
 
-// Additional exports
 export const nw = Date.now;
 export const ok = Object.keys;
 export const oe = Object.entries;
 
 export const E = Error;
 export const vals = vl;
+
+
+
+

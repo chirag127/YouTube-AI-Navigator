@@ -1,6 +1,6 @@
 const gu = p => chrome.runtime.getURL(p);
 
-const { l, e } = await import(gu('utils/shortcuts/logging.js'));
+const { l, e } = await import(gu('utils/shortcuts/log.js'));
 const { oe } = await import(gu('utils/shortcuts/core.js'));
 const { mp, jn } = await import(gu('utils/shortcuts/array.js'));
 const { qs, ce } = await import(gu('utils/shortcuts/dom.js'));
@@ -48,3 +48,7 @@ export const injectLegendStyles = () => {
     e('Err:injectLegendStyles', err);
   }
 };
+
+
+
+

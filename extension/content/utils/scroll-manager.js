@@ -1,7 +1,7 @@
 const gu = p => chrome.runtime.getURL(p);
 
 const { qs: $, qsa: $$ } = await import(gu('utils/shortcuts/dom.js'));
-const { l, e, w } = await import(gu('utils/shortcuts/logging.js'));
+const { l, e, w } = await import(gu('utils/shortcuts/log.js'));
 const { to } = await import(gu('utils/shortcuts/global.js'));
 export class ScrollManager {
   constructor() {
@@ -174,3 +174,7 @@ export const scrollToTop = (i = false) => getScrollManager().scrollToTop(i);
 export const scrollToTopInstant = () => getScrollManager().scrollToTopInstant();
 export const saveScrollPosition = () => getScrollManager().savePosition();
 export const restoreScrollPosition = () => getScrollManager().restorePosition();
+
+
+
+

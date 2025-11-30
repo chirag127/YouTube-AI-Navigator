@@ -4,9 +4,9 @@ const w = window,
   if (window.top !== window) return;
   const extId = document.currentScript?.src.split('://')[1]?.split('/')[0];
   const baseUrl = extId ? `chrome-extension://${extId}/` : '../';
-  const { l, e } = await import(baseUrl + 'utils/shortcuts/logging.js');
+  const { l, e } = await import(baseUrl + 'utils/shortcuts/log.js');
   const { jp, to: st } = await import(baseUrl + 'utils/shortcuts/core.js');
-  const { qs: $, on } = await import(baseUrl + 'utils/shortcuts/dom.js');
+  const { qs: $, qsa, on } = await import(baseUrl + 'utils/shortcuts/dom.js');
   const uc = s => s.toUpperCase();
   class YTE {
     constructor() {
@@ -127,7 +127,7 @@ const w = window,
         }
         if (!pr) {
           try {
-            for (const s of document.querySelectorAll('script')) {
+            for (const s of qsa('script')) {
               const m = (s.textContent || '').match(/ytInitialPlayerResponse\s*=\s*({.+?});/s);
               if (m) {
                 pr = jp(m[1]);
@@ -218,3 +218,4 @@ const w = window,
   }
   new YTE();
 })();
+

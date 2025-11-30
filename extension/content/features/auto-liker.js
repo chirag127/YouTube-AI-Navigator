@@ -2,7 +2,7 @@ const gu = p => chrome.runtime.getURL(p);
 
 const { state } = await import(gu('content/core/state.js'));
 const { ae, re, qs, qsa } = await import(gu('utils/shortcuts/dom.js'));
-const { l, e } = await import(gu('utils/shortcuts/logging.js'));
+const { l, e } = await import(gu('utils/shortcuts/log.js'));
 export class AutoLiker {
   constructor() {
     this.video = null;
@@ -181,3 +181,7 @@ export class AutoLiker {
   }
 }
 export const autoLiker = new AutoLiker();
+
+
+
+

@@ -1,6 +1,6 @@
 const gu = p => chrome.runtime.getURL(p);
 let slg, assign;
-const { l, e } = await import(gu('utils/shortcuts/logging.js'));
+const { l, e } = await import(gu('utils/shortcuts/log.js'));
 
 export const state = {
   currentVideoId: null,
@@ -54,3 +54,7 @@ export async function loadSettings() {
     return state.settings;
   }
 }
+
+
+
+

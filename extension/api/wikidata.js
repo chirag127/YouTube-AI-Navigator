@@ -20,3 +20,7 @@ export class WikidataAPI {
     return data?.entities?.[id] || null;
   }
 }
+
+
+
+

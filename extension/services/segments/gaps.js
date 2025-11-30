@@ -1,17 +1,14 @@
-import { l, e } from '../../utils/shortcuts/logging.js';
+import { l, e } from '../../utils/shortcuts/log.js';
 
 export function fillContentGaps(c, o) {
-  l('ENTRY:fillContentGaps');
   if (!o || !o.length) {
     l('[Gaps] No transcript provided to fillContentGaps');
-    l('EXIT:fillContentGaps');
     return [];
   }
   try {
     const last = o[o.length - 1];
     if (!last || typeof last.start === 'undefined') {
       l('[Gaps] Invalid transcript format');
-      l('EXIT:fillContentGaps');
       return [];
     }
     const end = last.start + (last.duration || 0),
@@ -25,11 +22,13 @@ export function fillContentGaps(c, o) {
       t = Math.max(t, seg.end);
     }
     if (t < end - 1) f.push({ label: 'Content', start: t, end, text: 'Main Content' });
-    l('EXIT:fillContentGaps');
     return f;
   } catch (x) {
     e('error:fillContentGaps', x);
-    l('EXIT:fillContentGaps');
     return [];
   }
 }
+
+
+
+

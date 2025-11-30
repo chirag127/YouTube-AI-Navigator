@@ -1,6 +1,6 @@
 const gu = p => chrome.runtime.getURL(p);
 
-const { l, e } = await import(gu('utils/shortcuts/logging.js'));
+const { l, e } = await import(gu('utils/shortcuts/log.js'));
 const { getVideoElement } = await import(gu('content/utils/dom.js'));
 const { qs: $, ce } = await import(gu('utils/shortcuts/dom.js'));
 export function injectSegmentMarkers(s) {
@@ -57,3 +57,7 @@ function getSegmentColor(l) {
     return '#999999';
   }
 }
+
+
+
+

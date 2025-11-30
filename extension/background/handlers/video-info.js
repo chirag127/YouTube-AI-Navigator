@@ -1,5 +1,5 @@
 import { ft } from '../../utils/shortcuts/network.js';
-import { l, e } from '../../utils/shortcuts/logging.js';
+import { l, e } from '../../utils/shortcuts/log.js';
 
 export async function handleGetVideoInfo({ videoId }) {
   try {
@@ -23,3 +23,7 @@ export async function handleGetVideoInfo({ videoId }) {
     return { success: false, error: x.message };
   }
 }
+
+
+
+

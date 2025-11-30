@@ -1,7 +1,7 @@
 import { gu } from '../../../utils/shortcuts/runtime.js';
 import { isa } from '../../../utils/shortcuts/array.js';
 
-const { l, e } = await import(gu('utils/shortcuts/logging.js'));
+const { l, e } = await import(gu('utils/shortcuts/log.js'));
 const { showPlaceholder } = await import(gu('content/ui/components/loading.js'));
 
 const { seekVideo } = await import(gu('content/utils/dom.js'));
@@ -73,3 +73,7 @@ export function renderSegments(c, data) {
     e('Err:renderSegments', err);
   }
 }
+
+
+
+

@@ -22,3 +22,7 @@ export const faq = (transcript, metadata) => {
     ${transcript}
     `;
 };
+
+
+
+

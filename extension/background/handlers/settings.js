@@ -1,5 +1,5 @@
 import { sg as ssg } from '../../utils/shortcuts/storage.js';
-import { l, e } from '../../utils/shortcuts/logging.js';
+import { l, e } from '../../utils/shortcuts/log.js';
 export async function handleGetSettings(rsp) {
   l('GetSettings');
   try {
@@ -23,3 +23,7 @@ export async function handleGetSettings(rsp) {
     l('GetSettings:Done');
   }
 }
+
+
+
+

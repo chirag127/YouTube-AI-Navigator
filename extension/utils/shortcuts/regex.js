@@ -7,3 +7,7 @@ export const rspl = (s, r) => s.split(r);
 export const rep = (s, r, n) => s.replace(r, n);
 export const repa = (s, r, n) => s.replaceAll(r, n);
 export const sch = (s, r) => s.search(r);
+
+
+
+

@@ -6,7 +6,7 @@ const { initTabs } = await import(gu('content/ui/tabs.js'));
 const { attachEventListeners } = await import(gu('content/handlers/events.js'));
 const { createWidgetHTML } = await import(gu('content/ui/components/widget/structure.js'));
 const { qs: $, id: ge, on, el: ce, wfe, mo } = await import(gu('utils/shortcuts/dom.js'));
-const { l, e } = await import(gu('utils/shortcuts/logging.js'));
+const { l, e } = await import(gu('utils/shortcuts/log.js'));
 const { si, ci, to } = await import(gu('utils/shortcuts/global.js'));
 const { log } = await import(gu('utils/shortcuts/core.js'));
 
@@ -250,3 +250,7 @@ export function getWidget() {
     return null;
   }
 }
+
+
+
+

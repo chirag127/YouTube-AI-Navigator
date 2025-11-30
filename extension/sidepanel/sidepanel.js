@@ -6,7 +6,7 @@ import { parseMarkdown } from '../lib/marked-loader.js';
 import { id, $$, on, ce } from '../utils/shortcuts/dom.js';
 import { sl } from '../utils/shortcuts/storage.js';
 import { l, e, w } from '../utils/shortcuts/log.js';
-import { tc as ct } from '../utils/shortcuts/tabs.js';
+import { tbc as ct } from '../utils/shortcuts/tabs.js';
 import { to as st } from '../utils/shortcuts/global.js';
 import { mf } from '../utils/shortcuts/math.js';
 import { pd } from '../utils/shortcuts/string.js';

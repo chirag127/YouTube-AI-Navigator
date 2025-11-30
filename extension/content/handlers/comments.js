@@ -1,7 +1,7 @@
 import { gu } from '../../utils/shortcuts/runtime.js';
 
-const { l, e } = await import(gu('utils/shortcuts/logging.js'));
-const { js } = await import(gu('utils/shortcuts/global.js'));
+const { l, e } = await import(gu('utils/shortcuts/log.js'));
+const { js, to } = await import(gu('utils/shortcuts/global.js'));
 const { ae, qsa: $$ } = await import(gu('utils/shortcuts/dom.js'));
 const { sg, slg: lg } = await import(gu('utils/shortcuts/storage.js'));
 const { ft } = await import(gu('utils/shortcuts/network.js'));
@@ -160,7 +160,7 @@ class CommentsExtractor {
         };
         ae(window, 'message', lis);
         window.postMessage({ type: 'YT_GET_DATA' }, '*');
-        setTimeout(() => {
+        to(() => {
           window.removeEventListener('message', lis);
           r(null);
         }, 1e3);
@@ -179,7 +179,7 @@ class CommentsExtractor {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       l(`[CE] Attempt ${attempt}/${maxRetries}`);
       const delay = baseDelay * attempt;
-      await new Promise(r => setTimeout(r, delay));
+      await new Promise(r => to(r, delay));
       try {
         const c = [];
         const el = $$('ytd-comment-thread-renderer');

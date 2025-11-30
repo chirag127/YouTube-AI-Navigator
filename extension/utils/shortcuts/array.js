@@ -22,3 +22,7 @@ export const afm = (a, f) => a.flatMap(f);
 export const aia = (a, v) => a?.indexOf(v);
 export const aus = a => [...new Set(a)];
 export const aic = (a, v) => a?.includes(v);
+
+
+
+

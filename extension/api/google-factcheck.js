@@ -17,3 +17,7 @@ export class GoogleFactCheckAPI {
     return data?.claims || [];
   }
 }
+
+
+
+
