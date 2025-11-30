@@ -1,4 +1,3 @@
-
 // Mock dependencies
 vi.mock('../../../extension/utils/shortcuts/global.js', () => ({
   to: vi.fn(),

@@ -1,4 +1,3 @@
-
 vi.mock('../../../extension/content/core/state.js', () => ({
   state: { currentTranscript: [{ text: 'test' }] },
 }));

@@ -1,4 +1,3 @@
-
 // Mocks
 vi.mock('../../../extension/api/genius-lyrics.js', () => ({
   geniusLyricsAPI: {

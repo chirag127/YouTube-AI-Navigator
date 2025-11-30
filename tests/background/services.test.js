@@ -1,12 +1,11 @@
-
 // Mocks
-vi.mock('../../../extension/services/chunking/index.js', () => ({
+vi.mock('../../extension/services/chunking/index.js', () => ({
   ChunkingService: function () {
     return {};
   },
 }));
 
-vi.mock('../../../extension/api/gemini.js', () => ({
+vi.mock('../../extension/api/gemini.js', () => ({
   GeminiService: function () {
     return {
       fetchAvailableModels: vi.fn().mockResolvedValue(),
@@ -14,20 +13,20 @@ vi.mock('../../../extension/api/gemini.js', () => ({
   },
 }));
 
-vi.mock('../../../extension/services/segments/index.js', () => ({
+vi.mock('../../extension/services/segments/index.js', () => ({
   SegmentClassificationService: vi.fn(),
 }));
 
-vi.mock('../../../extension/services/storage/index.js', () => ({
+vi.mock('../../extension/services/storage/index.js', () => ({
   StorageService: vi.fn(),
 }));
 
-vi.mock('../../../extension/utils/shortcuts/log.js', () => ({
+vi.mock('../../extension/utils/shortcuts/log.js', () => ({
   e: vi.fn(),
   w: vi.fn(),
 }));
 
-import { initializeServices, getServices } from '../../../extension/background/services.js';
+import { initializeServices, getServices } from '../../extension/background/services.js';
 
 describe('Background Services', () => {
   beforeEach(() => {
@@ -58,7 +57,7 @@ describe('Background Services', () => {
     });
 
     it('should handle fetchAvailableModels failure', async () => {
-      const mockGemini = vi.mocked(require('../../../extension/api/gemini.js').GeminiService);
+      const mockGemini = vi.mocked(require('../../extension/api/gemini.js').GeminiService);
       mockGemini.mockImplementation(() => ({
         fetchAvailableModels: vi.fn().mockRejectedValue(new Error('Fetch failed')),
       }));

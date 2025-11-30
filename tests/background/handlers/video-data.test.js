@@ -1,4 +1,3 @@
-
 // Mocks
 vi.mock('../../../extension/services/storage/comprehensive-history.js', () => ({
   getHistory: vi.fn(),

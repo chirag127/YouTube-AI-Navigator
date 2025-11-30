@@ -1,4 +1,3 @@
-
 vi.mock('../../../extension/content/core/state.js', () => ({
   state: { isAnalyzing: false, currentVideoId: '123', currentTranscript: [], analysisData: null },
 }));

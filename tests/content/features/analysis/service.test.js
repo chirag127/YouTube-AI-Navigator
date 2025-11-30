@@ -1,4 +1,3 @@
-
 vi.mock('../../../extension/utils/shortcuts/runtime.js', () => ({
   msg: vi.fn(),
 }));

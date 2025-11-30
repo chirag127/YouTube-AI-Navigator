@@ -1,4 +1,3 @@
-
 // Mock chrome.runtime.sendMessage
 const mockMsg = vi.fn();
 global.chrome = {

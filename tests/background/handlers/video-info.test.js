@@ -1,4 +1,3 @@
-
 // Mocks
 vi.mock('../../../extension/utils/shortcuts/network.js', () => ({
   ft: vi.fn(),

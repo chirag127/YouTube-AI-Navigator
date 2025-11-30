@@ -172,9 +172,12 @@
 .yt-ai-tabs {
   display: flex;
   gap: 8px;
-  padding: 16px 24px 8px 24px;
+  padding: 16px 24px 16px 24px;
   overflow-x: auto;
   scrollbar-width: none; /* Hide scrollbar */
+  position: relative;
+  z-index: 10; /* Ensure tabs stay above content */
+  background: transparent;
 }
 
 .yt-ai-tabs::-webkit-scrollbar {
@@ -213,12 +216,14 @@
 .yt-ai-content {
   flex: 1;
   overflow-y: auto;
-  padding: 16px 24px 24px 24px;
+  padding: 24px 24px 24px 24px;
   min-height: 250px;
   font-size: 15px;
   line-height: 1.7;
   color: rgba(255, 255, 255, 0.9);
   scroll-behavior: smooth;
+  position: relative;
+  z-index: 1; /* Below tabs */
 }
 
 /* Custom Scrollbar - Minimal */
@@ -417,6 +422,16 @@
 /*
  * LOADING
  */
+.yt-ai-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 40px 20px;
+  text-align: center;
+}
+
 .yt-ai-spinner {
   width: 32px;
   height: 32px;
@@ -424,6 +439,42 @@
   border-top-color: var(--primary-neon);
   border-radius: 50%;
   animation: spin 1s linear infinite;
+}
+
+.yt-ai-loading-text {
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.yt-ai-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.yt-ai-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.yt-ai-error-icon {
+  font-size: 32px;
+}
+
+.yt-ai-error-msg {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-bottom: 8px;
 }
 
 @keyframes spin {

@@ -1,4 +1,3 @@
-
 // Mocks
 vi.mock('../../../extension/utils/shortcuts/storage.js', () => ({
   sg: vi.fn(),

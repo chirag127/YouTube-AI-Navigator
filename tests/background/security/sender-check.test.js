@@ -1,4 +1,3 @@
-
 // Mocks
 vi.mock('../../../extension/utils/shortcuts/runtime.js', () => ({
   rt: { id: 'test-extension-id' },

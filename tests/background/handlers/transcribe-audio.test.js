@@ -1,4 +1,3 @@
-
 // Mocks
 vi.mock('../../../extension/api/gemini-client.js', () => ({
   GeminiClient: function () {

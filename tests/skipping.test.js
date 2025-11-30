@@ -1,4 +1,3 @@
-
 // Mock chrome global
 global.chrome = {
   runtime: {

@@ -1,4 +1,3 @@
-
 vi.mock('../../../extension/utils/shortcuts/log.js', () => ({
   e: vi.fn(),
 }));

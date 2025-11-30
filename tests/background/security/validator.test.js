@@ -1,4 +1,3 @@
-
 // Mocks
 vi.mock('../../../extension/utils/shortcuts/core.js', () => ({
   js: vi.fn(),

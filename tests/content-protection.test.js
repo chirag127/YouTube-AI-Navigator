@@ -1,4 +1,3 @@
-
 global.chrome = {
   runtime: {
     getURL: p => '../../' + p,

@@ -1,4 +1,3 @@
-
 const mockVideoElement = {
   currentTime: 0,
   playbackRate: 1,

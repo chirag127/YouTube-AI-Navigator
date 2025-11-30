@@ -31,7 +31,7 @@ export async function renderSummary(c, d) {
 
     // Liquid Glass Structure with Cards
     c.innerHTML = `
-      <div class="yt-ai-summary-container" style="display: flex; flex-direction: column; gap: 16px; padding: 8px 0;">
+      <div class="yt-ai-summary-container" style="display: flex; flex-direction: column; gap: 16px; padding: 0;">
 
         <div class="yt-ai-card glass-panel" style="animation: slideUpFade 0.4s var(--ease-fluid)">
           <h3 class="yt-ai-card-title">📝 Summary</h3>

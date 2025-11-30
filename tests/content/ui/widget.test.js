@@ -1,4 +1,3 @@
-
 // Mock runtime first
 vi.mock('../../../extension/utils/shortcuts/runtime.js', () => ({
   gu: path => {

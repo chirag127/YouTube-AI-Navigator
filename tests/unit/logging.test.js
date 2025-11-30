@@ -1,4 +1,3 @@
-
 // Mock console.error
 const originalConsoleError = console.error;
 const mockConsoleError = vi.fn();

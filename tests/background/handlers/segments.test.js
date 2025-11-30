@@ -1,4 +1,3 @@
-
 // Mocks
 vi.mock('../../../extension/background/services.js', () => ({
   initializeServices: vi.fn(),

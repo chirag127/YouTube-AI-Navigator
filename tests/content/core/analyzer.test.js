@@ -1,4 +1,3 @@
-
 vi.mock('../../../extension/content/features/analysis/index.js', () => ({
   startAnalysis: vi.fn(),
 }));

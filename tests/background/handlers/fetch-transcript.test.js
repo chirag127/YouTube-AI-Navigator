@@ -1,4 +1,3 @@
-
 // Mocks
 vi.mock('../../../extension/utils/shortcuts/string.js', () => ({
   rp: vi.fn(),

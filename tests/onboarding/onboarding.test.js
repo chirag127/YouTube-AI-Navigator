@@ -1,4 +1,3 @@
-
 // Mock all dependencies
 vi.mock('../../extension/utils/shortcuts/dom.js', () => ({
   ge: vi.fn(),

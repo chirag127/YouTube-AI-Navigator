@@ -1,4 +1,3 @@
-
 vi.mock('../../../extension/content/handlers/chat.js', () => ({
   sendChatMessage: vi.fn(),
 }));
