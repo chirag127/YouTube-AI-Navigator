@@ -12,6 +12,7 @@
     "test:watch": "vitest"
   },
   "devDependencies": {
+    "@vitest/coverage-v8": "^4.0.14",
     "eslint": "^8.55.0",
     "eslint-plugin-vitest": "^0.5.4",
     "glob": "^13.0.0",

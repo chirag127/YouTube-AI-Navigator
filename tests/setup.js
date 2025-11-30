@@ -2,7 +2,7 @@ import { vi } from 'vitest';
 
 global.chrome = {
   runtime: {
-    getURL: vi.fn((path) => `chrome-extension://mock-id/${path}`),
+    getURL: vi.fn(path => `chrome-extension://mock-id/${path}`),
     onMessage: {
       addListener: vi.fn(),
       removeListener: vi.fn(),
