@@ -1,4 +1,4 @@
-const gu = p => chrome.runtime.getURL(p);
+import { gu } from '../../../utils/shortcuts/runtime.js';
 
 const { e } = await import(gu('utils/shortcuts/log.js'));
 const { parseMarkdown } = await import(gu('lib/marked-loader.js'));

@@ -2,19 +2,26 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // Mock runtime first to control gu output
 vi.mock('../../../../extension/utils/shortcuts/runtime.js', () => ({
-  gu: (path) => `virtual:${path}`,
+  gu: (path) => {
+    const mapping = {
+      'utils/shortcuts/log.js': '../../../utils/shortcuts/log.js',
+      'lib/marked-loader.js': '../../../lib/marked-loader.js',
+      'utils/shortcuts/dom.js': '../../../utils/shortcuts/dom.js',
+    };
+    return mapping[path] || path;
+  },
 }));
 
-// Mock dependencies
-vi.mock('virtual:utils/shortcuts/log.js', () => ({
+// Mock dependencies using relative paths (as gu returns them)
+vi.mock('../../../../extension/utils/shortcuts/log.js', () => ({
   e: vi.fn(),
 }));
 
-vi.mock('virtual:lib/marked-loader.js', () => ({
+vi.mock('../../../../extension/lib/marked-loader.js', () => ({
   parseMarkdown: vi.fn().mockImplementation((text) => Promise.resolve(`<p>${text}</p>`)),
 }));
 
-vi.mock('virtual:utils/shortcuts/dom.js', () => ({
+vi.mock('../../../../extension/utils/shortcuts/dom.js', () => ({
   ce: (tag) => document.createElement(tag),
   qs: (sel, ctx) => (ctx || document).querySelector(sel),
 }));

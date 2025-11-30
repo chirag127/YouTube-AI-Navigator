@@ -326,6 +326,11 @@ async function applyWidgetConfig() {
       widgetContainer.style.webkitBackdropFilter = `blur(${widgetConfig.blur}px)`;
     }
 
+    // Apply Theme
+    const r2 = await sg('config');
+    const theme = r2.config?.ui?.theme || 'liquid-glass';
+    widgetContainer.setAttribute('data-theme', theme);
+
     if (widgetConfig.scale !== undefined) {
       const scale = widgetConfig.scale / 100;
       widgetContainer.style.fontSize = `${14 * scale}px`;
@@ -333,9 +338,9 @@ async function applyWidgetConfig() {
     }
 
     const rh = $('#yt-ai-resize-handle', widgetContainer);
-    if (rh) rh.style.display = widgetConfig.resizable ? 'block' : 'none';
+    if (rh) rh.style.display = widgetConfig.resizable ? 'flex' : 'none';
     const rwh = $('#yt-ai-resize-handle-width', widgetContainer);
-    if (rwh) rwh.style.display = widgetConfig.resizableWidth ? 'block' : 'none';
+    if (rwh) rwh.style.display = widgetConfig.resizableWidth ? 'flex' : 'none';
   } catch (err) {
     e('Err:applyWidgetConfig', err);
   }

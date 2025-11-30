@@ -24,7 +24,7 @@ export function switchTab(n, container) {
     $$('.yt-ai-tab', c).forEach(t => t.classList.remove('active'));
     $(`[data-tab="${n}"]`, c)?.classList.add('active');
     const i = $('#yt-ai-chat-input-area', c);
-    if (i) i.style.display = n === 'chat' ? 'flex' : 'none';
+    if (i) i.style.display = n === 'summary' ? 'flex' : 'none';
     const a = $('#yt-ai-content-area', c);
     if (!a) return;
     try {
@@ -36,9 +36,7 @@ export function switchTab(n, container) {
         case 'segments':
           renderSegments(a, state.analysisData || {});
           break;
-        case 'chat':
-          renderChat(a);
-          break;
+        // Chat tab removed
         case 'comments':
           renderComments(a);
           break;

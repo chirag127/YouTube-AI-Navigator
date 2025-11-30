@@ -16,7 +16,7 @@ export const DC = {
   },
   co: { en: 1, lm: 20, ir: 3, sb: 'top', as: 1 },
   md: { ti: 1, au: 1, vw: 1, du: 1, ds: 1, tg: 1, ud: 1 },
-  ui: { th: 'dark', wp: 'secondary', ae: 1, st: 1, cm: 0 },
+  ui: { th: 'dark', theme: 'liquid-glass', wp: 'secondary', ae: 1, st: 1, cm: 0 },
   ai: { k: '', m: 'gemini-2.5-flash-lite-preview-09-2025', cp: '', ol: 'en', t: 0.7, mt: 8192 },
   au: { aa: 1, al: 1, at: 50, ln: 1, ll: 1 },
   sg: {

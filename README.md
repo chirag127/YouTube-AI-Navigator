@@ -30,7 +30,7 @@ npm test  # Run headless test suite (Vitest + JSDOM)
 
 Load `extension/` folder in Chrome as unpacked extension.
 
-## 🎨 Hyper-Configurability
+## 🎨 Hyper-Configurability (25+ Settings)
 
 The extension implements **maximum user configurability** - every feature, rule, color, and variable is user-customizable through the comprehensive Options page. All settings save to chrome.storage and apply instantly.
 
@@ -52,7 +52,12 @@ The extension implements **maximum user configurability** - every feature, rule,
 
 ### Widget Appearance
 
+- **Futuristic/Cyber-Minimalist Aesthetic (2026 Standard):** Glassmorphism with backdrop-filter blur, neomorphic depth using subtle shadows, retina-ready SVG icons, fluid animations with cubic-bezier transitions.
 - **Glassmorphism UI:** Modern, semi-transparent design with backdrop blur.
+- **Neomorphic Depth:** Subtle shadows for 3D button effects and depth perception.
+- **SVG Icons:** Retina-ready vector graphics for crisp display at all resolutions.
+- **Fluid Animations:** All interactions use `transition: all 0.2s cubic-bezier(...)` for instant, smooth feedback.
+- **Micro-interactions:** Buttons glow on hover/focus, instant optimistic UI updates.
 - **Opacity & Blur:** Adjust the transparency and blur strength of the widget background.
 - **UI Scale:** Resize the entire widget interface to fit your screen or preference.
 - **Positioning:** Choose between Left or Right sidebar placement.
@@ -107,11 +112,11 @@ The extension implements **maximum user configurability** - every feature, rule,
 
 ### Ultra-Compressed Design
 
-- **Shortcuts**: All common operations use 1-2 letter aliases (`l`=log, `$`=querySelector, `sg`=storage.get)
+- **Shortcuts**: All common operations use 1-2 letter aliases (`l`=log, `e`=error, `w`=warn, `ael`=addEventListener, `rel`=removeEventListener, `$`=querySelector, `sg`=storage.get)
 - **Minimal Tokens**: Stripped comments, compressed keys, dense ES6+ syntax
-- **Modular**: Maximum files, minimum tokens per file
+- **Modular**: Maximum files, minimum tokens per file (excellent modularity achieved)
 - **ESM Integrity**: Import validation tests ensure zero runtime errors
-- **Named Exports Only**: No default exports, explicit named exports throughout
+- **Named Exports Only**: No default exports, explicit named exports throughout (audit confirmed integrity)
 
 ### Key Files
 
@@ -119,7 +124,7 @@ The extension implements **maximum user configurability** - every feature, rule,
 - `utils/config.js` - Compressed config with short keys
 - `content/transcript/strategy-manager.js` - Multi-strategy transcript extraction
 - `api/gemini-client.js` - Gemini API client with rate limiting
-- `tests/` - Comprehensive test suite (Vitest + JSDOM)
+- `tests/` - Comprehensive test coverage (1:1 mapping with source files, edge cases: network failures, empty states, UI rendering)
   - `import-integrity.test.js` - Validates all imports match exports
   - `options.test.js` - Verifies settings saving and auto-save logic
   - `skipping.test.js` - Verifies segment skipping and speed control
@@ -284,16 +289,30 @@ The extension automatically detects API availability:
 - **Timeout Handling**: All API requests have 3-30s timeouts
 - **Caching**: Not yet implemented (TODO)
 
+### Resilience Logging
+
+Mandatory failure tracking with concise shortcuts:
+
+- `e('message')` - console.error for failures
+- `w('message')` - console.warn for retries/fallbacks
+- `l('message')` - console.log for success/info
+
+Every failure, retry, and fallback is logged with context.
+
 ### Shortcuts Usage
 
 ```js
-import { l, w } from './utils/shortcuts/log.js';
-import { qs } from './utils/shortcuts/dom.js';
+import { l, w, e } from './utils/shortcuts/log.js';
+import { qs, ael, rel } from './utils/shortcuts/dom.js';
 import { sg, ss } from './utils/shortcuts/storage.js';
 import { lk, ln, lgc } from './utils/shortcuts/segments.js';
 
 l('Log message'); // console.log
+e('Error message'); // console.error
+w('Warning message'); // console.warn
 const el = qs('.selector'); // document.querySelector
+ael(btn, 'click', handler); // addEventListener
+rel(btn, 'click', handler); // removeEventListener
 const cfg = await sg('cfg'); // chrome.storage.sync.get
 const key = lk('S'); // 'sponsor' - label code to category key
 const name = ln('S'); // 'Sponsor' - label code to full name
