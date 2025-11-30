@@ -1,81 +1,116 @@
-import { SettingsManager } from './settings-manager.js';
-import { NotificationManager } from './notification-manager.js';
-const sm = new SettingsManager();
-const nm = new NotificationManager();
-export const initPromptsSection = async () => {
-  await sm.load();
-  const cfg = sm.get('prompts') || {};
-  const el = id => document.getElementById(id);
-  el('prompts-segments-role').value = cfg.segments?.roleDescription || '';
-  el('prompts-segments-timing').value = cfg.segments?.timingAccuracyTarget || 2;
-  el('prompts-segments-hints').checked = cfg.segments?.enablePatternHints !== false;
-  el('prompts-segments-sponsor-range').value =
-    cfg.segments?.sponsorDurationRange?.join(',') || '30,90';
-  el('prompts-segments-intro-range').value = cfg.segments?.introDurationRange?.join(',') || '5,15';
-  el('prompts-segments-outro-range').value = cfg.segments?.outroDurationRange?.join(',') || '10,30';
-  el('prompts-segments-min-short').value = cfg.segments?.minSegmentsShort || 3;
-  el('prompts-segments-min-long').value = cfg.segments?.minSegmentsLong || 8;
-  el('prompts-segments-threshold').value = cfg.segments?.videoLengthThreshold || 600;
-  el('prompts-comprehensive-role').value = cfg.comprehensive?.roleDescription || '';
-  el('prompts-comprehensive-bold').checked = cfg.comprehensive?.keywordBoldingEnabled !== false;
-  el('prompts-comprehensive-resources').checked =
-    cfg.comprehensive?.includeResourcesSection !== false;
-  el('prompts-comprehensive-takeaways').checked =
-    cfg.comprehensive?.includeActionableTakeaways !== false;
-  el('prompts-comprehensive-max-resources').value = cfg.comprehensive?.maxResourcesMentioned || 10;
-  el('prompts-comprehensive-max-takeaways').value = cfg.comprehensive?.maxTakeaways || 5;
-  el('prompts-comments-role').value = cfg.comments?.roleDescription || '';
-  el('prompts-comments-spam').checked = cfg.comments?.enableSpamFiltering !== false;
-  el('prompts-comments-sentiment').checked = cfg.comments?.enableSentimentLabeling !== false;
-  el('prompts-comments-likes').value = cfg.comments?.minLikesForHighEngagement || 10;
-  el('prompts-comments-themes').value = cfg.comments?.maxThemes || 7;
-  el('prompts-comments-questions').value = cfg.comments?.maxQuestions || 5;
-  el('prompts-comments-opportunities').checked =
-    cfg.comments?.includeCreatorOpportunities !== false;
-  el('save-prompts').addEventListener('click', savePrompts);
-};
-const savePrompts = async () => {
-  const el = id => document.getElementById(id);
-  const sponsorRange = el('prompts-segments-sponsor-range').value.split(',').map(Number);
-  const introRange = el('prompts-segments-intro-range').value.split(',').map(Number);
-  const outroRange = el('prompts-segments-outro-range').value.split(',').map(Number);
-  sm.set('prompts.segments.roleDescription', el('prompts-segments-role').value);
-  sm.set('prompts.segments.timingAccuracyTarget', Number(el('prompts-segments-timing').value));
-  sm.set('prompts.segments.enablePatternHints', el('prompts-segments-hints').checked);
-  sm.set('prompts.segments.sponsorDurationRange', sponsorRange);
-  sm.set('prompts.segments.introDurationRange', introRange);
-  sm.set('prompts.segments.outroDurationRange', outroRange);
-  sm.set('prompts.segments.minSegmentsShort', Number(el('prompts-segments-min-short').value));
-  sm.set('prompts.segments.minSegmentsLong', Number(el('prompts-segments-min-long').value));
-  sm.set('prompts.segments.videoLengthThreshold', Number(el('prompts-segments-threshold').value));
-  sm.set('prompts.comprehensive.roleDescription', el('prompts-comprehensive-role').value);
-  sm.set('prompts.comprehensive.keywordBoldingEnabled', el('prompts-comprehensive-bold').checked);
-  sm.set(
-    'prompts.comprehensive.includeResourcesSection',
-    el('prompts-comprehensive-resources').checked
-  );
-  sm.set(
-    'prompts.comprehensive.includeActionableTakeaways',
-    el('prompts-comprehensive-takeaways').checked
-  );
-  sm.set(
-    'prompts.comprehensive.maxResourcesMentioned',
-    Number(el('prompts-comprehensive-max-resources').value)
-  );
-  sm.set(
-    'prompts.comprehensive.maxTakeaways',
-    Number(el('prompts-comprehensive-max-takeaways').value)
-  );
-  sm.set('prompts.comments.roleDescription', el('prompts-comments-role').value);
-  sm.set('prompts.comments.enableSpamFiltering', el('prompts-comments-spam').checked);
-  sm.set('prompts.comments.enableSentimentLabeling', el('prompts-comments-sentiment').checked);
-  sm.set('prompts.comments.minLikesForHighEngagement', Number(el('prompts-comments-likes').value));
-  sm.set('prompts.comments.maxThemes', Number(el('prompts-comments-themes').value));
-  sm.set('prompts.comments.maxQuestions', Number(el('prompts-comments-questions').value));
-  sm.set(
-    'prompts.comments.includeCreatorOpportunities',
-    el('prompts-comments-opportunities').checked
-  );
-  await sm.save();
-  nm.show('Prompt settings saved successfully', 'success');
-};
+import { id as i } from '../../utils/shortcuts/dom.js';
+export class PromptsSettings {
+    constructor(sm, as) {
+        this.sm = sm;
+        this.as = as;
+    }
+    async init() {
+        const cfg = this.sm.get('prompts') || {};
+        i('prompts-segments-role').value = cfg.segments?.roleDescription || '';
+        i('prompts-segments-timing').value = cfg.segments?.timingAccuracyTarget || 2;
+        i('prompts-segments-hints').checked = cfg.segments?.enablePatternHints !== false;
+        i('prompts-segments-sponsor-range').value =
+            cfg.segments?.sponsorDurationRange?.join(',') || '30,90';
+        i('prompts-segments-intro-range').value =
+            cfg.segments?.introDurationRange?.join(',') || '5,15';
+        i('prompts-segments-outro-range').value =
+            cfg.segments?.outroDurationRange?.join(',') || '10,30';
+        i('prompts-segments-min-short').value = cfg.segments?.minSegmentsShort || 3;
+        i('prompts-segments-min-long').value = cfg.segments?.minSegmentsLong || 8;
+        i('prompts-segments-threshold').value = cfg.segments?.videoLengthThreshold || 600;
+        i('prompts-comprehensive-role').value = cfg.comprehensive?.roleDescription || '';
+        i('prompts-comprehensive-bold').checked = cfg.comprehensive?.keywordBoldingEnabled !== false;
+        i('prompts-comprehensive-resources').checked =
+            cfg.comprehensive?.includeResourcesSection !== false;
+        i('prompts-comprehensive-takeaways').checked =
+            cfg.comprehensive?.includeActionableTakeaways !== false;
+        i('prompts-comprehensive-max-resources').value =
+            cfg.comprehensive?.maxResourcesMentioned || 10;
+        i('prompts-comprehensive-max-takeaways').value = cfg.comprehensive?.maxTakeaways || 5;
+        i('prompts-comments-role').value = cfg.comments?.roleDescription || '';
+        i('prompts-comments-spam').checked = cfg.comments?.enableSpamFiltering !== false;
+        i('prompts-comments-sentiment').checked = cfg.comments?.enableSentimentLabeling !== false;
+        i('prompts-comments-likes').value = cfg.comments?.minLikesForHighEngagement || 10;
+        i('prompts-comments-themes').value = cfg.comments?.maxThemes || 7;
+        i('prompts-comments-questions').value = cfg.comments?.maxQuestions || 5;
+        i('prompts-comments-opportunities').checked =
+            cfg.comments?.includeCreatorOpportunities !== false;
+        [
+            'prompts-segments-role',
+            'prompts-segments-timing',
+            'prompts-segments-hints',
+            'prompts-segments-sponsor-range',
+            'prompts-segments-intro-range',
+            'prompts-segments-outro-range',
+            'prompts-segments-min-short',
+            'prompts-segments-min-long',
+            'prompts-segments-threshold',
+            'prompts-comprehensive-role',
+            'prompts-comprehensive-bold',
+            'prompts-comprehensive-resources',
+            'prompts-comprehensive-takeaways',
+            'prompts-comprehensive-max-resources',
+            'prompts-comprehensive-max-takeaways',
+            'prompts-comments-role',
+            'prompts-comments-spam',
+            'prompts-comments-sentiment',
+            'prompts-comments-likes',
+            'prompts-comments-themes',
+            'prompts-comments-questions',
+            'prompts-comments-opportunities',
+        ].forEach(id => i(id)?.addEventListener('change', () => this.as.trigger()));
+    }
+    async save() {
+        const sponsorRange = i('prompts-segments-sponsor-range').value.split(',').map(Number);
+        const introRange = i('prompts-segments-intro-range').value.split(',').map(Number);
+        const outroRange = i('prompts-segments-outro-range').value.split(',').map(Number);
+        this.sm.set('prompts.segments.roleDescription', i('prompts-segments-role').value);
+        this.sm.set('prompts.segments.timingAccuracyTarget', Number(i('prompts-segments-timing').value));
+        this.sm.set('prompts.segments.enablePatternHints', i('prompts-segments-hints').checked);
+        this.sm.set('prompts.segments.sponsorDurationRange', sponsorRange);
+        this.sm.set('prompts.segments.introDurationRange', introRange);
+        this.sm.set('prompts.segments.outroDurationRange', outroRange);
+        this.sm.set('prompts.segments.minSegmentsShort', Number(i('prompts-segments-min-short').value));
+        this.sm.set('prompts.segments.minSegmentsLong', Number(i('prompts-segments-min-long').value));
+        this.sm.set(
+            'prompts.segments.videoLengthThreshold',
+            Number(i('prompts-segments-threshold').value)
+        );
+        this.sm.set('prompts.comprehensive.roleDescription', i('prompts-comprehensive-role').value);
+        this.sm.set(
+            'prompts.comprehensive.keywordBoldingEnabled',
+            i('prompts-comprehensive-bold').checked
+        );
+        this.sm.set(
+            'prompts.comprehensive.includeResourcesSection',
+            i('prompts-comprehensive-resources').checked
+        );
+        this.sm.set(
+            'prompts.comprehensive.includeActionableTakeaways',
+            i('prompts-comprehensive-takeaways').checked
+        );
+        this.sm.set(
+            'prompts.comprehensive.maxResourcesMentioned',
+            Number(i('prompts-comprehensive-max-resources').value)
+        );
+        this.sm.set(
+            'prompts.comprehensive.maxTakeaways',
+            Number(i('prompts-comprehensive-max-takeaways').value)
+        );
+        this.sm.set('prompts.comments.roleDescription', i('prompts-comments-role').value);
+        this.sm.set('prompts.comments.enableSpamFiltering', i('prompts-comments-spam').checked);
+        this.sm.set('prompts.comments.enableSentimentLabeling', i('prompts-comments-sentiment').checked);
+        this.sm.set(
+            'prompts.comments.minLikesForHighEngagement',
+            Number(i('prompts-comments-likes').value)
+        );
+        this.sm.set('prompts.comments.maxThemes', Number(i('prompts-comments-themes').value));
+        this.sm.set('prompts.comments.maxQuestions', Number(i('prompts-comments-questions').value));
+        this.sm.set(
+            'prompts.comments.includeCreatorOpportunities',
+            i('prompts-comments-opportunities').checked
+        );
+        await this.sm.save();
+    }
+}
+}
