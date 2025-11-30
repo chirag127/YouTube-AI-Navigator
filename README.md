@@ -49,8 +49,11 @@ Load `extension/` folder in Chrome as unpacked extension.
 - `utils/config.js` - Compressed config with short keys
 - `content/transcript/strategy-manager.js` - Multi-strategy transcript extraction
 - `api/gemini-client.js` - Gemini API client with rate limiting
-- `tests/` - Comprehensive test suite (3 tests, 1 file)
-  - `import-integrity.test.js` - Validates all imports match exports, no default exports, no duplicate shortcuts
+- `tests/` - Comprehensive test suite (Vitest + JSDOM)
+  - `import-integrity.test.js` - Validates all imports match exports
+  - `options.test.js` - Verifies settings saving and auto-save logic
+  - `skipping.test.js` - Verifies segment skipping and speed control
+  - `comments.test.js` - Verifies comment extraction logic
 
 ### Storage Keys (Compressed)
 

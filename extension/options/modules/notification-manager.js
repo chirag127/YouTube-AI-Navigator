@@ -12,7 +12,7 @@ export class NotificationManager {
     this.container = cr('div');
     this.container.id = 'notification-container';
     this.container.style.cssText =
-      'position:fixed;top:20px;right:20px;z-index:10000;display:flex;flex-direction:column;gap:10px;pointer-events:none;';
+      'position:fixed;top:20px;right:20px;z-index:2147483647;display:flex;flex-direction:column;gap:10px;pointer-events:none;';
     ap(document.body, this.container);
   }
   show(m, t = 'success', d = 3000) {

@@ -187,20 +187,28 @@ class CommentsExtractor {
     }
   }
   async fetchCommentsFromDOM() {
-    const maxRetries = 3;
+    const maxRetries = 5;
     const baseDelay = 2000;
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       const delay = baseDelay * attempt;
       await new Promise(r => to(r, delay));
       try {
         const c = [];
-        const selectors = ['ytd-comment-thread-renderer', 'ytd-comment-renderer'];
+        const selectors = [
+          'ytd-comment-thread-renderer',
+          'ytd-comment-renderer',
+          'ytd-comment-view-model',
+        ];
         let el = [];
         for (const sel of selectors) {
           el = $$(sel);
-          if (el.length > 0) break;
+          if (el.length > 0) {
+            e(`[CE] Found ${el.length} comments using selector: ${sel}`);
+            break;
+          }
         }
         if (el.length === 0) {
+          e(`[CE] No comments found in DOM (Attempt ${attempt}/${maxRetries})`);
           continue;
         }
         const getText = (elm, sels) => {
@@ -218,15 +226,27 @@ class CommentsExtractor {
               '#author-text',
               '#author-text yt-formatted-string',
               '[author]',
+              '.ytd-channel-name',
+              '#author-text span',
             ]);
             const t = getText(elm, [
               '#content-text',
               '#content-text yt-formatted-string',
               '[content]',
+              '.yt-core-attributed-string',
             ]);
             const lk =
-              getText(elm, ['#vote-count-middle', '#vote-count-left', '#vote-count']) || '0';
-            const pt = getText(elm, ['#published-time-text', '#published-time']);
+              getText(elm, [
+                '#vote-count-middle',
+                '#vote-count-left',
+                '#vote-count',
+                '[aria-label*="likes"]',
+              ]) || '0';
+            const pt = getText(elm, [
+              '#published-time-text',
+              '#published-time',
+              '.ytd-comment-view-model > div > span',
+            ]);
             if (a && t) {
               c.push({
                 id: elm.id || `dom_${i}`,
@@ -236,16 +256,17 @@ class CommentsExtractor {
                 publishedTime: pt,
               });
             } else {
-              e(`Failed to extract comment ${i + 1}: missing author or text`);
+              // e(`Failed to extract comment ${i + 1}: missing author or text`);
             }
           } catch (x) {
             e(`[CE] Err ${i + 1}:`, x);
           }
         }
         if (c.length > 0) {
+          e(`[CE] Successfully extracted ${c.length} comments from DOM`);
           return c;
         } else {
-          w('No comments available in DOM');
+          w('No comments available in DOM after parsing');
         }
       } catch (x) {
         e(`[CE] Attempt ${attempt} failed:`, x);

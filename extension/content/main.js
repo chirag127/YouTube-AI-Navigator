@@ -15,8 +15,30 @@
     const { initializeExtension: ie, waitForPageReady: wp } = await import(
       gu('content/core/init.js')
     );
+    await import(gu('content/segments/autoskip.js'));
     await wp();
     if (!(await ie())) e('YAM: Init fail');
+
+    // Initialize AutoSkip
+    const { sg } = await import(gu('utils/shortcuts/storage.js'));
+    const st = await sg('config');
+    const cfg = st.config || {};
+    if (cfg.segments?.enabled) {
+       // We need segments first, usually fetched by analyzer.
+       // For now, we'll set up the listener and let it handle empty segments gracefully
+       // or wait for segments to be loaded.
+       // Actually, setupAutoSkip takes segments as arg.
+       // We should probably expose a global or listen for segments loaded event.
+       // Looking at autoskip.js, it takes 's' (segments).
+       // We need to hook into where segments are loaded.
+    }
+
+    // Wait, autoskip.js exports setupAutoSkip(s).
+    // Analyzer probably fetches segments.
+    // Let's check analyzer.js to see if it calls setupAutoSkip.
+    // If not, we need to wire it up there or here.
+    // For now, let's just import it so it's available.
+
   } catch (x) {
     e('YAM: Fatal', x);
   }

@@ -37,8 +37,15 @@ export async function setupAutoSkip(s) {
         re(v, 'timeupdate', handleAutoSkip);
         ae(v, 'timeupdate', handleAutoSkip);
         opr = v.playbackRate;
+        e(`[AutoSkip] Enabled with ${as.length} segments`);
+      } else {
+        e('[AutoSkip] Video element not found, retrying...');
+        to(() => setupAutoSkip(s), 1000);
       }
-    } else disableAutoSkip();
+    } else {
+      disableAutoSkip();
+      e('[AutoSkip] No segments to skip');
+    }
   } catch (err) {
     e('Err:setupAutoSkip', err);
   }

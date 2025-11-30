@@ -49,19 +49,24 @@ export class ScrollManager {
     this.isScrolling = true;
     try {
       this.savePosition();
-      const cs = $('ytd-comments#comments');
-      if (!cs) {
-        w('[SM] No comments sec');
-        this.isScrolling = false;
-        return false;
-      }
-      cs.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      // Smart Scroll: Scroll to bottom to trigger lazy loading
+      window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+
+      // Wait for network requests to initiate
+      await this.waitForScroll(2000);
+
+      // Restore original position
+      this.restorePosition();
+
+      // Wait for scroll back
       await this.waitForScroll(1000);
-      window.scrollBy({ top: -100, behavior: 'smooth' });
-      await this.waitForScroll(500);
-      await this.waitForCommentsToLoad();
+
+      // Wait for comments to actually populate in DOM
+      const loaded = await this.waitForCommentsToLoad();
+
       this.isScrolling = false;
-      return true;
+      return loaded;
     } catch (x) {
       e('[SM] Err scroll:', x);
       this.isScrolling = false;
