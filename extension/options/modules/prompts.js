@@ -59,7 +59,7 @@ export class PromptsSettings {
       'prompts-comments-themes',
       'prompts-comments-questions',
       'prompts-comments-opportunities',
-    ].forEach(id => i(id)?.addEventListener('change', () => this.as.trigger()));
+    ].forEach(id => i(id)?.addEventListener('change', () => this.as.trigger(() => this.save())));
   }
   async save() {
     const el = (id) => i(id);

@@ -11,13 +11,13 @@ export const comments = async commentList => {
       'Elite Community Sentiment Analyst with expertise in YouTube audience psychology and engagement patterns';
     const spamEnabled = pCfg.enableSpamFiltering !== false;
     const sentEnabled = pCfg.enableSentimentLabeling !== false;
-    const minLikes = pCfg.minLikesForHighEngagement || 10;
+    const minLikes = pCfg.minLikesForHighEngagement || 0;
     const maxThemes = pCfg.maxThemes || 7;
     const maxQuestions = pCfg.maxQuestions || 5;
     const opportunitiesEnabled = pCfg.includeCreatorOpportunities !== false;
     const analyzed = commentList.slice(0, 50).map(c => {
-      const author = c.authorText || 'Unknown';
-      const content = c.textDisplay || '';
+      const author = c.author || c.authorText || 'Unknown';
+      const content = c.text || c.textDisplay || '';
       const sentiment = sentEnabled ? analyzeSentiment(content) : 'neutral';
       const spam = spamEnabled ? detectSpam(content) : false;
       const question = isQuestion(content);
@@ -98,7 +98,7 @@ ${
 `
     : ''
 }OPTIMIZATION DIRECTIVES:
-- Prioritize comments with ${minLikes}+ likes (stronger signal)
+- Prioritize comments with ${minLikes}+ likes, but analyze ALL provided comments regardless of like count
 ${spamEnabled ? '- Ignore spam/bot comments (pre-filtered)' : ''}
 - Focus on substantive feedback over generic praise
 - Extract specific, actionable insights

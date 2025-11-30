@@ -15,9 +15,10 @@ describe('Config Defaults', () => {
   });
 
   it('should have aggressive segment actions by default', () => {
-    expect(DC.sg.ct.sp.a).toBe('skip'); // Sponsor
-    expect(DC.sg.ct.sf.a).toBe('skip'); // Self-promo
-    expect(DC.sg.ct.in.a).toBe('skip'); // Intro
-    expect(DC.sg.ct.ou.a).toBe('skip'); // Outro
+    expect(DC.sg.ct.sp.a).toBe('skip');
+    expect(DC.sg.ct.sf.a).toBe('skip');
+    expect(DC.sg.ct.it.a).toBe('skip');
+    expect(DC.sg.ct.in.a).toBe('ignore');
+    expect(DC.sg.ct.ou.a).toBe('ignore');
   });
 });

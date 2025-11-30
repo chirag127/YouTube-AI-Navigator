@@ -64,7 +64,7 @@ on(document, 'DOMContentLoaded', async () => {
     metadata: new MetadataSettings(settingsManager, autoSave),
     scroll: new ScrollSettings(settingsManager, autoSave),
     widget: new WidgetSettings(settingsManager, notificationManager),
-    integrations: new IntegrationsSettings(settingsManager, autoSave),
+    integrations: new IntegrationsSettings(settingsManager, notificationManager),
     prompts: new PromptsSettings(settingsManager, autoSave),
   };
   const initPromises = vs(modules).map(async m => {

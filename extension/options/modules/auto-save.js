@@ -25,6 +25,16 @@ export class AutoSave {
       }
     }, this.d);
   }
+  trigger(cb) {
+    clt(this.t);
+    this.t = to(async () => {
+      try {
+        await cb();
+      } catch (x) {
+        e('[AutoSave] Error in triggered callback:', x);
+      }
+    }, this.d);
+  }
   attachToInput(el, p, tr = v => v) {
     if (!el) return;
     const h = () => {
