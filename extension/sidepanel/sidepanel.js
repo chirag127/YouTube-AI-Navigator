@@ -3,7 +3,7 @@ import { GeminiService } from '../api/gemini.js';
 import { SegmentClassificationService } from '../services/segments/index.js';
 import { StorageService } from '../services/storage/index.js';
 import { parseMarkdown } from '../lib/marked-loader.js';
-import { id, $$, on, ce } from '../utils/shortcuts/dom.js';
+import { id, $, on, ce } from '../utils/shortcuts/dom.js';
 import { sl } from '../utils/shortcuts/storage.js';
 import { e, w } from '../utils/shortcuts/log.js';
 import { tbc as ct } from '../utils/shortcuts/tabs.js';
@@ -19,11 +19,10 @@ let gs = null,
 const ab = id('analyze-btn'),
   stEl = id('status'),
   aw = id('auth-warning'),
-  tbs = $$('.tab-btn'),
-  tcs = $$('.tab-content'),
+  tbs = $('.tab-btn'),
+  tcs = $('.tab-content'),
   sc = id('summary-content'),
   ic = id('insights-content'),
-  tc = id('transcript-container'),
   ci = id('chat-input'),
   csb = id('chat-send-btn'),
   ch = id('chat-history');
@@ -91,7 +90,7 @@ async function handleChat() {
 
 function appendMsg(r, t) {
   const d = ce('div');
-  d.className = `chat-message ${r}`;
+  d.className = `chat-message${r}`;
   d.id = `msg-${Date.now()}`;
   d.textContent = t;
   ch.appendChild(d);
