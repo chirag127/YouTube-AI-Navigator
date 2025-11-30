@@ -40,8 +40,6 @@ export async function renderComments(c) {
 
     try {
       const cm = await getComments(retries);
-      if (cfg.scroll?.scrollBackAfterComments !== false)
-        scrollBackToTop(origPos, cfg.scroll?.showScrollNotification ?? true);
 
       if (!cm.length) {
         showPlaceholder(c, 'No comments found.');
@@ -93,9 +91,15 @@ export async function renderComments(c) {
         );
       }
     } catch (x) {
-      if (cfg.scroll?.scrollBackAfterComments !== false) scrollBackToTop(origPos, false);
+      // Don't scroll back on error - stay at comments section for debugging
       ih(c, `<div class="yt-ai-error-msg">Failed: ${x.message}</div>`);
       e('Err:renderComments', x);
+    } finally {
+      // Always scroll back after extraction attempt (success or fail after full retry)
+      if (cfg.scroll?.scrollBackAfterComments !== false) {
+        await to(() => {}, 500); // Small delay before scrolling back
+        scrollBackToTop(origPos, cfg.scroll?.showScrollNotification ?? true);
+      }
     }
   } catch (err) {
     e('Err:renderComments', err);
