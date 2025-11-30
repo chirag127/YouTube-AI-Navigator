@@ -8,7 +8,7 @@
     <h3>Transcript Source</h3>
     <div class="form-group">
       <label for="transcriptMethod">Transcript Method</label>
-      <select id="transcriptMethod" class="form-select">
+      <select id="transcriptMethod" name="transcriptMethod" class="form-select">
         <option value="auto">Auto (Best Available)</option>
         <option value="dom-automation">DOM Automation</option>
         <option value="invidious">Invidious API</option>
@@ -19,7 +19,7 @@
     </div>
     <div class="form-group">
       <label for="transcriptLanguage">Transcript Language</label>
-      <select id="transcriptLanguage" class="form-select">
+      <select id="transcriptLanguage" name="transcriptLanguage" class="form-select">
         <option value="en">English</option>
         <option value="es">Spanish</option>
         <option value="fr">French</option>
@@ -45,7 +45,7 @@
         <p class="help-text">Show timestamps in transcript display</p>
       </div>
       <label class="switch sm">
-        <input type="checkbox" id="includeTimestamps" />
+        <input type="checkbox" id="includeTimestamps" name="includeTimestamps" />
         <span class="slider round"></span>
       </label>
     </div>
@@ -55,7 +55,7 @@
         <p class="help-text">Automatically translate transcripts to output language</p>
       </div>
       <label class="switch sm">
-        <input type="checkbox" id="transcriptAutoTranslate" />
+        <input type="checkbox" id="transcriptAutoTranslate" name="transcriptAutoTranslate" />
         <span class="slider round"></span>
       </label>
     </div>
@@ -65,7 +65,7 @@
         <p class="help-text">Display original text alongside translation</p>
       </div>
       <label class="switch sm">
-        <input type="checkbox" id="transcriptShowOriginal" />
+        <input type="checkbox" id="transcriptShowOriginal" name="transcriptShowOriginal" />
         <span class="slider round"></span>
       </label>
     </div>
@@ -75,7 +75,7 @@
         <p class="help-text">Highlight important keywords in transcript</p>
       </div>
       <label class="switch sm">
-        <input type="checkbox" id="transcriptHighlightKeywords" />
+        <input type="checkbox" id="transcriptHighlightKeywords" name="transcriptHighlightKeywords" />
         <span class="slider round"></span>
       </label>
     </div>
@@ -89,7 +89,7 @@
         <p class="help-text">Automatically collapse widget after transcript loads</p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="transcriptAutoClose" />
+        <input type="checkbox" id="transcriptAutoClose" name="transcriptAutoClose" />
         <span class="slider round"></span>
       </label>
     </div>
@@ -97,7 +97,7 @@
       <label for="transcriptAutoCloseDelay">Auto-Close Delay (ms)</label>
       <input
         type="number"
-        id="transcriptAutoCloseDelay"
+        id="transcriptAutoCloseDelay" name="transcriptAutoCloseDelay"
         class="form-input"
         min="0"
         max="5000"
@@ -112,7 +112,7 @@
         <p class="help-text">Also close widget when showing cached transcripts</p>
       </div>
       <label class="switch sm">
-        <input type="checkbox" id="transcriptAutoCloseOnCached" />
+        <input type="checkbox" id="transcriptAutoCloseOnCached" name="transcriptAutoCloseOnCached" />
         <span class="slider round"></span>
       </label>
     </div>
@@ -122,7 +122,7 @@
         <p class="help-text">Scroll page back to original position after extraction</p>
       </div>
       <label class="switch sm">
-        <input type="checkbox" id="transcriptAutoScroll" />
+        <input type="checkbox" id="transcriptAutoScroll" name="transcriptAutoScroll" />
         <span class="slider round"></span>
       </label>
     </div>

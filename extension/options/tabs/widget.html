@@ -5,19 +5,19 @@
   <h3>Height Configuration</h3>
   <div class="form-group">
     <label for="widget-height">Widget Height (px)</label>
-    <input type="number" id="widget-height" min="200" max="1200" step="50" class="form-input" />
+    <input type="number" id="widget-height" name="widget-height" min="200" max="1200" step="50" class="form-input" />
     <p class="help-text">Default content area height (200-1200px)</p>
   </div>
 
   <div class="form-group">
     <label for="widget-min-height">Minimum Height (px)</label>
-    <input type="number" id="widget-min-height" min="100" max="600" step="50" class="form-input" />
+    <input type="number" id="widget-min-height" name="widget-min-height" min="100" max="600" step="50" class="form-input" />
     <p class="help-text">Minimum resizable height</p>
   </div>
 
   <div class="form-group">
     <label for="widget-max-height">Maximum Height (px)</label>
-    <input type="number" id="widget-max-height" min="400" max="2000" step="100" class="form-input" />
+    <input type="number" id="widget-max-height" name="widget-max-height" min="400" max="2000" step="100" class="form-input" />
     <p class="help-text">Maximum resizable height</p>
   </div>
 
@@ -27,7 +27,7 @@
       <p class="help-text">Allow dragging bottom resize handle to adjust height</p>
     </div>
     <label class="switch">
-      <input type="checkbox" id="widget-resizable" />
+      <input type="checkbox" id="widget-resizable" name="widget-resizable" />
       <span class="slider round"></span>
     </label>
   </div>
@@ -37,19 +37,19 @@
   <h3>Width Configuration</h3>
   <div class="form-group">
     <label for="widget-width">Widget Width (px)</label>
-    <input type="number" id="widget-width" min="300" max="800" step="50" class="form-input" />
+    <input type="number" id="widget-width" name="widget-width" min="300" max="800" step="50" class="form-input" />
     <p class="help-text">Default widget width (only applies when width resizing is enabled)</p>
   </div>
 
   <div class="form-group">
     <label for="widget-min-width">Minimum Width (px)</label>
-    <input type="number" id="widget-min-width" min="200" max="500" step="50" class="form-input" />
+    <input type="number" id="widget-min-width" name="widget-min-width" min="200" max="500" step="50" class="form-input" />
     <p class="help-text">Minimum resizable width</p>
   </div>
 
   <div class="form-group">
     <label for="widget-max-width">Maximum Width (px)</label>
-    <input type="number" id="widget-max-width" min="400" max="1200" step="100" class="form-input" />
+    <input type="number" id="widget-max-width" name="widget-max-width" min="400" max="1200" step="100" class="form-input" />
     <p class="help-text">Maximum resizable width</p>
   </div>
 
@@ -59,7 +59,7 @@
       <p class="help-text">Allow dragging left edge to adjust width</p>
     </div>
     <label class="switch">
-      <input type="checkbox" id="widget-resizable-width" />
+      <input type="checkbox" id="widget-resizable-width" name="widget-resizable-width" />
       <span class="slider round"></span>
     </label>
   </div>
@@ -67,7 +67,7 @@
   <div class="form-group">
     <label for="widget-position">Widget Position</label>
     <div class="select-wrapper">
-      <select id="widget-position" class="form-select">
+      <select id="widget-position" name="widget-position" class="form-select">
         <option value="right">Right Side (Default)</option>
         <option value="left">Left Side</option>
       </select>
@@ -83,7 +83,7 @@
   <div class="form-group">
     <div class="range-with-value">
         <label for="widget-opacity" style="min-width: 150px;">Background Opacity</label>
-        <input type="range" id="widget-opacity" min="50" max="100" step="5" class="form-range" />
+        <input type="range" id="widget-opacity" name="widget-opacity" min="50" max="100" step="5" class="form-range" />
         <span class="range-value"></span>
     </div>
     <p class="help-text">Adjust transparency of the widget background</p>
@@ -92,7 +92,7 @@
   <div class="form-group">
     <div class="range-with-value">
         <label for="widget-blur" style="min-width: 150px;">Glass Blur (px)</label>
-        <input type="range" id="widget-blur" min="0" max="40" step="2" class="form-range" />
+        <input type="range" id="widget-blur" name="widget-blur" min="0" max="40" step="2" class="form-range" />
         <span class="range-value"></span>
     </div>
     <p class="help-text">Strength of the background blur effect</p>
@@ -101,7 +101,7 @@
   <div class="form-group">
     <div class="range-with-value">
         <label for="widget-scale" style="min-width: 150px;">UI Scale (%)</label>
-        <input type="range" id="widget-scale" min="80" max="120" step="5" class="form-range" />
+        <input type="range" id="widget-scale" name="widget-scale" min="80" max="120" step="5" class="form-range" />
         <span class="range-value"></span>
     </div>
     <p class="help-text">Adjust the overall size of widget elements</p>
@@ -113,14 +113,14 @@
       <p class="help-text">Automatically constrain height to fit within the screen (prevents clipping)</p>
     </div>
     <label class="switch">
-      <input type="checkbox" id="widget-dynamic-height" checked />
+      <input type="checkbox" id="widget-dynamic-height" name="widget-dynamic-height" checked />
       <span class="slider round"></span>
     </label>
   </div>
 
   <div class="form-group">
     <label for="widget-viewport-margin">Viewport Bottom Margin (px)</label>
-    <input type="number" id="widget-viewport-margin" min="0" max="200" step="10" class="form-input" />
+    <input type="number" id="widget-viewport-margin" name="widget-viewport-margin" min="0" max="200" step="10" class="form-input" />
     <p class="help-text">Space to leave at the bottom of the screen (useful for status bars/docked consoles)</p>
   </div>
 
@@ -135,7 +135,7 @@
             <label for="widget-tab-summary">Default Tab</label>
         </div>
         <label class="switch">
-            <input type="checkbox" id="widget-tab-summary" />
+            <input type="checkbox" id="widget-tab-summary" name="widget-tab-summary" />
             <span class="slider round"></span>
         </label>
       </div>
@@ -145,7 +145,7 @@
             <label for="widget-tab-segments">Segments Tab</label>
         </div>
         <label class="switch">
-            <input type="checkbox" id="widget-tab-segments" />
+            <input type="checkbox" id="widget-tab-segments" name="widget-tab-segments" />
             <span class="slider round"></span>
         </label>
       </div>
@@ -155,7 +155,7 @@
             <label for="widget-tab-chat">Chat Tab</label>
         </div>
         <label class="switch">
-            <input type="checkbox" id="widget-tab-chat" />
+            <input type="checkbox" id="widget-tab-chat" name="widget-tab-chat" />
             <span class="slider round"></span>
         </label>
       </div>
@@ -165,7 +165,7 @@
             <label for="widget-tab-comments">Comments Tab</label>
         </div>
         <label class="switch">
-            <input type="checkbox" id="widget-tab-comments" />
+            <input type="checkbox" id="widget-tab-comments" name="widget-tab-comments" />
             <span class="slider round"></span>
         </label>
       </div>
@@ -182,7 +182,7 @@
         <p class="help-text">Widget will be minimized when first loaded on a video</p>
     </div>
     <label class="switch">
-        <input type="checkbox" id="widget-default-collapsed" />
+        <input type="checkbox" id="widget-default-collapsed" name="widget-default-collapsed" />
         <span class="slider round"></span>
     </label>
   </div>
@@ -193,7 +193,7 @@
         <p class="help-text">Widget remembers if you collapsed/expanded it</p>
     </div>
     <label class="switch">
-        <input type="checkbox" id="widget-remember-state" />
+        <input type="checkbox" id="widget-remember-state" name="widget-remember-state" />
         <span class="slider round"></span>
     </label>
   </div>
@@ -206,39 +206,39 @@
   <div class="form-grid">
       <div class="form-group checkbox-row">
         <div class="checkbox-label"><label for="widget-show-sponsor">Show Sponsor Segments</label></div>
-        <label class="switch"><input type="checkbox" id="widget-show-sponsor" checked /><span class="slider round"></span></label>
+        <label class="switch"><input type="checkbox" id="widget-show-sponsor" name="widget-show-sponsor" checked /><span class="slider round"></span></label>
       </div>
       <div class="form-group checkbox-row">
         <div class="checkbox-label"><label for="widget-show-selfpromo">Show Self Promotion</label></div>
-        <label class="switch"><input type="checkbox" id="widget-show-selfpromo" checked /><span class="slider round"></span></label>
+        <label class="switch"><input type="checkbox" id="widget-show-selfpromo" name="widget-show-selfpromo" checked /><span class="slider round"></span></label>
       </div>
       <div class="form-group checkbox-row">
         <div class="checkbox-label"><label for="widget-show-interaction">Show Interaction Reminders</label></div>
-        <label class="switch"><input type="checkbox" id="widget-show-interaction" checked /><span class="slider round"></span></label>
+        <label class="switch"><input type="checkbox" id="widget-show-interaction" name="widget-show-interaction" checked /><span class="slider round"></span></label>
       </div>
       <div class="form-group checkbox-row">
         <div class="checkbox-label"><label for="widget-show-intro">Show Intro/Intermission</label></div>
-        <label class="switch"><input type="checkbox" id="widget-show-intro" checked /><span class="slider round"></span></label>
+        <label class="switch"><input type="checkbox" id="widget-show-intro" name="widget-show-intro" checked /><span class="slider round"></span></label>
       </div>
       <div class="form-group checkbox-row">
         <div class="checkbox-label"><label for="widget-show-outro">Show Outro/Endcards</label></div>
-        <label class="switch"><input type="checkbox" id="widget-show-outro" checked /><span class="slider round"></span></label>
+        <label class="switch"><input type="checkbox" id="widget-show-outro" name="widget-show-outro" checked /><span class="slider round"></span></label>
       </div>
       <div class="form-group checkbox-row">
         <div class="checkbox-label"><label for="widget-show-preview">Show Preview/Recap</label></div>
-        <label class="switch"><input type="checkbox" id="widget-show-preview" checked /><span class="slider round"></span></label>
+        <label class="switch"><input type="checkbox" id="widget-show-preview" name="widget-show-preview" checked /><span class="slider round"></span></label>
       </div>
       <div class="form-group checkbox-row">
         <div class="checkbox-label"><label for="widget-show-filler">Show Filler/Tangents</label></div>
-        <label class="switch"><input type="checkbox" id="widget-show-filler" checked /><span class="slider round"></span></label>
+        <label class="switch"><input type="checkbox" id="widget-show-filler" name="widget-show-filler" checked /><span class="slider round"></span></label>
       </div>
       <div class="form-group checkbox-row">
         <div class="checkbox-label"><label for="widget-show-highlight">Show Highlights</label></div>
-        <label class="switch"><input type="checkbox" id="widget-show-highlight" checked /><span class="slider round"></span></label>
+        <label class="switch"><input type="checkbox" id="widget-show-highlight" name="widget-show-highlight" checked /><span class="slider round"></span></label>
       </div>
       <div class="form-group checkbox-row">
         <div class="checkbox-label"><label for="widget-show-exclusive">Show Exclusive Access</label></div>
-        <label class="switch"><input type="checkbox" id="widget-show-exclusive" checked /><span class="slider round"></span></label>
+        <label class="switch"><input type="checkbox" id="widget-show-exclusive" name="widget-show-exclusive" checked /><span class="slider round"></span></label>
       </div>
   </div>
 

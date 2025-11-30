@@ -12,7 +12,7 @@
         <p class="help-text">Enable word-finding query engine</p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="api-datamuse-enabled" />
+        <input type="checkbox" id="api-datamuse-enabled" name="api-datamuse-enabled" />
         <span class="slider round"></span>
       </label>
     </div>
@@ -22,7 +22,7 @@
         <p class="help-text">Verify claims using Google's Fact Check Tools</p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="api-google-factcheck-enabled" />
+        <input type="checkbox" id="api-google-factcheck-enabled" name="api-google-factcheck-enabled" />
         <span class="slider round"></span>
       </label>
     </div>
@@ -30,7 +30,7 @@
       <label for="api-google-factcheck-key">API Key</label>
       <input
         type="password"
-        id="api-google-factcheck-key"
+        id="api-google-factcheck-key" name="api-google-factcheck-key"
         class="form-input"
         placeholder="Enter API Key"
       />
@@ -41,7 +41,7 @@
         <p class="help-text">Fetch structured data from Wikidata</p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="api-wikidata-enabled" />
+        <input type="checkbox" id="api-wikidata-enabled" name="api-wikidata-enabled" />
         <span class="slider round"></span>
       </label>
     </div>
@@ -51,7 +51,7 @@
         <p class="help-text">Access academic papers and citations</p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="api-semanticscholar-enabled" />
+        <input type="checkbox" id="api-semanticscholar-enabled" name="api-semanticscholar-enabled" />
         <span class="slider round"></span>
       </label>
     </div>
@@ -59,7 +59,7 @@
       <label for="api-semanticscholar-key">API Key (Optional)</label>
       <input
         type="password"
-        id="api-semanticscholar-key"
+        id="api-semanticscholar-key" name="api-semanticscholar-key"
         class="form-input"
         placeholder="Enter API Key"
       />
@@ -74,13 +74,13 @@
         <p class="help-text">Fetch movie and TV show metadata</p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="api-tmdb-enabled" />
+        <input type="checkbox" id="api-tmdb-enabled" name="api-tmdb-enabled" />
         <span class="slider round"></span>
       </label>
     </div>
     <div class="form-group" id="group-tmdb-key">
       <label for="api-tmdb-key">API Key</label>
-      <input type="password" id="api-tmdb-key" class="form-input" placeholder="Enter API Key" />
+      <input type="password" id="api-tmdb-key" name="api-tmdb-key" class="form-input" placeholder="Enter API Key" />
     </div>
     <div class="form-group checkbox-row">
       <div class="checkbox-label">
@@ -88,17 +88,17 @@
         <p class="help-text">Fetch video game metadata</p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="api-igdb-enabled" />
+        <input type="checkbox" id="api-igdb-enabled" name="api-igdb-enabled" />
         <span class="slider round"></span>
       </label>
     </div>
     <div class="form-group" id="group-igdb-client">
       <label for="api-igdb-client">Client ID</label>
-      <input type="text" id="api-igdb-client" class="form-input" placeholder="Client ID" />
+      <input type="text" id="api-igdb-client" name="api-igdb-client" class="form-input" placeholder="Client ID" />
     </div>
     <div class="form-group" id="group-igdb-token">
       <label for="api-igdb-token">Access Token</label>
-      <input type="password" id="api-igdb-token" class="form-input" placeholder="Access Token" />
+      <input type="password" id="api-igdb-token" name="api-igdb-token" class="form-input" placeholder="Access Token" />
     </div>
     <div class="form-group checkbox-row">
       <div class="checkbox-label">
@@ -106,7 +106,7 @@
         <p class="help-text">Open music encyclopedia</p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="api-musicbrainz-enabled" />
+        <input type="checkbox" id="api-musicbrainz-enabled" name="api-musicbrainz-enabled" />
         <span class="slider round"></span>
       </label>
     </div>
@@ -116,7 +116,7 @@
         <p class="help-text">Fetch song lyrics and annotations</p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="api-genius-lyrics-enabled" />
+        <input type="checkbox" id="api-genius-lyrics-enabled" name="api-genius-lyrics-enabled" />
         <span class="slider round"></span>
       </label>
     </div>
@@ -124,7 +124,7 @@
       <label for="api-genius-lyrics-token">Access Token</label>
       <input
         type="password"
-        id="api-genius-lyrics-token"
+        id="api-genius-lyrics-token" name="api-genius-lyrics-token"
         class="form-input"
         placeholder="Access Token"
       />
@@ -139,7 +139,7 @@
         <p class="help-text">Skip sponsors, intros, and more</p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="api-sponsorblock-enabled" />
+        <input type="checkbox" id="api-sponsorblock-enabled" name="api-sponsorblock-enabled" />
         <span class="slider round"></span>
       </label>
     </div>
@@ -149,7 +149,7 @@
         <p class="help-text">Crowdsourced titles and thumbnails</p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="api-dearrow-enabled" />
+        <input type="checkbox" id="api-dearrow-enabled" name="api-dearrow-enabled" />
         <span class="slider round"></span>
       </label>
     </div>
@@ -159,7 +159,7 @@
         <p class="help-text">Weather data</p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="api-openmeteo-enabled" />
+        <input type="checkbox" id="api-openmeteo-enabled" name="api-openmeteo-enabled" />
         <span class="slider round"></span>
       </label>
     </div>
@@ -169,13 +169,13 @@
         <p class="help-text">Global news API</p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="api-newsdata-enabled" />
+        <input type="checkbox" id="api-newsdata-enabled" name="api-newsdata-enabled" />
         <span class="slider round"></span>
       </label>
     </div>
     <div class="form-group" id="group-newsdata-key">
       <label for="api-newsdata-key">API Key</label>
-      <input type="password" id="api-newsdata-key" class="form-input" placeholder="Enter API Key" />
+      <input type="password" id="api-newsdata-key" name="api-newsdata-key" class="form-input" placeholder="Enter API Key" />
     </div>
     <div class="form-group checkbox-row">
       <div class="checkbox-label">
@@ -183,7 +183,7 @@
         <p class="help-text">Book metadata</p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="api-openlibrary-enabled" />
+        <input type="checkbox" id="api-openlibrary-enabled" name="api-openlibrary-enabled" />
         <span class="slider round"></span>
       </label>
     </div>

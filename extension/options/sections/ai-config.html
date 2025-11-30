@@ -9,7 +9,7 @@
     <div class="form-group">
       <label for="apiKey">Gemini API Key</label>
       <div class="input-with-button">
-        <input type="password" id="apiKey" class="form-input" placeholder="Enter your API key" />
+        <input type="password" id="apiKey" name="apiKey" class="form-input" placeholder="Enter your API key" />
         <button id="toggleApiKey" class="btn-icon" title="Show/Hide">👁️</button>
       </div>
       <p class="help-text">
@@ -28,7 +28,7 @@
     <div class="form-group">
       <label for="modelSelect">Gemini Model</label>
       <div class="select-wrapper">
-        <select id="modelSelect" class="form-select">
+        <select id="modelSelect" name="modelSelect" class="form-select">
           <option value="" disabled selected>Loading models...</option>
         </select>
         <button id="refreshModels" class="btn-icon" title="Refresh Models">🔄</button>
@@ -42,7 +42,7 @@
     <div class="form-group">
       <label for="customPrompt">Custom Instructions</label>
       <textarea
-        id="customPrompt"
+        id="customPrompt" name="customPrompt"
         class="form-textarea"
         rows="4"
         placeholder="e.g., Focus on technical details, use bullet points..."

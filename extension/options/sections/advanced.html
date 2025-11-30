@@ -9,7 +9,7 @@
     <div class="form-actions">
       <button id="exportSettings" class="btn btn-secondary">Export Settings JSON</button>
       <button id="importSettings" class="btn btn-secondary">Import Settings JSON</button>
-      <input type="file" id="importFile" accept=".json" style="display: none" />
+      <input type="file" id="importFile" name="importFile" accept=".json" style="display: none" />
     </div>
   </div>
 
@@ -21,7 +21,7 @@
         <p class="help-text">Enable detailed logging to the console.</p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="debugMode" />
+        <input type="checkbox" id="debugMode" name="debugMode" />
         <span class="slider round"></span>
       </label>
     </div>

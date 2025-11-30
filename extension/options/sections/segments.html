@@ -11,7 +11,7 @@
         <p class="help-text">Analyze video to identify sponsors, intros, and more.</p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="enableSegments" />
+        <input type="checkbox" id="enableSegments" name="enableSegments" />
         <span class="slider round"></span>
       </label>
     </div>
@@ -22,7 +22,7 @@
         <p class="help-text">Automatically skip or speed up segments based on settings below.</p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="enableAutoSkip" />
+        <input type="checkbox" id="enableAutoSkip" name="enableAutoSkip" />
         <span class="slider round"></span>
       </label>
     </div>
@@ -33,7 +33,7 @@
         <p class="help-text">Display on-screen notifications when skipping/speeding segments.</p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="showSegmentNotifications" />
+        <input type="checkbox" id="showSegmentNotifications" name="showSegmentNotifications" />
         <span class="slider round"></span>
       </label>
     </div>
@@ -44,7 +44,7 @@
         <p class="help-text">Display colored markers on video progress bar for segments.</p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="showSegmentMarkers" />
+        <input type="checkbox" id="showSegmentMarkers" name="showSegmentMarkers" />
         <span class="slider round"></span>
       </label>
     </div>
@@ -57,7 +57,7 @@
       <label for="skipTolerance">Skip Tolerance (seconds)</label>
       <p class="help-text">Buffer time before/after segment boundaries (0.1-2.0s)</p>
       <div class="slider-group">
-        <input type="range" id="skipTolerance" min="0.1" max="2" step="0.1" value="0.5" />
+        <input type="range" id="skipTolerance" name="skipTolerance" min="0.1" max="2" step="0.1" value="0.5" />
         <span id="skipToleranceValue" class="slider-value">0.5s</span>
       </div>
     </div>
@@ -66,7 +66,7 @@
       <label for="minSegmentDuration">Minimum Segment Duration (seconds)</label>
       <p class="help-text">Ignore segments shorter than this (0.5-10s)</p>
       <div class="slider-group">
-        <input type="range" id="minSegmentDuration" min="0.5" max="10" step="0.5" value="1" />
+        <input type="range" id="minSegmentDuration" name="minSegmentDuration" min="0.5" max="10" step="0.5" value="1" />
         <span id="minSegmentDurationValue" class="slider-value">1s</span>
       </div>
     </div>

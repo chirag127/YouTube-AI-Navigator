@@ -8,7 +8,7 @@
     <h3>Entertainment & Media</h3>
     <div class="form-group">
       <label for="tmdbApiKey">TMDB API Key (Movies/TV)</label>
-      <input type="password" id="tmdbApiKey" class="form-input" placeholder="Enter TMDB API Key" />
+      <input type="password" id="tmdbApiKey" name="tmdbApiKey" class="form-input" placeholder="Enter TMDB API Key" />
       <p class="help-text">
         Free key from
         <a href="https://www.themoviedb.org/settings/api" target="_blank">TheMovieDB</a>.
@@ -18,7 +18,7 @@
       <label for="twitchClientId">Twitch Client ID (Gaming)</label>
       <input
         type="text"
-        id="twitchClientId"
+        id="twitchClientId" name="twitchClientId"
         class="form-input"
         placeholder="Enter Twitch Client ID"
       />
@@ -27,7 +27,7 @@
       <label for="twitchAccessToken">Twitch Access Token (Gaming)</label>
       <input
         type="password"
-        id="twitchAccessToken"
+        id="twitchAccessToken" name="twitchAccessToken"
         class="form-input"
         placeholder="Enter Twitch Access Token"
       />
@@ -47,7 +47,7 @@
       <label for="googleFactCheckApiKey">Google Fact Check API Key</label>
       <input
         type="password"
-        id="googleFactCheckApiKey"
+        id="googleFactCheckApiKey" name="googleFactCheckApiKey"
         class="form-input"
         placeholder="Google Cloud API Key"
       />
@@ -55,7 +55,7 @@
     </div>
     <div class="form-group">
       <label class="checkbox-label">
-        <input type="checkbox" id="semanticScholarEnabled" />
+        <input type="checkbox" id="semanticScholarEnabled" name="semanticScholarEnabled" />
         <span>Enable Semantic Scholar (Academic Papers)</span>
       </label>
       <p class="help-text">No API key required. Public research database.</p>
@@ -66,28 +66,28 @@
     <h3>Knowledge & Reference APIs</h3>
     <div class="form-group">
       <label class="checkbox-label">
-        <input type="checkbox" id="wikidataEnabled" />
+        <input type="checkbox" id="wikidataEnabled" name="wikidataEnabled" />
         <span>Enable Wikidata</span>
       </label>
       <p class="help-text">No API key required. Structured knowledge base.</p>
     </div>
     <div class="form-group">
       <label class="checkbox-label">
-        <input type="checkbox" id="openLibraryEnabled" />
+        <input type="checkbox" id="openLibraryEnabled" name="openLibraryEnabled" />
         <span>Enable Open Library (Books)</span>
       </label>
       <p class="help-text">No API key required. Public book database.</p>
     </div>
     <div class="form-group">
       <label class="checkbox-label">
-        <input type="checkbox" id="datamuseEnabled" />
+        <input type="checkbox" id="datamuseEnabled" name="datamuseEnabled" />
         <span>Enable Datamuse (Word Relations)</span>
       </label>
       <p class="help-text">No API key required. Linguistic API.</p>
     </div>
     <div class="form-group">
       <label class="checkbox-label">
-        <input type="checkbox" id="openMeteoEnabled" />
+        <input type="checkbox" id="openMeteoEnabled" name="openMeteoEnabled" />
         <span>Enable Open-Meteo (Weather)</span>
       </label>
       <p class="help-text">No API key required. Free weather API.</p>
@@ -98,7 +98,7 @@
     <h3>YouTube Enhancement APIs</h3>
     <div class="form-group">
       <label class="checkbox-label">
-        <input type="checkbox" id="sponsorBlockEnabled" />
+        <input type="checkbox" id="sponsorBlockEnabled" name="sponsorBlockEnabled" />
         <span>Enable SponsorBlock</span>
       </label>
       <p class="help-text">Community-sourced segment database. No API key required.</p>
@@ -107,7 +107,7 @@
       <label for="sponsorBlockTimeout">SponsorBlock Timeout (ms)</label>
       <input
         type="number"
-        id="sponsorBlockTimeout"
+        id="sponsorBlockTimeout" name="sponsorBlockTimeout"
         class="form-input"
         min="1000"
         max="30000"
@@ -116,14 +116,14 @@
     </div>
     <div class="form-group">
       <label class="checkbox-label">
-        <input type="checkbox" id="deArrowEnabled" />
+        <input type="checkbox" id="deArrowEnabled" name="deArrowEnabled" />
         <span>Enable DeArrow (Clickbait-Free Titles)</span>
       </label>
       <p class="help-text">Community-sourced title replacements. No API key required.</p>
     </div>
     <div class="form-group">
       <label class="checkbox-label">
-        <input type="checkbox" id="deArrowUsePrivateAPI" />
+        <input type="checkbox" id="deArrowUsePrivateAPI" name="deArrowUsePrivateAPI" />
         <span>Use DeArrow Private API (Better Performance)</span>
       </label>
     </div>
@@ -131,7 +131,7 @@
       <label for="deArrowTimeout">DeArrow Timeout (ms)</label>
       <input
         type="number"
-        id="deArrowTimeout"
+        id="deArrowTimeout" name="deArrowTimeout"
         class="form-input"
         min="1000"
         max="30000"
