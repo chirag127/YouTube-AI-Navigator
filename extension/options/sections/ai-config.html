@@ -9,13 +9,7 @@
     <div class="form-group">
       <label for="ai-apiKey">Gemini API Key</label>
       <div class="input-with-button">
-        <input
-          type="password"
-          id="ai-apiKey"
-          name="ai-apiKey"
-          class="form-input"
-          placeholder="Enter your API key"
-        />
+        <input type="password" id="ai-apiKey" name="ai-apiKey" class="form-input" placeholder="Enter your API key" />
         <button id="ai-toggleApiKey" class="btn-icon" title="Show/Hide">👁️</button>
       </div>
       <p class="help-text">
@@ -47,13 +41,8 @@
     <h3>System Prompt</h3>
     <div class="form-group">
       <label for="ai-customPrompt">Custom Instructions</label>
-      <textarea
-        id="ai-customPrompt"
-        name="ai-customPrompt"
-        class="form-textarea"
-        rows="4"
-        placeholder="e.g., Focus on technical details, use bullet points..."
-      ></textarea>
+      <textarea id="ai-customPrompt" name="ai-customPrompt" class="form-textarea" rows="4"
+        placeholder="e.g., Focus on technical details, use bullet points..."></textarea>
       <p class="help-text">Optional instructions to guide the AI's behavior.</p>
     </div>
   </div>
@@ -85,29 +74,25 @@
     <h3>Advanced AI</h3>
     <div class="form-group">
       <label for="ai-maxInsights">Max Key Insights</label>
-      <input
-        type="number"
-        id="ai-maxInsights"
-        name="ai-maxInsights"
-        class="form-input"
-        min="1"
-        max="10"
-        value="5"
-      />
+      <input type="number" id="ai-maxInsights" name="ai-maxInsights" class="form-input" min="1" max="10" value="5" />
       <p class="help-text">Maximum number of key insights to generate (1-10)</p>
     </div>
     <div class="form-group">
       <label for="ai-maxFAQ">Max FAQs</label>
-      <input
-        type="number"
-        id="ai-maxFAQ"
-        name="ai-maxFAQ"
-        class="form-input"
-        min="0"
-        max="10"
-        value="3"
-      />
+      <input type="number" id="ai-maxFAQ" name="ai-maxFAQ" class="form-input" min="0" max="10" value="3" />
       <p class="help-text">Maximum number of FAQs to generate (0-10)</p>
+    </div>
+    <div class="form-group">
+      <label for="ai-temperature">Temperature</label>
+      <input type="number" id="ai-temperature" name="ai-temperature" class="form-input" min="0" max="2" step="0.1"
+        value="0.7" />
+      <p class="help-text">Creativity level (0-2, lower = more consistent)</p>
+    </div>
+    <div class="form-group">
+      <label for="ai-maxTokens">Max Tokens</label>
+      <input type="number" id="ai-maxTokens" name="ai-maxTokens" class="form-input" min="100" max="32768" step="100"
+        value="8192" />
+      <p class="help-text">Maximum response length in tokens (100-32768)</p>
     </div>
   </div>
 </section>

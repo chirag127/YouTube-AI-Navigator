@@ -4,30 +4,41 @@
   "version": "2.0.0",
   "description": "AI-powered YouTube insights with smart segmentation",
   "icons": {
-    "16": "assets/icon16.png",
-    "48": "assets/icon48.png",
-    "128": "assets/icon128.png"
+    "16": "assets/icon16.svg",
+    "48": "assets/icon48.svg",
+    "128": "assets/icon128.svg"
   },
-  "permissions": ["storage", "cookies"],
-  "host_permissions": ["*://*/*"],
+  "permissions": [
+    "storage",
+    "cookies"
+  ],
+  "host_permissions": [
+    "*://*/*"
+  ],
   "background": {
     "service_worker": "background/sw.js",
     "type": "module"
   },
   "content_scripts": [
     {
-      "matches": ["*://*.youtube.com/*"],
-      "js": ["content/main.js"],
-      "css": ["content/content.css"],
+      "matches": [
+        "*://*.youtube.com/*"
+      ],
+      "js": [
+        "content/main.js"
+      ],
+      "css": [
+        "content/content.css"
+      ],
       "run_at": "document_idle"
     }
   ],
   "action": {
     "default_popup": "popup/popup.html",
     "default_icon": {
-      "16": "assets/icon16.png",
-      "48": "assets/icon48.png",
-      "128": "assets/icon128.png"
+      "16": "assets/icon16.svg",
+      "48": "assets/icon48.svg",
+      "128": "assets/icon128.svg"
     }
   },
   "options_page": "options/opts.html",
@@ -50,7 +61,9 @@
         "utils/*.js",
         "utils/**/*.js"
       ],
-      "matches": ["*://*.youtube.com/*"]
+      "matches": [
+        "*://*.youtube.com/*"
+      ]
     }
   ]
 }

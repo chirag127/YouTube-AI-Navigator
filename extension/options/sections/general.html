@@ -71,15 +71,7 @@
     </div>
     <div class="form-group">
       <label for="commentsRetries">Extraction Retry Attempts</label>
-      <input
-        type="number"
-        id="commentsRetries"
-        name="commentsRetries"
-        class="form-input"
-        min="1"
-        max="10"
-        value="5"
-      />
+      <input type="number" id="commentsRetries" name="commentsRetries" class="form-input" min="1" max="10" value="5" />
       <p class="help-text">
         Number of retry attempts when extracting comments from DOM (1-10, default: 5).
       </p>
@@ -135,6 +127,46 @@
       </div>
       <label class="switch">
         <input type="checkbox" id="autoLoadTranscript" name="autoLoadTranscript" />
+        <span class="slider round"></span>
+      </label>
+    </div>
+    <div class="form-group checkbox-row">
+      <div class="checkbox-label">
+        <label for="autoLike">Auto-Like Videos</label>
+        <p class="help-text">Automatically like videos based on analysis.</p>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="autoLike" name="autoLike" />
+        <span class="slider round"></span>
+      </label>
+    </div>
+    <div class="form-group checkbox-row">
+      <div class="checkbox-label">
+        <label for="autoThumbsUp">Auto-Thumbs Up</label>
+        <p class="help-text">Automatically give thumbs up to comments.</p>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="autoThumbsUp" name="autoThumbsUp" />
+        <span class="slider round"></span>
+      </label>
+    </div>
+    <div class="form-group checkbox-row">
+      <div class="checkbox-label">
+        <label for="autoNext">Auto-Next Video</label>
+        <p class="help-text">Automatically play next video when current ends.</p>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="autoNext" name="autoNext" />
+        <span class="slider round"></span>
+      </label>
+    </div>
+    <div class="form-group checkbox-row">
+      <div class="checkbox-label">
+        <label for="autoLoop">Auto-Loop Videos</label>
+        <p class="help-text">Automatically loop videos.</p>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="autoLoop" name="autoLoop" />
         <span class="slider round"></span>
       </label>
     </div>

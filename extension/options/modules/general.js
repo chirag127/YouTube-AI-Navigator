@@ -15,8 +15,11 @@ export class GeneralSettings {
     this.chk('autoExtractKeyPoints', c.automation?.autoExtractKeyPoints ?? true);
     this.chk('autoDetectLanguage', c.automation?.autoDetectLanguage ?? true);
     this.chk('autoLoadTranscript', c.automation?.autoLoadTranscript ?? true);
-    this.chk('autoLoadTranscript', c.automation?.autoLoadTranscript ?? true);
     this.chk('saveHistory', c.advanced?.saveHistory ?? true);
+    this.chk('autoLike', c.automation?.autoLike ?? false);
+    this.chk('autoThumbsUp', c.automation?.autoThumbsUp ?? false);
+    this.chk('autoNext', c.automation?.autoNext ?? false);
+    this.chk('autoLoop', c.automation?.autoLoop ?? false);
     this.renderStrategies(
       c.transcript?.strategyOrder || ['dom-automation', 'genius', 'speech-to-text']
     );
@@ -27,6 +30,10 @@ export class GeneralSettings {
       autoExtractKeyPoints: { path: 'automation.autoExtractKeyPoints' },
       autoDetectLanguage: { path: 'automation.autoDetectLanguage' },
       autoLoadTranscript: { path: 'automation.autoLoadTranscript' },
+      autoLike: { path: 'automation.autoLike' },
+      autoThumbsUp: { path: 'automation.autoThumbsUp' },
+      autoNext: { path: 'automation.autoNext' },
+      autoLoop: { path: 'automation.autoLoop' },
       autoExpandDescription: { path: 'ui.autoExpandDescription' },
       showTimestamp: { path: 'ui.showTimestamp' },
       smoothScroll: { path: 'ui.smoothScroll' },

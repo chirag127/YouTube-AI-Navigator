@@ -7,9 +7,10 @@ export class ExternalAPIs {
   init() {
     const a = this.s.get().externalApis || {};
     this.set('section-tmdbApiKey', a.tmdb?.key || '');
+    this.set('newsDataApiKey', a.newsData?.key || '');
+    this.set('section-googleFactCheckApiKey', a.googleFactCheck?.key || '');
     this.set('twitchClientId', a.twitch?.clientId || '');
     this.set('twitchAccessToken', a.twitch?.accessToken || '');
-    this.set('section-googleFactCheckApiKey', a.googleFactCheck?.key || '');
     this.set('semanticScholarEnabled', a.semanticScholar?.enabled ?? true);
     this.set('wikidataEnabled', a.wikidata?.enabled ?? true);
     this.set('openLibraryEnabled', a.openLibrary?.enabled ?? true);
@@ -19,9 +20,10 @@ export class ExternalAPIs {
     this.set('section-deArrowTimeout', a.deArrow?.timeout || 5000);
     this.a.attachToAll({
       'section-tmdbApiKey': { path: 'externalApis.tmdb.key' },
+      newsDataApiKey: { path: 'externalApis.newsData.key' },
+      'section-googleFactCheckApiKey': { path: 'externalApis.googleFactCheck.key' },
       twitchClientId: { path: 'externalApis.twitch.clientId' },
       twitchAccessToken: { path: 'externalApis.twitch.accessToken' },
-      'section-googleFactCheckApiKey': { path: 'externalApis.googleFactCheck.key' },
       semanticScholarEnabled: { path: 'externalApis.semanticScholar.enabled' },
       wikidataEnabled: { path: 'externalApis.wikidata.enabled' },
       openLibraryEnabled: { path: 'externalApis.openLibrary.enabled' },

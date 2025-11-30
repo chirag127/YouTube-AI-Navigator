@@ -1,58 +1,86 @@
 :root {
-  /* Core Colors */
-  --yt-ai-bg-base: #0f0f0f;
-  --yt-ai-bg-glass: rgba(15, 15, 15, 0.85);
-  --yt-ai-bg-glass-hover: rgba(30, 30, 30, 0.9);
-  --yt-ai-text: #ffffff;
-  --yt-ai-text-secondary: #aaaaaa;
-  --yt-ai-border: rgba(255, 255, 255, 0.1);
-  --yt-ai-border-hover: rgba(255, 255, 255, 0.2);
+  /*
+   * 2026 HYBRID AESTHETIC: LIQUID GLASS + NEO-BRUTALISM
+   * Concept: "Alive Machine"
+   */
+  --primary: #00f3ff;
+  --primary-dim: rgba(0, 243, 255, 0.1);
+  --accent: #bc13fe;
 
-  /* Accent Colors */
-  --yt-ai-accent: #3ea6ff;
-  --yt-ai-accent-glow: rgba(62, 166, 255, 0.4);
-  --yt-ai-gradient: linear-gradient(135deg, #3ea6ff 0%, #764ba2 100%);
+  /* Neo-Brutalist Bases */
+  --bg-base: #000000;
+  --bg-glass: rgba(5, 5, 5, 0.75); /* More transparent for liquid feel */
+  --bg-glass-heavy: rgba(10, 10, 10, 0.9);
 
-  /* UI Properties */
-  --yt-ai-radius: 16px;
-  --yt-ai-radius-sm: 8px;
-  --yt-ai-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-  --yt-ai-backdrop: blur(12px);
-  --yt-ai-font: 'Roboto', 'Inter', system-ui, sans-serif;
+  /* Typography */
+  --text: #ffffff;
+  --text-secondary: #a0a0a0;
+  --font: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 
-  /* Transitions */
-  --yt-ai-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  /* Borders & Structure (Neo-Brutalism) */
+  --border-width: 2px;
+  --border: rgba(255, 255, 255, 0.15);
+  --border-active: #00f3ff;
+  --radius: 16px;
+  --radius-sm: 8px;
+
+  /* Effects (Liquid Glass) */
+  --backdrop: blur(24px) saturate(180%);
+  --shadow-depth: 0 16px 40px rgba(0, 0, 0, 0.8);
+  --shadow-neon: 0 0 20px rgba(0, 243, 255, 0.15);
+  --glow: 0 0 10px rgba(0, 243, 255, 0.5);
+
+  /* Motion */
+  --ease-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Widget Container - Glassmorphism */
+/*
+ * MASTER WIDGET CONTAINER
+ * The "Liquid Prism"
+ */
 #yt-ai-master-widget {
-  background: var(--yt-ai-bg-glass);
-  backdrop-filter: var(--yt-ai-backdrop);
-  -webkit-backdrop-filter: var(--yt-ai-backdrop);
-  border: 1px solid var(--yt-ai-border);
-  border-radius: var(--yt-ai-radius);
-  margin-bottom: 16px;
+  background: var(--bg-glass);
+  backdrop-filter: var(--backdrop);
+  -webkit-backdrop-filter: var(--backdrop);
+  border: var(--border-width) solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 20px;
   overflow: hidden;
-  font-family: var(--yt-ai-font);
-  color: var(--yt-ai-text);
+  font-family: var(--font);
+  color: var(--text);
   display: flex;
   flex-direction: column;
   height: auto;
-  max-height: 90vh; /* Fallback */
-  transition: all 0.3s var(--yt-ai-ease);
-  box-shadow: var(--yt-ai-shadow);
+  max-height: 85vh;
+  transition: all 0.3s var(--ease-elastic);
+  box-shadow: var(--shadow-depth);
 
   /* Positioning */
   position: relative !important;
-  z-index: 2202 !important;
+  z-index: 9999 !important;
   order: -9999 !important;
+}
+
+#yt-ai-master-widget:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: var(--shadow-depth), var(--shadow-neon);
+  transform: translateY(-2px);
 }
 
 /* Collapsed State */
 #yt-ai-master-widget.yt-ai-collapsed {
-  max-height: 64px !important;
-  min-height: 64px !important;
-  background: rgba(15, 15, 15, 0.95); /* Less transparent when collapsed */
+  max-height: 68px !important;
+  min-height: 68px !important;
+  background: var(--bg-glass-heavy);
+  border-color: var(--border);
+  cursor: pointer;
+}
+
+#yt-ai-master-widget.yt-ai-collapsed:hover {
+  border-color: var(--primary);
+  box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
 }
 
 #yt-ai-master-widget.yt-ai-collapsed .yt-ai-tabs,
@@ -63,111 +91,114 @@
   display: none !important;
 }
 
-/* Header */
+/*
+ * HEADER
+ * "Control Panel" Aesthetic
+ */
 .yt-ai-header {
-  padding: 16px 20px;
-  border-bottom: 1px solid var(--yt-ai-border);
+  padding: 16px 24px;
+  border-bottom: var(--border-width) solid var(--border);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(255, 255, 255, 0.03);
+  background: linear-gradient(90deg, rgba(255,255,255,0.03) 0%, transparent 100%);
 }
 
 .yt-ai-title {
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 800;
   display: flex;
   align-items: center;
-  gap: 10px;
-  background: var(--yt-ai-gradient);
+  gap: 12px;
+  background: linear-gradient(135deg, #fff 0%, #a0a0a0 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.5px;
+  text-transform: uppercase;
 }
 
-/* Tabs */
+/*
+ * TABS
+ * Floating Glass Chips
+ */
 .yt-ai-tabs {
   display: flex;
-  border-bottom: 1px solid var(--yt-ai-border);
-  background: rgba(0, 0, 0, 0.2);
-  padding: 0 4px;
+  gap: 4px;
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid var(--border);
 }
 
 .yt-ai-tab {
   flex: 1;
-  padding: 14px 0;
+  padding: 10px 0;
   text-align: center;
   cursor: pointer;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--yt-ai-text-secondary);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
   position: relative;
-  transition: all 0.2s var(--yt-ai-ease);
-  border-radius: 8px 8px 0 0;
+  transition: all 0.2s var(--ease-smooth);
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .yt-ai-tab:hover {
-  color: var(--yt-ai-text);
+  color: var(--text);
   background: rgba(255, 255, 255, 0.05);
 }
 
 .yt-ai-tab.active {
-  color: var(--yt-ai-accent);
+  color: #000;
+  background: var(--primary);
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
 }
 
-.yt-ai-tab.active::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 20%;
-  width: 60%;
-  height: 3px;
-  background: var(--yt-ai-accent);
-  border-radius: 3px 3px 0 0;
-  box-shadow: 0 -2px 8px var(--yt-ai-accent-glow);
-}
-
-/* Content Area */
+/*
+ * CONTENT AREA
+ * Deep Space
+ */
 .yt-ai-content {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 20px;
+  padding: 24px;
   padding-bottom: 80px;
-  min-height: 200px;
+  min-height: 250px;
   font-size: 14px;
   line-height: 1.6;
   scroll-behavior: smooth;
   position: relative;
-  scroll-padding-bottom: 80px;
 }
 
-/* Scrollbar */
+/* Scrollbar - Brutalist Track */
 .yt-ai-content::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
-
 .yt-ai-content::-webkit-scrollbar-track {
-  background: transparent;
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
 }
-
 .yt-ai-content::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 0; /* Square thumb for brutalism */
 }
-
 .yt-ai-content::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--primary);
 }
 
-/* Chat Input */
+/*
+ * CHAT INPUT
+ * Floating Command Bar
+ */
 .yt-ai-chat-input {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   padding: 16px;
-  border-top: 1px solid var(--yt-ai-border);
-  background: rgba(15, 15, 15, 0.9); /* Opaque for readability */
+  border-top: var(--border-width) solid var(--border);
+  background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(20px);
 }
 
@@ -175,56 +206,71 @@
   flex: 1;
   padding: 12px 16px;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--yt-ai-border);
-  border-radius: 24px;
-  color: var(--yt-ai-text);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text);
+  font-family: var(--font);
   font-size: 14px;
   outline: none;
-  transition: all 0.2s var(--yt-ai-ease);
+  transition: all 0.2s var(--ease-smooth);
 }
 
 #yt-ai-chat-input:focus {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: var(--yt-ai-accent);
-  box-shadow: 0 0 0 2px var(--yt-ai-accent-glow);
+  background: rgba(0, 0, 0, 0.5);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(0, 243, 255, 0.2);
 }
 
 #yt-ai-chat-send {
-  padding: 0 20px;
-  background: var(--yt-ai-accent);
-  color: white;
+  padding: 0 24px;
+  background: var(--primary);
+  color: #000;
   border: none;
-  border-radius: 24px;
-  font-weight: 600;
-  font-size: 13px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 12px;
   cursor: pointer;
-  transition: all 0.2s var(--yt-ai-ease);
-  box-shadow: 0 4px 12px var(--yt-ai-accent-glow);
+  transition: all 0.2s var(--ease-elastic);
+  text-transform: uppercase;
+  box-shadow: 0 4px 12px rgba(0, 243, 255, 0.3);
 }
 
 #yt-ai-chat-send:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px var(--yt-ai-accent-glow);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 20px rgba(0, 243, 255, 0.5);
 }
 
-/* Resize Handles */
+/*
+ * FOOTER / RESIZE HANDLES
+ * "End of Pop Up" Fix
+ */
 .yt-ai-resize-handle {
-  height: 14px;
-  background: transparent;
+  height: 24px; /* Taller for easier grab */
+  background: rgba(0, 0, 0, 0.9);
+  border-top: 1px solid var(--border);
   cursor: ns-resize;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--yt-ai-text-secondary);
-  font-size: 18px;
+  color: var(--text-secondary);
+  font-size: 12px;
   transition: all 0.2s;
+  letter-spacing: 2px;
+}
+
+.yt-ai-resize-handle::after {
+  content: '•••';
   opacity: 0.5;
 }
 
 .yt-ai-resize-handle:hover {
-  color: var(--yt-ai-accent);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--primary);
+}
+
+.yt-ai-resize-handle:hover::after {
   opacity: 1;
-  background: rgba(255, 255, 255, 0.02);
+  text-shadow: 0 0 8px var(--primary);
 }
 
 .yt-ai-resize-handle-width {
@@ -232,72 +278,31 @@
   left: 0;
   top: 0;
   bottom: 0;
-  width: 6px;
+  width: 8px;
   background: transparent;
   cursor: ew-resize;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--yt-ai-text-secondary);
-  font-size: 10px;
-  writing-mode: vertical-lr;
-  transition: all 0.2s;
   z-index: 10;
-  opacity: 0;
 }
 
 .yt-ai-resize-handle-width:hover {
-  background: rgba(62, 166, 255, 0.1);
-  color: var(--yt-ai-accent);
-  opacity: 1;
-  width: 12px;
+  background: rgba(0, 243, 255, 0.2);
+  border-right: 1px solid var(--primary);
 }
 
-/* Segments */
-.yt-ai-segment-item {
-  padding: 14px;
-  margin-bottom: 10px;
-  border-radius: var(--yt-ai-radius-sm);
-  border-left: 4px solid transparent;
-  background: rgba(255, 255, 255, 0.03);
-  cursor: pointer;
-  transition: all 0.2s var(--yt-ai-ease);
-  border: 1px solid transparent;
-}
-
-.yt-ai-segment-item:hover {
-  background: rgba(255, 255, 255, 0.07);
-  transform: translateX(4px);
-  border-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-/* Helper Classes */
-.yt-ai-icon-btn {
-  background: transparent;
-  border: none;
-  color: var(--yt-ai-text-secondary);
-  padding: 8px;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.yt-ai-icon-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--yt-ai-text);
-}
-
-/* Markdown & Typography */
+/*
+ * MARKDOWN & TYPOGRAPHY
+ * High Contrast / Technical
+ */
 .yt-ai-markdown h1,
-.yt-ai-markdown h2 {
-  font-size: 1.2em;
+.yt-ai-markdown h2,
+.yt-ai-markdown h3 {
+  font-weight: 800;
+  color: var(--text);
   margin: 1.5em 0 0.8em;
-  color: var(--yt-ai-text);
-  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  border-left: 4px solid var(--primary);
+  padding-left: 12px;
 }
 
 .yt-ai-markdown p {
@@ -307,816 +312,213 @@
 }
 
 .yt-ai-markdown strong {
-  color: var(--yt-ai-accent);
-  font-weight: 600;
+  color: var(--primary);
+  font-weight: 700;
 }
 
-/* Loading */
-.yt-ai-spinner {
-  width: 32px;
-  height: 32px;
-  border: 3px solid rgba(255, 255, 255, 0.1);
-  border-top-color: var(--yt-ai-accent);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+.yt-ai-markdown a {
+  color: var(--primary);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--primary);
+  transition: all 0.2s;
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Chat Messages */
-.yt-ai-chat-msg {
-  padding: 12px 16px;
-  border-radius: 18px;
-  max-width: 85%;
-  font-size: 14px;
-  line-height: 1.5;
-  margin-bottom: 12px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.yt-ai-chat-msg.user {
-  align-self: flex-end;
-  background: var(--yt-ai-accent);
-  color: white;
-  border-bottom-right-radius: 4px;
-  margin-left: auto;
-}
-
-.yt-ai-chat-msg.ai {
-  align-self: flex-start;
-  background: rgba(255, 255, 255, 0.08);
-  border-bottom-left-radius: 4px;
-  border: 1px solid var(--yt-ai-border);
-}
-
-/* Collapsed State - Show only header */
-#yt-ai-master-widget.yt-ai-collapsed {
-  max-height: 60px;
-  min-height: 60px;
-}
-
-#yt-ai-master-widget.yt-ai-collapsed .yt-ai-tabs,
-#yt-ai-master-widget.yt-ai-collapsed .yt-ai-content,
-#yt-ai-master-widget.yt-ai-collapsed .yt-ai-chat-input {
-  display: none;
-}
-
-#yt-ai-master-widget:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-/* Header with Gradient */
-.yt-ai-header {
-  padding: 16px;
-  border-bottom: 1px solid var(--yt-ai-border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%);
-}
-
-.yt-ai-title {
-  font-size: 16px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--yt-ai-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Tabs with Modern Underline */
-.yt-ai-tabs {
-  display: flex;
-  border-bottom: 1px solid var(--yt-ai-border);
-  background: var(--yt-ai-bg);
-  position: relative;
-}
-
-.yt-ai-tab {
-  flex: 1;
-  padding: 14px 0;
-  text-align: center;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--yt-ai-text-secondary);
-  border-bottom: 2px solid transparent;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-}
-
-.yt-ai-tab:hover {
-  color: var(--yt-ai-text);
-  background: var(--yt-ai-hover);
-}
-
-.yt-ai-tab.active {
-  color: var(--yt-ai-text);
-  border-bottom-color: var(--yt-ai-accent);
-}
-
-.yt-ai-tab.active::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 40%;
-  height: 2px;
-  background: var(--yt-ai-accent);
-  box-shadow: 0 0 10px var(--yt-ai-accent);
-  animation: tabGlow 2s ease-in-out infinite;
-}
-
-@keyframes tabGlow {
-  0%,
-  100% {
-    box-shadow: 0 0 10px var(--yt-ai-accent);
-  }
-  50% {
-    box-shadow: 0 0 20px var(--yt-ai-accent);
-  }
-}
-
-/* Content Area */
-.yt-ai-content {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 16px;
-  padding-bottom: 80px;
-  min-height: 200px;
-  height: 500px;
-  font-size: 14px;
-  line-height: 1.6;
-  animation: fadeIn 0.4s ease-in;
-  scroll-behavior: smooth;
-  position: relative;
-  scroll-padding-bottom: 80px;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.yt-ai-content::-webkit-scrollbar {
-  width: 10px;
-}
-
-.yt-ai-content::-webkit-scrollbar-track {
-  background: #1a1a1a;
-  border-radius: 10px;
-}
-
-.yt-ai-content::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #555, #333);
-  border-radius: 10px;
-  border: 2px solid #1a1a1a;
-}
-
-.yt-ai-content::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #666, #444);
-}
-
-/* Markdown Styles */
-.yt-ai-markdown h1,
-.yt-ai-markdown h2,
-.yt-ai-markdown h3 {
-  margin-top: 16px;
-  margin-bottom: 10px;
-  font-size: 1.15em;
-  color: #fff;
-  font-weight: 600;
-}
-
-.yt-ai-markdown p {
-  margin-bottom: 12px;
-  color: #ddd;
+.yt-ai-markdown a:hover {
+  background: var(--primary-dim);
+  border-bottom-style: solid;
 }
 
 .yt-ai-markdown ul,
 .yt-ai-markdown ol {
-  padding-left: 24px;
-  margin-bottom: 12px;
+  padding-left: 20px;
+  margin-bottom: 1em;
 }
 
 .yt-ai-markdown li {
   margin-bottom: 6px;
-  line-height: 1.5;
+  padding-left: 4px;
 }
 
-.yt-ai-markdown strong {
-  color: var(--yt-ai-accent);
-  font-weight: 600;
+.yt-ai-markdown li::marker {
+  color: var(--primary);
+  font-weight: bold;
 }
 
-/* Highlighted Important Phrases */
-.yt-ai-markdown mark,
-.yt-ai-markdown .yt-ai-highlight {
-  background: linear-gradient(120deg, rgba(255, 215, 0, 0.3) 0%, rgba(255, 165, 0, 0.3) 100%);
-  color: #ffd700;
-  padding: 2px 6px;
+/*
+ * TIMESTAMPS
+ * Cyber Tags
+ */
+.yt-ai-timestamp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
   border-radius: 4px;
-  font-weight: 600;
-  border-bottom: 2px solid rgba(255, 215, 0, 0.5);
-  transition: all 0.2s ease;
-  display: inline-block;
-  box-shadow: 0 2px 4px rgba(255, 215, 0, 0.1);
+  margin-right: 6px;
+  text-decoration: none;
+  transition: all 0.2s var(--ease-elastic);
+  box-shadow: 0 0 5px rgba(0, 243, 255, 0.1);
 }
 
-.yt-ai-markdown mark:hover,
-.yt-ai-markdown .yt-ai-highlight:hover {
-  background: linear-gradient(120deg, rgba(255, 215, 0, 0.4) 0%, rgba(255, 165, 0, 0.4) 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(255, 215, 0, 0.2);
+.yt-ai-timestamp:hover {
+  background: var(--primary);
+  color: #000;
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
+  transform: scale(1.05);
 }
 
-/* Transcript Segment */
+/*
+ * SEGMENTS
+ * Glass Cards
+ */
 .yt-ai-segment {
   display: flex;
-  gap: 12px;
-  padding: 10px;
-  border-radius: 6px;
+  gap: 16px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 8px;
+  transition: all 0.2s var(--ease-smooth);
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  border-left: 3px solid transparent;
 }
 
 .yt-ai-segment:hover {
-  background: var(--yt-ai-hover);
-  border-left-color: var(--yt-ai-accent);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--primary);
   transform: translateX(4px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
-.yt-ai-timestamp {
-  color: var(--yt-ai-accent);
-  font-weight: 600;
-  min-width: 50px;
-  font-family: 'Courier New', monospace;
-}
-
-.yt-ai-text {
-  color: var(--yt-ai-text);
-  flex: 1;
-}
-
-/* Comments Styles */
+/*
+ * COMMENTS
+ * Threaded Glass
+ */
 .yt-ai-comments-list {
-  margin-top: 16px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 .yt-ai-comment-item {
-  background: #1a1a1a;
-  padding: 12px;
-  border-radius: 8px;
-  border-left: 3px solid var(--yt-ai-accent);
-  transition: all 0.2s ease;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.2s;
 }
 
 .yt-ai-comment-item:hover {
-  background: #242424;
-  transform: translateX(4px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border-color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .yt-ai-comment-author {
-  font-weight: 600;
-  color: var(--yt-ai-accent);
-  margin-bottom: 6px;
-  font-size: 13px;
-}
-
-.yt-ai-comment-text {
-  color: var(--yt-ai-text);
-  margin-bottom: 8px;
-  line-height: 1.4;
-}
-
-.yt-ai-comment-stats {
+  font-weight: 700;
+  color: var(--primary);
   font-size: 12px;
-  color: var(--yt-ai-text-secondary);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-/* Button Styles */
+/*
+ * BUTTONS
+ * Neo-Brutalist Actions
+ */
 .yt-ai-btn {
-  background: var(--yt-ai-gradient);
-  color: white;
+  background: #fff;
+  color: #000;
   border: none;
   padding: 10px 20px;
-  border-radius: 20px;
-  font-weight: 600;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 12px;
+  text-transform: uppercase;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  position: relative;
-  overflow: hidden;
-}
-
-.yt-ai-btn::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.3);
-  transform: translate(-50%, -50%);
-  transition:
-    width 0.6s,
-    height 0.6s;
-}
-
-.yt-ai-btn:hover::before {
-  width: 300px;
-  height: 300px;
+  transition: all 0.2s var(--ease-elastic);
+  box-shadow: 4px 4px 0 rgba(0, 243, 255, 1);
 }
 
 .yt-ai-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 rgba(0, 243, 255, 1);
 }
 
 .yt-ai-btn:active {
-  transform: translateY(0);
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 rgba(0, 243, 255, 1);
 }
 
-.yt-ai-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
-
-/* Segments List */
-.yt-ai-segment-item {
-  padding: 12px;
-  margin-bottom: 8px;
-  border-radius: 8px;
-  border-left: 4px solid transparent;
-  background: linear-gradient(90deg, #1a1a1a 0%, #242424 100%);
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.yt-ai-segment-item:hover {
-  transform: translateX(6px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-.yt-ai-segment-item.Sponsor {
-  border-left-color: #00d26a;
-}
-.yt-ai-segment-item.Highlight {
-  border-left-color: #ff0055;
-}
-.yt-ai-segment-item.InteractionReminderSubscribe {
-  border-left-color: #a020f0;
-}
-.yt-ai-segment-item.SelfPromotion {
-  border-left-color: #ffff00;
-}
-.yt-ai-segment-item.ExclusiveAccess {
-  border-left-color: #008b45;
-}
-.yt-ai-segment-item.PreviewRecap {
-  border-left-color: #00bfff;
-}
-.yt-ai-segment-item.HookGreetings {
-  border-left-color: #4169e1;
-}
-.yt-ai-segment-item.TangentsJokes {
-  border-left-color: #9400d3;
-}
-.yt-ai-segment-item.IntermissionIntroAnimation {
-  border-left-color: #00ffff;
-}
-.yt-ai-segment-item.EndcardsCredits {
-  border-left-color: #0000ff;
-}
-
-/* Loading State with Pulse */
-.yt-ai-loading {
-  text-align: center;
-  padding: 40px 20px;
-  color: var(--yt-ai-text-secondary);
-  animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-/* Error State */
-.yt-ai-error {
-  background: rgba(255, 68, 68, 0.1);
-  border: 1px solid rgba(255, 68, 68, 0.3);
-  border-radius: 8px;
-  padding: 16px;
-  color: #ff6b6b;
-  text-align: center;
-}
-
-/* Placeholder State */
-.yt-ai-placeholder {
-  text-align: center;
-  padding: 40px 20px;
-  color: var(--yt-ai-text-secondary);
-  font-size: 15px;
-}
-
-/* Loading Spinner */
+/*
+ * LOADING & ERROR
+ */
 .yt-ai-loading {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 40px 20px;
-  gap: 16px;
+  padding: 60px 20px;
+  gap: 20px;
+  color: var(--text-secondary);
 }
 
 .yt-ai-spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid var(--yt-ai-border);
-  border-top-color: var(--yt-ai-accent);
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--primary);
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  animation: spin 0.8s linear infinite;
+  box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
+@keyframes spin { to { transform: rotate(360deg); } }
 
-.yt-ai-loading-text {
-  color: var(--yt-ai-text-secondary);
-  font-size: 14px;
-  text-align: center;
-}
-
-/* Header Actions */
-.yt-ai-header-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.yt-ai-icon-btn {
-  background: transparent;
-  border: 1px solid var(--yt-ai-border);
-  color: var(--yt-ai-text);
-  padding: 6px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: all 0.2s;
-}
-
-.yt-ai-icon-btn:hover {
-  background: var(--yt-ai-hover);
-  border-color: var(--yt-ai-accent);
-}
-
-/* Chat Interface */
-.yt-ai-chat-input {
-  display: flex;
-  gap: 8px;
-  padding: 12px 16px;
-  border-top: 1px solid var(--yt-ai-border);
-  background: var(--yt-ai-bg);
-}
-
-#yt-ai-chat-input {
-  flex: 1;
-  padding: 10px 12px;
-  background: var(--yt-ai-hover);
-  border: 1px solid var(--yt-ai-border);
-  border-radius: 20px;
-  color: var(--yt-ai-text);
-  font-size: 14px;
-  outline: none;
-}
-
-#yt-ai-chat-input:focus {
-  border-color: var(--yt-ai-accent);
-}
-
-#yt-ai-chat-send {
-  padding: 10px 20px;
-  background: var(--yt-ai-accent);
-  color: white;
-  border: none;
-  border-radius: 20px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-#yt-ai-chat-send:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-
-.yt-ai-chat-messages {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.yt-ai-error {
+  background: rgba(255, 42, 109, 0.1);
+  border: 1px solid #ff2a6d;
+  color: #ff2a6d;
   padding: 16px;
-  max-height: 60vh;
-  overflow-y: auto;
-  scroll-behavior: smooth;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+  box-shadow: 0 0 20px rgba(255, 42, 109, 0.2);
 }
 
+/*
+ * CHAT MESSAGES
+ */
 .yt-ai-chat-msg {
-  padding: 10px 14px;
-  border-radius: 12px;
+  padding: 14px 18px;
+  border-radius: 16px;
   max-width: 85%;
   font-size: 14px;
   line-height: 1.5;
+  margin-bottom: 16px;
+  position: relative;
 }
 
 .yt-ai-chat-msg.user {
   align-self: flex-end;
-  background: var(--yt-ai-accent);
-  color: white;
+  background: var(--primary);
+  color: #000;
   border-bottom-right-radius: 4px;
+  margin-left: auto;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(0, 243, 255, 0.3);
 }
 
 .yt-ai-chat-msg.ai {
   align-self: flex-start;
-  background: var(--yt-ai-hover);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
   border-bottom-left-radius: 4px;
-}
-
-/* Transcript List */
-.yt-ai-transcript-list {
-  display: flex;
-  flex-direction: column;
-}
-
-/* Segments List */
-.yt-ai-segments-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding-bottom: 32px;
-  margin-bottom: 16px;
-}
-
-.yt-ai-segment-legend {
-  display: flex;
-  gap: 12px;
-  padding: 12px;
-  background: var(--yt-ai-hover);
-  border-radius: 8px;
-  margin-bottom: 12px;
-  flex-wrap: wrap;
-}
-
-.legend-item {
-  font-size: 12px;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-weight: 500;
-}
-
-.legend-item.Sponsor {
-  background: rgba(255, 68, 68, 0.2);
-  color: #ff4444;
-}
-.legend-item.Highlight {
-  background: rgba(0, 204, 68, 0.2);
-  color: #00cc44;
-}
-.legend-item.Content {
-  background: rgba(153, 153, 153, 0.2);
-  color: #999;
-}
-
-.yt-ai-segment-label {
-  font-weight: 600;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.yt-ai-segment-time {
-  font-size: 12px;
-  color: var(--yt-ai-text-secondary);
-  margin-top: 4px;
-}
-
-.yt-ai-segment-title {
-  font-size: 14px;
-  font-weight: 600;
-  margin-top: 6px;
-  color: var(--yt-ai-text);
-}
-
-.yt-ai-segment-desc {
-  font-size: 13px;
-  margin-top: 6px;
-  color: var(--yt-ai-text);
-}
-
-/* Comments */
-.yt-ai-comment {
-  padding: 12px;
-  background: var(--yt-ai-hover);
-  border-radius: 8px;
-  margin-bottom: 8px;
-  border-left: 3px solid var(--yt-ai-accent);
-}
-
-.yt-ai-comment-author {
-  font-weight: 600;
-  color: var(--yt-ai-accent);
-  font-size: 13px;
-  margin-bottom: 6px;
-}
-
-.yt-ai-comment-text {
-  font-size: 14px;
-  line-height: 1.4;
-  margin-bottom: 8px;
-}
-
-.yt-ai-comment-likes {
-  font-size: 12px;
-  color: var(--yt-ai-text-secondary);
-}
-
-/* Error States */
-.yt-ai-error {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  padding: 40px 20px;
-}
-
-.yt-ai-error-icon {
-  font-size: 48px;
-}
-
-.yt-ai-error-msg {
-  color: #ff6b6b;
-  text-align: center;
-  font-size: 14px;
-}
-
-/* Placeholder */
-.yt-ai-placeholder {
-  text-align: center;
-  padding: 40px 20px;
-  color: var(--yt-ai-text-secondary);
-  font-size: 14px;
-}
-
-/* Transcript Controls */
-.yt-ai-transcript-controls {
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--yt-ai-border);
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  background: var(--yt-ai-hover);
-}
-
-.yt-ai-btn-small {
-  padding: 6px 12px;
-  font-size: 12px;
-  font-weight: 500;
-  border: 1px solid var(--yt-ai-border);
-  border-radius: 6px;
-  background: var(--yt-ai-bg);
-  color: var(--yt-ai-text-secondary);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.yt-ai-btn-small:hover {
-  background: var(--yt-ai-hover);
-  color: var(--yt-ai-text);
-  border-color: var(--yt-ai-accent);
-}
-
-.yt-ai-btn-small.active {
-  background: var(--yt-ai-accent);
-  color: #ffffff;
-  border-color: var(--yt-ai-accent);
-}
-
-/* Smooth scrolling animations */
-html {
-  scroll-behavior: smooth;
-}
-
-/* Resize Handle */
-.yt-ai-resize-handle {
-  height: 12px;
-  background: linear-gradient(180deg, transparent 0%, var(--yt-ai-border) 50%, transparent 100%);
-  cursor: ns-resize;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--yt-ai-text-secondary);
-  font-size: 16px;
-  user-select: none;
-  transition: all 0.2s ease;
-  border-top: 1px solid var(--yt-ai-border);
-}
-
-.yt-ai-resize-handle:hover {
-  background: linear-gradient(180deg, transparent 0%, var(--yt-ai-accent) 50%, transparent 100%);
-  color: var(--yt-ai-accent);
-}
-
-.yt-ai-resize-handle:active {
-  background: var(--yt-ai-accent);
-  color: white;
-}
-
-/* Scroll notification animations */
-@keyframes slideIn {
-  from {
-    transform: translateX(400px);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes slideOut {
-  from {
-    transform: translateX(0);
-    opacity: 1;
-  }
-  to {
-    transform: translateX(400px);
-    opacity: 0;
-  }
-}
-
-#yt-ai-scroll-notification {
-  pointer-events: none;
-}
-
-/* Width Resize Handle - Left side vertical bar */
-.yt-ai-resize-handle-width {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 8px;
-  background: linear-gradient(90deg, var(--yt-ai-border) 0%, transparent 100%);
-  cursor: ew-resize;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--yt-ai-text-secondary);
-  font-size: 10px;
-  writing-mode: vertical-lr;
-  user-select: none;
-  transition: all 0.2s ease;
-  z-index: 10;
-  opacity: 0.3;
-}
-
-.yt-ai-resize-handle-width:hover {
-  background: linear-gradient(90deg, var(--yt-ai-accent) 0%, transparent 100%);
-  color: var(--yt-ai-accent);
-  opacity: 1;
-  width: 12px;
-}
-
-.yt-ai-resize-handle-width:active {
-  background: var(--yt-ai-accent);
-  color: white;
-  opacity: 1;
+  color: var(--text);
 }

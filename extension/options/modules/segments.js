@@ -17,6 +17,7 @@ export class SegmentsConfig {
       msd = i('#minSegmentDuration'),
       msdv = i('#minSegmentDurationValue'),
       g = i('#segmentsGrid');
+
     if (en) en.checked = c.segments?.enabled ?? false;
     if (as) as.checked = c.segments?.autoSkip ?? false;
     if (sn) sn.checked = c.segments?.showNotifications ?? true;
@@ -29,14 +30,20 @@ export class SegmentsConfig {
       msd.value = c.segments?.minSegmentDuration ?? 1;
       if (msdv) msdv.textContent = `${msd.value}s`;
     }
+
     if (g) this.render(g);
-    if (en) on(en, 'change', e => this.a.save('segments.enabled', e.target.checked));
-    if (as) on(as, 'change', e => this.a.save('segments.autoSkip', e.target.checked));
-    if (sn) on(sn, 'change', e => this.a.save('segments.showNotifications', e.target.checked));
-    if (sm) on(sm, 'change', e => this.a.save('segments.showMarkers', e.target.checked));
+
+    // Use SettingsManager directly for immediate updates where appropriate,
+    // or AutoSave if debouncing is desired. For toggles, immediate is usually better for settings pages.
+    if (en) on(en, 'change', async e => await this.updateSetting('segments.enabled', e.target.checked));
+    if (as) on(as, 'change', async e => await this.updateSetting('segments.autoSkip', e.target.checked));
+    if (sn) on(sn, 'change', async e => await this.updateSetting('segments.showNotifications', e.target.checked));
+    if (sm) on(sm, 'change', async e => await this.updateSetting('segments.showMarkers', e.target.checked));
+
     if (st)
       on(st, 'input', () => {
         if (stv) stv.textContent = `${st.value}s`;
+        // Use AutoSave for sliders to avoid spamming storage
         this.a.save('segments.skipTolerance', pf(st.value));
       });
     if (msd)
@@ -44,19 +51,30 @@ export class SegmentsConfig {
         if (msdv) msdv.textContent = `${msd.value}s`;
         this.a.save('segments.minSegmentDuration', pf(msd.value));
       });
+
     const ib = i('#ignoreAllBtn'),
       sb = i('#skipAllBtn'),
       sp = i('#speedAllBtn'),
       rb = i('#resetAllBtn');
+
     if (ib) on(ib, 'click', () => this.setAll('ignore'));
     if (sb) on(sb, 'click', () => this.setAll('skip'));
     if (sp) on(sp, 'click', () => this.setAll('speed'));
     if (rb) on(rb, 'click', () => this.resetToDefaults());
   }
+
+  async updateSetting(path, value) {
+    this.s.set(path, value);
+    await this.s.save();
+  }
+
   render(g) {
     const t = i('#segmentItemTemplate');
+    if (!t) return;
+
     g.innerHTML = '';
     const c = this.s.get().segments?.categories || {};
+
     SEGMENT_CATEGORIES.forEach(cat => {
       const cl = t.content.cloneNode(true),
         item = cl.querySelector('.segment-item'),
@@ -66,59 +84,86 @@ export class SegmentsConfig {
         sc = cl.querySelector('.speed-control'),
         ss = cl.querySelector('.speed-slider'),
         sv = cl.querySelector('.speed-value');
+
+      if (!item) return;
+
       item.dataset.category = cat.id;
-      co.style.backgroundColor = cat.color;
-      n.textContent = cat.label;
+      if (co) co.style.backgroundColor = cat.color;
+      if (n) n.textContent = cat.label;
+
       const cfg = c[cat.id] || { ...DEFAULT_SEGMENT_CONFIG };
-      a.value = cfg.action;
-      ss.value = cfg.speed;
-      sv.textContent = `${cfg.speed}x`;
+
+      if (a) {
+        a.value = cfg.action;
+        on(a, 'change', () => {
+          const v = a.value;
+          if (sc) {
+            if (v === 'speed') sc.classList.remove('hidden');
+            else sc.classList.add('hidden');
+          }
+          this.updateCategory(cat.id, { action: v });
+        });
+      }
+
+      if (ss && sv) {
+        ss.value = cfg.speed;
+        sv.textContent = `${cfg.speed}x`;
+        on(ss, 'input', () => {
+          const v = ss.value;
+          sv.textContent = `${v}x`;
+          // Debounce speed updates if possible, or just save
+          this.updateCategory(cat.id, { speed: pf(v) });
+        });
+      }
+
       if (cat.id === 'content') {
-        a.disabled = false;
+        if (a) a.disabled = false; // Allow changing action for content? Usually content is not skipped.
+        // Actually, logic says "NEVER skipped". So maybe disable 'skip' option?
+        // For now, keeping existing logic but ensuring class is added
         item.classList.add('content-segment');
         const desc = cl.querySelector('.segment-description');
         if (desc) desc.textContent = 'Main video content - can adjust speed but NEVER skipped';
       }
-      if (cfg.action === 'speed') sc.classList.remove('hidden');
-      on(a, 'change', () => {
-        const v = a.value;
-        if (v === 'speed') sc.classList.remove('hidden');
-        else sc.classList.add('hidden');
-        this.update(cat.id, { action: v });
-      });
-      on(ss, 'input', () => {
-        const v = ss.value;
-        sv.textContent = `${v}x`;
-        this.update(cat.id, { speed: pf(v) });
-      });
+
+      if (cfg.action === 'speed' && sc) sc.classList.remove('hidden');
+
       g.appendChild(cl);
     });
   }
-  async update(id, u) {
+
+  async updateCategory(id, u) {
     const c = this.s.get(),
       cats = { ...(c.segments?.categories || {}) };
+
     if (!cats[id]) cats[id] = { ...DEFAULT_SEGMENT_CONFIG };
     cats[id] = { ...cats[id], ...u };
+
     this.s.set('segments.categories', cats);
     await this.s.save();
   }
+
   async setAll(a) {
     const c = this.s.get(),
       cats = { ...(c.segments?.categories || {}) };
+
     SEGMENT_CATEGORIES.forEach(cat => {
       if (cat.id === 'content') return;
       if (!cats[cat.id]) cats[cat.id] = { ...DEFAULT_SEGMENT_CONFIG };
       cats[cat.id] = { ...cats[cat.id], action: a };
     });
+
     this.s.set('segments.categories', cats);
     await this.s.save();
+
     const g = i('#segmentsGrid');
     if (g) this.render(g);
   }
+
   async resetToDefaults() {
     const defaults = this.s.getDefaults();
     this.s.set('segments.categories', defaults.segments.categories);
     await this.s.save();
+
     const g = i('#segmentsGrid');
     if (g) this.render(g);
   }

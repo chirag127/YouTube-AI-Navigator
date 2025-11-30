@@ -7,7 +7,7 @@
   <title>YouTube AI Navigator - Settings</title>
   <link rel="stylesheet" href="options.css" />
   <link rel="stylesheet" href="banner-styles.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 </head>
 
 <body>
@@ -95,10 +95,10 @@
         <span class="segment-name">Category Name</span>
       </div>
       <div class="segment-controls">
-        <select class="segment-action form-select-sm" name="segment-action" aria-label="Segment Action"></select>
-        <option value="ignore">Ignore</option>
-        <option value="skip">Skip</option>
-        <option value="speed">Speed Up</option>
+        <select class="segment-action form-select-sm" name="segment-action" aria-label="Segment Action">
+          <option value="ignore">Ignore</option>
+          <option value="skip">Skip</option>
+          <option value="speed">Speed Up</option>
         </select>
         <div class="speed-control hidden">
           <input type="range" class="speed-slider" name="speed-slider" min="1" max="16" step="0.5" value="2"

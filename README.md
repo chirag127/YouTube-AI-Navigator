@@ -30,9 +30,25 @@ npm test  # Run headless test suite (Vitest + JSDOM)
 
 Load `extension/` folder in Chrome as unpacked extension.
 
-## 🎨 Customization
+## 🎨 Hyper-Configurability
 
-The extension offers extensive customization options to tailor the experience to your preferences:
+The extension implements **maximum user configurability** - every feature, rule, color, and variable is user-customizable through the comprehensive Options page. All settings save to chrome.storage and apply instantly.
+
+### Core Features Configurable
+
+- **Video Analysis**: Enable/disable auto-analysis, auto-summarize, auto-extract key points, auto-detect language, auto-load transcript
+- **Chat**: Enable/disable chat features
+- **Comments**: Enable/disable analysis, set limit (5-100), max replies depth (0-5), sort by (top/newest/oldest), auto-summarize
+- **Segments**: Enable/disable detection, auto-skip, show notifications, show markers, skip tolerance (0.1-2s), min duration (0.5-10s), per-category actions (ignore/skip/speed 1-16x)
+- **Transcripts**: Enable/disable, active state, auto-open widget, method (auto/dom/genius/speech), language, include timestamps, auto-translate, show original, highlight keywords, auto-close, auto-close delay (0-5000ms), auto-close on cached, auto-scroll
+- **Metadata**: Include/extract title, author, views, duration, description, tags, upload date, chapters
+- **Notifications**: Enable/disable, position (top/bottom), duration (1-10s), sound, vibration, browser notifications
+- **Cache**: Enable/disable, TTL (1-168h), max size (10-500MB), per-type caching (transcripts/comments/metadata/segments/summaries)
+- **Performance**: Rate limits, timeouts, retry attempts, chunk sizes, memory limits
+- **UI Appearance**: Theme (dark/light/system), wallpaper mode, compact mode, font family, icon style, primary/accent/background/text/border colors
+- **Automation**: Auto-like, auto-thumbs up, auto-next video, auto-loop
+- **External APIs**: TMDB, NewsData, Google Fact Check, Twitch (client ID/access token), enable/disable toggles for all 14 APIs
+- **Advanced**: Debug mode, enable telemetry, max history (10-1000), export/import settings, reset defaults
 
 ### Widget Appearance
 
@@ -53,6 +69,20 @@ The extension offers extensive customization options to tailor the experience to
 ### Segment Filtering
 
 - **Granular Control:** Toggle visibility for specific segment types (Sponsors, Self-promo, Intros, etc.).
+
+### AI Configuration
+
+- **Model Selection:** Choose from available Gemini models
+- **API Key:** Secure storage of Gemini API key
+- **Temperature:** Creativity level (0-2)
+- **Max Tokens:** Response length (100-32768)
+- **Custom Prompts:** Editable AI instructions for all analysis types
+- **Output Settings:** Summary length, max insights, max FAQs, timestamps
+
+### Scroll & UI Settings
+
+- **Scroll Behavior:** Auto-scroll to comments, scroll back after, show notifications, smooth scrolling, speed, delay
+- **UI Preferences:** Theme, font size, animations, tooltips, compact mode
 
 ## Configuration
 

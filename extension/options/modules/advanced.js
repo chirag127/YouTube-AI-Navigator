@@ -9,7 +9,13 @@ export class AdvancedSettings {
   }
   init() {
     this.chk('debugMode', this.s.get().advanced?.debugMode ?? false);
-    this.a.attachToAll({ debugMode: { path: 'advanced.debugMode' } });
+    this.chk('enableTelemetry', this.s.get().advanced?.enableTelemetry ?? false);
+    this.set('maxHistory', this.s.get().advanced?.maxHistory || 100);
+    this.a.attachToAll({
+      debugMode: { path: 'advanced.debugMode' },
+      enableTelemetry: { path: 'advanced.enableTelemetry' },
+      maxHistory: { path: 'advanced.maxHistory', transform: v => parseInt(v) },
+    });
     const els = {
       ex: i('#exportSettings'),
       im: i('#importSettings'),

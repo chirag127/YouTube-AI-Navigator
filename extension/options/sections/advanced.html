@@ -25,6 +25,21 @@
         <span class="slider round"></span>
       </label>
     </div>
+    <div class="form-group checkbox-row">
+      <div class="checkbox-label">
+        <label for="enableTelemetry">Enable Telemetry</label>
+        <p class="help-text">Send anonymous usage data to improve the extension.</p>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="enableTelemetry" name="enableTelemetry" />
+        <span class="slider round"></span>
+      </label>
+    </div>
+    <div class="form-group">
+      <label for="maxHistory">Max History Entries</label>
+      <input type="number" id="maxHistory" name="maxHistory" class="form-input" min="10" max="1000" value="100" />
+      <p class="help-text">Maximum number of videos to keep in history (10-1000)</p>
+    </div>
     <div class="form-actions mt-4">
       <button id="resetDefaults" class="btn btn-danger">Reset All Settings to Default</button>
     </div>

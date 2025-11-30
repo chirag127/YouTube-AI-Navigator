@@ -1,17 +1,46 @@
+:root {
+  --primary: #00f3ff;
+  --glass: rgba(0, 0, 0, 0.85);
+  --glow: rgba(0, 243, 255, 0.4);
+  --bg-base: #000000;
+  --bg-glass: rgba(0, 0, 0, 0.85);
+  --text: #ffffff;
+  --text-secondary: #a0a0a0;
+  --border: rgba(255, 255, 255, 0.1);
+  --border-hover: rgba(255, 255, 255, 0.2);
+  --accent: #00f3ff;
+  --gradient: linear-gradient(135deg, #00f3ff 0%, #bc13fe 100%);
+  --radius: 16px;
+  --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
+  --shadow-neo: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 4px 8px rgba(255, 255, 255, 0.1);
+  --backdrop: blur(20px);
+  --font: 'Inter', system-ui, sans-serif;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .welcome-banner {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-  border: 1px solid rgba(102, 126, 234, 0.3);
-  border-radius: 16px;
+  background: var(--bg-glass);
+  backdrop-filter: var(--backdrop);
+  -webkit-backdrop-filter: var(--backdrop);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   padding: 24px;
   margin-bottom: 32px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow), var(--shadow-neo);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
   position: relative;
   overflow: hidden;
+  transition: all 0.2s var(--ease);
+}
+
+.welcome-banner:hover {
+  border-color: var(--border-hover);
+  box-shadow:
+    0 12px 48px rgba(0, 243, 255, 0.15),
+    var(--shadow-neo);
 }
 
 .welcome-banner::before {
@@ -77,14 +106,19 @@
   display: block;
   font-size: 18px;
   font-weight: 700;
-  color: white;
+  color: var(--text);
   margin-bottom: 6px;
   letter-spacing: -0.01em;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 10px var(--glow);
 }
 
 .banner-text p {
   font-size: 15px;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--text-secondary);
   margin: 0;
 }
 
@@ -95,29 +129,50 @@
 }
 
 #start-setup-btn {
-  background: white;
-  color: #667eea;
+  background: var(--gradient);
+  color: #000;
   padding: 10px 24px;
   border: none;
-  border-radius: 10px;
+  border-radius: var(--radius);
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s var(--ease);
+  box-shadow: 0 4px 16px var(--glow);
   white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+}
+
+#start-setup-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition:
+    width 0.6s,
+    height 0.6s;
 }
 
 #start-setup-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-  background: #f8f9fa;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 20px var(--glow);
+}
+
+#start-setup-btn:hover::before {
+  width: 300px;
+  height: 300px;
 }
 
 #dismiss-banner-btn {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   width: 40px;
   height: 40px;
   display: flex;
@@ -125,10 +180,13 @@
   justify-content: center;
   cursor: pointer;
   font-size: 16px;
-  transition: all 0.2s ease;
+  transition: all 0.2s var(--ease);
 }
 
 #dismiss-banner-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: rotate(90deg);
+  background: rgba(255, 42, 109, 0.1);
+  border-color: #ff2a6d;
+  color: #ff2a6d;
+  transform: rotate(90deg) scale(1.1);
+  box-shadow: 0 0 12px rgba(255, 42, 109, 0.3);
 }

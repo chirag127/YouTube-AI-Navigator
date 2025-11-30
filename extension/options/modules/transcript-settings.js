@@ -9,6 +9,8 @@ export class TranscriptSettings {
     const c = this.s.get().transcript || {};
     this.set('transcriptMethod', c.method || 'auto');
     this.set('transcriptLanguage', c.language || 'en');
+    this.chk('transcriptActive', c.active ?? true);
+    this.chk('transcriptAutoOpen', c.autoOpen ?? true);
     this.chk('transcript-includeTimestamps', c.includeTimestamps ?? true);
     this.chk('transcriptAutoTranslate', c.autoTranslate ?? true);
     this.chk('transcriptShowOriginal', c.showOriginal ?? false);
@@ -20,6 +22,8 @@ export class TranscriptSettings {
     this.a.attachToAll({
       transcriptMethod: { path: 'transcript.method' },
       transcriptLanguage: { path: 'transcript.language' },
+      transcriptActive: { path: 'transcript.active' },
+      transcriptAutoOpen: { path: 'transcript.autoOpen' },
       'transcript-includeTimestamps': { path: 'transcript.includeTimestamps' },
       transcriptAutoTranslate: { path: 'transcript.autoTranslate' },
       transcriptShowOriginal: { path: 'transcript.showOriginal' },

@@ -18,16 +18,14 @@
     </div>
     <div class="form-group">
       <label for="commentsLimit">Comments Limit</label>
-      <input
-        type="number"
-        id="commentsLimit"
-        name="commentsLimit"
-        class="form-input"
-        min="5"
-        max="100"
-        value="20"
-      />
+      <input type="number" id="commentsLimit" name="commentsLimit" class="form-input" min="5" max="100" value="20" />
       <p class="help-text">Maximum number of comments to fetch (5-100)</p>
+    </div>
+    <div class="form-group">
+      <label for="commentsMaxReplies">Max Replies Depth</label>
+      <input type="number" id="commentsMaxReplies" name="commentsMaxReplies" class="form-input" min="0" max="5"
+        value="3" />
+      <p class="help-text">Maximum depth of comment replies to fetch (0-5)</p>
     </div>
     <div class="form-group checkbox-row">
       <div class="checkbox-label">
@@ -51,6 +49,16 @@
 
   <div class="glass-card">
     <h3>Comment Analysis</h3>
+    <div class="form-group checkbox-row">
+      <div class="checkbox-label">
+        <label for="commentsAutoSummarize">Auto-Summarize Comments</label>
+        <p class="help-text">Automatically generate summary of comments</p>
+      </div>
+      <label class="switch sm">
+        <input type="checkbox" id="commentsAutoSummarize" name="commentsAutoSummarize" />
+        <span class="slider round"></span>
+      </label>
+    </div>
     <div class="form-group checkbox-row">
       <div class="checkbox-label">
         <label for="analyzeSentiment">Analyze Sentiment</label>

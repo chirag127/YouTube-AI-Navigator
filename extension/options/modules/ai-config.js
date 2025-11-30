@@ -70,6 +70,16 @@ export class AIConfig {
         els.it.checked = c.includeTimestamps !== false;
         on(els.it, 'change', e => this.a.save('ai.includeTimestamps', e.target.checked));
       }
+      const temp = i('#ai-temperature');
+      if (temp) {
+        temp.value = c.temperature || 0.7;
+        on(temp, 'change', e => this.a.save('ai.temperature', parseFloat(vl(e.target))));
+      }
+      const mt = i('#ai-maxTokens');
+      if (mt) {
+        mt.value = c.maxTokens || 8192;
+        on(mt, 'change', e => this.a.save('ai.maxTokens', parseInt(vl(e.target))));
+      }
       if (els.ms)
         on(els.ms, 'change', e => {
           let m = vl(e.target);

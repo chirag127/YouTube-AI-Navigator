@@ -1,0 +1,85 @@
+<section id="ui-appearance" class="section-content">
+    <header class="section-header">
+        <h2>UI Appearance Settings</h2>
+        <p>Customize the visual appearance and behavior of the extension interface</p>
+    </header>
+
+    <div class="glass-card">
+        <h3>Display Modes</h3>
+        <div class="form-group checkbox-row">
+            <div class="checkbox-label">
+                <label for="uiWallpaperMode">Wallpaper Mode</label>
+                <p class="help-text">Enable dynamic background wallpapers</p>
+            </div>
+            <label class="switch sm">
+                <input type="checkbox" id="uiWallpaperMode" name="uiWallpaperMode" />
+                <span class="slider round"></span>
+            </label>
+        </div>
+        <div class="form-group checkbox-row">
+            <div class="checkbox-label">
+                <label for="uiCompactMode">Compact Mode</label>
+                <p class="help-text">Use compact layout for smaller screens</p>
+            </div>
+            <label class="switch sm">
+                <input type="checkbox" id="uiCompactMode" name="uiCompactMode" />
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="glass-card">
+        <h3>Color Customization</h3>
+        <div class="form-group">
+            <label for="uiPrimaryColor">Primary Color</label>
+            <input type="color" id="uiPrimaryColor" name="uiPrimaryColor" class="form-color" value="#00f3ff" />
+            <p class="help-text">Main accent color for highlights and buttons</p>
+        </div>
+        <div class="form-group">
+            <label for="uiAccentColor">Accent Color</label>
+            <input type="color" id="uiAccentColor" name="uiAccentColor" class="form-color" value="#bc13fe" />
+            <p class="help-text">Secondary accent color for gradients</p>
+        </div>
+        <div class="form-group">
+            <label for="uiBackgroundColor">Background Color</label>
+            <input type="color" id="uiBackgroundColor" name="uiBackgroundColor" class="form-color" value="#000000" />
+            <p class="help-text">Main background color</p>
+        </div>
+        <div class="form-group">
+            <label for="uiTextColor">Text Color</label>
+            <input type="color" id="uiTextColor" name="uiTextColor" class="form-color" value="#ffffff" />
+            <p class="help-text">Primary text color</p>
+        </div>
+        <div class="form-group">
+            <label for="uiBorderColor">Border Color</label>
+            <input type="color" id="uiBorderColor" name="uiBorderColor" class="form-color" value="#ffffff" />
+            <p class="help-text">Border and separator color (with opacity)</p>
+        </div>
+    </div>
+
+    <div class="glass-card">
+        <h3>Typography</h3>
+        <div class="form-group">
+            <label for="uiFontFamily">Font Family</label>
+            <select id="uiFontFamily" name="uiFontFamily" class="form-select">
+                <option value="Inter">Inter (Default)</option>
+                <option value="Roboto">Roboto</option>
+                <option value="Open Sans">Open Sans</option>
+                <option value="Lato">Lato</option>
+                <option value="System">System Default</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="glass-card">
+        <h3>Icons & Visuals</h3>
+        <div class="form-group">
+            <label for="uiIconStyle">Icon Style</label>
+            <select id="uiIconStyle" name="uiIconStyle" class="form-select">
+                <option value="default">Default (Emoji/Simple)</option>
+                <option value="minimal">Minimal</option>
+                <option value="solid">Solid</option>
+            </select>
+        </div>
+    </div>
+</section>
