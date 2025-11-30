@@ -26,20 +26,20 @@ export class AIConfig {
       const c = this.s.get().ai || {};
       if (ModelManager && c.GAK)
         this.mm = new ModelManager(c.GAK, 'https://generativelanguage.googleapis.com/v1beta');
-      this.set('section-apiKey', c.GAK || '');
-      this.set('section-customPrompt', c.customPrompt || '');
-      if (c.model) this.set('modelSelect', c.model);
+      this.set('ai-apiKey', c.GAK || '');
+      this.set('ai-customPrompt', c.customPrompt || '');
+      if (c.model) this.set('ai-modelSelect', c.model);
       const els = {
-        ak: i('#section-apiKey'),
-        tak: i('#toggleApiKey'),
-        ms: i('#modelSelect'),
-        rm: i('#refreshModels'),
-        tc: i('#testConnection'),
-        cp: i('#section-customPrompt'),
-        sl: i('#summaryLength'),
-        mi: i('#maxInsights'),
-        mf: i('#maxFAQ'),
-        it: i('#includeTimestamps'),
+        ak: i('#ai-apiKey'),
+        tak: i('#ai-toggleApiKey'),
+        ms: i('#ai-modelSelect'),
+        rm: i('#ai-refreshModels'),
+        tc: i('#ai-testConnection'),
+        cp: i('#ai-customPrompt'),
+        sl: i('#ai-summaryLength'),
+        mi: i('#ai-maxInsights'),
+        mf: i('#ai-maxFAQ'),
+        it: i('#ai-includeTimestamps'),
       };
       if (els.ak)
         on(els.ak, 'change', async e => {
@@ -124,9 +124,9 @@ export class AIConfig {
     }
   }
   async test() {
-    const btn = i('#testConnection'),
-      st = i('#apiStatus'),
-      ms = i('#modelSelect'),
+    const btn = i('#ai-testConnection'),
+      st = i('#ai-apiStatus'),
+      ms = i('#ai-modelSelect'),
       c = this.s.get().ai || {};
     btn.disabled = true;
     tc(btn, 'Testing...');

@@ -7,10 +7,10 @@
   <div class="glass-card">
     <h3>API Connection</h3>
     <div class="form-group">
-      <label for="section-apiKey">Gemini API Key</label>
+      <label for="ai-apiKey">Gemini API Key</label>
       <div class="input-with-button">
-        <input type="password" id="section-apiKey" name="section-apiKey" class="form-input" placeholder="Enter your API key" />
-        <button id="toggleApiKey" class="btn-icon" title="Show/Hide">👁️</button>
+        <input type="password" id="ai-apiKey" name="ai-apiKey" class="form-input" placeholder="Enter your API key" />
+        <button id="ai-toggleApiKey" class="btn-icon" title="Show/Hide">👁️</button>
       </div>
       <p class="help-text">
         Get your free key from
@@ -18,20 +18,20 @@
       </p>
     </div>
     <div class="form-actions">
-      <button id="testConnection" class="btn btn-secondary">Test Connection</button>
+      <button id="ai-testConnection" class="btn btn-secondary">Test Connection</button>
     </div>
-    <div id="apiStatus" class="status-indicator hidden"></div>
+    <div id="ai-apiStatus" class="status-indicator hidden"></div>
   </div>
 
   <div class="glass-card">
     <h3>Model Selection</h3>
     <div class="form-group">
-      <label for="modelSelect">Gemini Model</label>
+      <label for="ai-modelSelect">Gemini Model</label>
       <div class="select-wrapper">
-        <select id="modelSelect" name="modelSelect" class="form-select">
+        <select id="ai-modelSelect" name="ai-modelSelect" class="form-select">
           <option value="" disabled selected>Loading models...</option>
         </select>
-        <button id="refreshModels" class="btn-icon" title="Refresh Models">🔄</button>
+        <button id="ai-refreshModels" class="btn-icon" title="Refresh Models">🔄</button>
       </div>
       <p class="help-text">Select the AI model to use. Newer models may be faster or smarter.</p>
     </div>
@@ -40,14 +40,51 @@
   <div class="glass-card">
     <h3>System Prompt</h3>
     <div class="form-group">
-      <label for="section-customPrompt">Custom Instructions</label>
+      <label for="ai-customPrompt">Custom Instructions</label>
       <textarea
-        id="section-customPrompt" name="section-customPrompt"
+        id="ai-customPrompt" name="ai-customPrompt"
         class="form-textarea"
         rows="4"
         placeholder="e.g., Focus on technical details, use bullet points..."
       ></textarea>
       <p class="help-text">Optional instructions to guide the AI's behavior.</p>
+    </div>
+  </div>
+
+  <div class="glass-card">
+    <h3>Summary Settings</h3>
+    <div class="form-group">
+      <label for="ai-summaryLength">Summary Length</label>
+      <select id="ai-summaryLength" name="ai-summaryLength" class="form-select">
+        <option value="short">Short (Concise)</option>
+        <option value="medium" selected>Medium (Balanced)</option>
+        <option value="long">Long (Detailed)</option>
+      </select>
+      <p class="help-text">Desired length of the generated summary</p>
+    </div>
+    <div class="form-group checkbox-row">
+      <div class="checkbox-label">
+        <label for="ai-includeTimestamps">Include Timestamps</label>
+        <p class="help-text">Add clickable timestamps to the summary</p>
+      </div>
+      <label class="switch sm">
+        <input type="checkbox" id="ai-includeTimestamps" name="ai-includeTimestamps" />
+        <span class="slider round"></span>
+      </label>
+    </div>
+  </div>
+
+  <div class="glass-card">
+    <h3>Advanced AI</h3>
+    <div class="form-group">
+      <label for="ai-maxInsights">Max Key Insights</label>
+      <input type="number" id="ai-maxInsights" name="ai-maxInsights" class="form-input" min="1" max="10" value="5" />
+      <p class="help-text">Maximum number of key insights to generate (1-10)</p>
+    </div>
+    <div class="form-group">
+      <label for="ai-maxFAQ">Max FAQs</label>
+      <input type="number" id="ai-maxFAQ" name="ai-maxFAQ" class="form-input" min="0" max="10" value="3" />
+      <p class="help-text">Maximum number of FAQs to generate (0-10)</p>
     </div>
   </div>
 </section>

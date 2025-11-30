@@ -12,10 +12,10 @@ export class PerformanceSettings {
   loadSettings() {
     const c = this.s.get(),
       p = c.performance || {};
-    this.set('maxConcurrentRequests', p.maxConcurrentRequests || 3);
-    this.set('rateLimitDelay', p.rateLimitDelay || 1000);
-    this.set('retryAttempts', p.retryAttempts || 3);
-    this.set('retryDelay', p.retryDelay || 2000);
+    this.set('section-maxConcurrentRequests', p.maxConcurrentRequests || 3);
+    this.set('section-rateLimitDelay', p.rateLimitDelay || 1000);
+    this.set('section-retryAttempts', p.retryAttempts || 3);
+    this.set('section-retryDelay', p.retryDelay || 2000);
     this.chk('enableCompression', p.enableCompression ?? true);
     this.chk('lazyLoad', p.lazyLoad ?? true);
     this.chk('prefetchData', p.prefetchData ?? true);
@@ -24,11 +24,24 @@ export class PerformanceSettings {
     this.a.attachToAll({
       maxConcurrentRequests: {
         path: 'performance.maxConcurrentRequests',
+        selector: '#section-maxConcurrentRequests',
         transform: v => pi(v),
       },
-      rateLimitDelay: { path: 'performance.rateLimitDelay', transform: v => pi(v) },
-      retryAttempts: { path: 'performance.retryAttempts', transform: v => pi(v) },
-      retryDelay: { path: 'performance.retryDelay', transform: v => pi(v) },
+      rateLimitDelay: {
+        path: 'performance.rateLimitDelay',
+        selector: '#section-rateLimitDelay',
+        transform: v => pi(v)
+      },
+      retryAttempts: {
+        path: 'performance.retryAttempts',
+        selector: '#section-retryAttempts',
+        transform: v => pi(v)
+      },
+      retryDelay: {
+        path: 'performance.retryDelay',
+        selector: '#section-retryDelay',
+        transform: v => pi(v)
+      },
       enableCompression: { path: 'performance.enableCompression' },
       lazyLoad: { path: 'performance.lazyLoad' },
       prefetchData: { path: 'performance.prefetchData' },
