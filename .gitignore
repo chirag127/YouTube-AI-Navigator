@@ -10,3 +10,4 @@ package-lock.json
 lint_output.txt
 
 MIGRATION.md
+test-results.json

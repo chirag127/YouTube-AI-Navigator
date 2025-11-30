@@ -1,4 +1,4 @@
-import { qs as i, on } from '../../utils/shortcuts/dom.js';
+import { qs as i } from '../../utils/shortcuts/dom.js';
 export class ExternalAPIs {
   constructor(s, a) {
     this.s = s;
