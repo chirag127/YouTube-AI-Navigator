@@ -101,6 +101,7 @@
                       <input
                         type="range"
                         id="widgetOpacity"
+                        name="widgetOpacity"
                         class="form-range"
                         min="20"
                         max="100"
@@ -116,6 +117,7 @@
                       <input
                         type="range"
                         id="widgetBorderRadius"
+                        name="widgetBorderRadius"
                         class="form-range"
                         min="0"
                         max="24"
@@ -128,7 +130,7 @@
                   <div class="form-group">
                     <label for="widgetAccentColor">Accent Color</label>
                     <div class="color-picker-wrapper">
-                      <input type="color" id="widgetAccentColor" class="form-color" value="#3ea6ff" />
+                      <input type="color" id="widgetAccentColor" name="widgetAccentColor" class="form-color" value="#3ea6ff" />
                       <span id="widgetAccentColorValue" class="color-value">#3ea6ff</span>
                     </div>
                   </div>
@@ -141,6 +143,7 @@
                 <label for="widgetHideOnChannels">Hide on Channels (Blacklist)</label>
                 <textarea
                   id="widgetHideOnChannels"
+                  name="widgetHideOnChannels"
                   class="form-textarea"
                   rows="3"
                   placeholder="Enter channel names or IDs, separated by commas..."
@@ -177,6 +180,7 @@
                 <input
                   type="password"
                   id="apiKey"
+                  name="apiKey"
                   class="form-input"
                   placeholder="Enter your API key"
                 />
@@ -199,7 +203,7 @@
             <div class="form-group">
               <label for="modelSelect">Gemini Model</label>
               <div class="select-wrapper">
-                <select id="modelSelect" class="form-select">
+                <select id="modelSelect" name="modelSelect" class="form-select">
                   <option value="" disabled selected>Loading models...</option>
                 </select>
                 <button id="refreshModels" class="btn-icon" title="Refresh Models">🔄</button>
@@ -216,6 +220,7 @@
               <label for="customPrompt">Custom Instructions</label>
               <textarea
                 id="customPrompt"
+                name="customPrompt"
                 class="form-textarea"
                 rows="4"
                 placeholder="e.g., Focus on technical details, use bullet points..."
@@ -232,6 +237,7 @@
                   <input
                     type="text"
                     id="aiBaseUrl"
+                    name="aiBaseUrl"
                     class="form-input"
                     placeholder="https://generativelanguage.googleapis.com"
                   />
@@ -245,6 +251,7 @@
                     <input
                       type="range"
                       id="aiTopP"
+                      name="aiTopP"
                       class="form-range"
                       min="0"
                       max="1"
@@ -261,6 +268,7 @@
                     <input
                       type="range"
                       id="aiTopK"
+                      name="aiTopK"
                       class="form-range"
                       min="1"
                       max="100"
@@ -280,7 +288,7 @@
                 <div class="form-group">
                   <label for="summaryLength">Summary Length</label>
                   <div class="select-wrapper">
-                    <select id="summaryLength" class="form-select">
+                    <select id="summaryLength" name="summaryLength" class="form-select">
                       <option value="short">Short (2-3 paragraphs)</option>
                       <option value="medium" selected>Medium (4-6 paragraphs)</option>
                       <option value="long">Long (8-12 paragraphs)</option>
@@ -290,12 +298,12 @@
                 </div>
                 <div class="form-group">
                   <label for="maxInsights">Max Key Insights</label>
-                  <input type="number" id="maxInsights" class="form-input" min="3" max="20" value="8" />
+                  <input type="number" id="maxInsights" name="maxInsights" class="form-input" min="3" max="20" value="8" />
                   <p class="help-text">Number of key takeaways to extract (3-20).</p>
                 </div>
                 <div class="form-group">
                   <label for="maxFAQ">Max FAQ Items</label>
-                  <input type="number" id="maxFAQ" class="form-input" min="3" max="15" value="5" />
+                  <input type="number" id="maxFAQ" name="maxFAQ" class="form-input" min="3" max="15" value="5" />
                   <p class="help-text">Number of FAQ questions to generate (3-15).</p>
                 </div>
             </div>
@@ -305,7 +313,7 @@
                 <p class="help-text">Add [MM:SS] timestamps to summaries and insights.</p>
               </div>
               <label class="switch">
-                <input type="checkbox" id="includeTimestamps" checked />
+                <input type="checkbox" id="includeTimestamps" name="includeTimestamps" checked />
                 <span class="slider round"></span>
               </label>
             </div>
@@ -326,7 +334,7 @@
                 <p class="help-text">Analyze video to identify sponsors, intros, and more.</p>
               </div>
               <label class="switch">
-                <input type="checkbox" id="enableSegments" />
+                <input type="checkbox" id="enableSegments" name="enableSegments" />
                 <span class="slider round"></span>
               </label>
             </div>
@@ -364,7 +372,7 @@
                 <label for="tmdbEnabled">Enable TMDB (Movies/TV)</label>
               </div>
               <label class="switch">
-                <input type="checkbox" id="tmdbEnabled" checked />
+                <input type="checkbox" id="tmdbEnabled" name="tmdbEnabled" checked />
                 <span class="slider round"></span>
               </label>
             </div>
@@ -373,6 +381,7 @@
               <input
                 type="password"
                 id="tmdbApiKey"
+                name="tmdbApiKey"
                 class="form-input"
                 placeholder="Enter TMDB API Key"
               />
@@ -386,7 +395,7 @@
                 <label for="igdbEnabled">Enable IGDB (Gaming)</label>
               </div>
               <label class="switch">
-                <input type="checkbox" id="igdbEnabled" checked />
+                <input type="checkbox" id="igdbEnabled" name="igdbEnabled" checked />
                 <span class="slider round"></span>
               </label>
             </div>
@@ -396,6 +405,7 @@
                   <input
                     type="text"
                     id="igdbClientId"
+                    name="igdbClientId"
                     class="form-input"
                     placeholder="Twitch Client ID"
                   />
@@ -405,6 +415,7 @@
                   <input
                     type="password"
                     id="igdbAccessToken"
+                    name="igdbAccessToken"
                     class="form-input"
                     placeholder="Twitch Access Token"
                   />
@@ -419,7 +430,7 @@
                 <p class="help-text">No API key required. Public database.</p>
               </div>
               <label class="switch">
-                <input type="checkbox" id="musicBrainzEnabled" checked />
+                <input type="checkbox" id="musicBrainzEnabled" name="musicBrainzEnabled" checked />
                 <span class="slider round"></span>
               </label>
             </div>
@@ -429,7 +440,7 @@
                 <p class="help-text">No API key required. Scrapes public lyrics.</p>
               </div>
               <label class="switch">
-                <input type="checkbox" id="geniusLyricsEnabled" checked />
+                <input type="checkbox" id="geniusLyricsEnabled" name="geniusLyricsEnabled" checked />
                 <span class="slider round"></span>
               </label>
             </div>
@@ -442,7 +453,7 @@
                 <label for="newsDataEnabled">Enable NewsData.io</label>
               </div>
               <label class="switch">
-                <input type="checkbox" id="newsDataEnabled" checked />
+                <input type="checkbox" id="newsDataEnabled" name="newsDataEnabled" checked />
                 <span class="slider round"></span>
               </label>
             </div>
@@ -451,6 +462,7 @@
               <input
                 type="password"
                 id="newsDataApiKey"
+                name="newsDataApiKey"
                 class="form-input"
                 placeholder="Enter NewsData API Key"
               />
@@ -463,7 +475,7 @@
                 <label for="googleFactCheckEnabled">Enable Google Fact Check</label>
               </div>
               <label class="switch">
-                <input type="checkbox" id="googleFactCheckEnabled" checked />
+                <input type="checkbox" id="googleFactCheckEnabled" name="googleFactCheckEnabled" checked />
                 <span class="slider round"></span>
               </label>
             </div>
@@ -472,6 +484,7 @@
               <input
                 type="password"
                 id="googleFactCheckApiKey"
+                name="googleFactCheckApiKey"
                 class="form-input"
                 placeholder="Google Cloud API Key"
               />
@@ -485,7 +498,7 @@
                 <p class="help-text">No API key required. Public research database.</p>
               </div>
               <label class="switch">
-                <input type="checkbox" id="semanticScholarEnabled" checked />
+                <input type="checkbox" id="semanticScholarEnabled" name="semanticScholarEnabled" checked />
                 <span class="slider round"></span>
               </label>
             </div>
@@ -499,7 +512,7 @@
                 <p class="help-text">No API key required. Structured knowledge base.</p>
               </div>
               <label class="switch">
-                <input type="checkbox" id="wikidataEnabled" checked />
+                <input type="checkbox" id="wikidataEnabled" name="wikidataEnabled" checked />
                 <span class="slider round"></span>
               </label>
             </div>
@@ -509,7 +522,7 @@
                 <p class="help-text">No API key required. Public book database.</p>
               </div>
               <label class="switch">
-                <input type="checkbox" id="openLibraryEnabled" checked />
+                <input type="checkbox" id="openLibraryEnabled" name="openLibraryEnabled" checked />
                 <span class="slider round"></span>
               </label>
             </div>
@@ -519,7 +532,7 @@
                 <p class="help-text">No API key required. Linguistic API.</p>
               </div>
               <label class="switch">
-                <input type="checkbox" id="datamuseEnabled" checked />
+                <input type="checkbox" id="datamuseEnabled" name="datamuseEnabled" checked />
                 <span class="slider round"></span>
               </label>
             </div>
@@ -529,7 +542,7 @@
                 <p class="help-text">No API key required. Free weather API.</p>
               </div>
               <label class="switch">
-                <input type="checkbox" id="openMeteoEnabled" checked />
+                <input type="checkbox" id="openMeteoEnabled" name="openMeteoEnabled" checked />
                 <span class="slider round"></span>
               </label>
             </div>
@@ -543,7 +556,7 @@
                 <p class="help-text">Community-sourced segment database. No API key required.</p>
               </div>
               <label class="switch">
-                <input type="checkbox" id="sponsorBlockEnabled" checked />
+                <input type="checkbox" id="sponsorBlockEnabled" name="sponsorBlockEnabled" checked />
                 <span class="slider round"></span>
               </label>
             </div>
@@ -552,6 +565,7 @@
               <input
                 type="number"
                 id="sponsorBlockTimeout"
+                name="sponsorBlockTimeout"
                 class="form-input"
                 min="1000"
                 max="30000"
@@ -565,7 +579,7 @@
                 <p class="help-text">Community-sourced title replacements. No API key required.</p>
               </div>
               <label class="switch">
-                <input type="checkbox" id="deArrowEnabled" checked />
+                <input type="checkbox" id="deArrowEnabled" name="deArrowEnabled" checked />
                 <span class="slider round"></span>
               </label>
             </div>
@@ -576,7 +590,7 @@
                 >
               </div>
               <label class="switch">
-                <input type="checkbox" id="deArrowUsePrivateAPI" checked />
+                <input type="checkbox" id="deArrowUsePrivateAPI" name="deArrowUsePrivateAPI" checked />
                 <span class="slider round"></span>
               </label>
             </div>
@@ -585,6 +599,7 @@
               <input
                 type="number"
                 id="deArrowTimeout"
+                name="deArrowTimeout"
                 class="form-input"
                 min="1000"
                 max="30000"
@@ -610,6 +625,7 @@
                   <input
                     type="number"
                     id="maxConcurrentRequests"
+                    name="maxConcurrentRequests"
                     class="form-input"
                     min="1"
                     max="10"
@@ -622,6 +638,7 @@
                   <input
                     type="number"
                     id="rateLimitDelay"
+                    name="rateLimitDelay"
                     class="form-input"
                     min="0"
                     max="5000"
@@ -635,6 +652,7 @@
                   <input
                     type="number"
                     id="retryAttempts"
+                    name="retryAttempts"
                     class="form-input"
                     min="0"
                     max="10"
@@ -647,6 +665,7 @@
                   <input
                     type="number"
                     id="retryDelay"
+                    name="retryDelay"
                     class="form-input"
                     min="0"
                     max="10000"
@@ -663,7 +682,7 @@
             <div class="form-group">
               <label for="exportFormat">Export Format</label>
               <div class="select-wrapper">
-                <select id="exportFormat" class="form-select">
+                <select id="exportFormat" name="exportFormat" class="form-select">
                   <option value="json" selected>JSON</option>
                   <option value="txt">Text (Readable)</option>
                 </select>
@@ -685,7 +704,7 @@
                 <p class="help-text">Enable detailed logging to the console.</p>
               </div>
               <label class="switch">
-                <input type="checkbox" id="debugMode" />
+                <input type="checkbox" id="debugMode" name="debugMode" />
                 <span class="slider round"></span>
               </label>
             </div>

@@ -8,7 +8,7 @@
     <h3>Language & Region</h3>
     <div class="form-group">
       <label for="outputLanguage">Output Language</label>
-      <select id="outputLanguage" class="form-select">
+      <select id="outputLanguage" name="outputLanguage" class="form-select">
         <option value="en">English</option>
         <option value="es">Spanish</option>
         <option value="fr">French</option>
@@ -39,7 +39,7 @@
     </div>
     <div class="form-group">
       <label for="transcriptLanguage">Transcript Language</label>
-      <select id="transcriptLanguage" class="form-select">
+      <select id="transcriptLanguage" name="transcriptLanguage" class="form-select">
         <option value="en">English</option>
         <option value="es">Spanish</option>
         <option value="fr">French</option>
@@ -65,13 +65,13 @@
         <p class="help-text">Extract and analyze video comments.</p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="commentsEnabled" />
+        <input type="checkbox" id="commentsEnabled" name="commentsEnabled" />
         <span class="slider round"></span>
       </label>
     </div>
     <div class="form-group">
       <label for="commentsRetries">Extraction Retry Attempts</label>
-      <input type="number" id="commentsRetries" class="form-input" min="1" max="10" value="5" />
+      <input type="number" id="commentsRetries" name="commentsRetries" class="form-input" min="1" max="10" value="5" />
       <p class="help-text">
         Number of retry attempts when extracting comments from DOM (1-10, default: 5).
       </p>
@@ -86,7 +86,7 @@
         <p class="help-text">Automatically start analysis when a video page loads.</p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="autoAnalyze" />
+        <input type="checkbox" id="autoAnalyze" name="autoAnalyze" />
         <span class="slider round"></span>
       </label>
     </div>
@@ -96,7 +96,7 @@
         <p class="help-text">Automatically generate comprehensive summary.</p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="autoSummarize" />
+        <input type="checkbox" id="autoSummarize" name="autoSummarize" />
         <span class="slider round"></span>
       </label>
     </div>
@@ -106,7 +106,7 @@
         <p class="help-text">Automatically extract key insights and takeaways.</p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="autoExtractKeyPoints" />
+        <input type="checkbox" id="autoExtractKeyPoints" name="autoExtractKeyPoints" />
         <span class="slider round"></span>
       </label>
     </div>
@@ -116,7 +116,7 @@
         <p class="help-text">Automatically detect video language.</p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="autoDetectLanguage" />
+        <input type="checkbox" id="autoDetectLanguage" name="autoDetectLanguage" />
         <span class="slider round"></span>
       </label>
     </div>
@@ -126,7 +126,7 @@
         <p class="help-text">Automatically fetch transcript on video load.</p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="autoLoadTranscript" />
+        <input type="checkbox" id="autoLoadTranscript" name="autoLoadTranscript" />
         <span class="slider round"></span>
       </label>
     </div>
@@ -136,7 +136,7 @@
     <h3>Interface & Experience</h3>
     <div class="form-group">
       <label for="theme">Theme</label>
-      <select id="theme" class="form-select">
+      <select id="theme" name="theme" class="form-select">
         <option value="dark">Dark</option>
         <option value="light">Light</option>
         <option value="system">System Default</option>
@@ -145,7 +145,7 @@
     <div class="form-group">
       <label for="uiFontFamily">Font Family</label>
       <div class="select-wrapper">
-        <select id="uiFontFamily" class="form-select">
+        <select id="uiFontFamily" name="uiFontFamily" class="form-select">
           <option value="Inter" selected>Inter (Default)</option>
           <option value="Roboto">Roboto</option>
           <option value="Open Sans">Open Sans</option>
@@ -157,7 +157,7 @@
     <div class="form-group">
       <label for="uiIconStyle">Icon Style</label>
       <div class="select-wrapper">
-        <select id="uiIconStyle" class="form-select">
+        <select id="uiIconStyle" name="uiIconStyle" class="form-select">
           <option value="default" selected>Default (Emoji/Simple)</option>
           <option value="minimal">Minimal</option>
           <option value="solid">Solid</option>
@@ -170,7 +170,7 @@
         <p class="help-text">Automatically expand video description on load</p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="autoExpandDescription" />
+        <input type="checkbox" id="autoExpandDescription" name="autoExpandDescription" />
         <span class="slider round"></span>
       </label>
     </div>
@@ -180,7 +180,7 @@
         <p class="help-text">Display timestamps in summaries and chats</p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="showTimestamp" />
+        <input type="checkbox" id="showTimestamp" name="showTimestamp" />
         <span class="slider round"></span>
       </label>
     </div>
@@ -190,7 +190,7 @@
         <p class="help-text">Enable smooth scrolling for page navigation</p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="smoothScroll" />
+        <input type="checkbox" id="smoothScroll" name="smoothScroll" />
         <span class="slider round"></span>
       </label>
     </div>
@@ -200,7 +200,7 @@
         <p class="help-text">Enable keyboard shortcuts for quick actions</p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="keyboardShortcuts" />
+        <input type="checkbox" id="keyboardShortcuts" name="keyboardShortcuts" />
         <span class="slider round"></span>
       </label>
     </div>
@@ -214,7 +214,7 @@
         <p class="help-text">Keep a local history of summarized videos.</p>
       </div>
       <label class="switch">
-        <input type="checkbox" id="saveHistory" />
+        <input type="checkbox" id="saveHistory" name="saveHistory" />
         <span class="slider round"></span>
       </label>
     </div>

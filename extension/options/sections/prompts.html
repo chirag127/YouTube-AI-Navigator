@@ -1,4 +1,4 @@
-<div class="section" id="prompts-section">
+<section id="prompts" class="tab-content">
   <h2>Prompt Engineering</h2>
   <p class="section-description">
     Configure AI prompt behavior, pattern detection, and output formatting
@@ -11,6 +11,7 @@
       <input
         type="text"
         id="prompts-segments-role"
+        name="prompts-segments-role"
         class="form-input"
         placeholder="Elite Video Segmentation Specialist with 15+ years analyzing YouTube content structure and SponsorBlock taxonomy"
       />
@@ -21,6 +22,7 @@
         <input
           type="number"
           id="prompts-segments-timing"
+          name="prompts-segments-timing"
           class="form-input"
           min="1"
           max="10"
@@ -33,7 +35,7 @@
           <p class="help-text">Regex Pre-Analysis</p>
         </div>
         <label class="switch">
-          <input type="checkbox" id="prompts-segments-hints" />
+          <input type="checkbox" id="prompts-segments-hints" name="prompts-segments-hints" />
           <span class="slider round"></span>
         </label>
       </div>
@@ -44,6 +46,7 @@
         <input
           type="text"
           id="prompts-segments-sponsor-range"
+          name="prompts-segments-sponsor-range"
           class="form-input"
           placeholder="30,90"
         />
@@ -53,6 +56,7 @@
         <input
           type="text"
           id="prompts-segments-intro-range"
+          name="prompts-segments-intro-range"
           class="form-input"
           placeholder="5,15"
         />
@@ -62,6 +66,7 @@
         <input
           type="text"
           id="prompts-segments-outro-range"
+          name="prompts-segments-outro-range"
           class="form-input"
           placeholder="10,30"
         />
@@ -73,6 +78,7 @@
         <input
           type="number"
           id="prompts-segments-min-short"
+          name="prompts-segments-min-short"
           class="form-input"
           min="1"
           max="10"
@@ -84,6 +90,7 @@
         <input
           type="number"
           id="prompts-segments-min-long"
+          name="prompts-segments-min-long"
           class="form-input"
           min="5"
           max="20"
@@ -95,6 +102,7 @@
         <input
           type="number"
           id="prompts-segments-threshold"
+          name="prompts-segments-threshold"
           class="form-input"
           min="300"
           max="1800"
@@ -111,6 +119,7 @@
       <input
         type="text"
         id="prompts-comprehensive-role"
+        name="prompts-comprehensive-role"
         class="form-input"
         placeholder="Elite AI Video Analyst - Senior Content Strategist with 20+ years analyzing educational, entertainment, and technical content"
       />
@@ -121,7 +130,7 @@
           <label for="prompts-comprehensive-bold">Enable Keyword Bolding</label>
         </div>
         <label class="switch">
-          <input type="checkbox" id="prompts-comprehensive-bold" />
+          <input type="checkbox" id="prompts-comprehensive-bold" name="prompts-comprehensive-bold" />
           <span class="slider round"></span>
         </label>
       </div>
@@ -130,7 +139,7 @@
           <label for="prompts-comprehensive-resources">Include Resources Section</label>
         </div>
         <label class="switch">
-          <input type="checkbox" id="prompts-comprehensive-resources" />
+          <input type="checkbox" id="prompts-comprehensive-resources" name="prompts-comprehensive-resources" />
           <span class="slider round"></span>
         </label>
       </div>
@@ -139,7 +148,7 @@
           <label for="prompts-comprehensive-takeaways">Include Actionable Takeaways</label>
         </div>
         <label class="switch">
-          <input type="checkbox" id="prompts-comprehensive-takeaways" />
+          <input type="checkbox" id="prompts-comprehensive-takeaways" name="prompts-comprehensive-takeaways" />
           <span class="slider round"></span>
         </label>
       </div>
@@ -150,6 +159,7 @@
         <input
           type="number"
           id="prompts-comprehensive-max-resources"
+          name="prompts-comprehensive-max-resources"
           class="form-input"
           min="5"
           max="20"
@@ -161,6 +171,7 @@
         <input
           type="number"
           id="prompts-comprehensive-max-takeaways"
+          name="prompts-comprehensive-max-takeaways"
           class="form-input"
           min="3"
           max="10"
@@ -177,6 +188,7 @@
       <input
         type="text"
         id="prompts-comments-role"
+        name="prompts-comments-role"
         class="form-input"
         placeholder="Elite Community Sentiment Analyst with expertise in YouTube audience psychology and engagement patterns"
       />
@@ -188,7 +200,7 @@
           <p class="help-text">Regex</p>
         </div>
         <label class="switch">
-          <input type="checkbox" id="prompts-comments-spam" />
+          <input type="checkbox" id="prompts-comments-spam" name="prompts-comments-spam" />
           <span class="slider round"></span>
         </label>
       </div>
@@ -198,7 +210,7 @@
           <p class="help-text">Regex</p>
         </div>
         <label class="switch">
-          <input type="checkbox" id="prompts-comments-sentiment" />
+          <input type="checkbox" id="prompts-comments-sentiment" name="prompts-comments-sentiment" />
           <span class="slider round"></span>
         </label>
       </div>
@@ -207,7 +219,7 @@
           <label for="prompts-comments-opportunities">Include Creator Opportunities</label>
         </div>
         <label class="switch">
-          <input type="checkbox" id="prompts-comments-opportunities" />
+          <input type="checkbox" id="prompts-comments-opportunities" name="prompts-comments-opportunities" />
           <span class="slider round"></span>
         </label>
       </div>
@@ -218,6 +230,7 @@
         <input
           type="number"
           id="prompts-comments-likes"
+          name="prompts-comments-likes"
           class="form-input"
           min="1"
           max="100"
@@ -229,6 +242,7 @@
         <input
           type="number"
           id="prompts-comments-themes"
+          name="prompts-comments-themes"
           class="form-input"
           min="3"
           max="15"
@@ -240,6 +254,7 @@
         <input
           type="number"
           id="prompts-comments-questions"
+          name="prompts-comments-questions"
           class="form-input"
           min="3"
           max="10"
@@ -250,6 +265,6 @@
   </div>
 
   <div class="form-actions">
-    <button class="save-btn" id="save-prompts">Save Prompt Settings</button>
+    <button class="btn btn-primary" id="save-prompts">Save Prompt Settings</button>
   </div>
-</div>
+</section>

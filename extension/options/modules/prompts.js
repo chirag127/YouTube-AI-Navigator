@@ -60,6 +60,14 @@ export class PromptsSettings {
       'prompts-comments-questions',
       'prompts-comments-opportunities',
     ].forEach(id => i(id)?.addEventListener('change', () => this.as.trigger(() => this.save())));
+
+    const saveBtn = i('save-prompts');
+    if (saveBtn) {
+      saveBtn.addEventListener('click', async () => {
+        await this.save();
+        if (this.as.n) this.as.n.success('Settings saved');
+      });
+    }
   }
   async save() {
     const el = (id) => i(id);
