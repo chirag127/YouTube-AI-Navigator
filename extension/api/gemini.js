@@ -63,11 +63,13 @@ Instructions:
       return 'No comments available to analyze.';
     }
 
-    return this.generateContent(prompts.comments(c), m);
+    const prompt = await prompts.comments(c);
+    return this.generateContent(prompt, m);
   }
   async generateComprehensiveAnalysis(ctx, opt = {}) {
     try {
-      const r = await this.generateContent(prompts.comprehensive(ctx, opt));
+      const prompt = await prompts.comprehensive(ctx, opt);
+      const r = await this.generateContent(prompt);
       const s = this._extractSection(r, 'Summary');
       const i = this._extractSection(r, 'Key Insights');
       const f = this._extractSection(r, 'FAQ');
@@ -97,7 +99,8 @@ Instructions:
   }
   async extractSegments(ctx) {
     try {
-      const r = await this.generateContent(prompts.segments(ctx));
+      const prompt = await prompts.segments(ctx);
+      const r = await this.generateContent(prompt);
 
       let cr = trm(r);
       cr = rep(cr, /```json\s*/g, '');

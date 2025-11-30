@@ -20,8 +20,7 @@ export const sentimentPatterns = {
 };
 export const analyzeSentiment = t => {
   let pos = 0,
-    neg = 0,
-    neu = 0;
+    neg = 0;
   sentimentPatterns.positive.forEach(p => {
     const m = t.match(p);
     if (m) pos += m.length;
