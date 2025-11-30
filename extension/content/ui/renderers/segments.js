@@ -61,18 +61,23 @@ export async function renderSegments(c, data) {
     const s = isa(data) ? data : data?.segments || [];
     const fl = !isa(data) ? data?.fullVideoLabel : null;
     const b = qs('#yt-ai-full-video-label');
+
+    // Handle Full Video Label
     if (b) {
       if (fl) {
         b.textContent = LM[fl] || fl;
         b.style.display = 'inline-block';
-        b.style.backgroundColor = colors[fl] || '#999';
-        b.style.color = '#000';
+        b.style.backgroundColor = colors[fl] || 'var(--glass-highlight)';
+        b.style.color = '#fff';
         b.style.marginLeft = '8px';
-        b.style.fontSize = '0.8em';
-        b.style.padding = '2px 6px';
-        b.style.borderRadius = '4px';
+        b.style.fontSize = '0.75em';
+        b.style.padding = '4px 8px';
+        b.style.borderRadius = 'var(--radius-sm)';
+        b.style.border = '1px solid var(--glass-border)';
+        b.style.backdropFilter = 'var(--backdrop-blur)';
       } else b.style.display = 'none';
     }
+
     if (!s?.length) {
       showPlaceholder(c, 'No segments detected.');
       return;
@@ -95,24 +100,30 @@ export async function renderSegments(c, data) {
       return;
     }
 
+    // Generate HTML with Liquid Glass structure
     const h = filteredSegments
-      .map(x => {
-        const cl = colors[x.label] || '#999';
+      .map((x, i) => {
+        const cl = colors[x.label] || 'var(--glass-border)';
         const ts = x.timestamps || [
           { type: 'start', time: x.start },
           { type: 'end', time: x.end },
         ];
+
+        // Format timestamps
         const th = ts
           .map(
             t =>
-              `<span class="yt-ai-timestamp" data-time="${t.time}" title="Click to seek to ${formatTime(t.time)}">${formatTime(t.time)}</span>`
+              `<span class="yt-ai-timestamp" data-time="${t.time}" title="Jump to ${formatTime(t.time)}">${formatTime(t.time)}</span>`
           )
-          .join(' - ');
+          .join(' <span style="opacity:0.3; margin:0 4px">/</span> ');
+
+        // Stagger animation delay for scrollytelling effect
+        const delay = i * 0.05;
 
         return `
-          <div class="yt-ai-segment-item" style="border-left: 4px solid ${cl}">
+          <div class="yt-ai-segment-item" style="border-left: 3px solid ${cl}; animation-delay: ${delay}s">
             <div class="yt-ai-segment-header">
-              <div class="yt-ai-segment-label">${LM[x.label] || x.label}</div>
+              <div class="yt-ai-segment-label" style="background: ${cl}22; border: 1px solid ${cl}44; color: ${cl}">${LM[x.label] || x.label}</div>
               <div class="yt-ai-segment-time">${th}</div>
             </div>
             ${x.title ? `<div class="yt-ai-segment-title">${x.title}</div>` : ''}
@@ -121,15 +132,26 @@ export async function renderSegments(c, data) {
         `;
       })
       .join('');
+
     c.innerHTML = `<div class="yt-ai-segments-list">${h}</div>`;
+
+    // Attach Event Listeners
     $('.yt-ai-timestamp', c).forEach(e => {
       e.style.cursor = 'pointer';
-      e.style.textDecoration = 'underline';
       ae(e, 'click', evt => {
         evt.stopPropagation();
         seekVideo(parseFloat(e.dataset.time));
       });
+
+      // Add micro-interaction on hover
+      ae(e, 'mouseenter', () => {
+        e.style.textShadow = '0 0 8px var(--primary)';
+      });
+      ae(e, 'mouseleave', () => {
+        e.style.textShadow = 'none';
+      });
     });
+
   } catch (err) {
     e('Err:renderSegments', err);
   }

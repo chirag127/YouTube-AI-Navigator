@@ -73,13 +73,14 @@ async function forceLoadComments() {
     const cs = doc.querySelector('ytd-comments#comments');
     if (cs) {
       cs.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      await to(() => {}, 1200);
+      // Wait for 1 second as requested to allow lazy loading
+      await to(() => {}, 1000);
       window.scrollBy(0, 200);
-      await to(() => {}, 600);
+      await to(() => {}, 500);
       return;
     }
     window.scrollTo({ top: doc.documentElement.scrollHeight, behavior: 'smooth' });
-    await to(() => {}, 1500);
+    await to(() => {}, 1000);
   } catch (err) {
     e('Err:forceLoadComments', err);
   }

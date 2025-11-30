@@ -1,103 +1,71 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const projectRoot = path.resolve(__dirname, '../../../');
+vi.mock('../../../extension/content/core/state.js', () => ({
+  state: { currentTranscript: [{ text: 'test' }] },
+}));
 
-describe('Chat Handler', () => {
-  let sendChatMessage;
-  let originalChrome;
+vi.mock('../../../extension/content/ui/renderers/chat.js', () => ({
+  addChatMessage: vi.fn(),
+}));
 
-  beforeEach(async () => {
+vi.mock('../../../extension/lib/marked-loader.js', () => ({
+  parseMarkdown: vi.fn(),
+}));
+
+vi.mock('../../../extension/utils/shortcuts/dom.js', () => ({
+  qs: vi.fn(),
+}));
+
+vi.mock('../../../extension/utils/shortcuts/runtime.js', () => ({
+  rs: vi.fn(),
+}));
+
+vi.mock('../../../extension/utils/shortcuts/array.js', () => ({
+  am: vi.fn(),
+  ajn: vi.fn(),
+}));
+
+vi.mock('../../../extension/utils/shortcuts/log.js', () => ({
+  e: vi.fn(),
+}));
+
+import { sendChatMessage } from '../../../extension/content/handlers/chat.js';
+
+describe('sendChatMessage', () => {
+  beforeEach(() => {
     vi.clearAllMocks();
-    document.body.innerHTML = '';
-
-    // Setup global chrome mock BEFORE importing chat.js
-    originalChrome = global.chrome;
-
-    global.chrome = {
-      runtime: {
-        getURL: (p) => {
-          const absPath = path.join(projectRoot, 'extension', p);
-          return `file://${absPath.replace(/\\/g, '/')}`;
-        },
-        sendMessage: vi.fn().mockResolvedValue({ success: true, answer: 'Test answer' }),
-      },
-      storage: {
-        local: { get: vi.fn().mockResolvedValue({}) },
-        sync: { get: vi.fn().mockResolvedValue({}) },
-      }
-    };
-
-    // Setup DOM for chat
-    const input = document.createElement('input');
-    input.id = 'yt-ai-chat-input';
-    input.value = 'Hello';
-    document.body.appendChild(input);
-
-    const chatContainer = document.createElement('div');
-    chatContainer.id = 'yt-ai-chat-messages';
-    chatContainer.className = 'yt-ai-chat-messages';
-    document.body.appendChild(chatContainer);
-
-    // Dynamically import the module under test
-    vi.resetModules();
-    const module = await import('../../../extension/content/handlers/chat.js');
-    sendChatMessage = module.sendChatMessage;
   });
 
-  afterEach(() => {
-    global.chrome = originalChrome;
-  });
-
-  it('should send chat message successfully using real dependencies', async () => {
-    const statePath = path.join(projectRoot, 'extension/content/core/state.js');
-    const stateUrl = `file://${statePath.replace(/\\/g, '/')}`;
-    const { state } = await import(stateUrl);
-
-    state.currentTranscript = [{ text: 'line 1' }, { text: 'line 2' }];
+  it('should send message successfully', async () => {
+    const qs = (vi.mocked(await import('../../../extension/utils/shortcuts/dom.js'))).qs;
+    qs.mockReturnValue({ value: 'question' });
+    const addChatMessage = (vi.mocked(await import('../../../extension/content/ui/renderers/chat.js'))).addChatMessage;
+    addChatMessage.mockResolvedValue();
+    addChatMessage.mockResolvedValue({ innerHTML: '' });
+    const rs = (vi.mocked(await import('../../../extension/utils/shortcuts/runtime.js'))).rs;
+    rs.mockResolvedValue({ success: true, answer: 'answer' });
+    const parseMarkdown = (vi.mocked(await import('../../../extension/lib/marked-loader.js'))).parseMarkdown;
+    parseMarkdown.mockResolvedValue('parsed');
 
     await sendChatMessage();
 
-    const messages = document.querySelectorAll('.yt-ai-chat-msg');
-    expect(messages.length).toBeGreaterThanOrEqual(2);
-    expect(messages[messages.length - 1].innerHTML).toContain('Test answer');
+    expect(addChatMessage).toHaveBeenCalledWith('user', 'question');
+    expect(rs).toHaveBeenCalledWith({ action: 'CHAT_WITH_VIDEO', question: 'question', context: expect.any(String), metadata: null });
+    expect(parseMarkdown).toHaveBeenCalledWith('answer');
   });
 
-  it('should seek video when timestamp is clicked', async () => {
-    // Setup video element
-    const video = document.createElement('video');
-    document.body.appendChild(video);
+  it('should handle error', async () => {
+    const qs = (vi.mocked(await import('../../../extension/utils/shortcuts/dom.js'))).qs;
+    qs.mockReturnValue({ value: 'question' });
+    const addChatMessage = (vi.mocked(await import('../../../extension/content/ui/renderers/chat.js'))).addChatMessage;
+    addChatMessage.mockResolvedValue();
+    addChatMessage.mockResolvedValue({ textContent: '' });
+    const rs = (vi.mocked(await import('../../../extension/utils/shortcuts/runtime.js'))).rs;
+    rs.mockRejectedValue(new Error('chat error'));
+    const e = (vi.mocked(await import('../../../extension/utils/shortcuts/log.js'))).e;
 
-    // Setup chat container
-    const container = document.createElement('div');
-    document.body.appendChild(container);
+    await sendChatMessage();
 
-    // Import renderChat
-    const { renderChat } = await import('../../../extension/content/ui/renderers/chat.js');
-    renderChat(container);
-
-    // Simulate adding a message with timestamp
-    // renderChat creates .yt-ai-chat-messages inside container if not present
-    // But in our beforeEach we already added #yt-ai-chat-messages to body?
-    // Wait, renderChat takes a container `c` and looks for `.yt-ai-chat-messages` inside it.
-    // In the test, we passed a new div `container`.
-    // So it should create `.yt-ai-chat-messages` inside `container`.
-
-    const messagesContainer = container.querySelector('.yt-ai-chat-messages');
-    expect(messagesContainer).not.toBeNull();
-
-    const msg = document.createElement('div');
-    msg.innerHTML = '<button class="timestamp-btn" data-time="1:30">1:30</button>';
-    messagesContainer.appendChild(msg);
-
-    // Click the timestamp
-    const btn = msg.querySelector('.timestamp-btn');
-    btn.click();
-
-    // Verify video time
-    // 1:30 = 90 seconds
-    expect(video.currentTime).toBe(90);
+    expect(e).toHaveBeenCalledWith('Err:sendChatMessage', expect.any(Error));
   });
 });

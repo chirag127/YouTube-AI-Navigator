@@ -1,61 +1,55 @@
 :root {
   /*
-   * 2026 HYBRID AESTHETIC: LIQUID GLASS + NEO-BRUTALISM
-   * Concept: "Alive Machine"
+   * 2026 AESTHETIC: LIQUID GLASS / ETHEREAL CYBER
+   * Concept: "Digital Fluidity"
    */
-  --primary: #00f3ff;
-  --primary-dim: rgba(0, 243, 255, 0.1);
-  --accent: #bc13fe;
+  --glass-surface: rgba(20, 20, 25, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-highlight: rgba(255, 255, 255, 0.15);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 
-  /* Neo-Brutalist Bases */
-  --bg-base: #000000;
-  --bg-glass: rgba(5, 5, 5, 0.75); /* More transparent for liquid feel */
-  --bg-glass-heavy: rgba(10, 10, 10, 0.9);
+  --primary-neon: #00f3ff;
+  --primary-glow: rgba(0, 243, 255, 0.4);
+  --secondary-neon: #bc13fe;
+  --secondary-glow: rgba(188, 19, 254, 0.4);
 
-  /* Typography */
-  --text: #ffffff;
-  --text-secondary: #a0a0a0;
-  --font: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --text-main: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.6);
 
-  /* Borders & Structure (Neo-Brutalism) */
-  --border-width: 2px;
-  --border: rgba(255, 255, 255, 0.15);
-  --border-active: #00f3ff;
-  --radius: 16px;
-  --radius-sm: 8px;
+  --font-display: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
-  /* Effects (Liquid Glass) */
-  --backdrop: blur(24px) saturate(180%);
-  --shadow-depth: 0 16px 40px rgba(0, 0, 0, 0.8);
-  --shadow-neon: 0 0 20px rgba(0, 243, 255, 0.15);
-  --glow: 0 0 10px rgba(0, 243, 255, 0.5);
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
 
-  /* Motion */
-  --ease-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --backdrop-blur: blur(20px);
+  --transition-fluid: cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy/Fluid */
+  --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /*
  * MASTER WIDGET CONTAINER
- * The "Liquid Prism"
+ * The "Floating Prism"
  */
 #yt-ai-master-widget {
-  background: var(--bg-glass);
-  backdrop-filter: var(--backdrop);
-  -webkit-backdrop-filter: var(--backdrop);
-  border: var(--border-width) solid var(--border);
-  border-radius: var(--radius);
-  margin-bottom: 20px;
+  background: var(--glass-surface);
+  backdrop-filter: var(--backdrop-blur);
+  -webkit-backdrop-filter: var(--backdrop-blur);
+  border: 1px solid var(--glass-border);
+  border-top: 1px solid var(--glass-highlight);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glass-shadow),
+              0 0 0 1px rgba(255,255,255,0.05) inset; /* Inner rim light */
+  margin-bottom: 24px;
   overflow: hidden;
-  font-family: var(--font);
-  color: var(--text);
+  font-family: var(--font-display);
+  color: var(--text-main);
   display: flex;
   flex-direction: column;
   height: auto;
   max-height: 85vh;
-  transition: all 0.3s var(--ease-elastic);
-  box-shadow: var(--shadow-depth);
+  transition: all 0.4s var(--transition-fluid);
 
   /* Positioning */
   position: relative !important;
@@ -64,23 +58,22 @@
 }
 
 #yt-ai-master-widget:hover {
-  border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: var(--shadow-depth), var(--shadow-neon);
-  transform: translateY(-2px);
+  box-shadow: var(--glass-shadow),
+              0 0 20px rgba(0, 243, 255, 0.1); /* Subtle glow on hover */
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 /* Collapsed State */
 #yt-ai-master-widget.yt-ai-collapsed {
-  max-height: 68px !important;
-  min-height: 68px !important;
-  background: var(--bg-glass-heavy);
-  border-color: var(--border);
+  max-height: 72px !important;
+  min-height: 72px !important;
   cursor: pointer;
+  background: rgba(10, 10, 12, 0.8);
 }
 
 #yt-ai-master-widget.yt-ai-collapsed:hover {
-  border-color: var(--primary);
-  box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+  transform: scale(1.02);
+  border-color: var(--primary-neon);
 }
 
 #yt-ai-master-widget.yt-ai-collapsed .yt-ai-tabs,
@@ -93,184 +86,281 @@
 
 /*
  * HEADER
- * "Control Panel" Aesthetic
+ * Minimalist & Clean
  */
 .yt-ai-header {
-  padding: 16px 24px;
-  border-bottom: var(--border-width) solid var(--border);
+  padding: 20px 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(90deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
 .yt-ai-title {
-  font-size: 16px;
-  font-weight: 800;
+  font-size: 18px;
+  font-weight: 700;
   display: flex;
   align-items: center;
-  gap: 12px;
-  background: linear-gradient(135deg, #fff 0%, #a0a0a0 100%);
+  gap: 10px;
+  background: linear-gradient(135deg, #fff 0%, #b0b0b0 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  letter-spacing: -0.5px;
-  text-transform: uppercase;
+  letter-spacing: -0.03em;
+}
+
+.yt-ai-icon-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.2s var(--transition-smooth);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.yt-ai-icon-btn:hover {
+  background: rgba(255,255,255,0.1);
+  color: var(--text-main);
+  transform: rotate(90deg);
 }
 
 /*
  * TABS
- * Floating Glass Chips
+ * Floating Pills
  */
 .yt-ai-tabs {
   display: flex;
-  gap: 4px;
-  padding: 8px 12px;
-  background: rgba(0, 0, 0, 0.3);
-  border-bottom: 1px solid var(--border);
+  gap: 8px;
+  padding: 12px 24px;
+  overflow-x: auto;
+  scrollbar-width: none; /* Hide scrollbar */
+}
+
+.yt-ai-tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .yt-ai-tab {
-  flex: 1;
-  padding: 10px 0;
-  text-align: center;
+  padding: 8px 16px;
+  border-radius: 100px; /* Pill shape */
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid transparent;
   cursor: pointer;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text-secondary);
-  position: relative;
-  transition: all 0.2s var(--ease-smooth);
-  border-radius: 6px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  transition: all 0.3s var(--transition-smooth);
+  white-space: nowrap;
 }
 
 .yt-ai-tab:hover {
-  color: var(--text);
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-main);
 }
 
 .yt-ai-tab.active {
-  color: #000;
-  background: var(--primary);
-  box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+  background: rgba(0, 243, 255, 0.1);
+  color: var(--primary-neon);
+  border-color: rgba(0, 243, 255, 0.3);
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);
 }
 
 /*
  * CONTENT AREA
- * Deep Space
+ * Smooth & Readable
  */
 .yt-ai-content {
   flex: 1;
   overflow-y: auto;
-  overflow-x: hidden;
-  padding: 24px;
-  padding-bottom: 80px;
+  padding: 0 24px 24px 24px;
   min-height: 250px;
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: 15px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.9);
   scroll-behavior: smooth;
-  position: relative;
 }
 
-/* Scrollbar - Brutalist Track */
+/* Custom Scrollbar - Minimal */
 .yt-ai-content::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 .yt-ai-content::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.02);
-  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  background: transparent;
 }
 .yt-ai-content::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 0; /* Square thumb for brutalism */
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
 }
 .yt-ai-content::-webkit-scrollbar-thumb:hover {
-  background: var(--primary);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 /*
  * CHAT INPUT
- * Floating Command Bar
+ * Floating Bar
  */
 .yt-ai-chat-input {
+  padding: 20px 24px;
+  background: linear-gradient(0deg, rgba(0,0,0,0.2) 0%, transparent 100%);
   display: flex;
   gap: 12px;
-  padding: 16px;
-  border-top: var(--border-width) solid var(--border);
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(20px);
+  position: relative;
 }
 
 #yt-ai-chat-input {
   flex: 1;
-  padding: 12px 16px;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  color: var(--text);
-  font-family: var(--font);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  color: var(--text-main);
+  font-family: var(--font-display);
   font-size: 14px;
   outline: none;
-  transition: all 0.2s var(--ease-smooth);
+  transition: all 0.3s var(--transition-smooth);
 }
 
 #yt-ai-chat-input:focus {
-  background: rgba(0, 0, 0, 0.5);
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(0, 243, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--primary-neon);
+  box-shadow: 0 0 0 2px rgba(0, 243, 255, 0.1);
 }
 
 #yt-ai-chat-send {
-  padding: 0 24px;
-  background: var(--primary);
+  background: var(--primary-neon);
   color: #000;
   border: none;
-  border-radius: 12px;
-  font-weight: 800;
-  font-size: 12px;
+  border-radius: var(--radius-md);
+  padding: 0 20px;
+  font-weight: 700;
+  font-size: 13px;
   cursor: pointer;
-  transition: all 0.2s var(--ease-elastic);
+  transition: all 0.3s var(--transition-fluid);
   text-transform: uppercase;
-  box-shadow: 0 4px 12px rgba(0, 243, 255, 0.3);
+  letter-spacing: 0.5px;
 }
 
 #yt-ai-chat-send:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 8px 20px rgba(0, 243, 255, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--primary-glow);
 }
 
 /*
- * FOOTER / RESIZE HANDLES
- * "End of Pop Up" Fix
+ * MARKDOWN STYLES
+ */
+.yt-ai-markdown h1,
+.yt-ai-markdown h2,
+.yt-ai-markdown h3 {
+  color: var(--text-main);
+  margin-top: 1.5em;
+  margin-bottom: 0.8em;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.yt-ai-markdown h1 {
+  font-size: 1.5em;
+  background: linear-gradient(90deg, #fff, #aaa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.yt-ai-markdown p {
+  margin-bottom: 1.2em;
+  color: var(--text-muted);
+}
+
+.yt-ai-markdown strong {
+  color: var(--primary-neon);
+  font-weight: 600;
+}
+
+.yt-ai-markdown a {
+  color: var(--primary-neon);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(0, 243, 255, 0.3);
+  transition: all 0.2s;
+}
+
+.yt-ai-markdown a:hover {
+  border-bottom-color: var(--primary-neon);
+  text-shadow: 0 0 8px var(--primary-glow);
+}
+
+/*
+ * TIMESTAMPS & TAGS
+ */
+.yt-ai-timestamp {
+  display: inline-block;
+  background: rgba(0, 243, 255, 0.1);
+  color: var(--primary-neon);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  margin-right: 4px;
+  text-decoration: none;
+  border: 1px solid rgba(0, 243, 255, 0.2);
+  transition: all 0.2s;
+}
+
+.yt-ai-timestamp:hover {
+  background: var(--primary-neon);
+  color: #000;
+  box-shadow: 0 0 10px var(--primary-glow);
+  transform: translateY(-1px);
+}
+
+/*
+ * COMMENTS & ITEMS
+ */
+.yt-ai-comment-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 12px;
+  transition: all 0.2s;
+}
+
+.yt-ai-comment-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateX(4px);
+}
+
+.yt-ai-comment-author {
+  color: var(--secondary-neon);
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+/*
+ * RESIZE HANDLES
  */
 .yt-ai-resize-handle {
-  height: 24px; /* Taller for easier grab */
-  background: rgba(0, 0, 0, 0.9);
-  border-top: 1px solid var(--border);
-  cursor: ns-resize;
+  height: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-secondary);
-  font-size: 12px;
-  transition: all 0.2s;
+  cursor: ns-resize;
+  color: rgba(255,255,255,0.2);
+  font-size: 10px;
   letter-spacing: 2px;
-}
-
-.yt-ai-resize-handle::after {
-  content: '•••';
-  opacity: 0.5;
+  transition: color 0.2s;
 }
 
 .yt-ai-resize-handle:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--primary);
-}
-
-.yt-ai-resize-handle:hover::after {
-  opacity: 1;
-  text-shadow: 0 0 8px var(--primary);
+  color: var(--primary-neon);
 }
 
 .yt-ai-resize-handle-width {
@@ -278,213 +368,58 @@
   left: 0;
   top: 0;
   bottom: 0;
-  width: 8px;
-  background: transparent;
+  width: 12px;
   cursor: ew-resize;
-  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent;
+  transition: all 0.2s;
 }
 
 .yt-ai-resize-handle-width:hover {
-  background: rgba(0, 243, 255, 0.2);
-  border-right: 1px solid var(--primary);
+  background: linear-gradient(90deg, rgba(0,243,255,0.1), transparent);
+  color: var(--primary-neon);
 }
 
 /*
- * MARKDOWN & TYPOGRAPHY
- * High Contrast / Technical
+ * LOADING
  */
-.yt-ai-markdown h1,
-.yt-ai-markdown h2,
-.yt-ai-markdown h3 {
-  font-weight: 800;
-  color: var(--text);
-  margin: 1.5em 0 0.8em;
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
-  border-left: 4px solid var(--primary);
-  padding-left: 12px;
-}
-
-.yt-ai-markdown p {
-  margin-bottom: 1em;
-  color: #e0e0e0;
-  line-height: 1.7;
-}
-
-.yt-ai-markdown strong {
-  color: var(--primary);
-  font-weight: 700;
-}
-
-.yt-ai-markdown a {
-  color: var(--primary);
-  text-decoration: none;
-  border-bottom: 1px dashed var(--primary);
-  transition: all 0.2s;
-}
-
-.yt-ai-markdown a:hover {
-  background: var(--primary-dim);
-  border-bottom-style: solid;
-}
-
-.yt-ai-markdown ul,
-.yt-ai-markdown ol {
-  padding-left: 20px;
-  margin-bottom: 1em;
-}
-
-.yt-ai-markdown li {
-  margin-bottom: 6px;
-  padding-left: 4px;
-}
-
-.yt-ai-markdown li::marker {
-  color: var(--primary);
-  font-weight: bold;
-}
-
-/*
- * TIMESTAMPS
- * Cyber Tags
- */
-.yt-ai-timestamp {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid var(--primary);
-  color: var(--primary);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 4px;
-  margin-right: 6px;
-  text-decoration: none;
-  transition: all 0.2s var(--ease-elastic);
-  box-shadow: 0 0 5px rgba(0, 243, 255, 0.1);
-}
-
-.yt-ai-timestamp:hover {
-  background: var(--primary);
-  color: #000;
-  box-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
-  transform: scale(1.05);
-}
-.yt-ai-comment-item {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 16px;
-  transition: all 0.2s;
-}
-
-.yt-ai-comment-item:hover {
-  border-color: var(--text-secondary);
-  background: rgba(255, 255, 255, 0.04);
-}
-
-.yt-ai-comment-author {
-  font-weight: 700;
-  color: var(--primary);
-  font-size: 12px;
-  margin-bottom: 6px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-/*
- * BUTTONS
- * Neo-Brutalist Actions
- */
-.yt-ai-btn {
-  background: #fff;
-  color: #000;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 800;
-  font-size: 12px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 0.2s var(--ease-elastic);
-  box-shadow: 4px 4px 0 rgba(0, 243, 255, 1);
-}
-
-.yt-ai-btn:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0 rgba(0, 243, 255, 1);
-}
-
-.yt-ai-btn:active {
-  transform: translate(2px, 2px);
-  box-shadow: 0 0 0 rgba(0, 243, 255, 1);
-}
-
-/*
- * LOADING & ERROR
- */
-.yt-ai-loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  gap: 20px;
-  color: var(--text-secondary);
-}
-
 .yt-ai-spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid rgba(255, 255, 255, 0.1);
-  border-top-color: var(--primary);
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(255,255,255,0.1);
+  border-top-color: var(--primary-neon);
   border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+  animation: spin 1s linear infinite;
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }
-
-.yt-ai-error {
-  background: rgba(255, 42, 109, 0.1);
-  border: 1px solid #ff2a6d;
-  color: #ff2a6d;
-  padding: 16px;
-  border-radius: 8px;
-  text-align: center;
-  font-weight: 600;
-  box-shadow: 0 0 20px rgba(255, 42, 109, 0.2);
-}
 
 /*
  * CHAT MESSAGES
  */
 .yt-ai-chat-msg {
-  padding: 14px 18px;
-  border-radius: 16px;
-  max-width: 85%;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  margin-bottom: 12px;
   font-size: 14px;
   line-height: 1.5;
-  margin-bottom: 16px;
-  position: relative;
+  max-width: 85%;
 }
 
 .yt-ai-chat-msg.user {
-  align-self: flex-end;
-  background: var(--primary);
+  background: var(--primary-neon);
   color: #000;
-  border-bottom-right-radius: 4px;
+  align-self: flex-end;
   margin-left: auto;
-  font-weight: 600;
-  box-shadow: 0 4px 15px rgba(0, 243, 255, 0.3);
+  border-bottom-right-radius: 4px;
+  font-weight: 500;
 }
 
 .yt-ai-chat-msg.ai {
-  align-self: flex-start;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  align-self: flex-start;
   border-bottom-left-radius: 4px;
-  color: var(--text);
 }

@@ -1,109 +1,204 @@
-/* 2026 Cyber-Minimalist Transcript Styles */
+/* 2026 Liquid Glass + Neo-Brutalist Design System */
 
 :root {
+  /* Core Palette */
   --primary: #00f3ff;
-  --glass: rgba(0, 0, 0, 0.85);
-  --glow: rgba(0, 243, 255, 0.4);
-  --bg-base: #000000;
-  --bg-glass: rgba(5, 5, 5, 0.85);
-  --text: #ffffff;
-  --text-secondary: #a0a0a0;
-  --border: rgba(255, 255, 255, 0.15);
-  --border-active: #00f3ff;
-  --radius: 16px;
+  --primary-dim: rgba(0, 243, 255, 0.1);
+  --accent: #ff0055;
+  --accent-glow: rgba(255, 0, 85, 0.4);
+  --bg-base: #050505;
+
+  /* Liquid Glass Surfaces */
+  --glass-surface: rgba(20, 20, 20, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-highlight: rgba(255, 255, 255, 0.15);
+  --backdrop-blur: blur(40px);
+  --backdrop-saturation: saturate(180%);
+
+  /* Neo-Brutalist Accents */
+  --brutal-border: 2px solid rgba(255, 255, 255, 0.1);
+  --brutal-shadow: 4px 4px 0px rgba(0, 243, 255, 0.2);
+  --brutal-shadow-hover: 6px 6px 0px rgba(0, 243, 255, 0.4);
+
+  /* Typography */
+  --font-display: 'Outfit', 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Motion */
+  --ease-fluid: cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy/Fluid */
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Dimensions */
+  --radius-xl: 24px;
+  --radius-lg: 16px;
+  --radius-md: 12px;
   --radius-sm: 8px;
-  --shadow: 0 16px 40px 0 rgba(0, 0, 0, 0.8);
-  --shadow-neo: 0 0 20px rgba(0, 243, 255, 0.15);
-  --backdrop: blur(24px);
-  --font: 'Inter', system-ui, sans-serif;
-  --ease: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Base Reset & Typography */
 .ytai-transcript-display {
+  font-family: var(--font-display);
+  background: var(--glass-surface);
+  backdrop-filter: var(--backdrop-blur) var(--backdrop-saturation);
+  -webkit-backdrop-filter: var(--backdrop-blur) var(--backdrop-saturation);
+  border: 1px solid var(--glass-border);
+  border-top: 1px solid var(--glass-highlight);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  padding: 24px;
   max-height: 400px;
   overflow-y: auto;
-  padding: 24px;
-  background: var(--bg-glass);
-  backdrop-filter: var(--backdrop);
-  -webkit-backdrop-filter: var(--backdrop);
-  border: 2px solid var(--border);
-  border-radius: var(--radius);
-  font-family: var(--font);
-  color: var(--text);
-  box-shadow: var(--shadow);
-  transition: all 0.2s var(--ease);
+  color: #fff;
+  transition: all 0.3s var(--ease-smooth);
 }
 
-.ytai-transcript-display:hover {
-  border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: var(--shadow), var(--shadow-neo);
+/* Scrollbar Styling */
+.ytai-transcript-display::-webkit-scrollbar {
+  width: 6px;
+}
+.ytai-transcript-display::-webkit-scrollbar-track {
+  background: transparent;
+}
+.ytai-transcript-display::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+.ytai-transcript-display::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
 }
 
+/* Transcript Lines */
 .ytai-transcript-line {
   display: flex;
   gap: 16px;
-  padding: 12px 16px;
-  cursor: pointer;
-  transition: all 0.2s var(--ease);
-  border-radius: var(--radius-sm);
-  margin-bottom: 4px;
+  padding: 16px;
+  margin-bottom: 8px;
+  border-radius: var(--radius-lg);
   border: 1px solid transparent;
+  transition: all 0.3s var(--ease-fluid);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
 }
 
+/* Hover State - Liquid Effect */
 .ytai-transcript-line:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.03);
   border-color: rgba(255, 255, 255, 0.1);
-  transform: translateX(4px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transform: scale(1.02) translateX(4px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
-.ytai-transcript-timestamp {
-  flex-shrink: 0;
-  color: var(--primary);
-  font-weight: 700;
-  font-size: 12px;
-  min-width: 50px;
-  font-family: 'JetBrains Mono', monospace;
-  padding-top: 2px;
-}
-
-.ytai-transcript-text {
-  color: var(--text);
-  font-size: 14px;
-  line-height: 1.6;
-  transition: color 0.2s var(--ease);
-}
-
-.ytai-transcript-line:hover .ytai-transcript-text {
-  color: #fff;
-}
-
+/* Active State - Neo-Brutalist Pop */
 .ytai-transcript-line.active {
-  background: rgba(0, 243, 255, 0.1);
-  border: 1px solid var(--border-active);
-  box-shadow: 0 0 15px var(--glow);
+  background: rgba(0, 243, 255, 0.05);
+  border: 1px solid var(--primary);
+  box-shadow: var(--brutal-shadow);
   transform: translateX(8px);
 }
 
-.ytai-transcript-line.active .ytai-transcript-timestamp {
+.ytai-transcript-timestamp {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary);
+  opacity: 0.8;
+  min-width: 45px;
+  padding-top: 4px;
+  letter-spacing: 0.5px;
+}
+
+.ytai-transcript-text {
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 400;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.ytai-transcript-line.active .ytai-transcript-text {
   color: #fff;
-  text-shadow: 0 0 10px var(--glow);
+  font-weight: 500;
 }
 
-/* Scrollbar */
-.ytai-transcript-display::-webkit-scrollbar {
-  width: 8px;
+/* Segments Container */
+.yt-ai-segments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 8px 0;
 }
 
-.ytai-transcript-display::-webkit-scrollbar-track {
+/* Segment Item - Glass Card */
+.yt-ai-segment-item {
   background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  transition: all 0.4s var(--ease-fluid);
+  position: relative;
+  /* Scrollytelling Animation Entry */
+  animation: slideUpFade 0.6s var(--ease-fluid) backwards;
 }
 
-.ytai-transcript-display::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+.yt-ai-segment-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+}
+
+.yt-ai-segment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.yt-ai-segment-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 800;
+  padding: 4px 8px;
   border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
 }
 
-.ytai-transcript-display::-webkit-scrollbar-thumb:hover {
-  background: var(--primary);
+.yt-ai-segment-time {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--primary);
+}
+
+.yt-ai-segment-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+
+.yt-ai-segment-desc {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.5;
+}
+
+/* Animations */
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 10px var(--primary-dim); }
+  50% { box-shadow: 0 0 25px var(--primary-dim); }
 }
