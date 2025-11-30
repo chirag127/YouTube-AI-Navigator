@@ -106,6 +106,8 @@ The extension offers extensive customization options to tailor the experience to
   - `api-performance.test.js` - API metrics tracking, auto-detection logic
   - `prompts.test.js` - Verifies prompt settings and configuration
   - `comments.test.js` (patterns) - Tests sentiment analysis and spam detection patterns
+  - `tab-loader.test.js` - Verifies dynamic tab loading logic
+  - `config-defaults.test.js` - Verifies default configuration values
 
 ### Storage Keys (Compressed)
 

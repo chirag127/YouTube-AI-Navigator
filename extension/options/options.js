@@ -67,11 +67,12 @@ on(document, 'DOMContentLoaded', async () => {
     integrations: new IntegrationsSettings(settingsManager, autoSave),
     prompts: new PromptsSettings(settingsManager, autoSave),
   };
-  vs(modules).forEach(m => {
+  const initPromises = vs(modules).map(async m => {
     try {
-      m.init();
+      await m.init();
     } catch (x) {
       e(`[Options] Failed to init ${m.constructor.name}:`, x);
     }
   });
+  await Promise.allSettled(initPromises);
 });

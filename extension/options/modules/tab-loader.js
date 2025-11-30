@@ -16,6 +16,8 @@ export class TabLoader {
       scroll: 'tabs/scroll.html',
       performance: 'tabs/performance.html',
       notifications: 'tabs/notifications.html',
+      prompts: 'sections/prompts.html',
+      integrations: 'tabs/integrations.html',
     };
     this.loaded = new Set();
   }
