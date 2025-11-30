@@ -75,8 +75,10 @@
               <strong>Welcome to YouTube AI Master!</strong>
               <p>Complete the setup guide to get started with AI-powered video analysis.</p>
             </div>
-            <button id="start-setup-btn" class="btn btn-primary">Start Setup</button>
-            <button id="dismiss-banner-btn" class="btn-icon">✕</button>
+            <div class="banner-actions">
+                <button id="start-setup-btn" class="btn btn-primary">Start Setup</button>
+                <button id="dismiss-banner-btn" class="btn-icon">✕</button>
+            </div>
           </div>
         </div>
 
@@ -90,48 +92,50 @@
               <p>Customize the look and feel of the overlay widget</p>
             </header>
 
-            <div class="card">
+            <div class="glass-card">
               <h3>Appearance</h3>
-              <div class="form-group">
-                <label for="widgetOpacity">Background Opacity</label>
-                <div class="range-with-value">
-                  <input
-                    type="range"
-                    id="widgetOpacity"
-                    class="form-range"
-                    min="20"
-                    max="100"
-                    step="5"
-                    value="95"
-                  />
-                  <span id="widgetOpacityValue" class="range-value">95%</span>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="widgetBorderRadius">Border Radius</label>
-                <div class="range-with-value">
-                  <input
-                    type="range"
-                    id="widgetBorderRadius"
-                    class="form-range"
-                    min="0"
-                    max="24"
-                    step="2"
-                    value="12"
-                  />
-                  <span id="widgetBorderRadiusValue" class="range-value">12px</span>
-                </div>
-              </div>
-              <div class="form-group">
-                <label for="widgetAccentColor">Accent Color</label>
-                <div class="color-picker-wrapper">
-                  <input type="color" id="widgetAccentColor" class="form-color" value="#3ea6ff" />
-                  <span id="widgetAccentColorValue" class="color-value">#3ea6ff</span>
-                </div>
+              <div class="form-grid">
+                  <div class="form-group">
+                    <label for="widgetOpacity">Background Opacity</label>
+                    <div class="range-with-value">
+                      <input
+                        type="range"
+                        id="widgetOpacity"
+                        class="form-range"
+                        min="20"
+                        max="100"
+                        step="5"
+                        value="95"
+                      />
+                      <span id="widgetOpacityValue" class="range-value">95%</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="widgetBorderRadius">Border Radius</label>
+                    <div class="range-with-value">
+                      <input
+                        type="range"
+                        id="widgetBorderRadius"
+                        class="form-range"
+                        min="0"
+                        max="24"
+                        step="2"
+                        value="12"
+                      />
+                      <span id="widgetBorderRadiusValue" class="range-value">12px</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="widgetAccentColor">Accent Color</label>
+                    <div class="color-picker-wrapper">
+                      <input type="color" id="widgetAccentColor" class="form-color" value="#3ea6ff" />
+                      <span id="widgetAccentColorValue" class="color-value">#3ea6ff</span>
+                    </div>
+                  </div>
               </div>
             </div>
 
-            <div class="card">
+            <div class="glass-card">
               <h3>Behavior</h3>
               <div class="form-group">
                 <label for="widgetHideOnChannels">Hide on Channels (Blacklist)</label>
@@ -165,7 +169,7 @@
             <p>Manage your Gemini API connection and model settings</p>
           </header>
 
-          <div class="card">
+          <div class="glass-card">
             <h3>API Connection</h3>
             <div class="form-group">
               <label for="apiKey">Gemini API Key</label>
@@ -190,7 +194,7 @@
             <div id="apiStatus" class="status-indicator hidden"></div>
           </div>
 
-          <div class="card">
+          <div class="glass-card">
             <h3>Model Selection</h3>
             <div class="form-group">
               <label for="modelSelect">Gemini Model</label>
@@ -206,7 +210,7 @@
             </div>
           </div>
 
-          <div class="card">
+          <div class="glass-card">
             <h3>System Prompt</h3>
             <div class="form-group">
               <label for="customPrompt">Custom Instructions</label>
@@ -220,76 +224,80 @@
             </div>
           </div>
 
-          <div class="card">
+          <div class="glass-card">
             <h3>Advanced Model Parameters</h3>
-            <div class="form-group">
-              <label for="aiBaseUrl">Base URL (Optional)</label>
-              <input
-                type="text"
-                id="aiBaseUrl"
-                class="form-input"
-                placeholder="https://generativelanguage.googleapis.com"
-              />
-              <p class="help-text">
-                Override the default API endpoint (for proxies or enterprise).
-              </p>
-            </div>
-            <div class="form-group">
-              <label for="aiTopP">Top P (Nucleus Sampling)</label>
-              <div class="range-with-value">
-                <input
-                  type="range"
-                  id="aiTopP"
-                  class="form-range"
-                  min="0"
-                  max="1"
-                  step="0.05"
-                  value="0.95"
-                />
-                <span id="aiTopPValue" class="range-value">0.95</span>
-              </div>
-              <p class="help-text">Controls diversity. Lower values are more deterministic.</p>
-            </div>
-            <div class="form-group">
-              <label for="aiTopK">Top K</label>
-              <div class="range-with-value">
-                <input
-                  type="range"
-                  id="aiTopK"
-                  class="form-range"
-                  min="1"
-                  max="100"
-                  step="1"
-                  value="40"
-                />
-                <span id="aiTopKValue" class="range-value">40</span>
-              </div>
-              <p class="help-text">Limits the set of tokens to consider for each step.</p>
+            <div class="form-grid">
+                <div class="form-group">
+                  <label for="aiBaseUrl">Base URL (Optional)</label>
+                  <input
+                    type="text"
+                    id="aiBaseUrl"
+                    class="form-input"
+                    placeholder="https://generativelanguage.googleapis.com"
+                  />
+                  <p class="help-text">
+                    Override the default API endpoint (for proxies or enterprise).
+                  </p>
+                </div>
+                <div class="form-group">
+                  <label for="aiTopP">Top P (Nucleus Sampling)</label>
+                  <div class="range-with-value">
+                    <input
+                      type="range"
+                      id="aiTopP"
+                      class="form-range"
+                      min="0"
+                      max="1"
+                      step="0.05"
+                      value="0.95"
+                    />
+                    <span id="aiTopPValue" class="range-value">0.95</span>
+                  </div>
+                  <p class="help-text">Controls diversity. Lower values are more deterministic.</p>
+                </div>
+                <div class="form-group">
+                  <label for="aiTopK">Top K</label>
+                  <div class="range-with-value">
+                    <input
+                      type="range"
+                      id="aiTopK"
+                      class="form-range"
+                      min="1"
+                      max="100"
+                      step="1"
+                      value="40"
+                    />
+                    <span id="aiTopKValue" class="range-value">40</span>
+                  </div>
+                  <p class="help-text">Limits the set of tokens to consider for each step.</p>
+                </div>
             </div>
           </div>
 
-          <div class="card">
+          <div class="glass-card">
             <h3>Comprehensive Analysis Settings</h3>
-            <div class="form-group">
-              <label for="summaryLength">Summary Length</label>
-              <div class="select-wrapper">
-                <select id="summaryLength" class="form-select">
-                  <option value="short">Short (2-3 paragraphs)</option>
-                  <option value="medium" selected>Medium (4-6 paragraphs)</option>
-                  <option value="long">Long (8-12 paragraphs)</option>
-                </select>
-              </div>
-              <p class="help-text">Control the detail level of video summaries.</p>
-            </div>
-            <div class="form-group">
-              <label for="maxInsights">Max Key Insights</label>
-              <input type="number" id="maxInsights" class="form-input" min="3" max="20" value="8" />
-              <p class="help-text">Number of key takeaways to extract (3-20).</p>
-            </div>
-            <div class="form-group">
-              <label for="maxFAQ">Max FAQ Items</label>
-              <input type="number" id="maxFAQ" class="form-input" min="3" max="15" value="5" />
-              <p class="help-text">Number of FAQ questions to generate (3-15).</p>
+            <div class="form-grid">
+                <div class="form-group">
+                  <label for="summaryLength">Summary Length</label>
+                  <div class="select-wrapper">
+                    <select id="summaryLength" class="form-select">
+                      <option value="short">Short (2-3 paragraphs)</option>
+                      <option value="medium" selected>Medium (4-6 paragraphs)</option>
+                      <option value="long">Long (8-12 paragraphs)</option>
+                    </select>
+                  </div>
+                  <p class="help-text">Control the detail level of video summaries.</p>
+                </div>
+                <div class="form-group">
+                  <label for="maxInsights">Max Key Insights</label>
+                  <input type="number" id="maxInsights" class="form-input" min="3" max="20" value="8" />
+                  <p class="help-text">Number of key takeaways to extract (3-20).</p>
+                </div>
+                <div class="form-group">
+                  <label for="maxFAQ">Max FAQ Items</label>
+                  <input type="number" id="maxFAQ" class="form-input" min="3" max="15" value="5" />
+                  <p class="help-text">Number of FAQ questions to generate (3-15).</p>
+                </div>
             </div>
             <div class="form-group checkbox-row">
               <div class="checkbox-label">
@@ -311,7 +319,7 @@
             <p>Control how different video segments are handled</p>
           </header>
 
-          <div class="card highlight-card">
+          <div class="glass-card highlight-card">
             <div class="form-group checkbox-row">
               <div class="checkbox-label">
                 <label for="enableSegments">Enable Segment Detection</label>
@@ -324,7 +332,7 @@
             </div>
           </div>
 
-          <div class="card" id="segmentSettingsContainer">
+          <div class="glass-card" id="segmentSettingsContainer">
             <div class="card-header-row">
               <h3>Category Actions</h3>
               <div class="global-actions">
@@ -349,7 +357,7 @@
             <p>Configure external data sources for enhanced context</p>
           </header>
 
-          <div class="card">
+          <div class="glass-card">
             <h3>Entertainment & Media APIs</h3>
             <div class="form-group checkbox-row">
               <div class="checkbox-label">
@@ -382,26 +390,28 @@
                 <span class="slider round"></span>
               </label>
             </div>
-            <div class="form-group">
-              <label for="igdbClientId">IGDB Client ID</label>
-              <input
-                type="text"
-                id="igdbClientId"
-                class="form-input"
-                placeholder="Twitch Client ID"
-              />
-            </div>
-            <div class="form-group">
-              <label for="igdbAccessToken">IGDB Access Token</label>
-              <input
-                type="password"
-                id="igdbAccessToken"
-                class="form-input"
-                placeholder="Twitch Access Token"
-              />
-              <p class="help-text">
-                Get from <a href="https://dev.twitch.tv/console" target="_blank">Twitch Dev</a>
-              </p>
+            <div class="form-grid">
+                <div class="form-group">
+                  <label for="igdbClientId">IGDB Client ID</label>
+                  <input
+                    type="text"
+                    id="igdbClientId"
+                    class="form-input"
+                    placeholder="Twitch Client ID"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="igdbAccessToken">IGDB Access Token</label>
+                  <input
+                    type="password"
+                    id="igdbAccessToken"
+                    class="form-input"
+                    placeholder="Twitch Access Token"
+                  />
+                  <p class="help-text">
+                    Get from <a href="https://dev.twitch.tv/console" target="_blank">Twitch Dev</a>
+                  </p>
+                </div>
             </div>
             <div class="form-group checkbox-row">
               <div class="checkbox-label">
@@ -425,7 +435,7 @@
             </div>
           </div>
 
-          <div class="card">
+          <div class="glass-card">
             <h3>News & Research APIs</h3>
             <div class="form-group checkbox-row">
               <div class="checkbox-label">
@@ -481,7 +491,7 @@
             </div>
           </div>
 
-          <div class="card">
+          <div class="glass-card">
             <h3>Knowledge & Reference APIs</h3>
             <div class="form-group checkbox-row">
               <div class="checkbox-label">
@@ -525,7 +535,7 @@
             </div>
           </div>
 
-          <div class="card">
+          <div class="glass-card">
             <h3>YouTube Enhancement APIs</h3>
             <div class="form-group checkbox-row">
               <div class="checkbox-label">
@@ -592,61 +602,63 @@
             <p>Performance, backup, restore, and debug</p>
           </header>
 
-          <div class="card">
+          <div class="glass-card">
             <h3>Performance</h3>
-            <div class="form-group">
-              <label for="maxConcurrentRequests">Max Concurrent Requests</label>
-              <input
-                type="number"
-                id="maxConcurrentRequests"
-                class="form-input"
-                min="1"
-                max="10"
-                value="3"
-              />
-              <p class="help-text">Maximum parallel API requests (1-10)</p>
-            </div>
-            <div class="form-group">
-              <label for="rateLimitDelay">Rate Limit Delay (ms)</label>
-              <input
-                type="number"
-                id="rateLimitDelay"
-                class="form-input"
-                min="0"
-                max="5000"
-                step="100"
-                value="1000"
-              />
-              <p class="help-text">Delay between API requests (0-5000ms)</p>
-            </div>
-            <div class="form-group">
-              <label for="retryAttempts">Retry Attempts</label>
-              <input
-                type="number"
-                id="retryAttempts"
-                class="form-input"
-                min="0"
-                max="10"
-                value="3"
-              />
-              <p class="help-text">Number of retry attempts on failure (0-10)</p>
-            </div>
-            <div class="form-group">
-              <label for="retryDelay">Retry Delay (ms)</label>
-              <input
-                type="number"
-                id="retryDelay"
-                class="form-input"
-                min="0"
-                max="10000"
-                step="100"
-                value="2000"
-              />
-              <p class="help-text">Delay before retry (0-10000ms)</p>
+            <div class="form-grid">
+                <div class="form-group">
+                  <label for="maxConcurrentRequests">Max Concurrent Requests</label>
+                  <input
+                    type="number"
+                    id="maxConcurrentRequests"
+                    class="form-input"
+                    min="1"
+                    max="10"
+                    value="3"
+                  />
+                  <p class="help-text">Maximum parallel API requests (1-10)</p>
+                </div>
+                <div class="form-group">
+                  <label for="rateLimitDelay">Rate Limit Delay (ms)</label>
+                  <input
+                    type="number"
+                    id="rateLimitDelay"
+                    class="form-input"
+                    min="0"
+                    max="5000"
+                    step="100"
+                    value="1000"
+                  />
+                  <p class="help-text">Delay between API requests (0-5000ms)</p>
+                </div>
+                <div class="form-group">
+                  <label for="retryAttempts">Retry Attempts</label>
+                  <input
+                    type="number"
+                    id="retryAttempts"
+                    class="form-input"
+                    min="0"
+                    max="10"
+                    value="3"
+                  />
+                  <p class="help-text">Number of retry attempts on failure (0-10)</p>
+                </div>
+                <div class="form-group">
+                  <label for="retryDelay">Retry Delay (ms)</label>
+                  <input
+                    type="number"
+                    id="retryDelay"
+                    class="form-input"
+                    min="0"
+                    max="10000"
+                    step="100"
+                    value="2000"
+                  />
+                  <p class="help-text">Delay before retry (0-10000ms)</p>
+                </div>
             </div>
           </div>
 
-          <div class="card">
+          <div class="glass-card">
             <h3>Backup & Restore</h3>
             <div class="form-group">
               <label for="exportFormat">Export Format</label>
@@ -665,7 +677,7 @@
             </div>
           </div>
 
-          <div class="card">
+          <div class="glass-card">
             <h3>Troubleshooting</h3>
             <div class="form-group checkbox-row">
               <div class="checkbox-label">

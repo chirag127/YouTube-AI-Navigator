@@ -18,7 +18,12 @@ describe('Config Defaults', () => {
     expect(DC.sg.ct.sp.a).toBe('skip');
     expect(DC.sg.ct.sf.a).toBe('skip');
     expect(DC.sg.ct.it.a).toBe('skip');
-    expect(DC.sg.ct.in.a).toBe('ignore');
-    expect(DC.sg.ct.ou.a).toBe('ignore');
+    expect(DC.sg.ct.in.a).toBe('skip');
+    expect(DC.sg.ct.ou.a).toBe('skip');
+    expect(DC.sg.ct.mo.a).toBe('skip');
+    expect(DC.sg.ct.pv.a).toBe('skip');
+    expect(DC.sg.ct.fl.a).toBe('skip');
+    expect(DC.sg.ct.ph.a).toBe('skip');
+    expect(DC.sg.ct.ea.a).toBe('skip');
   });
 });
