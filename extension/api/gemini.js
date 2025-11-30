@@ -58,7 +58,7 @@ export class GeminiService {
         timestamps: ts,
       };
     } catch (x) {
-      e('error:generateComprehensiveAnalysis fail:', x);
+      e('[API:Fail:Gemini] generateComprehensiveAnalysis fail:', x);
       throw x;
     }
   }
@@ -77,7 +77,7 @@ export class GeminiService {
         fullVideoLabel: expandLabel(parsed.fullVideoLabel) || null,
       };
     } catch (x) {
-      e('error:extractSegments fail:', x.message);
+      e('[API:Fail:Gemini] extractSegments fail:', x.message);
       e('[GS] Stack:', x.stack);
       return { segments: [], fullVideoLabel: null };
     }
@@ -122,7 +122,7 @@ export class GeminiService {
       }
     }
     const em = `All ${ml.length} failed. ${errs[0]?.error || 'Unknown'}`;
-    e('error:generateContent all failed:', em);
+    e('[API:Fail:Gemini] generateContent all failed:', em);
     throw new Error(em);
   }
 

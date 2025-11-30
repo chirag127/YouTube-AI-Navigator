@@ -29,8 +29,8 @@ export async function fetchBranding(vid, opt = {}) {
     const d = await r.json();
     return pbr(d);
   } catch (x) {
-    if (x.name === 'AbortError') e('error:fetchBranding timeout');
-    else e('error:fetchBranding fail:', x.message);
+    if (x.name === 'AbortError') e('[API:Fail:DeArrow] fetchBranding timeout');
+    else e('[API:Fail:DeArrow] fetchBranding fail:', x.message);
     return null;
   }
 }
@@ -74,8 +74,8 @@ export async function fetchBrandingPrivate(vid, opt = {}) {
     }
     return null;
   } catch (x) {
-    if (x.name === 'AbortError') e('error:fetchBrandingPrivate timeout');
-    else e('error:fetchBrandingPrivate fail:', x.message);
+    if (x.name === 'AbortError') e('[API:Fail:DeArrow] fetchBrandingPrivate timeout');
+    else e('[API:Fail:DeArrow] fetchBrandingPrivate fail:', x.message);
     return null;
   }
 }
@@ -128,8 +128,8 @@ export async function fetchThumbnail(vid, ts, timeout = 5000) {
     if (!r.ok) throw new Error(`Thumb err: ${r.status}`);
     return await r.blob();
   } catch (x) {
-    if (x.name === 'AbortError') e('error:fetchThumbnail timeout');
-    else e('error:fetchThumbnail fail:', x.message);
+    if (x.name === 'AbortError') e('[API:Fail:DeArrow] fetchThumbnail timeout');
+    else e('[API:Fail:DeArrow] fetchThumbnail fail:', x.message);
     return null;
   }
 }

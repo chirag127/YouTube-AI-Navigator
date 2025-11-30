@@ -13,7 +13,8 @@ class MetadataExtractor {
   log(lvl, msg) {
     const i = { info: 'ℹ️', success: '✅', warn: '⚠️', error: '❌' };
     const f = lvl === 'error' ? e : l;
-    f(`[ME] ${i[lvl]} ${msg}`);
+    const p = lvl === 'error' ? '[Metadata:Fail] ' : '[ME] ';
+    f(`${p}${i[lvl]} ${msg}`);
   }
   async extract(vid, opt = {}) {
     try {
@@ -29,7 +30,7 @@ class MetadataExtractor {
         try {
           da = await deArrowAPI.getVideoMetadata(vid, { usePrivateAPI: usePrivateDeArrow });
         } catch (x) {
-          this.log('info', `DA fail: ${x.message}`);
+          this.log('error', `DA fail: ${x.message}`);
         }
       }
       const id = await this.getInitialData();
@@ -57,7 +58,7 @@ class MetadataExtractor {
           return md;
         }
       } catch (x) {
-        this.log('info', `DOM fail: ${x.message}`);
+        this.log('error', `DOM fail: ${x.message}`);
       }
       if (!md || !md.title || md.title === 'Unknown Title') {
         try {
@@ -83,7 +84,7 @@ class MetadataExtractor {
             return md;
           }
         } catch (x) {
-          this.log('info', `JSON-LD fail: ${x.message}`);
+          this.log('error', `JSON-LD fail: ${x.message}`);
         }
       }
       if (!md || !md.title) {

@@ -280,6 +280,12 @@ export class SettingsManager {
         experimentalFeatures: false,
         verboseLogging: false,
         exportFormat: 'json',
+        logging: {
+          apiErrors: true,
+          metadataErrors: true,
+          contextErrors: true,
+          verbose: false,
+        },
       },
       performance: {
         maxConcurrentRequests: 3,

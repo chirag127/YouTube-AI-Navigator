@@ -75,7 +75,7 @@ export async function fetchSegments(vid) {
 
     return s;
   } catch (x) {
-    ce('[SB] Fail:', x.message);
+    ce('[API:Fail:SponsorBlock] Fail:', x.message);
     return [];
   }
 }

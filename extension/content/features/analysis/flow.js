@@ -57,6 +57,7 @@ export async function startAnalysis() {
       ts = result.success ? result.data : [];
     } catch (err) {
       // Transcript extraction failed
+      e('[Context:Fail] Transcript extraction:', err);
     }
     state.currentTranscript = ts || [];
     showLoading(ca, 'Extracting comments...');
@@ -65,12 +66,16 @@ export async function startAnalysis() {
       cm = await getComments();
     } catch (err) {
       // Comments extraction failed
+      e('[Context:Fail] Comments extraction:', err);
     }
     showLoading(ca, `Analyzing content with AI...`);
 
     const r = await analyzeVideo(ts, md, cm);
 
-    if (!r.success) throw new Er(r.error || 'Analysis failed');
+    if (!r.success) {
+      e('[Context:Fail] Analysis service:', r.error);
+      throw new Er(r.error || 'Analysis failed');
+    }
     state.analysisData = r.data;
     if (state.analysisData.segments) {
       injectSegmentMarkers(state.analysisData.segments);
