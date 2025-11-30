@@ -23,12 +23,12 @@ export async function setupAutoSkip(s) {
     as = s
       .filter(x => {
         const lk = getLabelKey(x.label);
-        const c = cats[lk];
-        return c && c.action && c.action !== 'ignore';
+        const c = cats[lk] || { action: 'skip', speed: 2 };
+        return c.action && c.action !== 'ignore';
       })
       .map(x => {
         const lk = getLabelKey(x.label);
-        return { ...x, config: cats[lk] };
+        return { ...x, config: cats[lk] || { action: 'skip', speed: 2 } };
       });
     if (as.length > 0) {
       en = true;
