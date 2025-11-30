@@ -147,39 +147,7 @@
           </section>
         </div>
 
-        <!-- General Tab (Dynamically loaded or static? It was static in nav but dynamic in content? No, it was missing in body. Adding it now.) -->
-        <section id="general" class="tab-content active">
-          <header class="section-header">
-            <h2>General Settings</h2>
-            <p>Global preferences for the extension</p>
-          </header>
 
-          <div class="card">
-            <h3>Interface</h3>
-            <div class="form-group">
-              <label for="uiFontFamily">Font Family</label>
-              <div class="select-wrapper">
-                <select id="uiFontFamily" class="form-select">
-                  <option value="Inter" selected>Inter (Default)</option>
-                  <option value="Roboto">Roboto</option>
-                  <option value="Open Sans">Open Sans</option>
-                  <option value="Lato">Lato</option>
-                  <option value="System">System Default</option>
-                </select>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="uiIconStyle">Icon Style</label>
-              <div class="select-wrapper">
-                <select id="uiIconStyle" class="form-select">
-                  <option value="default" selected>Default (Emoji/Simple)</option>
-                  <option value="minimal">Minimal</option>
-                  <option value="solid">Solid</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </section>
 
         <!-- Integrations Tab -->
         <div id="integrations-tab-container"></div>
@@ -729,13 +697,13 @@
           <span class="segment-name">Category Name</span>
         </div>
         <div class="segment-controls">
-          <select class="segment-action form-select-sm">
+          <select class="segment-action form-select-sm" aria-label="Segment Action">
             <option value="ignore">Ignore</option>
             <option value="skip">Skip</option>
             <option value="speed">Speed Up</option>
           </select>
           <div class="speed-control hidden">
-            <input type="range" class="speed-slider" min="1" max="16" step="0.5" value="2" />
+            <input type="range" class="speed-slider" min="1" max="16" step="0.5" value="2" aria-label="Speed Multiplier" />
             <span class="speed-value">2x</span>
           </div>
         </div>
