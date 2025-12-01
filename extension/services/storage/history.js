@@ -1,5 +1,3 @@
-import { nw as nt } from '../../utils/shortcuts/core.js';
-
 export async function getHistory() {
   const r = await chrome.storage.local.get('history_index');
   return r.history_index || [];
@@ -7,7 +5,7 @@ export async function getHistory() {
 export async function updateHistory(v, m) {
   const i = await getHistory(),
     n = i.filter(x => x.videoId !== v);
-  n.unshift({ videoId: v, title: m.title, author: m.author, timestamp: nt() });
+  n.unshift({ videoId: v, title: m.title, author: m.author, timestamp: Date.now() });
   await chrome.storage.local.set({ history_index: n });
 }
 export async function deleteFromHistory(v) {

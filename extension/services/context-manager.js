@@ -9,8 +9,6 @@ import { WikidataAPI } from '../api/wikidata.js';
 import { DatamuseAPI } from '../api/datamuse.js';
 import { OpenMeteoAPI } from '../api/openmeteo.js';
 
-import { ps } from '../utils/shortcuts/async.js';
-
 export class ContextManager {
   constructor(s) {
     this.s = s || {};
@@ -85,7 +83,7 @@ export class ContextManager {
         })
       );
     }
-    const r = await ps(tasks);
+    const r = await Promise.allSettled(tasks);
     r.forEach(res => {
       if (res.status === 'fulfilled') {
         const { n, res: d } = res.value;

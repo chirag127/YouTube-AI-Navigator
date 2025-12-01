@@ -1,5 +1,3 @@
-import { nw as nt, jp, js } from '../../utils/shortcuts/core.js';
-
 export class ComprehensiveHistory {
   constructor() {
     this.k = 'comprehensive_history';
@@ -8,7 +6,7 @@ export class ComprehensiveHistory {
   async save(v, d) {
     const n = {
       videoId: v,
-      timestamp: nt(),
+      timestamp: Date.now(),
       url: `https://www.youtube.com/watch?v=${v}`,
       metadata: d.metadata || {},
       transcript: d.transcript || [],
@@ -69,16 +67,16 @@ export class ComprehensiveHistory {
       totalComments: h.filter(x => x.comments?.raw?.length > 0).length,
       totalSegments: h.filter(x => x.segments?.detected?.length > 0).length,
       totalAnalyses: h.filter(x => x.analysis?.summary).length,
-      storageSize: js(h).length,
+      storageSize: JSON.stringify(h).length,
     };
   }
   async export() {
     const h = await this.getAll();
-    return js(h, null, 2);
+    return JSON.stringify(h, null, 2);
   }
   async import(j) {
     try {
-      const i = jp(j);
+      const i = JSON.parse(j);
       if (!Array.isArray(i)) throw new Error('Invalid format');
       await chrome.storage.local.set({ [this.k]: i });
       return true;

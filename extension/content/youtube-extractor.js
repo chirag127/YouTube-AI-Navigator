@@ -23,7 +23,7 @@ function $(selector) {
         this.inl();
         w?.addEventListener('message', ev => {
           if (ev.source !== w) return;
-          if (ev.data.type === 'YT_GET_DATA') this.e('data_response', this.gid());
+          if (ev.data.type === 'YT_GET_DATA') this.emit('data_response', this.gid());
         });
         w._ytExtractor = this;
       } catch (err) {
@@ -48,13 +48,13 @@ function $(selector) {
       try {
         if (u.includes('/youtubei/v1/player')) {
           try {
-            this.e('metadata', await r.clone().json());
+            this.emit('metadata', await r.clone().json());
           } catch (err) {
             console.error('Err:pr:metadata', err);
           }
         } else if (u.includes('/youtubei/v1/next')) {
           try {
-            this.e('comments', await r.clone().json());
+            this.emit('comments', await r.clone().json());
           } catch (err) {
             console.error('Err:pr:comments', err);
           }
@@ -62,13 +62,13 @@ function $(selector) {
           this.htu(u);
         } else if (u.includes('/youtubei/v1/live_chat/get_live_chat')) {
           try {
-            this.e('live_chat', await r.clone().json());
+            this.emit('live_chat', await r.clone().json());
           } catch (err) {
             console.error('Err:pr:live_chat', err);
           }
         } else if (u.includes('/youtubei/v1/reel/')) {
           try {
-            this.e('shorts_data', await r.clone().json());
+            this.emit('shorts_data', await r.clone().json());
           } catch (err) {
             console.error('Err:pr:shorts', err);
           }
@@ -88,7 +88,7 @@ function $(selector) {
           return;
         }
         const d = await r.json();
-        this.e('transcript', d);
+        this.emit('transcript', d);
         st(() => this.iu.delete(u), 1e4);
       } catch (err) {
         console.error('Err:htu', err);
@@ -99,7 +99,7 @@ function $(selector) {
       try {
         d?.addEventListener('yt-navigate-finish', ev => {
           const vid = ev.detail?.response?.playerResponse?.videoDetails?.videoId;
-          this.e('navigation', { videoId: vid, detail: ev.detail });
+          this.emit('navigation', { videoId: vid, detail: ev.detail });
         });
       } catch (err) {
         console.error('Err:inl', err);

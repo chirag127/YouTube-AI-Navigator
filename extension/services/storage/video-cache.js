@@ -1,5 +1,3 @@
-import { nw as nt } from '../../utils/shortcuts/core.js';
-
 export async function saveVideoData(v, d) {
   const k = `video_${v}`,
     e = await getVideoData(v),

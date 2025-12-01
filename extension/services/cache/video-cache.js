@@ -1,52 +1,26 @@
-import { nw as nt, ok as keys } from '../../utils/shortcuts/core.js';
-
 const V = 1,
-  E = 86400000;
-class VideoCache {
-  constructor() {
-    this.m = new Map();
-  }
-  async get(id, t) {
-    const k = `${id}:${t}`;
-    if (this.m.has(k)) {
-      const c = this.m.get(k);
-      if (nt() - c.ts < E) {
-        return c.d;
-      }
-      this.m.delete(k);
-    }
-    const sk = `video_${id}_${t}`,
-      r = await chrome.storage.local.get(sk);
-    if (r[sk]) {
-      const c = r[sk];
-      if (c.v === V && nt() - c.ts < E) {
-        this.m.set(k, { d: c.d, ts: c.ts });
-        return c.d;
-      }
-      await chrome.storage.local.remove(sk);
-    }
+  E = 864e5;
+
+export const videoCache = {
+  async set(v, t, d) {
+    const k = `vc_${v}_${t}`;
+    await chrome.storage.local.set({ [k]: { v: V, t: Date.now(), d } });
+  },
+  async get(v, t) {
+    const k = `vc_${v}_${t}`;
+    const r = await chrome.storage.local.get(k);
+    const c = r[k];
+    if (c && c.v === V && Date.now() - c.t < E) return c.d;
     return null;
-  }
-  async set(id, t, d) {
-    const k = `${id}:${t}`,
-      sk = `video_${id}_${t}`,
-      ts = nt();
-    this.m.set(k, { d, ts });
-    await chrome.storage.local.get({ [sk]: { v: V, ts, d } });
-  }
-  async clear(id) {
-    if (id) {
-      const ks = ['metadata', 'transcript', 'comments'];
-      for (const t of ks) {
-        this.m.delete(`${id}:${t}`);
-        await chrome.storage.local.remove(`video_${id}_${t}`);
-      }
-    } else {
-      this.m.clear();
-      const a = await chrome.storage.local.get(null),
-        vk = keys(a).filter(k => k.startsWith('video_'));
-      await chrome.storage.local.remove(vk);
-    }
-  }
-}
-export const videoCache = new VideoCache();
+  },
+  async clear(v) {
+    const r = await chrome.storage.local.get(null);
+    const k = Object.keys(r).filter(x => x.startsWith(`vc_${v}_`));
+    await chrome.storage.local.remove(k);
+  },
+  async clearAll() {
+    const r = await chrome.storage.local.get(null);
+    const k = Object.keys(r).filter(x => x.startsWith('vc_'));
+    await chrome.storage.local.remove(k);
+  },
+};

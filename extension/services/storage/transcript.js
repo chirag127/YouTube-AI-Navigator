@@ -1,5 +1,3 @@
-import { nw as nt } from '../../utils/shortcuts/core.js';
-
 export async function saveTranscript(v, m, t, s) {
   if (!v) throw new Error('Video ID required');
   const d = { videoId: v, metadata: m, transcript: t, summary: s, timestamp: nt() };
