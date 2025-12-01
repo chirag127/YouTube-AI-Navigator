@@ -50,7 +50,7 @@ describe('AutoLiker', () => {
   describe('startObserving', () => {
     it('should observe mutations', async () => {
       const qs = vi.mocked(await import('../../../extension/utils/shortcuts/dom.js')).qs;
-      qs.mockReturnValue(null);
+      document.querySelector.mockReturnValue(null);
 
       liker.startObserving();
 
@@ -94,7 +94,7 @@ describe('AutoLiker', () => {
   describe('isLiveStream', () => {
     it('should detect live stream', async () => {
       const qs = vi.mocked(await import('../../../extension/utils/shortcuts/dom.js')).qs;
-      qs.mockReturnValue({ style: { display: 'block' } });
+      document.querySelector.mockReturnValue({ style: { display: 'block' } });
       Object.defineProperty(window, 'getComputedStyle', {
         value: vi.fn(() => ({ display: 'block' })),
       });
@@ -108,7 +108,7 @@ describe('AutoLiker', () => {
   describe('checkSubscriptionStatus', () => {
     it('should check subscription', async () => {
       const qs = vi.mocked(await import('../../../extension/utils/shortcuts/dom.js')).qs;
-      qs.mockReturnValue({ hasAttribute: vi.fn(() => true) });
+      document.querySelector.mockReturnValue({ hasAttribute: vi.fn(() => true) });
 
       const result = await liker.checkSubscriptionStatus();
 

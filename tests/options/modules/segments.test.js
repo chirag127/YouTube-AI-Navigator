@@ -7,7 +7,7 @@ vi.mock('../../../extension/utils/shortcuts/dom.js', () => ({
   on: vi.fn(),
 }));
 
-import { qs, ce, on } from '../../../extension/utils/shortcuts/dom.js';
+
 
 describe('SegmentsConfig', () => {
   let settingsManager;
@@ -17,7 +17,7 @@ describe('SegmentsConfig', () => {
 
   beforeEach(() => {
     mockElements = {};
-    qs.mockImplementation(selector => {
+    document.querySelector.mockImplementation(selector => {
       const id = selector.replace('#', '');
       if (id === 'segmentItemTemplate') {
         return {
@@ -50,7 +50,7 @@ describe('SegmentsConfig', () => {
       return mockElements[id];
     });
 
-    ce.mockImplementation(() => ({
+    document.createElement.mockImplementation(() => ({
       className: '',
       innerHTML: '',
       appendChild: vi.fn(),

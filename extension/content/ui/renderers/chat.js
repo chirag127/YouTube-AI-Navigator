@@ -1,8 +1,8 @@
-import { gu } from '../../../utils/shortcuts/runtime.js';
 
-const { e } = await import(gu('utils/shortcuts/log.js'));
-const { parseMarkdown } = await import(gu('lib/marked-loader.js'));
-const { ce, qs: $ } = await import(gu('utils/shortcuts/dom.js'));
+
+);
+const { parseMarkdown } = await import(chrome.runtime.getURL('lib/marked-loader.js'));
+);
 
 function parseTime(t) {
   const p = t.split(':').map(Number);
@@ -18,7 +18,7 @@ export function renderChat(c) {
       c.innerHTML = '';
 
       // Create chat container with glass styling
-      const chatContainer = ce('div');
+      const chatContainer = document.createElement('div');
       chatContainer.className = 'yt-ai-chat-messages';
       chatContainer.id = 'yt-ai-chat-messages';
       chatContainer.style.display = 'flex';
@@ -52,7 +52,7 @@ export function renderChat(c) {
       });
     }
   } catch (err) {
-    e('Err:renderChat', err);
+    console.error('Err:renderChat', err);
   }
 }
 
@@ -61,7 +61,7 @@ export async function addChatMessage(r, t) {
     const m = $('#yt-ai-chat-messages');
     if (!m) return;
 
-    const d = ce('div');
+    const d = document.createElement('div');
     d.className = `yt-ai-chat-msg ${r}`;
 
     // Apply specific styles based on role (AI vs User)
@@ -82,7 +82,7 @@ export async function addChatMessage(r, t) {
     m.scrollTop = m.scrollHeight;
     return d;
   } catch (err) {
-    e('Err:addChatMessage', err);
+    console.error('Err:addChatMessage', err);
     return null;
   }
 }

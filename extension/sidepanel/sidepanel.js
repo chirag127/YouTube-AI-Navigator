@@ -3,31 +3,31 @@ import { GeminiService } from '../api/gemini.js';
 import { SegmentClassificationService } from '../services/segments/index.js';
 import { StorageService } from '../services/storage/index.js';
 import { parseMarkdown } from '../lib/marked-loader.js';
-import { id, $, on, ce } from '../utils/shortcuts/dom.js';
-import { sl } from '../utils/shortcuts/storage.js';
-import { e, w } from '../utils/shortcuts/log.js';
-import { tbc as ct } from '../utils/shortcuts/tabs.js';
-import { to as st } from '../utils/shortcuts/global.js';
-import { mf } from '../utils/shortcuts/math.js';
-import { pd } from '../utils/shortcuts/string.js';
+
+
+
+
+
+
+
 
 const ss = new StorageService(),
   cs = new ChunkingService();
 let gs = null,
   scs = null,
   ctx = '';
-const ab = id('analyze-btn'),
-  stEl = id('status'),
-  aw = id('auth-warning'),
+const ab = document.getElementById('analyze-btn'),
+  stEl = document.getElementById('status'),
+  aw = document.getElementById('auth-warning'),
   tbs = $('.tab-btn'),
   tcs = $('.tab-content'),
-  sc = id('summary-content'),
-  ic = id('insights-content'),
-  ci = id('chat-input'),
-  csb = id('chat-send-btn'),
-  ch = id('chat-history');
+  sc = document.getElementById('summary-content'),
+  ic = document.getElementById('insights-content'),
+  ci = document.getElementById('chat-input'),
+  csb = document.getElementById('chat-send-btn'),
+  ch = document.getElementById('chat-history');
 
-on(document, 'DOMContentLoaded', async () => {
+(document)?.addEventListener('DOMContentLoaded', async () => {
   const { GAK } = await sl.get('GAK');
   if (!GAK) {
     aw.style.display = 'block';
@@ -42,21 +42,21 @@ on(document, 'DOMContentLoaded', async () => {
     void x;
   }
   for (const b of tbs) {
-    on(b, 'click', () => {
+    (b)?.addEventListener('click', () => {
       for (const x of tbs) x.classList.remove('active');
       for (const x of tcs) x.classList.remove('active');
       b.classList.add('active');
-      id(`${b.getAttribute('data-tab')}-tab`).classList.add('active');
+      document.getElementById(`${b.getAttribute('data-tab')}-tab`).classList.add('active');
     });
   }
-  on(csb, 'click', handleChat);
-  on(ci, 'keypress', e => {
+  (csb)?.addEventListener('click', handleChat);
+  (ci)?.addEventListener('keypress', e => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleChat();
     }
   });
-  on(document, 'click', e => {
+  (document)?.addEventListener('click', e => {
     if (e.target.classList.contains('timestamp-btn')) {
       const t = e.target.getAttribute('data-time');
       if (t) {
@@ -89,7 +89,7 @@ async function handleChat() {
 }
 
 function appendMsg(r, t) {
-  const d = ce('div');
+  const d = document.createElement('div');
   d.className = `chat-message${r}`;
   d.id = `msg-${Date.now()}`;
   d.textContent = t;
@@ -106,7 +106,7 @@ async function updateMsg(id, t) {
   }
 }
 
-on(ab, 'click', () => analyzeVideo());
+(ab)?.addEventListener('click', () => analyzeVideo());
 
 async function analyzeVideo(rc = 0) {
   const mr = 2;
@@ -127,7 +127,7 @@ async function analyzeVideo(rc = 0) {
       if (r.error) throw new Error(r.error);
       md = r.metadata;
     } catch (x) {
-      w('Metadata fetch failed, using fallback:', x);
+      console.warn('Metadata fetch failed, using fallback:', x);
       md = { title: 'Unknown Title', author: 'Unknown Channel', videoId: v };
     }
     setStatus('loading', 'Fetching transcript...');
@@ -151,10 +151,10 @@ async function analyzeVideo(rc = 0) {
     try {
       const cls = await scs.classifyTranscript({ transcript: ts, metadata: md });
       ct.sendMessage(tab.id, { action: 'SHOW_SEGMENTS', segments: cls.segments }).catch(x =>
-        w('Failed to send segments:', x)
+        console.warn('Failed to send segments:', x)
       );
     } catch (x) {
-      w('Segment classification failed:', x);
+      console.warn('Segment classification failed:', x);
     }
     const cfg = await sl.get([
       'summaryLength',
@@ -178,7 +178,7 @@ async function analyzeVideo(rc = 0) {
     await renderMd(an.summary, sc);
     setStatus('loading', 'Analyzing comments...');
     const cr = await ct.sendMessage(tab.id, { action: 'GET_COMMENTS' }).catch(x => {
-      e('Failed to get comments:', x);
+      console.error('Failed to get comments:', x);
       return { comments: [] };
     });
     const cms = cr?.comments || [];
@@ -187,10 +187,10 @@ async function analyzeVideo(rc = 0) {
       try {
         ca = await gs.analyzeCommentSentiment(cms);
       } catch (x) {
-        e('Comment analysis failed:', x);
+        console.error('Comment analysis failed:', x);
         ca = `Failed to analyze comments: ${x.message}`;
       }
-    } else w('[Sidepanel] No comments found to analyze');
+    } else console.warn('[Sidepanel] No comments found to analyze');
     const ih = await parseMarkdown(an.insights),
       ch = await parseMarkdown(ca),
       fh = await parseMarkdown(an.faq);
@@ -199,12 +199,12 @@ async function analyzeVideo(rc = 0) {
     try {
       await ss.saveTranscript(v, md, ts, an.summary);
     } catch (x) {
-      w('Failed to save to history:', x);
+      console.warn('Failed to save to history:', x);
     }
   } catch (x) {
-    e('Analysis error:', x);
+    console.error('Analysis error:', x);
     if (rc < mr && (x.message.includes('fetch') || x.message.includes('network'))) {
-      await new Promise(r => st(r, 1000 * (rc + 1)));
+      await new Promise(r => setTimeout(r, 1000 * (rc + 1)));
       return analyzeVideo(rc + 1);
     }
     showError('Analysis Failed', x.message);
@@ -219,7 +219,7 @@ async function smr(tid, m, mr = 3) {
       return await ct.sendMessage(tid, m);
     } catch (x) {
       if (i === mr - 1) throw x;
-      await new Promise(r => st(r, 500 * (i + 1)));
+      await new Promise(r => setTimeout(r, 500 * (i + 1)));
     }
   }
 }
@@ -256,7 +256,7 @@ async function seekVideo(s) {
 }
 
 export function fmtTime(s) {
-  const m = mf(s / 60),
-    sc = mf(s % 60);
-  return `${m}:${pd(sc.toString(), 2, '0')}`;
+  const m = Math.floor(s / 60),
+    sc = Math.floor(s % 60);
+  return `${m}:${sc.toString().padStart(2, '0')}`;
 }

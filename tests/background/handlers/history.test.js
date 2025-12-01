@@ -19,10 +19,10 @@ describe('handleSaveToHistory', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockSlg = vi.mocked(require('../../../extension/utils/shortcuts/storage.js').slg);
-    mockSls = vi.mocked(require('../../../extension/utils/shortcuts/storage.js').sls);
-    mockNw = vi.mocked(require('../../../extension/utils/shortcuts/core.js').nw);
-    mockE = vi.mocked(require('../../../extension/utils/shortcuts/log.js').e);
+    mockSlg = vi.mocked(vi.fn().slg);
+    mockSls = vi.mocked(vi.fn().sls);
+    mockNw = vi.mocked(vi.fn().nw);
+    mockE = vi.mocked(vi.fn().e);
     mockNw.mockReturnValue(1234567890);
     mockRsp = vi.fn();
   });

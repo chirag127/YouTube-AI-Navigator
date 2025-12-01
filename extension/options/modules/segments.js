@@ -1,6 +1,6 @@
 import { SEGMENT_CATEGORIES, DEFAULT_SEGMENT_CONFIG } from './settings-manager.js';
-import { qs as i, on } from '../../utils/shortcuts/dom.js';
-import { pf } from '../../utils/shortcuts/global.js';
+
+
 import { stc, ih, ac } from '../../utils/shortcuts.js';
 export class SegmentsConfig {
   constructor(s, a) {
@@ -9,15 +9,15 @@ export class SegmentsConfig {
   }
   init() {
     const c = this.s.get(),
-      en = i('#enableSegments'),
-      as = i('#enableAutoSkip'),
-      sn = i('#showSegmentNotifications'),
-      sm = i('#showSegmentMarkers'),
-      st = i('#skipTolerance'),
-      stv = i('#skipToleranceValue'),
-      msd = i('#minSegmentDuration'),
-      msdv = i('#minSegmentDurationValue'),
-      g = i('#segmentsGrid');
+      en = (document).querySelector('#enableSegments'),
+      as = (document).querySelector('#enableAutoSkip'),
+      sn = (document).querySelector('#showSegmentNotifications'),
+      sm = (document).querySelector('#showSegmentMarkers'),
+      st = (document).querySelector('#skipTolerance'),
+      stv = (document).querySelector('#skipToleranceValue'),
+      msd = (document).querySelector('#minSegmentDuration'),
+      msdv = (document).querySelector('#minSegmentDurationValue'),
+      g = (document).querySelector('#segmentsGrid');
 
     if (en) en.checked = c.segments?.enabled ?? false;
     if (as) as.checked = c.segments?.autoSkip ?? false;
@@ -37,43 +37,35 @@ export class SegmentsConfig {
     // Use SettingsManager directly for immediate updates where appropriate,
     // or AutoSave if debouncing is desired. For toggles, immediate is usually better for settings pages.
     if (en)
-      on(en, 'change', async e => await this.updateSetting('segments.enabled', e.target.checked));
+      (en)?.addEventListener('change', async e => await this.updateSetting('segments.enabled', e.target.checked));
     if (as)
-      on(as, 'change', async e => await this.updateSetting('segments.autoSkip', e.target.checked));
+      (as)?.addEventListener('change', async e => await this.updateSetting('segments.autoSkip', e.target.checked));
     if (sn)
-      on(
-        sn,
-        'change',
-        async e => await this.updateSetting('segments.showNotifications', e.target.checked)
-      );
+      (sn)?.addEventListener('change', async e => await this.updateSetting('segments.showNotifications', e.target.checked));
     if (sm)
-      on(
-        sm,
-        'change',
-        async e => await this.updateSetting('segments.showMarkers', e.target.checked)
-      );
+      (sm)?.addEventListener('change', async e => await this.updateSetting('segments.showMarkers', e.target.checked));
 
     if (st)
-      on(st, 'input', () => {
+      (st)?.addEventListener('input', () => {
         if (stv) stc(stv, `${st.value}s`);
         // Use AutoSave for sliders to avoid spamming storage
-        this.a.save('segments.skipTolerance', pf(st.value));
+        this.a.save('segments.skipTolerance', parseFloat(st.value));
       });
     if (msd)
-      on(msd, 'input', () => {
+      (msd)?.addEventListener('input', () => {
         if (msdv) stc(msdv, `${msd.value}s`);
-        this.a.save('segments.minSegmentDuration', pf(msd.value));
+        this.a.save('segments.minSegmentDuration', parseFloat(msd.value));
       });
 
-    const ib = i('#ignoreAllBtn'),
-      sb = i('#skipAllBtn'),
-      sp = i('#speedAllBtn'),
-      rb = i('#resetAllBtn');
+    const ib = (document).querySelector('#ignoreAllBtn'),
+      sb = (document).querySelector('#skipAllBtn'),
+      sp = (document).querySelector('#speedAllBtn'),
+      rb = (document).querySelector('#resetAllBtn');
 
-    if (ib) on(ib, 'click', () => this.setAll('ignore'));
-    if (sb) on(sb, 'click', () => this.setAll('skip'));
-    if (sp) on(sp, 'click', () => this.setAll('speed'));
-    if (rb) on(rb, 'click', () => this.resetToDefaults());
+    if (ib) (ib)?.addEventListener('click', () => this.setAll('ignore'));
+    if (sb) (sb)?.addEventListener('click', () => this.setAll('skip'));
+    if (sp) (sp)?.addEventListener('click', () => this.setAll('speed'));
+    if (rb) (rb)?.addEventListener('click', () => this.resetToDefaults());
   }
 
   async updateSetting(path, value) {
@@ -82,7 +74,7 @@ export class SegmentsConfig {
   }
 
   render(g) {
-    const t = i('#segmentItemTemplate');
+    const t = (document).querySelector('#segmentItemTemplate');
     if (!t) return;
 
     ih(g, '');
@@ -108,7 +100,7 @@ export class SegmentsConfig {
 
       if (a) {
         a.value = cfg.action;
-        on(a, 'change', () => {
+        (a)?.addEventListener('change', () => {
           const v = a.value;
           if (sc) {
             if (v === 'speed') sc.classList.remove('hidden');
@@ -121,11 +113,11 @@ export class SegmentsConfig {
       if (ss && sv) {
         ss.value = cfg.speed;
         stc(sv, `${cfg.speed}x`);
-        on(ss, 'input', () => {
+        (ss)?.addEventListener('input', () => {
           const v = ss.value;
           stc(sv, `${v}x`);
           // Debounce speed updates if possible, or just save
-          this.updateCategory(cat.id, { speed: pf(v) });
+          this.updateCategory(cat.id, { speed: parseFloat(v) });
         });
       }
 
@@ -171,7 +163,7 @@ export class SegmentsConfig {
     this.s.set('segments.categories', cats);
     await this.s.save();
 
-    const g = i('#segmentsGrid');
+    const g = (document).querySelector('#segmentsGrid');
     if (g) this.render(g);
   }
 
@@ -180,7 +172,7 @@ export class SegmentsConfig {
     this.s.set('segments.categories', defaults.segments.categories);
     await this.s.save();
 
-    const g = i('#segmentsGrid');
+    const g = (document).querySelector('#segmentsGrid');
     if (g) this.render(g);
   }
 }

@@ -1,5 +1,5 @@
-import { qs, ce } from '../../../utils/shortcuts/dom.js';
-import { e } from '../../../utils/shortcuts/log.js';
+
+
 
 const CATEGORY_COLORS = {
   sponsor: { bg: '#00d400', text: '#000000', label: 'Sponsor' },
@@ -16,11 +16,11 @@ const CATEGORY_COLORS = {
 export function injectVideoLabel(segments) {
   try {
     // Find the title element
-    const titleElem = qs('h1.ytd-watch-metadata');
+    const titleElem = (document).querySelector('h1.ytd-watch-metadata');
     if (!titleElem) return;
 
     // Check if we already injected
-    let parent = qs('#yt-ai-category-pill-parent');
+    let parent = (document).querySelector('#yt-ai-category-pill-parent');
     if (parent) parent.remove(); // Re-inject to update
 
     if (!segments || !segments.length) return;
@@ -66,13 +66,13 @@ export function injectVideoLabel(segments) {
     // Create structure
     // <span id="yt-ai-category-pill-parent">...</span>
 
-    parent = ce('span');
+    parent = document.createElement('span');
     parent.id = 'yt-ai-category-pill-parent';
     parent.style.display = 'flex';
     parent.style.marginRight = '8px';
     parent.style.alignItems = 'center';
 
-    const pill = ce('span');
+    const pill = document.createElement('span');
     pill.className = 'yt-ai-category-pill';
     pill.style.backgroundColor = config.bg;
     pill.style.color = config.text;
@@ -92,7 +92,7 @@ export function injectVideoLabel(segments) {
     // User example had an img. I'll skip the img for now to avoid broken images,
     // or use a generic SVG if needed. Text is safer.
 
-    const text = ce('span');
+    const text = document.createElement('span');
     text.textContent = config.label;
 
     pill.appendChild(text);
@@ -101,6 +101,6 @@ export function injectVideoLabel(segments) {
     // Insert at the beginning of the title
     titleElem.insertBefore(parent, titleElem.firstChild);
   } catch (err) {
-    e('Err:injectVideoLabel', err);
+    console.error('Err:injectVideoLabel', err);
   }
 }

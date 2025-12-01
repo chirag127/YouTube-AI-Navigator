@@ -1,4 +1,4 @@
-import { qs as i } from '../../utils/shortcuts/dom.js';
+
 export class ExternalAPIs {
   constructor(s, a) {
     this.s = s;
@@ -34,7 +34,7 @@ export class ExternalAPIs {
     });
   }
   set(id, v) {
-    const el = i(`#${id}`);
+    const el = (document).querySelector(`#${id}`);
     if (!el) return;
     if (el.type === 'checkbox') el.checked = v;
     else if (el.type === 'number') el.value = Number(v);

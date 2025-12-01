@@ -1,6 +1,6 @@
 import { initializeServices, getServices } from '../services.js';
 import { getApiKey } from '../utils/api-key.js';
-import { e } from '../../utils/shortcuts/log.js';
+
 export async function handleGetCachedData(req, rsp) {
   try {
     const { videoId } = req;
@@ -14,7 +14,7 @@ export async function handleGetCachedData(req, rsp) {
     const d = await storage.getVideoData(videoId);
     rsp({ success: true, data: d });
   } catch (x) {
-    e('GetCached:', x);
+    console.error('GetCached:', x);
     rsp({ success: false, error: x.message });
   }
 }

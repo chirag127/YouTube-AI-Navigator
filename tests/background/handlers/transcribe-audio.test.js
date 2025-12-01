@@ -26,15 +26,15 @@ vi.mock('../../../extension/utils/shortcuts/storage.js', () => ({
 }));
 
 vi.mock('../../../extension/utils/shortcuts/network.js', () => ({
-  ft: vi.fn(),
+  fetch: vi.fn(),
 }));
 
 import { GeminiClient } from '../../../extension/api/gemini-client.js';
-import { w, e } from '../../../extension/utils/shortcuts/log.js';
+
 import { jp } from '../../../extension/utils/shortcuts/core.js';
-import { rp, trm } from '../../../extension/utils/shortcuts/string.js';
-import { sg } from '../../../extension/utils/shortcuts/storage.js';
-import { ft } from '../../../extension/utils/shortcuts/network.js';
+
+
+
 import { handleTranscribeAudio } from '../../../extension/background/handlers/transcribe-audio.js';
 
 describe('handleTranscribeAudio', () => {
@@ -49,7 +49,7 @@ describe('handleTranscribeAudio', () => {
     mockRp = rp;
     mockTrm = trm;
     mockSg = sg;
-    mockFt = ft;
+    mockFt = fetch;
     mockRsp = vi.fn();
 
     // Setup mocks

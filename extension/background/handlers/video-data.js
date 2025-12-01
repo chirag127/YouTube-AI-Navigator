@@ -1,6 +1,6 @@
 import { getHistory } from '../../services/storage/comprehensive-history.js';
-import { slg, sls, slr } from '../../utils/shortcuts/storage.js';
-import { e } from '../../utils/shortcuts/log.js';
+
+
 import { nw } from '../../utils/shortcuts/core.js';
 import { handleGetVideoInfo } from './video-info.js';
 import { handleFetchTranscript as handleGetTranscript } from './fetch-transcript.js';
@@ -62,7 +62,7 @@ export const handleGetVideoData = async req => {
     }
     return r;
   } catch (x) {
-    e(`[VideoData] Error fetching ${dataType}:`, x);
+    console.error(`[VideoData] Error fetching ${dataType}:`, x);
     return { success: false, error: x.message };
   }
 };

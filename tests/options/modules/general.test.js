@@ -16,7 +16,7 @@ vi.mock('../../../extension/utils/shortcuts/dom.js', () => ({
   rc: vi.fn(),
 }));
 
-import { qs } from '../../../extension/utils/shortcuts/dom.js';
+
 
 describe('GeneralSettings', () => {
   let settingsManager;
@@ -26,7 +26,7 @@ describe('GeneralSettings', () => {
 
   beforeEach(() => {
     mockElements = {};
-    qs.mockImplementation(selector => {
+    document.querySelector.mockImplementation(selector => {
       const id = selector.replace('#', '');
       if (!mockElements[id]) {
         mockElements[id] = {

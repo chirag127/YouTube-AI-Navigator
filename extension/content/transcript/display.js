@@ -1,35 +1,35 @@
 const gu = p => chrome.runtime.getURL(p);
 
-const { e } = await import(gu('utils/shortcuts/log.js'));
-const { el: ce } = await import(gu('utils/shortcuts/dom.js'));
+);
+);
 export function createTranscriptDisplay(s) {
   try {
-    const c = ce('div', 'ytai-transcript-display');
+    const c = (()=>{const e=document.createElement('div');e.className='ytai-transcript-display';return e;})();
     for (const seg of s) c.appendChild(createTranscriptLine(seg));
 
     return c;
   } catch (err) {
-    e('Err:createTranscriptDisplay', err);
-    return ce('div', 'ytai-transcript-display');
+    console.error('Err:createTranscriptDisplay', err);
+    return (()=>{const e=document.createElement('div');e.className='ytai-transcript-display';return e;})();
   }
 }
 
 function createTranscriptLine(s) {
   try {
-    const line = ce('div', 'ytai-transcript-line');
+    const line = (()=>{const e=document.createElement('div');e.className='ytai-transcript-line';return e;})();
     line.dataset.start = s.start;
     line.dataset.duration = s.duration;
-    const ts = ce('span', 'ytai-transcript-timestamp');
+    const ts = (()=>{const e=document.createElement('span');e.className='ytai-transcript-timestamp';return e;})();
     ts.textContent = formatTimestamp(s.start);
-    const tx = ce('span', 'ytai-transcript-text');
+    const tx = (()=>{const e=document.createElement('span');e.className='ytai-transcript-text';return e;})();
     tx.textContent = s.text;
     line.appendChild(ts);
     line.appendChild(tx);
 
     return line;
   } catch (err) {
-    e('Err:createTranscriptLine', err);
-    return ce('div', 'ytai-transcript-line');
+    console.error('Err:createTranscriptLine', err);
+    return (()=>{const e=document.createElement('div');e.className='ytai-transcript-line';return e;})();
   }
 }
 
@@ -41,7 +41,7 @@ function formatTimestamp(s) {
 
     return result;
   } catch (err) {
-    e('Err:formatTimestamp', err);
+    console.error('Err:formatTimestamp', err);
     return '0:00';
   }
 }

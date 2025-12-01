@@ -1,6 +1,6 @@
-import { to } from '../../utils/shortcuts/global.js';
+
 import { raf } from '../../utils/shortcuts/async.js';
-import { ce as cr, ap } from '../../utils/shortcuts/dom.js';
+
 export class NotificationManager {
   constructor() {
     this.container = null;
@@ -10,11 +10,11 @@ export class NotificationManager {
   }
   init() {
     if (document.body) {
-      this.container = cr('div');
+      this.container = document.createElement('div');
       this.container.id = 'notification-container';
       this.container.style.cssText =
         'position:fixed;top:20px;right:20px;z-index:2147483647;display:flex;flex-direction:column;gap:10px;pointer-events:none;';
-      ap(document.body, this.container);
+      (document.body)?.appendChild(this.container);
     } else {
       setTimeout(() => this.init(), 100);
     }
@@ -24,20 +24,20 @@ export class NotificationManager {
       console.error('[NotificationManager] Container not initialized');
       return null;
     }
-    const n = cr('div');
+    const n = document.createElement('div');
     n.className = `notification notification-${t}`;
     const i = this.getIcon(t);
     n.innerHTML = `<span class="notification-icon">${i}</span><span class="notification-message">${m}</span>`;
     n.style.cssText = `display:flex;align-items:center;gap:12px;padding:12px 20px;background:${this.getBackground(t)};color:${this.getColor(t)};border-radius:8px;font-size:14px;font-weight:500;box-shadow:0 4px 12px rgba(0,0,0,0.3);transform:translateX(400px);transition:transform 0.3s cubic-bezier(0.175,0.885,0.32,1.275);pointer-events:auto;border:1px solid ${this.getBorderColor(t)};`;
-    ap(this.container, n);
+    (this.container)?.appendChild(n);
     raf(() => {
       raf(() => {
         n.style.transform = 'translateX(0)';
       });
     });
-    to(() => {
+    setTimeout(() => {
       n.style.transform = 'translateX(400px)';
-      to(() => {
+      setTimeout(() => {
         n.remove();
       }, 300);
     }, d);

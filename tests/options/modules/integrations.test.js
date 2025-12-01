@@ -8,7 +8,7 @@ vi.mock('../../../extension/utils/shortcuts/dom.js', () => ({
   ce: vi.fn(),
 }));
 
-import { qs, id, ce } from '../../../extension/utils/shortcuts/dom.js';
+
 
 describe('IntegrationsSettings', () => {
   let settingsManager;
@@ -36,9 +36,9 @@ describe('IntegrationsSettings', () => {
       return mockElements[elId];
     };
 
-    qs.mockImplementation(mockEl);
-    id.mockImplementation(mockEl);
-    ce.mockImplementation(() => ({
+    document.querySelector.mockImplementation(mockEl);
+    document.getElementById.mockImplementation(mockEl);
+    document.createElement.mockImplementation(() => ({
       className: '',
       innerHTML: '',
       appendChild: vi.fn(),

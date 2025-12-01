@@ -8,9 +8,9 @@ import { GoogleFactCheckAPI } from '../api/google-factcheck.js';
 import { WikidataAPI } from '../api/wikidata.js';
 import { DatamuseAPI } from '../api/datamuse.js';
 import { OpenMeteoAPI } from '../api/openmeteo.js';
-import { w } from '../utils/shortcuts/log.js';
+
 import { ps } from '../utils/shortcuts/async.js';
-import { aia } from '../utils/shortcuts/array.js';
+
 
 export class ContextManager {
   constructor(s) {
@@ -95,13 +95,13 @@ export class ContextManager {
         }
       } else {
         const { n, err: e } = res.reason;
-        w(`[ContextManager] ✗ ${n}:`, e.message || e);
-        if (e.message?.includes('timeout')) w(`[ContextManager] ${n} timeout`);
+        console.warn(`[ContextManager] ✗ ${n}:`, e.message || e);
+        if (e.message?.includes('timeout')) console.warn(`[ContextManager] ${n} timeout`);
         else if (e.message?.includes('Failed to fetch') || e.message?.includes('NetworkError'))
-          w(`[ContextManager] ${n} network error`);
+          console.warn(`[ContextManager] ${n} network error`);
         else if (e.message?.includes('401') || e.message?.includes('403'))
-          w(`[ContextManager] ${n} auth error`);
-        else w(`[ContextManager] ${n} unexpected error`);
+          console.warn(`[ContextManager] ${n} auth error`);
+        else console.warn(`[ContextManager] ${n} unexpected error`);
       }
     });
     return ctx;

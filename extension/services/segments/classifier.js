@@ -1,6 +1,6 @@
 import { annotateTranscript } from './rule-engine.js';
-import { isa } from '../../utils/shortcuts/array.js';
-import { e } from '../../utils/shortcuts/log.js';
+
+
 
 export async function classifyTranscript(context, g) {
   const { transcript, metadata } = context;
@@ -18,7 +18,7 @@ export async function classifyTranscript(context, g) {
   try {
     const result = await g.extractSegments(annotatedContext);
 
-    if (isa(result)) {
+    if (Array.isArray(result)) {
       return { segments: result, fullVideoLabel: null };
     }
 
@@ -27,7 +27,7 @@ export async function classifyTranscript(context, g) {
       fullVideoLabel: result.fullVideoLabel || null,
     };
   } catch (err) {
-    e('error:classifyTranscript', err);
+    console.error('error:classifyTranscript', err);
     return { segments: [], fullVideoLabel: null };
   }
 }

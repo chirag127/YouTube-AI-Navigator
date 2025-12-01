@@ -38,10 +38,10 @@ describe('handleGenerateSummary', () => {
     );
     mockGetServices = vi.mocked(require('../../../extension/background/services.js').getServices);
     mockGetApiKey = vi.mocked(require('../../../extension/background/utils/api-key.js').getApiKey);
-    mockFlr = vi.mocked(require('../../../extension/utils/shortcuts/math.js').flr);
-    mockAm = vi.mocked(require('../../../extension/utils/shortcuts/array.js').am);
-    mockAjn = vi.mocked(require('../../../extension/utils/shortcuts/array.js').ajn);
-    mockIsa = vi.mocked(require('../../../extension/utils/shortcuts/array.js').isa);
+    mockFlr = vi.mocked(vi.fn().flr);
+    mockAm = vi.mocked(vi.fn().am);
+    mockAjn = vi.mocked(vi.fn().ajn);
+    mockIsa = vi.mocked(vi.fn().isa);
     mockGemini = { generateSummary: vi.fn() };
     mockGetServices.mockReturnValue({ gemini: mockGemini });
     mockRsp = vi.fn();

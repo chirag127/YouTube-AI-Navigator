@@ -27,7 +27,7 @@ describe('MusicBrainzAPI', () => {
         ok: true,
         json: vi.fn().mockResolvedValue(mockData),
       });
-      const { sg } = await import('../../extension/utils/shortcuts/storage.js');
+
       sg.mockResolvedValue({});
 
       const result = await api.searchArtist('query');
@@ -36,7 +36,7 @@ describe('MusicBrainzAPI', () => {
     });
 
     it('should return null when disabled', async () => {
-      const { sg } = await import('../../extension/utils/shortcuts/storage.js');
+
       sg.mockResolvedValue({ integrations: { musicbrainz: { enabled: false } } });
 
       const result = await api.searchArtist('query');
@@ -49,7 +49,7 @@ describe('MusicBrainzAPI', () => {
         ok: true,
         json: vi.fn().mockResolvedValue({ artists: [] }),
       });
-      const { sg } = await import('../../extension/utils/shortcuts/storage.js');
+
       sg.mockResolvedValue({});
 
       const result = await api.searchArtist('query');
@@ -61,7 +61,7 @@ describe('MusicBrainzAPI', () => {
   describe('searchRelease', () => {
     it('should return release on success', async () => {
       const mockData = { releases: [{ title: 'Release' }] };
-      const { sf } = await import('../../extension/utils/shortcuts/network.js');
+
       sf.mockResolvedValue(mockData);
 
       const result = await api.searchRelease('query', 'artist');
@@ -75,7 +75,7 @@ describe('MusicBrainzAPI', () => {
 
     it('should search without artist', async () => {
       const mockData = { releases: [{ title: 'Release' }] };
-      const { sf } = await import('../../extension/utils/shortcuts/network.js');
+
       sf.mockResolvedValue(mockData);
 
       const result = await api.searchRelease('query');
@@ -88,7 +88,7 @@ describe('MusicBrainzAPI', () => {
     });
 
     it('should return null on no releases', async () => {
-      const { sf } = await import('../../extension/utils/shortcuts/network.js');
+
       sf.mockResolvedValue({ releases: [] });
 
       const result = await api.searchRelease('query');

@@ -1,11 +1,11 @@
-import { ge, on, $$ } from '../utils/shortcuts/dom.js';
-import { sg, ss, sls } from '../utils/shortcuts/storage.js';
+
+
 import { nw as nt, js } from '../utils/shortcuts/core.js';
-import { ft } from '../utils/shortcuts/network.js';
-import { cht as ctab } from '../utils/shortcuts/chrome.js';
-import { rt } from '../utils/shortcuts/runtime.js';
-import { to as st, wn as win } from '../utils/shortcuts/global.js';
-import { e } from '../utils/shortcuts/log.js';
+
+
+
+
+
 class OnboardingFlow {
   constructor() {
     this.currentStep = 0;
@@ -20,10 +20,10 @@ class OnboardingFlow {
   }
   async loadSettings() {
     try {
-      const r = await sg('config');
+      const r = await chrome.storage.sync.get('config');
       this.settings = r.config || this.getDefaults();
     } catch (err) {
-      e('Err:LoadSettings', err);
+      console.error('Err:LoadSettings', err);
     }
   }
   async saveSettings(p, v) {
@@ -35,9 +35,9 @@ class OnboardingFlow {
           return o[key];
         }, this.settings);
       t[last] = v;
-      await ss('config', this.settings);
+      await chrome.storage.sync.set(typeof 'config' === 'string' ? { ['config']: this.settings } : 'config');
     } catch (err) {
-      e('Err:SaveSettings', err);
+      console.error('Err:SaveSettings', err);
     }
   }
   getDefaults() {
@@ -51,44 +51,44 @@ class OnboardingFlow {
     return defaults;
   }
   setupEventListeners() {
-    on(ge('nextBtn'), 'click', () => this.nextStep());
-    on(ge('backBtn'), 'click', () => this.prevStep());
-    const tak = ge('toggleApiKeyBtn'),
-      tst = ge('testApiKeyBtn'),
-      aki = ge('apiKeyInput'),
-      oak = ge('openApiKeyPage'),
-      ol = ge('outputLanguage'),
-      aa = ge('autoAnalyze'),
-      es = ge('enableSegments'),
-      os = ge('openSettingsBtn'),
-      fb = ge('finishBtn');
-    if (tak) on(tak, 'click', this.toggleApiKeyVisibility.bind(this));
-    if (tst) on(tst, 'click', this.testApiKey.bind(this));
-    if (aki) on(aki, 'input', this.onApiKeyInput.bind(this));
-    if (oak) on(oak, 'click', () => ctab({ url: 'https://aistudio.google.com/app/apikey' }));
-    if (ol) on(ol, 'change', e => this.saveSettings('ui.outputLanguage', e.target.value));
-    if (aa) on(aa, 'change', e => this.saveSettings('automation.autoAnalyze', e.target.checked));
-    if (es) on(es, 'change', e => this.saveSettings('segments.enabled', e.target.checked));
+    (document.getElementById('nextBtn'))?.addEventListener('click', () => this.nextStep());
+    (document.getElementById('backBtn'))?.addEventListener('click', () => this.prevStep());
+    const tak = document.getElementById('toggleApiKeyBtn'),
+      tst = document.getElementById('testApiKeyBtn'),
+      aki = document.getElementById('apiKeyInput'),
+      oak = document.getElementById('openApiKeyPage'),
+      ol = document.getElementById('outputLanguage'),
+      aa = document.getElementById('autoAnalyze'),
+      es = document.getElementById('enableSegments'),
+      os = document.getElementById('openSettingsBtn'),
+      fb = document.getElementById('finishBtn');
+    if (tak) (tak)?.addEventListener('click', this.toggleApiKeyVisibility.bind(this));
+    if (tst) (tst)?.addEventListener('click', this.testApiKey.bind(this));
+    if (aki) (aki)?.addEventListener('input', this.onApiKeyInput.bind(this));
+    if (oak) (oak)?.addEventListener('click', () => chrome.tabs({ url: 'https://aistudio.google.com/app/apikey' }));
+    if (ol) (ol)?.addEventListener('change', e => this.saveSettings('ui.outputLanguage', e.target.value));
+    if (aa) (aa)?.addEventListener('change', e => this.saveSettings('automation.autoAnalyze', e.target.checked));
+    if (es) (es)?.addEventListener('change', e => this.saveSettings('segments.enabled', e.target.checked));
     if (os)
-      on(os, 'click', () => {
+      (os)?.addEventListener('click', () => {
         rt.openOptionsPage();
-        win.close();
+        chrome.windows.close();
       });
-    if (fb) on(fb, 'click', () => this.completeOnboarding());
+    if (fb) (fb)?.addEventListener('click', () => this.completeOnboarding());
   }
   toggleApiKeyVisibility() {
-    const i = ge('apiKeyInput');
+    const i = document.getElementById('apiKeyInput');
     i.type = i.type === 'password' ? 'text' : 'password';
   }
   onApiKeyInput() {
-    const s = ge('apiKeyStatus');
+    const s = document.getElementById('apiKeyStatus');
     s.className = 'status-message';
     s.textContent = '';
   }
   async testApiKey() {
-    const i = ge('apiKeyInput'),
-      b = ge('testApiKeyBtn'),
-      s = ge('apiKeyStatus'),
+    const i = document.getElementById('apiKeyInput'),
+      b = document.getElementById('testApiKeyBtn'),
+      s = document.getElementById('apiKeyStatus'),
       k = i.value.trim();
     if (!k) {
       s.className = 'status-message error';
@@ -101,7 +101,7 @@ class OnboardingFlow {
     s.textContent = 'Connecting to Google AI...';
     try {
       const m = 'gemini-2.5-pro';
-      const r = await ft(
+      const r = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${k}`,
         {
           method: 'POST',
@@ -123,9 +123,9 @@ class OnboardingFlow {
       await sls('GAK', k);
       s.className = 'status-message success';
       s.textContent = '✓ Connection successful! API key saved.';
-      st(() => this.nextStep(), 1500);
+      setTimeout(() => this.nextStep(), 1500);
     } catch (e) {
-      e('Err:TestApiKey', e);
+      console.error('Err:TestApiKey', e);
       s.className = 'status-message error';
       s.textContent = `✗ ${e.message}`;
     } finally {
@@ -148,9 +148,9 @@ class OnboardingFlow {
   updateUI() {
     const s = [...$$('.step')],
       d = [...$$('.step-dot')],
-      pf = ge('progressFill'),
-      bb = ge('backBtn'),
-      nb = ge('nextBtn');
+      pf = document.getElementById('progressFill'),
+      bb = document.getElementById('backBtn'),
+      nb = document.getElementById('nextBtn');
     s.forEach((st, i) => {
       st.classList.remove('active', 'prev');
       if (i === this.currentStep) st.classList.add('active');
@@ -168,21 +168,21 @@ class OnboardingFlow {
   }
   async loadStepData() {
     if (this.currentStep === 1) {
-      const i = ge('apiKeyInput');
+      const i = document.getElementById('apiKeyInput');
       if (this.settings.ai?.GAK) i.value = this.settings.ai.GAK;
     } else if (this.currentStep === 2) {
-      ge('outputLanguage').value = this.settings.ui?.outputLanguage || 'en';
-      ge('autoAnalyze').checked = this.settings.automation?.autoAnalyze || false;
-      ge('enableSegments').checked = this.settings.segments?.enabled !== false;
+      document.getElementById('outputLanguage').value = this.settings.ui?.outputLanguage || 'en';
+      document.getElementById('autoAnalyze').checked = this.settings.automation?.autoAnalyze || false;
+      document.getElementById('enableSegments').checked = this.settings.segments?.enabled !== false;
     }
   }
   async completeOnboarding() {
     try {
       await this.saveSettings('_meta.onboardingCompleted', true);
-      win.close();
+      chrome.windows.close();
     } catch (err) {
-      e('Err:CompleteOnboarding', err);
+      console.error('Err:CompleteOnboarding', err);
     }
   }
 }
-on(document, 'DOMContentLoaded', () => new OnboardingFlow());
+(document)?.addEventListener('DOMContentLoaded', () => new OnboardingFlow());

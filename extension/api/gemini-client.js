@@ -1,9 +1,9 @@
 import { HttpClient } from './core/http-client.js';
 import { ErrorHandler } from './core/error-handler.js';
 import { RateLimiter } from './core/rate-limiter.js';
-import { e } from '../utils/shortcuts/log.js';
+
 import { js } from '../utils/shortcuts/core.js';
-import { isa } from '../utils/shortcuts/array.js';
+
 
 export class GeminiClient {
   constructor(apiKey, config = {}) {
@@ -24,7 +24,7 @@ export class GeminiClient {
     await this.rateLimiter.acquire();
     const url = `${this.baseUrl}/models/${model}:generateContent?key=${this.apiKey}`;
     try {
-      const contents = isa(prompt) ? [{ parts: prompt }] : [{ parts: [{ text: prompt }] }];
+      const contents = Array.isArray(prompt) ? [{ parts: prompt }] : [{ parts: [{ text: prompt }] }];
       const response = await this.httpClient.fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -35,7 +35,7 @@ export class GeminiClient {
       if (!text) throw new Error('No content');
       return text;
     } catch (error) {
-      e(`error:generateContent ${model}:`, error.message);
+      console.error(`error:generateContent ${model}:`, error.message);
       throw ErrorHandler.createUserError(error);
     }
   }

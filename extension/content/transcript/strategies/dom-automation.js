@@ -1,9 +1,9 @@
-import { $, $$ } from '../../../utils/shortcuts/dom.js';
-import { e } from '../../../utils/shortcuts/log.js';
+
+
 import { getCfg } from '../../../utils/config.js';
 import { stt as to } from '../../../utils/shortcuts/time.js';
 import { now as nw } from '../../../utils/shortcuts/core.js';
-import { trm } from '../../../utils/shortcuts/string.js';
+
 
 export const name = 'DOM Automation';
 export const priority = 10;
@@ -34,7 +34,7 @@ export const extract = async () => {
 
     return s;
   } catch (x) {
-    e('Err:extract', x);
+    console.error('Err:extract', x);
     throw x;
   }
 };
@@ -46,7 +46,7 @@ const closePanel = async () => {
       await wait(300);
     }
   } catch (err) {
-    e('Err:closePanel', err);
+    console.error('Err:closePanel', err);
   }
 };
 
@@ -54,7 +54,7 @@ const isVis = c => {
   try {
     return c && c.visibility !== 'hidden' && c.offsetParent !== null;
   } catch (err) {
-    e('Err:isVis', err);
+    console.error('Err:isVis', err);
     return false;
   }
 };
@@ -85,7 +85,7 @@ const openPanel = async () => {
       await wait(1000);
     } else throw new Error('Show transcript button not found');
   } catch (err) {
-    e('Err:openPanel', err);
+    console.error('Err:openPanel', err);
     throw err;
   }
 };
@@ -102,7 +102,7 @@ const waitSeg = async (t = 5000) => {
     }
     throw new Error('Timeout waiting for segments');
   } catch (err) {
-    e('Err:waitSeg', err);
+    console.error('Err:waitSeg', err);
     throw err;
   }
 };
@@ -115,8 +115,8 @@ const scrape = () => {
       const tse = el.querySelector('.segment-timestamp');
       const te = el.querySelector('.segment-text');
       if (tse && te) {
-        const ts = trm(tse.textContent);
-        const t = trm(te.textContent);
+        const ts = tse.textContent.trim();
+        const t = te.textContent.trim();
         const st = parseTs(ts);
         s.push({ start: st, text: t, duration: 0 });
       }
@@ -127,7 +127,7 @@ const scrape = () => {
     }
     return s;
   } catch (err) {
-    e('Err:scrape', err);
+    console.error('Err:scrape', err);
     return [];
   }
 };
@@ -139,7 +139,7 @@ const parseTs = s => {
     else if (p.length === 2) return p[0] * 60 + p[1];
     return 0;
   } catch (err) {
-    e('Err:parseTs', err);
+    console.error('Err:parseTs', err);
     return 0;
   }
 };
@@ -148,7 +148,7 @@ const wait = ms => {
   try {
     return new Promise(r => to(r, ms));
   } catch (err) {
-    e('Err:wait', err);
+    console.error('Err:wait', err);
     return Promise.resolve();
   }
 };

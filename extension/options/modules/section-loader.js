@@ -1,9 +1,9 @@
-import { url } from '../../utils/shortcuts/runtime.js';
-import { $ } from '../../utils/shortcuts/dom.js';
-import { e as ce2 } from '../../utils/shortcuts/log.js';
+
+
+
 import { pa } from '../../utils/shortcuts/async.js';
 import { ok } from '../../utils/shortcuts/core.js';
-import { ft } from '../../utils/shortcuts/network.js';
+
 
 export class SectionLoader {
   constructor() {
@@ -31,13 +31,13 @@ export class SectionLoader {
     const p = this.sections[id];
     if (!p) return false;
     try {
-      const h = await ft(url(`options/${p}`)).then(r => r.text());
+      const h = await fetch(chrome.runtime.getURL(`options/${p}`)).then(r => r.text());
       const c = $('.content-area');
       c.insertAdjacentHTML('beforeend', h);
       this.loaded.add(id);
       return true;
     } catch (x) {
-      ce2(`[SectionLoader] Failed to load ${id}:`, x);
+      console.error(`[SectionLoader] Failed to load ${id}:`, x);
       return false;
     }
   }

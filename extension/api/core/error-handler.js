@@ -1,8 +1,8 @@
-import { l } from '../../utils/shortcuts/log.js';
+
 
 export class ErrorHandler {
   static classify(error) {
-    l(`[ErrorHandler] Classifying error: ${error.message}`);
+    console.log(`[ErrorHandler] Classifying error: ${error.message}`);
     const status = error.status || error.code;
 
     if (status === 401 || status === 403) {
@@ -67,7 +67,7 @@ export class ErrorHandler {
     userError.type = classified.type;
     userError.retryable = classified.retryable;
     userError.originalError = error;
-    l(`[ErrorHandler] Created user error: ${classified.type}, retryable: ${classified.retryable}`);
+    console.log(`[ErrorHandler] Created user error: ${classified.type}, retryable: ${classified.retryable}`);
     return userError;
   }
 }

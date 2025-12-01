@@ -21,12 +21,12 @@ describe('UIManager', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockFt = vi.mocked(require('../../../extension/utils/shortcuts/network.js').ft);
-    mockId = vi.mocked(require('../../../extension/utils/shortcuts/dom.js').id);
-    mock$$ = vi.mocked(require('../../../extension/utils/shortcuts/dom.js').$$);
-    mockOn = vi.mocked(require('../../../extension/utils/shortcuts/dom.js').on);
-    mockCe = vi.mocked(require('../../../extension/utils/shortcuts/log.js').ce);
-    mockTo = vi.mocked(require('../../../extension/utils/shortcuts/global.js').to);
+    mockFt = vi.mocked(vi.fn().ft);
+    mockId = vi.mocked(vi.fn().id);
+    mock$$ = vi.mocked(vi.fn().$$);
+    mockOn = vi.mocked(vi.fn().on);
+    mockCe = vi.mocked(vi.fn().ce);
+    mockTo = vi.mocked(vi.fn().to);
     manager = new UIManager();
   });
 

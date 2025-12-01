@@ -14,7 +14,7 @@ vi.mock('../../../extension/utils/shortcuts/log.js', () => ({
 
 import { initializeServices, getServices } from '../../../extension/background/services.js';
 import { getApiKey } from '../../../extension/background/utils/api-key.js';
-import { e } from '../../../extension/utils/shortcuts/log.js';
+
 import { handleGetCachedData } from '../../../extension/background/handlers/cache.js';
 
 describe('handleGetCachedData', () => {

@@ -65,9 +65,9 @@ import {
   showPlaceholder,
 } from '../../../../extension/content/ui/components/loading.js';
 import { getComments } from '../../../../extension/content/handlers/comments.js';
-import { rs } from '../../../../extension/utils/shortcuts/runtime.js';
-import { sg } from '../../../../extension/utils/shortcuts/storage.js';
-import { ih } from '../../../../extension/utils/shortcuts/dom.js';
+
+
+
 
 describe('renderComments', () => {
   let container;

@@ -35,9 +35,9 @@ global.document = {
 // Import after mocks
 // Import after mocks
 import { NotificationManager } from '../../../extension/options/modules/notification-manager.js';
-import { to } from '../../../extension/utils/shortcuts/global.js';
+
 import { raf } from '../../../extension/utils/shortcuts/async.js';
-import { ce, ap } from '../../../extension/utils/shortcuts/dom.js';
+
 
 describe('NotificationManager', () => {
   let manager;

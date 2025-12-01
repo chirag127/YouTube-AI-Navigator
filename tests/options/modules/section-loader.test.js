@@ -30,12 +30,12 @@ describe('SectionLoader', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockUrl = vi.mocked(require('../../../extension/utils/shortcuts/runtime.js').url);
-    mock$ = vi.mocked(require('../../../extension/utils/shortcuts/dom.js').$);
-    mockE = vi.mocked(require('../../../extension/utils/shortcuts/log.js').e);
-    mockPa = vi.mocked(require('../../../extension/utils/shortcuts/async.js').pa);
-    mockOk = vi.mocked(require('../../../extension/utils/shortcuts/core.js').ok);
-    mockFt = vi.mocked(require('../../../extension/utils/shortcuts/network.js').ft);
+    mockUrl = vi.mocked(vi.fn().url);
+    mock$ = vi.mocked(vi.fn().$);
+    mockE = vi.mocked(vi.fn().e);
+    mockPa = vi.mocked(vi.fn().pa);
+    mockOk = vi.mocked(vi.fn().ok);
+    mockFt = vi.mocked(vi.fn().ft);
     mockUrl.mockImplementation(p => `chrome-extension://id/${p}`);
     mock$.mockReturnValue({ insertAdjacentHTML: vi.fn() });
   });

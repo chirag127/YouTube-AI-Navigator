@@ -1,31 +1,28 @@
-import { gu } from '../../../utils/shortcuts/runtime.js';
 
-const { state } = await import(gu('content/core/state.js'));
-const { showLoading, showPlaceholder } = await import(gu('content/ui/components/loading.js'));
-const { getComments } = await import(gu('content/handlers/comments.js'));
-const { parseMarkdown } = await import(gu('lib/marked-loader.js'));
-const { rs } = await import(gu('utils/shortcuts/runtime.js'));
-const { sg } = await import(gu('utils/shortcuts/storage.js'));
-const { to } = await import(gu('utils/shortcuts/global.js'));
-const { e } = await import(gu('utils/shortcuts/log.js'));
-const { mp } = await import(gu('utils/shortcuts/core.js'));
-const { jn, slc } = await import(gu('utils/shortcuts/string.js'));
-const { ce, ap, ih, dc: doc, txt } = await import(gu('utils/shortcuts/dom.js'));
+
+const { state } = await import(chrome.runtime.getURL('content/core/state.js'));
+const { showLoading, showPlaceholder } = await import(chrome.runtime.getURL('content/ui/components/loading.js'));
+const { getComments } = await import(chrome.runtime.getURL('content/handlers/comments.js'));
+const { parseMarkdown } = await import(chrome.runtime.getURL('lib/marked-loader.js'));
+);
+);
+);
+);
+const { mp } = await import(chrome.runtime.getURL('utils/shortcuts/core.js'));
+);
+);
 
 export async function renderComments(c) {
   try {
     if (state.analysisData?.commentAnalysis) {
       const html = await parseMarkdown(state.analysisData.commentAnalysis);
       // Wrap existing analysis in glass card
-      ih(
-        c,
-        `
+      (c).innerHTML = `
         <div class="yt-ai-card glass-panel" style="animation: slideUpFade 0.4s var(--ease-fluid)">
           <h3 class="yt-ai-card-title">💬 Comment Sentiment Analysis</h3>
           <div class="yt-ai-card-content">${html}</div>
         </div>
-      `
-      );
+      `;
       return;
     }
 
@@ -37,7 +34,7 @@ export async function renderComments(c) {
     // Scroll to comments and wait for them to load
     await forceLoadComments();
     showLoading(c, 'Waiting for comments...');
-    await to(() => {}, 1200); // Increased wait time for lazy-load
+    await setTimeout(() => {}, 1200); // Increased wait time for lazy-load
 
     try {
       // Extract comments with retry logic - stay scrolled down during this process
@@ -45,7 +42,7 @@ export async function renderComments(c) {
 
       // Scroll back AFTER extraction completes
       if (cfg.scroll?.scrollBackAfterComments !== false) {
-        await to(() => {}, 300); // Brief delay before scroll-back
+        await setTimeout(() => {}, 300); // Brief delay before scroll-back
         scrollBackToTop(origPos, cfg.scroll?.showScrollNotification ?? true);
       }
 
@@ -65,7 +62,7 @@ export async function renderComments(c) {
         // Render with Liquid Glass Design
         const topCommentsHtml = jn(
           mp(
-            slc(cm, 0, 5),
+            cm.slice(0, 5),
             (x, i) => `
               <div class="yt-ai-comment glass-panel-sub" style="animation: slideUpFade 0.3s var(--ease-fluid) ${0.1 + i * 0.05}s backwards; margin-bottom: 8px; padding: 12px; border-radius: var(--radius-md);">
                 <div class="yt-ai-comment-header" style="display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 0.85em; opacity: 0.8;">
@@ -79,9 +76,7 @@ export async function renderComments(c) {
           ''
         );
 
-        ih(
-          c,
-          `
+        (c).innerHTML = `
             <div class="yt-ai-comments-container" style="display: flex; flex-direction: column; gap: 16px; padding: 8px 0;">
               <div class="yt-ai-card glass-panel" style="animation: slideUpFade 0.4s var(--ease-fluid)">
                 <h3 class="yt-ai-card-title">💬 Comment Sentiment Analysis</h3>
@@ -95,26 +90,25 @@ export async function renderComments(c) {
                 </div>
               </div>
             </div>
-          `
-        );
+          `;
       }
     } catch (x) {
       // Scroll back even on error after full retry attempts
       if (cfg.scroll?.scrollBackAfterComments !== false) {
-        await to(() => {}, 300);
+        await setTimeout(() => {}, 300);
         scrollBackToTop(origPos, cfg.scroll?.showScrollNotification ?? true);
       }
-      ih(c, `<div class="yt-ai-error-msg">Failed: ${x.message}</div>`);
-      e('Err:renderComments', x);
+      (c).innerHTML = `<div class="yt-ai-error-msg">Failed: ${x.message}</div>`;
+      console.error('Err:renderComments', x);
     }
   } catch (err) {
-    e('Err:renderComments', err);
+    console.error('Err:renderComments', err);
   }
 }
 
 async function getConfig() {
   try {
-    const r = await sg('config');
+    const r = await chrome.storage.sync.get('config');
     return r.config || {};
   } catch (err) {
     return {};
@@ -123,7 +117,7 @@ async function getConfig() {
 
 async function forceLoadComments() {
   try {
-    const cs = doc.querySelector('ytd-comments#comments');
+    const cs = document.querySelector('ytd-comments#comments');
     if (cs) {
       cs.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
@@ -132,21 +126,21 @@ async function forceLoadComments() {
       const maxAttempts = 20; // 20 * 500ms = 10 seconds
 
       while (attempts < maxAttempts) {
-        await to(() => {}, 500);
+        await setTimeout(() => {}, 500);
 
         // Check if comments have loaded
-        const comments = doc.querySelectorAll('ytd-comment-thread-renderer, ytd-comment-renderer');
+        const comments = document.querySelectorAll('ytd-comment-thread-renderer, ytd-comment-renderer');
         if (comments && comments.length > 0) {
           // Comments appeared! Give a tiny bit more time for text to render
-          await to(() => {}, 500);
+          await setTimeout(() => {}, 500);
           return;
         }
 
         // Check for spinner (still loading)
-        // const spinner = doc.querySelector('ytd-item-section-renderer #spinner');
+        // const spinner = document.querySelector('ytd-item-section-renderer #spinner');
 
         // Check for "disabled" message to exit early
-        const msg = doc.querySelector('ytd-comments-header-renderer #message');
+        const msg = document.querySelector('ytd-comments-header-renderer #message');
         if (msg && msg.textContent.toLowerCase().includes('turned off')) {
           return; // Comments disabled, stop waiting
         }
@@ -154,7 +148,7 @@ async function forceLoadComments() {
         // If we are at the bottom, maybe scroll up a bit to trigger lazy load
         if (attempts % 5 === 0) {
           window.scrollBy(0, -50);
-          await to(() => {}, 100);
+          await setTimeout(() => {}, 100);
           window.scrollBy(0, 50);
         }
 
@@ -164,47 +158,47 @@ async function forceLoadComments() {
     }
 
     // Fallback if no comments section found (e.g. mobile/other layout)
-    window.scrollTo({ top: doc.documentElement.scrollHeight, behavior: 'smooth' });
-    await to(() => {}, 2000);
+    window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+    await setTimeout(() => {}, 2000);
   } catch (err) {
-    e('Err:forceLoadComments', err);
+    console.error('Err:forceLoadComments', err);
   }
 }
 
 function scrollBackToTop(pos = 0, sn = true) {
   try {
     window.scrollTo({ top: pos, behavior: 'smooth' });
-    doc.documentElement.scrollTop = pos;
-    doc.body.scrollTop = pos;
-    void doc.body.offsetHeight;
+    document.documentElement.scrollTop = pos;
+    document.body.scrollTop = pos;
+    void document.body.offsetHeight;
     if (typeof requestAnimationFrame === 'function') {
       requestAnimationFrame(() => {
         if (Math.abs(window.scrollY - pos) > 10) {
           window.scrollTo(pos, pos);
-          doc.documentElement.scrollTop = pos;
-          doc.body.scrollTop = pos;
+          document.documentElement.scrollTop = pos;
+          document.body.scrollTop = pos;
         }
       });
     } else {
-      to(() => {
+      setTimeout(() => {
         if (Math.abs(window.scrollY - pos) > 10) {
           window.scrollTo(pos, pos);
-          doc.documentElement.scrollTop = pos;
-          doc.body.scrollTop = pos;
+          document.documentElement.scrollTop = pos;
+          document.body.scrollTop = pos;
         }
       }, 16);
     }
     if (sn) showScrollNotification();
   } catch (err) {
-    e('Err:scrollBackToTop', err);
+    console.error('Err:scrollBackToTop', err);
   }
 }
 
 function showScrollNotification() {
   try {
-    const n = ce('div');
+    const n = document.createElement('div');
     n.id = 'yt-ai-scroll-notification';
-    txt(n, '⬆️ Scrolled to top');
+    (n).textContent = '⬆️ Scrolled to top';
     // Updated style to match Neo-Brutalist/Glass aesthetic
     n.style.cssText = `
       position: fixed;
@@ -222,12 +216,12 @@ function showScrollNotification() {
       border: 2px solid #000;
       animation: slideIn 0.3s var(--ease-fluid, ease-out);
     `;
-    ap(doc.body, n);
-    to(() => {
+    (document.body)?.appendChild(n);
+    setTimeout(() => {
       n.style.animation = 'slideOut 0.3s ease-in';
-      to(() => n.remove(), 300);
+      setTimeout(() => n.remove(), 300);
     }, 2000);
   } catch (err) {
-    e('Err:showScrollNotification', err);
+    console.error('Err:showScrollNotification', err);
   }
 }

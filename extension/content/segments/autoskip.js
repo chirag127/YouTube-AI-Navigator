@@ -1,10 +1,10 @@
 const gu = p => chrome.runtime.getURL(p);
 
-const { e } = await import(gu('utils/shortcuts/log.js'));
+);
 const { getVideoElement } = await import(gu('content/utils/dom.js'));
-const { sg } = await import(gu('utils/shortcuts/storage.js'));
-const { to } = await import(gu('utils/shortcuts/global.js'));
-const { qs, ae, re, ce } = await import(gu('utils/shortcuts/dom.js'));
+);
+);
+);
 let as = [];
 let en = false;
 let opr = 1;
@@ -12,16 +12,16 @@ let isu = false;
 export async function setupAutoSkip(s) {
   try {
     if (!s?.length) {
-      e('[AutoSkip] No segments provided');
+      console.error('[AutoSkip] No segments provided');
       return;
     }
-    const st = await sg('config');
+    const st = await chrome.storage.sync.get('config');
     const cfg = st.config || {};
     const me = cfg.segments?.enabled === true;
     const ase = cfg.segments?.autoSkip === true;
     if (!me || !ase) {
       disableAutoSkip();
-      e(`[AutoSkip] Disabled (enabled:${me}, autoSkip:${ase})`);
+      console.error(`[AutoSkip] Disabled (enabled:${me}, autoSkip:${ase})`);
       return;
     }
     const cats = cfg.segments?.categories || {};
@@ -29,8 +29,8 @@ export async function setupAutoSkip(s) {
     const msd = cfg.segments?.minSegmentDuration || 1;
     const filtered = [];
     for (const x of s) {
-      const lk = await getLabelKey(x.label);
-      const c = cats[lk] || { action: 'ignore', speed: 2 };
+      const getLabelKey = await getLabelKey(x.label);
+      const c = cats[getLabelKey] || { action: 'ignore', speed: 2 };
       const dur = x.end - x.start;
       if (c.action && c.action !== 'ignore' && dur >= msd) {
         const displayLabel = x.labelFull || x.label;
@@ -47,39 +47,39 @@ export async function setupAutoSkip(s) {
       en = true;
       const v = getVideoElement();
       if (v) {
-        re(v, 'timeupdate', handleAutoSkip);
-        ae(v, 'timeupdate', handleAutoSkip);
+        (v)?.removeEventListener('timeupdate', handleAutoSkip);
+        (v)?.addEventListener('timeupdate', handleAutoSkip);
         opr = v.playbackRate;
-        e(`[AutoSkip] Enabled with ${as.length}/${s.length} segments`);
+        console.error(`[AutoSkip] Enabled with ${as.length}/${s.length} segments`);
       } else {
-        e('[AutoSkip] Video element not found, retrying...');
-        to(() => setupAutoSkip(s), 1000);
+        console.error('[AutoSkip] Video element not found, retrying...');
+        setTimeout(() => setupAutoSkip(s), 1000);
       }
     } else {
       disableAutoSkip();
-      e('[AutoSkip] No actionable segments (all ignored)');
+      console.error('[AutoSkip] No actionable segments (all ignored)');
     }
   } catch (err) {
-    e('Err:setupAutoSkip', err);
+    console.error('Err:setupAutoSkip', err);
   }
 }
 async function getLabelKey(l) {
-  const { lk } = await import(gu('utils/shortcuts/segments.js'));
-  return lk(l);
+  );
+  return getLabelKey(l);
 }
 function disableAutoSkip() {
   try {
     en = false;
     const v = getVideoElement();
     if (v) {
-      re(v, 'timeupdate', handleAutoSkip);
+      (v)?.removeEventListener('timeupdate', handleAutoSkip);
       if (isu) {
         v.playbackRate = opr;
         isu = false;
       }
     }
   } catch (err) {
-    e('Err:disableAutoSkip', err);
+    console.error('Err:disableAutoSkip', err);
   }
 }
 export function handleAutoSkip() {
@@ -97,9 +97,7 @@ export function handleAutoSkip() {
           if (Math.abs(v.currentTime - nt) > 0.5) {
             v.currentTime = nt;
             showNotification(`⏭️ Skipped: ${s.displayLabel || s.label}`);
-            e(
-              `[AutoSkip] Skipped ${s.displayLabel || s.label} (${s.start.toFixed(1)}s-${s.end.toFixed(1)}s)`
-            );
+            console.error(`[AutoSkip] Skipped ${s.displayLabel || s.label} (${s.start.toFixed(1)}s-${s.end.toFixed(1)}s)`);
           }
           return;
         } else if (s.config.action === 'speed') {
@@ -109,7 +107,7 @@ export function handleAutoSkip() {
             v.playbackRate = s.config.speed || 2;
             isu = true;
             showNotification(`⏩ Speeding: ${s.displayLabel || s.label} (${s.config.speed}x)`);
-            e(`[AutoSkip] Speed ${s.displayLabel || s.label} at ${s.config.speed}x`);
+            console.error(`[AutoSkip] Speed ${s.displayLabel || s.label} at ${s.config.speed}x`);
           }
           if (v.playbackRate !== s.config.speed) v.playbackRate = s.config.speed;
         }
@@ -118,18 +116,18 @@ export function handleAutoSkip() {
     if (isu && !ins) {
       v.playbackRate = opr;
       isu = false;
-      e('[AutoSkip] Restored normal speed');
+      console.error('[AutoSkip] Restored normal speed');
     }
   } catch (err) {
-    e('Err:handleAutoSkip', err);
+    console.error('Err:handleAutoSkip', err);
   }
 }
 function showNotification(tx) {
   try {
     const id = 'yt-ai-skip-notif';
-    let n = qs('#' + id);
+    let n = (document).querySelector('#' + id);
     if (n) n.remove();
-    n = ce('div');
+    n = document.createElement('div');
     n.id = id;
     n.style.cssText =
       'position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.8);color:white;padding:10px 20px;border-radius:20px;font-size:14px;z-index:9999;pointer-events:none;font-family:sans-serif;backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,0.1);';
@@ -144,10 +142,10 @@ function showNotification(tx) {
       { duration: 2000, easing: 'ease-out', fill: 'forwards' }
     );
     document.body.appendChild(n);
-    to(() => {
+    setTimeout(() => {
       if (n.parentNode) n.remove();
     }, 2000);
   } catch (err) {
-    e('Err:showNotification', err);
+    console.error('Err:showNotification', err);
   }
 }

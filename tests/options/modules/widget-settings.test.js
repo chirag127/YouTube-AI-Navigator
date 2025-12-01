@@ -9,7 +9,7 @@ vi.mock('../../../extension/utils/shortcuts/dom.js', () => ({
   on: vi.fn(),
 }));
 
-import { qs, id, ce, on } from '../../../extension/utils/shortcuts/dom.js';
+
 
 describe('WidgetSettings', () => {
   let settingsManager;
@@ -33,9 +33,9 @@ describe('WidgetSettings', () => {
       return mockElements[elId];
     };
 
-    qs.mockImplementation(mockEl);
-    id.mockImplementation(mockEl);
-    ce.mockImplementation(() => ({
+    document.querySelector.mockImplementation(mockEl);
+    document.getElementById.mockImplementation(mockEl);
+    document.createElement.mockImplementation(() => ({
       className: '',
       innerHTML: '',
       appendChild: vi.fn(),

@@ -10,26 +10,26 @@ const { injectSegmentMarkers } = await import(gu('content/segments/markers.js'))
 const { setupAutoSkip } = await import(gu('content/segments/autoskip.js'));
 const { renderTimeline } = await import(gu('content/segments/timeline.js'));
 const { analyzeVideo } = await import(gu('content/features/analysis/service.js'));
-const { e, w, l } = await import(gu('utils/shortcuts/log.js'));
-const { id: i, $ } = await import(gu('utils/shortcuts/dom.js'));
-const { msg } = await import(gu('utils/shortcuts/runtime.js'));
+);
+);
+);
 const { E: Er } = await import(gu('utils/shortcuts/core.js'));
 export async function startAnalysis() {
   if (state.isAnalyzing || !state.currentVideoId) {
-    if (state.isAnalyzing) w('[Analysis] Already analyzing, skipping');
-    if (!state.currentVideoId) w('[Analysis] No video ID, skipping');
+    if (state.isAnalyzing) console.warn('[Analysis] Already analyzing, skipping');
+    if (!state.currentVideoId) console.warn('[Analysis] No video ID, skipping');
     return;
   }
-  l(`[Analysis] Starting for video: ${state.currentVideoId}`);
+  console.log(`[Analysis] Starting for video: ${state.currentVideoId}`);
   state.isAnalyzing = true;
-  const ca = i('yt-ai-content-area');
+  const ca = document.getElementById('yt-ai-content-area');
   try {
     showLoading(ca, 'Extracting video metadata...');
 
     // Helper to fetch settings with timeout
     const getSettingsWithTimeout = async (timeout = 2000) => {
       return Promise.race([
-        msg({ action: 'GET_SETTINGS' }),
+        chrome.runtime.sendMessage({ action: 'GET_SETTINGS' }),
         new Promise((_, reject) =>
           setTimeout(() => reject(new Error('Settings fetch timeout')), timeout)
         ),
@@ -55,42 +55,42 @@ export async function startAnalysis() {
       usePrivateDeArrow: cfg?.externalApis?.deArrow?.usePrivateAPI ?? true,
     };
     const md = await metadataExtractor.extract(state.currentVideoId, daOpt);
-    l(`[Analysis] Metadata extracted: ${md.title?.substring(0, 30)}...`);
+    console.log(`[Analysis] Metadata extracted: ${md.title?.substring(0, 30)}...`);
     showLoading(ca, 'Extracting transcript...');
     let ts = [];
     try {
       const result = await extractTranscript(state.currentVideoId);
       ts = result.success ? result.data : [];
-      l(`[Analysis] Transcript extracted: ${ts.length} segments`);
+      console.log(`[Analysis] Transcript extracted: ${ts.length} segments`);
     } catch (err) {
       // Transcript extraction failed
-      e('[Context:Fail] Transcript extraction:', err);
-      w('[Analysis] Continuing without transcript');
+      console.error('[Context:Fail] Transcript extraction:', err);
+      console.warn('[Analysis] Continuing without transcript');
     }
     state.currentTranscript = ts || [];
     showLoading(ca, 'Extracting comments...');
     let cm = [];
     try {
       cm = await getComments();
-      l(`[Analysis] Comments extracted: ${cm.length} comments`);
+      console.log(`[Analysis] Comments extracted: ${cm.length} comments`);
     } catch (err) {
       // Comments extraction failed
-      e('[Context:Fail] Comments extraction:', err);
-      w('[Analysis] Continuing without comments');
+      console.error('[Context:Fail] Comments extraction:', err);
+      console.warn('[Analysis] Continuing without comments');
     }
     showLoading(ca, `Analyzing content with AI...`);
 
     const r = await analyzeVideo(ts, md, cm);
 
     if (!r.success) {
-      e('[Context:Fail] Analysis service:', r.error);
+      console.error('[Context:Fail] Analysis service:', r.error);
       throw new Er(r.error || 'Analysis failed');
     }
-    l(`[Analysis] AI analysis completed successfully`);
+    console.log(`[Analysis] AI analysis completed successfully`);
     state.analysisData = r.data;
     if (state.analysisData.segments) {
       const segmentCount = state.analysisData.segments.length;
-      l(`[Analysis] Applying ${segmentCount} segments`);
+      console.log(`[Analysis] Applying ${segmentCount} segments`);
       injectSegmentMarkers(state.analysisData.segments);
       setupAutoSkip(state.analysisData.segments);
       const v = $('video');
@@ -116,7 +116,7 @@ export async function startAnalysis() {
     switchTab('summary');
   } catch (err) {
     showError(ca, err.message);
-    e('Err:startAnalysis', err);
+    console.error('Err:startAnalysis', err);
   } finally {
     state.isAnalyzing = false;
   }
@@ -124,8 +124,8 @@ export async function startAnalysis() {
 
 async function saveToHistory(d) {
   try {
-    await msg({ action: 'SAVE_HISTORY', data: d });
+    await chrome.runtime.sendMessage({ action: 'SAVE_HISTORY', data: d });
   } catch (err) {
-    e('Err:saveToHistory', err);
+    console.error('Err:saveToHistory', err);
   }
 }

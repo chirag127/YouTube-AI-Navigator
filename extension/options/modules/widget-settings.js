@@ -1,5 +1,5 @@
-import { id, on } from '../../utils/shortcuts/dom.js';
-import { e } from '../../utils/shortcuts/log.js';
+
+
 
 export class WidgetSettings {
   constructor(sm, nm) {
@@ -11,50 +11,50 @@ export class WidgetSettings {
       this.loadSettings();
       this.attachListeners();
     } catch (err) {
-      e('[WidgetSettings] Init error:', err);
+      console.error('[WidgetSettings] Init error:', err);
     }
   }
   loadSettings() {
     try {
       const cfg = this.sm.get('widget') || {};
-      const h = id('widget-height');
-      const mh = id('widget-min-height');
-      const xh = id('widget-max-height');
-      const w = id('widget-width');
-      const mw = id('widget-min-width');
-      const xw = id('widget-max-width');
-      const r = id('widget-resizable');
-      const rw = id('widget-resizable-width');
-      const pos = id('widget-position');
-      const op = id('widget-opacity');
-      const bl = id('widget-blur');
-      const sc = id('widget-scale');
-      const dh = id('widget-dynamic-height');
-      const vm = id('widget-viewport-margin');
-      const ts = id('widget-tab-summary');
-      const tg = id('widget-tab-segments');
-      const tc = id('widget-tab-chat');
-      const tm = id('widget-tab-comments');
-      const dc = id('widget-default-collapsed');
-      const rs = id('widget-remember-state');
-      const wop = id('widgetOpacity');
-      const wbr = id('widgetBorderRadius');
-      const wac = id('widgetAccentColor');
-      const whc = id('widgetHideOnChannels');
-      const wopv = id('widgetOpacityValue');
-      const wbrv = id('widgetBorderRadiusValue');
-      const wacv = id('widgetAccentColorValue');
+      const h = document.getElementById('widget-height');
+      const mh = document.getElementById('widget-min-height');
+      const xh = document.getElementById('widget-max-height');
+      const w = document.getElementById('widget-width');
+      const mw = document.getElementById('widget-min-width');
+      const xw = document.getElementById('widget-max-width');
+      const r = document.getElementById('widget-resizable');
+      const rw = document.getElementById('widget-resizable-width');
+      const pos = document.getElementById('widget-position');
+      const op = document.getElementById('widget-opacity');
+      const bl = document.getElementById('widget-blur');
+      const sc = document.getElementById('widget-scale');
+      const dh = document.getElementById('widget-dynamic-height');
+      const vm = document.getElementById('widget-viewport-margin');
+      const ts = document.getElementById('widget-tab-summary');
+      const tg = document.getElementById('widget-tab-segments');
+      const tc = document.getElementById('widget-tab-chat');
+      const tm = document.getElementById('widget-tab-comments');
+      const dc = document.getElementById('widget-default-collapsed');
+      const rs = document.getElementById('widget-remember-state');
+      const wop = document.getElementById('widgetOpacity');
+      const wbr = document.getElementById('widgetBorderRadius');
+      const wac = document.getElementById('widgetAccentColor');
+      const whc = document.getElementById('widgetHideOnChannels');
+      const wopv = document.getElementById('widgetOpacityValue');
+      const wbrv = document.getElementById('widgetBorderRadiusValue');
+      const wacv = document.getElementById('widgetAccentColorValue');
 
       // Segment type filters
-      const ss = id('widget-show-sponsor');
-      const sp = id('widget-show-selfpromo');
-      const si = id('widget-show-interaction');
-      const sin = id('widget-show-intro');
-      const so = id('widget-show-outro');
-      const spr = id('widget-show-preview');
-      const sf = id('widget-show-filler');
-      const sh = id('widget-show-highlight');
-      const se = id('widget-show-exclusive');
+      const ss = document.getElementById('widget-show-sponsor');
+      const sp = document.getElementById('widget-show-selfpromo');
+      const si = document.getElementById('widget-show-interaction');
+      const sin = document.getElementById('widget-show-intro');
+      const so = document.getElementById('widget-show-outro');
+      const spr = document.getElementById('widget-show-preview');
+      const sf = document.getElementById('widget-show-filler');
+      const sh = document.getElementById('widget-show-highlight');
+      const se = document.getElementById('widget-show-exclusive');
 
       if (h) h.value = cfg.height || 500;
       if (mh) mh.value = cfg.minHeight || 200;
@@ -102,39 +102,39 @@ export class WidgetSettings {
       if (sh) sh.checked = filters.highlight !== false;
       if (se) se.checked = filters.exclusive !== false;
     } catch (err) {
-      e('[WidgetSettings] Load error:', err);
+      console.error('[WidgetSettings] Load error:', err);
     }
   }
   attachListeners() {
     try {
-      const h = id('widget-height');
-      const mh = id('widget-min-height');
-      const xh = id('widget-max-height');
-      const w = id('widget-width');
-      const mw = id('widget-min-width');
-      const xw = id('widget-max-width');
-      const r = id('widget-resizable');
-      const rw = id('widget-resizable-width');
-      const pos = id('widget-position');
-      const op = id('widget-opacity');
-      const bl = id('widget-blur');
-      const sc = id('widget-scale');
-      const dh = id('widget-dynamic-height');
-      const vm = id('widget-viewport-margin');
-      const ts = id('widget-tab-summary');
-      const tg = id('widget-tab-segments');
-      const tc = id('widget-tab-chat');
-      const tm = id('widget-tab-comments');
-      const dc = id('widget-default-collapsed');
-      const rs = id('widget-remember-state');
-      const wop = id('widgetOpacity');
-      const wbr = id('widgetBorderRadius');
-      const wac = id('widgetAccentColor');
-      const whc = id('widgetHideOnChannels');
-      const wopv = id('widgetOpacityValue');
-      const wbrv = id('widgetBorderRadiusValue');
-      const wacv = id('widgetAccentColorValue');
-      const rb = id('widget-reset');
+      const h = document.getElementById('widget-height');
+      const mh = document.getElementById('widget-min-height');
+      const xh = document.getElementById('widget-max-height');
+      const w = document.getElementById('widget-width');
+      const mw = document.getElementById('widget-min-width');
+      const xw = document.getElementById('widget-max-width');
+      const r = document.getElementById('widget-resizable');
+      const rw = document.getElementById('widget-resizable-width');
+      const pos = document.getElementById('widget-position');
+      const op = document.getElementById('widget-opacity');
+      const bl = document.getElementById('widget-blur');
+      const sc = document.getElementById('widget-scale');
+      const dh = document.getElementById('widget-dynamic-height');
+      const vm = document.getElementById('widget-viewport-margin');
+      const ts = document.getElementById('widget-tab-summary');
+      const tg = document.getElementById('widget-tab-segments');
+      const tc = document.getElementById('widget-tab-chat');
+      const tm = document.getElementById('widget-tab-comments');
+      const dc = document.getElementById('widget-default-collapsed');
+      const rs = document.getElementById('widget-remember-state');
+      const wop = document.getElementById('widgetOpacity');
+      const wbr = document.getElementById('widgetBorderRadius');
+      const wac = document.getElementById('widgetAccentColor');
+      const whc = document.getElementById('widgetHideOnChannels');
+      const wopv = document.getElementById('widgetOpacityValue');
+      const wbrv = document.getElementById('widgetBorderRadiusValue');
+      const wacv = document.getElementById('widgetAccentColorValue');
+      const rb = document.getElementById('widget-reset');
 
       // Segment filters
       const filters = [
@@ -149,79 +149,79 @@ export class WidgetSettings {
         'exclusive',
       ];
 
-      if (h) on(h, 'change', () => this.save());
-      if (mh) on(mh, 'change', () => this.save());
-      if (xh) on(xh, 'change', () => this.save());
-      if (w) on(w, 'change', () => this.save());
-      if (mw) on(mw, 'change', () => this.save());
-      if (xw) on(xw, 'change', () => this.save());
-      if (r) on(r, 'change', () => this.save());
-      if (rw) on(rw, 'change', () => this.save());
-      if (pos) on(pos, 'change', () => this.save());
-      if (op) on(op, 'change', () => this.save());
-      if (bl) on(bl, 'change', () => this.save());
-      if (sc) on(sc, 'change', () => this.save());
-      if (dh) on(dh, 'change', () => this.save());
-      if (vm) on(vm, 'change', () => this.save());
-      if (ts) on(ts, 'change', () => this.save());
-      if (tg) on(tg, 'change', () => this.save());
-      if (tc) on(tc, 'change', () => this.save());
-      if (tm) on(tm, 'change', () => this.save());
-      if (dc) on(dc, 'change', () => this.save());
-      if (rs) on(rs, 'change', () => this.save());
+      if (h) (h)?.addEventListener('change', () => this.save());
+      if (mh) (mh)?.addEventListener('change', () => this.save());
+      if (xh) (xh)?.addEventListener('change', () => this.save());
+      if (w) (w)?.addEventListener('change', () => this.save());
+      if (mw) (mw)?.addEventListener('change', () => this.save());
+      if (xw) (xw)?.addEventListener('change', () => this.save());
+      if (r) (r)?.addEventListener('change', () => this.save());
+      if (rw) (rw)?.addEventListener('change', () => this.save());
+      if (pos) (pos)?.addEventListener('change', () => this.save());
+      if (op) (op)?.addEventListener('change', () => this.save());
+      if (bl) (bl)?.addEventListener('change', () => this.save());
+      if (sc) (sc)?.addEventListener('change', () => this.save());
+      if (dh) (dh)?.addEventListener('change', () => this.save());
+      if (vm) (vm)?.addEventListener('change', () => this.save());
+      if (ts) (ts)?.addEventListener('change', () => this.save());
+      if (tg) (tg)?.addEventListener('change', () => this.save());
+      if (tc) (tc)?.addEventListener('change', () => this.save());
+      if (tm) (tm)?.addEventListener('change', () => this.save());
+      if (dc) (dc)?.addEventListener('change', () => this.save());
+      if (rs) (rs)?.addEventListener('change', () => this.save());
       if (wop) {
-        on(wop, 'input', e => {
+        (wop)?.addEventListener('input', e => {
           if (wopv) wopv.textContent = `${e.target.value}%`;
         });
-        on(wop, 'change', () => this.save());
+        (wop)?.addEventListener('change', () => this.save());
       }
       if (wbr) {
-        on(wbr, 'input', e => {
+        (wbr)?.addEventListener('input', e => {
           if (wbrv) wbrv.textContent = `${e.target.value}px`;
         });
-        on(wbr, 'change', () => this.save());
+        (wbr)?.addEventListener('change', () => this.save());
       }
       if (wac) {
-        on(wac, 'input', e => {
+        (wac)?.addEventListener('input', e => {
           if (wacv) wacv.textContent = e.target.value;
         });
-        on(wac, 'change', () => this.save());
+        (wac)?.addEventListener('change', () => this.save());
       }
-      if (whc) on(whc, 'change', () => this.save());
+      if (whc) (whc)?.addEventListener('change', () => this.save());
 
       // Attach listeners for all segment filters
       filters.forEach(f => {
-        const el = id(`widget-show-${f}`);
-        if (el) on(el, 'change', () => this.save());
+        const el = document.getElementById(`widget-show-${f}`);
+        if (el) (el)?.addEventListener('change', () => this.save());
       });
 
-      if (rb) on(rb, 'click', () => this.reset());
+      if (rb) (rb)?.addEventListener('click', () => this.reset());
     } catch (err) {
-      e('[WidgetSettings] Attach listeners error:', err);
+      console.error('[WidgetSettings] Attach listeners error:', err);
     }
   }
   async save() {
     try {
-      const h = id('widget-height');
-      const mh = id('widget-min-height');
-      const xh = id('widget-max-height');
-      const w = id('widget-width');
-      const mw = id('widget-min-width');
-      const xw = id('widget-max-width');
-      const r = id('widget-resizable');
-      const rw = id('widget-resizable-width');
-      const pos = id('widget-position');
-      const op = id('widget-opacity');
-      const bl = id('widget-blur');
-      const sc = id('widget-scale');
-      const dh = id('widget-dynamic-height');
-      const vm = id('widget-viewport-margin');
-      const ts = id('widget-tab-summary');
-      const tg = id('widget-tab-segments');
-      const tc = id('widget-tab-chat');
-      const tm = id('widget-tab-comments');
-      const dc = id('widget-default-collapsed');
-      const rs = id('widget-remember-state');
+      const h = document.getElementById('widget-height');
+      const mh = document.getElementById('widget-min-height');
+      const xh = document.getElementById('widget-max-height');
+      const w = document.getElementById('widget-width');
+      const mw = document.getElementById('widget-min-width');
+      const xw = document.getElementById('widget-max-width');
+      const r = document.getElementById('widget-resizable');
+      const rw = document.getElementById('widget-resizable-width');
+      const pos = document.getElementById('widget-position');
+      const op = document.getElementById('widget-opacity');
+      const bl = document.getElementById('widget-blur');
+      const sc = document.getElementById('widget-scale');
+      const dh = document.getElementById('widget-dynamic-height');
+      const vm = document.getElementById('widget-viewport-margin');
+      const ts = document.getElementById('widget-tab-summary');
+      const tg = document.getElementById('widget-tab-segments');
+      const tc = document.getElementById('widget-tab-chat');
+      const tm = document.getElementById('widget-tab-comments');
+      const dc = document.getElementById('widget-default-collapsed');
+      const rs = document.getElementById('widget-remember-state');
 
       this.sm.set('widget.height', parseInt(h?.value || 500));
       this.sm.set('widget.minHeight', parseInt(mh?.value || 200));
@@ -244,10 +244,10 @@ export class WidgetSettings {
       this.sm.set('widget.defaultCollapsed', dc?.checked === true);
       this.sm.set('widget.rememberState', rs?.checked !== false);
 
-      const wop = id('widgetOpacity');
-      const wbr = id('widgetBorderRadius');
-      const wac = id('widgetAccentColor');
-      const whc = id('widgetHideOnChannels');
+      const wop = document.getElementById('widgetOpacity');
+      const wbr = document.getElementById('widgetBorderRadius');
+      const wac = document.getElementById('widgetAccentColor');
+      const whc = document.getElementById('widgetHideOnChannels');
 
       this.sm.set('widget.opacity', parseInt(wop?.value || 95));
       this.sm.set('widget.borderRadius', parseInt(wbr?.value || 12));
@@ -261,22 +261,22 @@ export class WidgetSettings {
 
       // Save segment filters
       const filters = {
-        sponsor: id('widget-show-sponsor')?.checked !== false,
-        selfpromo: id('widget-show-selfpromo')?.checked !== false,
-        interaction: id('widget-show-interaction')?.checked !== false,
-        intro: id('widget-show-intro')?.checked !== false,
-        outro: id('widget-show-outro')?.checked !== false,
-        preview: id('widget-show-preview')?.checked !== false,
-        filler: id('widget-show-filler')?.checked !== false,
-        highlight: id('widget-show-highlight')?.checked !== false,
-        exclusive: id('widget-show-exclusive')?.checked !== false,
+        sponsor: document.getElementById('widget-show-sponsor')?.checked !== false,
+        selfpromo: document.getElementById('widget-show-selfpromo')?.checked !== false,
+        interaction: document.getElementById('widget-show-interaction')?.checked !== false,
+        intro: document.getElementById('widget-show-intro')?.checked !== false,
+        outro: document.getElementById('widget-show-outro')?.checked !== false,
+        preview: document.getElementById('widget-show-preview')?.checked !== false,
+        filler: document.getElementById('widget-show-filler')?.checked !== false,
+        highlight: document.getElementById('widget-show-highlight')?.checked !== false,
+        exclusive: document.getElementById('widget-show-exclusive')?.checked !== false,
       };
       this.sm.set('widget.segmentFilters', filters);
 
       await this.sm.save();
       this.nm.show('Widget settings saved', 'success');
     } catch (err) {
-      e('[WidgetSettings] Save error:', err);
+      console.error('[WidgetSettings] Save error:', err);
       this.nm.show('Failed to save widget settings', 'error');
     }
   }
@@ -320,7 +320,7 @@ export class WidgetSettings {
       this.loadSettings();
       this.nm.show('Widget settings reset to defaults', 'success');
     } catch (err) {
-      e('[WidgetSettings] Reset error:', err);
+      console.error('[WidgetSettings] Reset error:', err);
       this.nm.show('Failed to reset widget settings', 'error');
     }
   }

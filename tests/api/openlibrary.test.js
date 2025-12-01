@@ -26,7 +26,7 @@ describe('OpenLibraryAPI', () => {
       global.fetch = vi.fn().mockResolvedValue({
         json: vi.fn().mockResolvedValue(mockData),
       });
-      const { sg } = await import('../../extension/utils/shortcuts/storage.js');
+
       sg.mockResolvedValue({ integrations: { openlibrary: { enabled: true } } });
 
       const result = await api.searchBook('query');
@@ -36,7 +36,7 @@ describe('OpenLibraryAPI', () => {
     });
 
     it('should return null when disabled', async () => {
-      const { sg } = await import('../../extension/utils/shortcuts/storage.js');
+
       sg.mockResolvedValue({ integrations: { openlibrary: { enabled: false } } });
 
       const result = await api.searchBook('query');
@@ -48,7 +48,7 @@ describe('OpenLibraryAPI', () => {
       global.fetch = vi.fn().mockResolvedValue({
         json: vi.fn().mockResolvedValue({ docs: [] }),
       });
-      const { sg } = await import('../../extension/utils/shortcuts/storage.js');
+
       sg.mockResolvedValue({ integrations: { openlibrary: { enabled: true } } });
 
       const result = await api.searchBook('query');
@@ -60,7 +60,7 @@ describe('OpenLibraryAPI', () => {
   describe('getWork', () => {
     it('should return work data', async () => {
       const mockData = { title: 'Work' };
-      const { sf } = await import('../../extension/utils/shortcuts/network.js');
+
       sf.mockResolvedValue(mockData);
 
       const result = await api.getWork('/works/OL123');

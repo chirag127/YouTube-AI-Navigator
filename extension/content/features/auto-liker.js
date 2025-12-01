@@ -1,8 +1,8 @@
 const gu = p => chrome.runtime.getURL(p);
 
 const { state } = await import(gu('content/core/state.js'));
-const { ae, re, qs, qsa } = await import(gu('utils/shortcuts/dom.js'));
-const { l, e } = await import(gu('utils/shortcuts/log.js'));
+);
+);
 export class AutoLiker {
   constructor() {
     this.video = null;
@@ -14,33 +14,33 @@ export class AutoLiker {
     try {
       this.startObserving();
     } catch (err) {
-      e('Err:init', err);
+      console.error('Err:init', err);
     }
   }
   startObserving() {
     try {
       if (this.isObserving) return;
       const o = new MutationObserver(() => {
-        const v = qs('video');
+        const v = (document).querySelector('video');
         if (v && v !== this.video) this.attachToVideo(v);
       });
       o.observe(document.body, { childList: true, subtree: true });
       this.isObserving = true;
-      const v = qs('video');
+      const v = (document).querySelector('video');
       if (v) this.attachToVideo(v);
     } catch (err) {
-      e('Err:startObserving', err);
+      console.error('Err:startObserving', err);
     }
   }
   attachToVideo(v) {
     try {
-      if (this.video) re(this.video, 'timeupdate', this.handleTimeUpdate);
+      if (this.video) (this.video)?.removeEventListener('timeupdate', this.handleTimeUpdate);
       this.video = v;
-      ae(this.video, 'timeupdate', this.handleTimeUpdate.bind(this));
+      (this.video)?.addEventListener('timeupdate', this.handleTimeUpdate.bind(this));
       const vid = state.currentVideoId || new URLSearchParams(location.search).get('v');
-      if (vid && !this.likedVideos.has(vid)) l(`AL: New vid ${vid}`);
+      if (vid && !this.likedVideos.has(vid)) console.log(`AL: New vid ${vid}`);
     } catch (err) {
-      e('Err:attachToVideo', err);
+      console.error('Err:attachToVideo', err);
     }
   }
   async handleTimeUpdate() {
@@ -55,7 +55,7 @@ export class AutoLiker {
       const t = state.settings.autoLikeThreshold || 50;
       if (p >= t) await this.attemptLike(vid);
     } catch (err) {
-      e('Err:handleTimeUpdate', err);
+      console.error('Err:handleTimeUpdate', err);
     }
   }
   async attemptLike(vid) {
@@ -78,12 +78,12 @@ export class AutoLiker {
         this.likedVideos.add(vid);
       }
     } catch (err) {
-      e('Err:attemptLike', err);
+      console.error('Err:attemptLike', err);
     }
   }
   isLiveStream() {
     try {
-      const b = qs('.ytp-live-badge');
+      const b = (document).querySelector('.ytp-live-badge');
       if (b && window.getComputedStyle(b).display !== 'none') {
         return true;
       }
@@ -92,7 +92,7 @@ export class AutoLiker {
       }
       return false;
     } catch (err) {
-      e('Err:isLiveStream', err);
+      console.error('Err:isLiveStream', err);
       return false;
     }
   }
@@ -105,7 +105,7 @@ export class AutoLiker {
       ];
       let b = null;
       for (const sel of s) {
-        b = qs(sel);
+        b = (document).querySelector(sel);
         if (b) break;
       }
       if (!b) {
@@ -116,7 +116,7 @@ export class AutoLiker {
         b.querySelector("button[aria-label^='Unsubscribe']") !== null
       );
     } catch (err) {
-      e('Err:checkSubscriptionStatus', err);
+      console.error('Err:checkSubscriptionStatus', err);
       return false;
     }
   }
@@ -131,7 +131,7 @@ export class AutoLiker {
       ];
       let lb = null;
       for (const sel of s) {
-        const btns = qsa(sel);
+        const btns = (document).querySelectorAll(sel);
         for (const b of btns) {
           if (b.closest('#top-level-buttons-computed') || b.closest('#actions')) {
             lb = b;
@@ -152,7 +152,7 @@ export class AutoLiker {
       lb.click();
       return true;
     } catch (err) {
-      e('Err:clickLikeButton', err);
+      console.error('Err:clickLikeButton', err);
       return false;
     }
   }

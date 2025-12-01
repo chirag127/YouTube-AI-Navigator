@@ -1,5 +1,5 @@
 import { videoCache as vc } from '../cache/video-cache.js';
-import { msg } from '../../utils/shortcuts/runtime.js';
+
 
 class VideoDataService {
   constructor() {
@@ -7,12 +7,8 @@ class VideoDataService {
   }
   async getMetadata(id, o = {}) {
     const result = await this._f(id, 'metadata', async () => {
-      const r = await msg({
-        action: 'GET_VIDEO_DATA',
-        videoId: id,
-        dataType: 'metadata',
-        options: o,
-      });
+      const r = await chrome.runtime.sendMessage({
+        action: 'GET_VIDEO_DATA', videoId: id, dataType: 'metadata', options: o, });
       if (!r.success) throw new Error(r.error);
       return r.data;
     });
@@ -20,12 +16,8 @@ class VideoDataService {
   }
   async getTranscript(id, lg = 'en') {
     const result = await this._f(id, 'transcript', async () => {
-      const r = await msg({
-        action: 'GET_VIDEO_DATA',
-        videoId: id,
-        dataType: 'transcript',
-        options: { lang: lg },
-      });
+      const r = await chrome.runtime.sendMessage({
+        action: 'GET_VIDEO_DATA', videoId: id, dataType: 'transcript', options: { lang: lg }, });
       if (!r.success) throw new Error(r.error);
       return r.data;
     });
@@ -33,12 +25,8 @@ class VideoDataService {
   }
   async getComments(id, lm = 20) {
     const result = await this._f(id, 'comments', async () => {
-      const r = await msg({
-        action: 'GET_VIDEO_DATA',
-        videoId: id,
-        dataType: 'comments',
-        options: { limit: lm },
-      });
+      const r = await chrome.runtime.sendMessage({
+        action: 'GET_VIDEO_DATA', videoId: id, dataType: 'comments', options: { limit: lm }, });
       if (!r.success) throw new Error(r.error);
       return r.data;
     });

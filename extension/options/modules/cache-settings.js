@@ -1,5 +1,5 @@
-import { qs as i, on } from '../../utils/shortcuts/dom.js';
-import { slcc as lcl } from '../../utils/shortcuts/storage.js';
+
+
 export class CacheSettings {
   constructor(s, a) {
     this.s = s;
@@ -25,19 +25,19 @@ export class CacheSettings {
       cacheSegments: { path: 'cache.segments' },
       cacheSummaries: { path: 'cache.summaries' },
     });
-    const cc = i('#clearCache');
+    const cc = (document).querySelector('#clearCache');
     if (cc)
-      on(cc, 'click', async () => {
+      (cc)?.addEventListener('click', async () => {
         if (confirm('Clear all cached data? This cannot be undone.')) {
           await lcl();
           this.a.notifications?.success('Cache cleared');
         }
       });
-    const vs = i('#viewCacheStats');
+    const vs = (document).querySelector('#viewCacheStats');
     if (vs)
-      on(vs, 'click', async () => {
+      (vs)?.addEventListener('click', async () => {
         const s = await chrome.storage.local.getBytesInUse();
-        const d = i('#cacheStats');
+        const d = (document).querySelector('#cacheStats');
         if (d) {
           d.className = 'status-indicator success';
           d.textContent = `Cache: ${(s / 1024 / 1024).toFixed(2)} MB`;
@@ -45,11 +45,11 @@ export class CacheSettings {
       });
   }
   set(id, v) {
-    const el = i(`#${id}`);
+    const el = (document).querySelector(`#${id}`);
     if (el) el.value = v;
   }
   chk(id, v) {
-    const el = i(`#${id}`);
+    const el = (document).querySelector(`#${id}`);
     if (el) el.checked = v;
   }
 }

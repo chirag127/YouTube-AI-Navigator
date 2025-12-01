@@ -14,8 +14,8 @@ describe('getApiKey', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockSlg = vi.mocked(require('../../../extension/utils/shortcuts/storage.js').slg);
-    mockE = vi.mocked(require('../../../extension/utils/shortcuts/log.js').e);
+    mockSlg = vi.mocked(vi.fn().slg);
+    mockE = vi.mocked(vi.fn().e);
   });
 
   it('should return apiKey', async () => {

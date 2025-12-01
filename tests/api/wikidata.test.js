@@ -20,9 +20,9 @@ describe('Wikidata API', () => {
   describe('searchWikidata', () => {
     it('should return entity on success', async () => {
       const mockData = { search: [{ id: 'Q1' }] };
-      const { sf } = await import('../../extension/utils/shortcuts/network.js');
+
       sf.mockResolvedValue(mockData);
-      const { sg } = await import('../../extension/utils/shortcuts/storage.js');
+
       sg.mockResolvedValue({ integrations: { wikidata: { enabled: true } } });
 
       const result = await searchWikidata('query');
@@ -34,7 +34,7 @@ describe('Wikidata API', () => {
     });
 
     it('should return null when disabled', async () => {
-      const { sg } = await import('../../extension/utils/shortcuts/storage.js');
+
       sg.mockResolvedValue({ integrations: { wikidata: { enabled: false } } });
 
       const result = await searchWikidata('query');
@@ -43,9 +43,9 @@ describe('Wikidata API', () => {
     });
 
     it('should return null on no search results', async () => {
-      const { sf } = await import('../../extension/utils/shortcuts/network.js');
+
       sf.mockResolvedValue({ search: [] });
-      const { sg } = await import('../../extension/utils/shortcuts/storage.js');
+
       sg.mockResolvedValue({ integrations: { wikidata: { enabled: true } } });
 
       const result = await searchWikidata('query');
@@ -64,9 +64,9 @@ describe('Wikidata API', () => {
     describe('searchEntity', () => {
       it('should call searchWikidata', async () => {
         const mockData = { id: 'Q1' };
-        const { sf } = await import('../../extension/utils/shortcuts/network.js');
+
         sf.mockResolvedValue({ search: [mockData] });
-        const { sg } = await import('../../extension/utils/shortcuts/storage.js');
+
         sg.mockResolvedValue({ integrations: { wikidata: { enabled: true } } });
 
         const result = await api.searchEntity('query');
@@ -78,7 +78,7 @@ describe('Wikidata API', () => {
     describe('getEntityDetails', () => {
       it('should return entity details', async () => {
         const mockData = { entities: { Q1: { label: 'Entity' } } };
-        const { sf } = await import('../../extension/utils/shortcuts/network.js');
+
         sf.mockResolvedValue(mockData);
 
         const result = await api.getEntityDetails('Q1');
@@ -96,7 +96,7 @@ describe('Wikidata API', () => {
       });
 
       it('should return null on no entities', async () => {
-        const { sf } = await import('../../extension/utils/shortcuts/network.js');
+
         sf.mockResolvedValue({ entities: {} });
 
         const result = await api.getEntityDetails('Q1');

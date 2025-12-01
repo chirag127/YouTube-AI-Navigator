@@ -1,8 +1,8 @@
-import { rp as rep, trm } from '../../utils/shortcuts/string.js';
-import { pf as pF } from '../../utils/shortcuts/global.js';
+
+
 import { jp } from '../../utils/shortcuts/core.js';
-import { afl, am, ajn } from '../../utils/shortcuts/array.js';
-import { ft as tf } from '../../utils/shortcuts/network.js';
+
+
 function dec(t) {
   const e = {
     '&amp;': '&',
@@ -12,7 +12,7 @@ function dec(t) {
     '&#39;': "'",
     '&nbsp;': ' ',
   };
-  return rep(t, /&[^;]+;/g, m => e[m] || m);
+  return t.replace(/&[^;]+;/g, m => e[m] || m);
 }
 function pXML(x) {
   const s = [],
@@ -20,7 +20,7 @@ function pXML(x) {
   let m;
   while ((m = r.exec(x)) !== null) {
     const t = dec(m[3]);
-    if (trm(t)) s.push({ start: pF(m[1]), duration: m[2] ? pF(m[2]) : 0, text: t });
+    if (t.trim()) s.push({ start: parseFloat(m[1]), duration: m[2] ? parseFloat(m[2]) : 0, text: t });
   }
   return s;
 }
@@ -30,25 +30,19 @@ async function fYT(vid, lNg = 'en') {
     try {
       const u = `https://www.youtube.com/api/timedtext?v=${vid}&lang=${lNg}&fmt=${f}`;
       if (f === 'json3') {
-        const t = await tf(u);
+        const t = await fetch(u);
         if (!t) continue;
         const d = jp(t);
         if (d.events) {
-          const s = am(
-            afl(d.events, e => e.segs),
-            e => ({
+          const s = d.events.filter(e => e.segs).map(e => ({
               start: e.tStartMs / 1000,
               duration: (e.dDurationMs || 0) / 1000,
-              text: ajn(
-                am(e.segs, s => s.utf8),
-                ''
-              ),
-            })
-          );
+              text: e.segs.map(s => s.utf8).join(''),
+            }));
           if (s.length) return { success: true, data: s };
         }
       } else {
-        const x = await tf(u);
+        const x = await fetch(u);
         const s = pXML(x);
         if (s.length) return { success: true, data: s };
       }

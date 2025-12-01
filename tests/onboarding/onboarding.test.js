@@ -54,14 +54,14 @@ describe('OnboardingFlow', () => {
     vi.clearAllMocks();
 
     // Get mock functions
-    mockGe = vi.mocked(require('../../extension/utils/shortcuts/dom.js').ge);
-    mockSg = vi.mocked(require('../../extension/utils/shortcuts/storage.js').sg);
-    mockSs = vi.mocked(require('../../extension/utils/shortcuts/storage.js').ss);
-    mockSls = vi.mocked(require('../../extension/utils/shortcuts/storage.js').sls);
-    mockFt = vi.mocked(require('../../extension/utils/shortcuts/network.js').ft);
-    mockSt = vi.mocked(require('../../extension/utils/shortcuts/global.js').to);
-    mockWin = require('../../extension/utils/shortcuts/global.js').wn;
-    mockE = vi.mocked(require('../../extension/utils/shortcuts/log.js').e);
+    mockGe = vi.mocked(vi.fn().ge);
+    mockSg = vi.mocked(vi.fn().sg);
+    mockSs = vi.mocked(vi.fn().ss);
+    mockSls = vi.mocked(vi.fn().sls);
+    mockFt = vi.mocked(vi.fn().ft);
+    mockSt = vi.mocked(vi.fn().to);
+    mockWin = vi.fn().wn;
+    mockE = vi.mocked(vi.fn().e);
 
     // Mock DOM elements
     const mockElement = {

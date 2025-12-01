@@ -46,7 +46,7 @@ vi.mock('../extension/utils/shortcuts/dom.js', () => ({
 
 // Now import the module under test
 const { setupAutoSkip, handleAutoSkip } = await import('../extension/content/segments/autoskip.js');
-const { sg } = await import('../extension/utils/shortcuts/storage.js');
+
 
 describe('AutoSkip', () => {
   let videoMock;

@@ -29,7 +29,7 @@ describe('TmdbAPI', () => {
   describe('searchMovie', () => {
     it('should return movie on success', async () => {
       const mockData = { results: [{ title: 'Movie' }] };
-      const { sf } = await import('../../extension/utils/shortcuts/network.js');
+
       sf.mockResolvedValue(mockData);
 
       const result = await api.searchMovie('query');
@@ -49,7 +49,7 @@ describe('TmdbAPI', () => {
     });
 
     it('should return null on no results', async () => {
-      const { sf } = await import('../../extension/utils/shortcuts/network.js');
+
       sf.mockResolvedValue({ results: [] });
 
       const result = await api.searchMovie('query');
@@ -58,7 +58,7 @@ describe('TmdbAPI', () => {
     });
 
     it('should return null on failure', async () => {
-      const { sf } = await import('../../extension/utils/shortcuts/network.js');
+
       sf.mockRejectedValue(new Error('error'));
 
       const result = await api.searchMovie('query');
@@ -70,7 +70,7 @@ describe('TmdbAPI', () => {
   describe('searchTV', () => {
     it('should return TV show on success', async () => {
       const mockData = { results: [{ name: 'Show' }] };
-      const { sf } = await import('../../extension/utils/shortcuts/network.js');
+
       sf.mockResolvedValue(mockData);
 
       const result = await api.searchTV('query');
@@ -82,7 +82,7 @@ describe('TmdbAPI', () => {
   describe('getDetails', () => {
     it('should return details on success', async () => {
       const mockData = { title: 'Details' };
-      const { sf } = await import('../../extension/utils/shortcuts/network.js');
+
       sf.mockResolvedValue(mockData);
 
       const result = await api.getDetails('id');
@@ -95,7 +95,7 @@ describe('TmdbAPI', () => {
 
     it('should use tv type', async () => {
       const mockData = { name: 'TV Details' };
-      const { sf } = await import('../../extension/utils/shortcuts/network.js');
+
       sf.mockResolvedValue(mockData);
 
       const result = await api.getDetails('id', 'tv');

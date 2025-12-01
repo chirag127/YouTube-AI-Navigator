@@ -1,10 +1,10 @@
-import { e } from '../../utils/shortcuts/log.js';
+
 import { analyzeSentiment, detectSpam, isQuestion } from '../../utils/patterns/comments.js';
-import { sg } from '../../utils/shortcuts/storage.js';
+
 export const comments = async commentList => {
   try {
     if (!commentList || !commentList.length) return '';
-    const cfg = await sg('config');
+    const cfg = await chrome.storage.sync.get('config');
     const pCfg = cfg.config?.prompts?.comments || {};
     const cCfg = cfg.config?.comments || {};
     const role =
@@ -108,7 +108,7 @@ ${spamEnabled ? '- Ignore spam/bot comments (pre-filtered)' : ''}
 Comments${spamEnabled ? ' (Spam-Filtered)' : ''}${sentEnabled ? ' (Sentiment-Labeled)' : ''}:
 ${text}`;
   } catch (err) {
-    e('Err:Comments', err);
+    console.error('Err:Comments', err);
     return '';
   }
 };

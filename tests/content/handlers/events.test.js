@@ -20,8 +20,8 @@ describe('attachEventListeners', () => {
 
   it('should attach listeners', async () => {
     const qs = vi.mocked(await import('../../../extension/utils/shortcuts/dom.js')).qs;
-    qs.mockReturnValueOnce({}); // send button
-    qs.mockReturnValueOnce({}); // input
+    document.querySelector.mockReturnValueOnce({}); // send button
+    document.querySelector.mockReturnValueOnce({}); // input
     const ae = vi.mocked(await import('../../../extension/utils/shortcuts/dom.js')).ae;
 
     attachEventListeners();
@@ -31,7 +31,7 @@ describe('attachEventListeners', () => {
 
   it('should handle error', async () => {
     const qs = vi.mocked(await import('../../../extension/utils/shortcuts/dom.js')).qs;
-    qs.mockImplementation(() => {
+    document.querySelector.mockImplementation(() => {
       throw new Error('dom error');
     });
     const e = vi.mocked(await import('../../../extension/utils/shortcuts/log.js')).e;

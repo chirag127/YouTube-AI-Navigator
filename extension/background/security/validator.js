@@ -1,6 +1,6 @@
 import { js } from '../../utils/shortcuts/core.js';
-import { rp as rep } from '../../utils/shortcuts/string.js';
-import { isa } from '../../utils/shortcuts/array.js';
+
+
 
 const ALLOWED = new Set([
   'TEST',
@@ -46,11 +46,11 @@ export const sanitizeString = (s, max = MAX_SL) => {
   if (!s || typeof s !== 'string') {
     return '';
   }
-  return rep(s.slice(0, max), /[<>]/g, '');
+  return s.slice(0, max).replace(/[<>]/g, '');
 };
 
 export const validateTranscript = t => {
-  if (!isa(t)) {
+  if (!Array.isArray(t)) {
     return false;
   }
   if (js(t).length > MAX_TS) {

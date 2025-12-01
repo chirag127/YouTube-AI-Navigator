@@ -107,7 +107,7 @@ describe('DeArrow API', () => {
         ok: true,
         json: vi.fn().mockResolvedValue(mockData),
       });
-      const { sg } = await import('../../extension/utils/shortcuts/storage.js');
+
       sg.mockResolvedValue({ integrations: { dearrow: { enabled: true } } });
 
       const result = await getBranding('testVid');
@@ -116,7 +116,7 @@ describe('DeArrow API', () => {
     });
 
     it('should return null when disabled', async () => {
-      const { sg } = await import('../../extension/utils/shortcuts/storage.js');
+
       sg.mockResolvedValue({ integrations: { dearrow: { enabled: false } } });
 
       const result = await getBranding('testVid');

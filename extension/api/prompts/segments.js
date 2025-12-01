@@ -1,8 +1,8 @@
 import { buildContextString } from './utils.js';
 import { analyzeTranscript, buildPatternHints } from '../../utils/patterns/index.js';
-import { sg } from '../../utils/shortcuts/storage.js';
+
 export const segments = async context => {
-  const cfg = await sg('config');
+  const cfg = await chrome.storage.sync.get('config');
   const pCfg = cfg.config?.prompts?.segments || {};
   const role =
     pCfg.roleDescription ||

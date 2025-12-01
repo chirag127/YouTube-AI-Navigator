@@ -1,5 +1,5 @@
-import { slg } from '../../utils/shortcuts/storage.js';
-import { e } from '../../utils/shortcuts/log.js';
+
+
 
 export async function getApiKey() {
   try {
@@ -7,7 +7,7 @@ export async function getApiKey() {
 
     return result.GAK || null;
   } catch (err) {
-    e('Err:GetApiKey', err);
+    console.error('Err:GetApiKey', err);
     return null;
   }
 }

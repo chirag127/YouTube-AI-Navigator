@@ -1,4 +1,4 @@
-import { rt as cr } from '../../utils/shortcuts/runtime.js';
+
 
 export const verifySender = s => {
   if (!s || !s.id) {

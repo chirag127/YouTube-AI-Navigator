@@ -1,7 +1,7 @@
-import { e } from '../utils/shortcuts/log.js';
-import { to as st, co as cst } from '../utils/shortcuts/global.js';
-import { am, ajn, af } from '../utils/shortcuts/array.js';
-import { trm, rp, sb as sbs } from '../utils/shortcuts/string.js';
+
+
+
+
 
 const DAB = 'https://sponsor.ajay.app';
 const DTB = 'https://dearrow-thumb.ajay.app';
@@ -14,12 +14,12 @@ export async function fetchBranding(vid, opt = {}) {
   const u = `${DAB}/api/branding?${p.toString()}`;
   try {
     const c = new AbortController();
-    const id = st(() => c.abort(), timeout);
+    const id = setTimeout(() => c.abort(), timeout);
     const r = await fetch(u, {
       signal: c.signal,
       headers: { Accept: 'application/json' },
     });
-    cst(id);
+    clearTimeout(id);
     if (!r.ok) {
       if (r.status === 404) {
         return null;
@@ -29,16 +29,16 @@ export async function fetchBranding(vid, opt = {}) {
     const d = await r.json();
     return pbr(d);
   } catch (x) {
-    if (x.name === 'AbortError') e('[API:Fail:DeArrow] fetchBranding timeout');
-    else e('[API:Fail:DeArrow] fetchBranding fail:', x.message);
+    if (x.name === 'AbortError') console.error('[API:Fail:DeArrow] fetchBranding timeout');
+    else console.error('[API:Fail:DeArrow] fetchBranding fail:', x.message);
     return null;
   }
 }
 
-import { sg } from '../utils/shortcuts/storage.js';
+
 
 export async function getBranding(videoId) {
-  const cfg = await sg('integrations');
+  const cfg = await chrome.storage.sync.get('integrations');
   if (cfg.integrations?.dearrow?.enabled === false) return null;
 
   const url = `https://sponsor.ajay.app/api/branding?videoID=${videoId}`;
@@ -56,12 +56,12 @@ export async function fetchBrandingPrivate(vid, opt = {}) {
   const u = `${DAB}/api/branding/${hp}?${p.toString()}`;
   try {
     const c = new AbortController();
-    const id = st(() => c.abort(), timeout);
+    const id = setTimeout(() => c.abort(), timeout);
     const r = await fetch(u, {
       signal: c.signal,
       headers: { Accept: 'application/json' },
     });
-    cst(id);
+    clearTimeout(id);
     if (!r.ok) {
       if (r.status === 404) {
         return null;
@@ -74,8 +74,8 @@ export async function fetchBrandingPrivate(vid, opt = {}) {
     }
     return null;
   } catch (x) {
-    if (x.name === 'AbortError') e('[API:Fail:DeArrow] fetchBrandingPrivate timeout');
-    else e('[API:Fail:DeArrow] fetchBrandingPrivate fail:', x.message);
+    if (x.name === 'AbortError') console.error('[API:Fail:DeArrow] fetchBrandingPrivate timeout');
+    else console.error('[API:Fail:DeArrow] fetchBrandingPrivate fail:', x.message);
     return null;
   }
 }
@@ -118,18 +118,18 @@ export async function fetchThumbnail(vid, ts, timeout = 5000) {
   const u = getThumbnailUrl(vid, ts);
   try {
     const c = new AbortController();
-    const id = st(() => c.abort(), timeout);
+    const id = setTimeout(() => c.abort(), timeout);
     const r = await fetch(u, { signal: c.signal });
-    cst(id);
+    clearTimeout(id);
     if (r.status === 204) {
-      e('error:fetchThumbnail fail:', r.headers.get('X-Failure-Reason'));
+      console.error('error:fetchThumbnail fail:', r.headers.get('X-Failure-Reason'));
       return null;
     }
     if (!r.ok) throw new Error(`Thumb err: ${r.status}`);
     return await r.blob();
   } catch (x) {
-    if (x.name === 'AbortError') e('[API:Fail:DeArrow] fetchThumbnail timeout');
-    else e('[API:Fail:DeArrow] fetchThumbnail fail:', x.message);
+    if (x.name === 'AbortError') console.error('[API:Fail:DeArrow] fetchThumbnail timeout');
+    else console.error('[API:Fail:DeArrow] fetchThumbnail fail:', x.message);
     return null;
   }
 }
@@ -146,17 +146,14 @@ function ct(t) {
   if (!t) {
     return '';
   }
-  return trm(rp(t, />\s*/g, ''));
+  return t.replace(/>\s*/g, '').trim();
 }
 async function gsp(vid) {
   const e = new TextEncoder();
   const d = e.encode(vid);
   const hb = await crypto.subtle.digest('SHA-256', d);
   const ha = af(new Uint8Array(hb));
-  const hh = ajn(
-    am(ha, b => b.toString(16).padStart(2, '0')),
-    ''
-  );
+  const hh = ha.map(b => b.toString(16).padStart(2, '0')).join('');
   return sbs(hh, 0, 4);
 }
 

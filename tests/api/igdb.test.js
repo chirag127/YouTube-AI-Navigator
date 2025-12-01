@@ -5,7 +5,7 @@ vi.mock('../../extension/utils/shortcuts/log.js', () => ({
 }));
 
 vi.mock('../../extension/utils/shortcuts/network.js', () => ({
-  ft: vi.fn(),
+  fetch: vi.fn(),
 }));
 
 describe('IgdbAPI', () => {
@@ -26,12 +26,12 @@ describe('IgdbAPI', () => {
   describe('searchGame', () => {
     it('should return game on success', async () => {
       const mockResult = [{ name: 'Game' }];
-      const { ft } = await import('../../extension/utils/shortcuts/network.js');
-      ft.mockResolvedValue(mockResult);
+
+      fetch.mockResolvedValue(mockResult);
 
       const result = await api.searchGame('query');
 
-      expect(ft).toHaveBeenCalledWith('https://api.igdb.com/v4/games', {
+      expect(fetch).toHaveBeenCalledWith('https://api.igdb.com/v4/games', {
         method: 'POST',
         headers: {
           'Client-ID': 'client-id',
@@ -43,8 +43,8 @@ describe('IgdbAPI', () => {
     });
 
     it('should return null on no results', async () => {
-      const { ft } = await import('../../extension/utils/shortcuts/network.js');
-      ft.mockResolvedValue([]);
+
+      fetch.mockResolvedValue([]);
 
       const result = await api.searchGame('query');
 
@@ -60,8 +60,8 @@ describe('IgdbAPI', () => {
     });
 
     it('should return null on failure', async () => {
-      const { ft } = await import('../../extension/utils/shortcuts/network.js');
-      ft.mockRejectedValue(new Error('error'));
+
+      fetch.mockRejectedValue(new Error('error'));
 
       const result = await api.searchGame('query');
 

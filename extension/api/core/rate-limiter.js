@@ -1,7 +1,7 @@
-import { to } from '../../utils/shortcuts/global.js';
+
 import { nw } from '../../utils/shortcuts/core.js';
 import { np } from '../../utils/shortcuts/async.js';
-import { w, l } from '../../utils/shortcuts/log.js';
+
 
 export class RateLimiter {
   constructor(config = {}) {
@@ -12,7 +12,7 @@ export class RateLimiter {
   }
 
   async acquire() {
-    l(`[RateLimiter] Request queued, current queue: ${this.queue.length}`);
+    console.log(`[RateLimiter] Request queued, current queue: ${this.queue.length}`);
     return np(resolve => {
       this.queue.push(resolve);
       this._processQueue();
@@ -30,17 +30,17 @@ export class RateLimiter {
       this.timestamps.push(now);
       const resolve = this.queue.shift();
       resolve();
-      l(`[RateLimiter] Request processed, ${this.queue.length} remaining in queue`);
+      console.log(`[RateLimiter] Request processed, ${this.queue.length} remaining in queue`);
 
       if (this.queue.length > 0) {
-        to(() => this._processQueue(), 0);
+        setTimeout(() => this._processQueue(), 0);
       }
     } else {
       const oldestTimestamp = this.timestamps[0];
       const waitTime = this.windowMs - (now - oldestTimestamp) + 100;
-      w(`[RateLimiter] Rate limit reached, waiting ${waitTime}ms, queue: ${this.queue.length}`);
+      console.warn(`[RateLimiter] Rate limit reached, waiting ${waitTime}ms, queue: ${this.queue.length}`);
 
-      to(() => this._processQueue(), waitTime);
+      setTimeout(() => this._processQueue(), waitTime);
     }
   }
 

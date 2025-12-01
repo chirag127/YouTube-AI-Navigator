@@ -1,5 +1,5 @@
-import { en as enc } from '../utils/shortcuts/global.js';
-import { sf as safeFetch } from '../utils/shortcuts/network.js';
+
+
 
 const BASE_URL = 'https://newsdata.io/api/1';
 
@@ -12,7 +12,7 @@ export class NewsDataAPI {
     if (!this.apiKey) return [];
     try {
       const data = await safeFetch(
-        `${BASE_URL}/news?apikey=${this.apiKey}&q=${enc(query)}&language=${language}`
+        `${BASE_URL}/news?apikey=${this.apiKey}&q=${encodeURIComponent(query)}&language=${language}`
       );
       return data?.results || [];
     } catch (x) {

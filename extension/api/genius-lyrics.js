@@ -1,8 +1,8 @@
-import { e } from '../utils/shortcuts/log.js';
-import { en as enc } from '../utils/shortcuts/global.js';
-import { tf as ftx, jf as fj } from '../utils/shortcuts/network.js';
-import { rp, trm } from '../utils/shortcuts/string.js';
-import { am, ajn } from '../utils/shortcuts/array.js';
+
+
+
+
+
 
 export class GeniusLyricsAPI {
   constructor() {
@@ -26,7 +26,7 @@ export class GeniusLyricsAPI {
         artist: hit.result.primary_artist.name,
       };
     } catch (err) {
-      e('error:getLyrics fail:', err.message);
+      console.error('error:getLyrics fail:', err.message);
       return null;
     }
   }
@@ -34,8 +34,8 @@ export class GeniusLyricsAPI {
   async search(title, artist) {
     const cleanTitle = this.cleanTitle(title);
     const query = cleanTitle.includes(artist) ? cleanTitle : `${cleanTitle} ${artist}`;
-    const url = `${this.searchUrl}?per_page=1&q=${enc(query)}`;
-    const data = await fj(url);
+    const url = `${this.searchUrl}?per_page=1&q=${encodeURIComponent(query)}`;
+    const data = await (await fetch(url)).json();
     if (data?.response?.sections) {
       for (const section of data.response.sections) {
         if (section.type === 'song' && section.hits?.length > 0) {
@@ -53,32 +53,17 @@ export class GeniusLyricsAPI {
     }
     const lyricsMatch = html.match(/<div[^>]*data-lyrics-container="true"[^>]*>(.*?)<\/div>/gs);
     if (lyricsMatch) {
-      return trm(
-        ajn(
-          am(lyricsMatch, div => {
-            let text = rp(div, /<br\s*\/?>/gi, '\n');
-            text = rp(text, /<[^>]*>/g, '');
+      return lyricsMatch.map(div => {
+            let text = div.replace(/<br\s*\/?>/gi, '\n');
+            text = text.replace(/<[^>]*>/g, '');
             return this.decodeHtml(text);
-          }),
-          '\n\n'
-        )
-      );
+          }).join('\n\n').trim();
     }
     return null;
   }
 
   cleanTitle(title) {
-    return trm(
-      rp(
-        rp(
-          rp(title, /[([](?:official|video|audio|lyric|lyrics|hq|hd|4k|mv|music video)[)\]]/gi, ''),
-          /ft\.|feat\.|featuring/gi,
-          ''
-        ),
-        /[([].*?[)\]]/g,
-        ''
-      )
-    );
+    return title.replace(/[([](?:official|video|audio|lyric|lyrics|hq|hd|4k|mv|music video)[)\]]/gi, '').replace(/ft\.|feat\.|featuring/gi, '').replace(/[([].*?[)\]]/g, '').trim();
   }
 
   decodeHtml(html) {
@@ -90,7 +75,7 @@ export class GeniusLyricsAPI {
       '&#39;': "'",
       '&nbsp;': ' ',
     };
-    return rp(html, /&[^;]+;/g, match => entities[match] || match);
+    return html.replace(/&[^;]+;/g, match => entities[match] || match);
   }
 }
 

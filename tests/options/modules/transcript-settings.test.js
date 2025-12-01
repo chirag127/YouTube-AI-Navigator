@@ -5,7 +5,7 @@ vi.mock('../../../extension/utils/shortcuts/dom.js', () => ({
   qs: vi.fn(),
 }));
 
-import { qs } from '../../../extension/utils/shortcuts/dom.js';
+
 
 describe('TranscriptSettings', () => {
   let settingsManager;
@@ -15,7 +15,7 @@ describe('TranscriptSettings', () => {
 
   beforeEach(() => {
     mockElements = {};
-    qs.mockImplementation(selector => {
+    document.querySelector.mockImplementation(selector => {
       const id = selector.replace('#', '');
       if (!mockElements[id]) {
         mockElements[id] = {

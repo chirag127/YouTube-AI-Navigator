@@ -1,19 +1,19 @@
-import { sl } from '../../utils/shortcuts/storage.js';
+
 import { nw as nt } from '../../utils/shortcuts/core.js';
 
 export async function saveVideoData(v, d) {
   const k = `video_${v}`,
     e = await getVideoData(v),
     m = { videoId: v, timestamp: nt(), lastAccessed: nt(), ...e, ...d };
-  await sl({ [k]: m });
+  await chrome.storage.local.set({ [k]: m });
   return m;
 }
 export async function getVideoData(v) {
-  const r = await sl(`video_${v}`),
+  const r = await chrome.storage.local.get(`video_${v}`),
     d = r[`video_${v}`];
   if (d) {
     d.lastAccessed = nt();
-    await sl({ [`video_${v}`]: d });
+    await chrome.storage.local.set({ [`video_${v}`]: d });
   }
   return d || null;
 }
@@ -22,7 +22,7 @@ export async function hasVideoData(v) {
   return !!d;
 }
 export async function deleteVideoData(v) {
-  await sl(`video_${v}`, null);
+  await chrome.storage.local.remove(`video_${v}`);
 }
 export async function getCachedTranscript(v) {
   const d = await getVideoData(v);

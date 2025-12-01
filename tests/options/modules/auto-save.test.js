@@ -24,12 +24,12 @@ describe('AutoSave', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockE = vi.mocked(require('../../../extension/utils/shortcuts/log.js').e);
-    mockTo = vi.mocked(require('../../../extension/utils/shortcuts/global.js').to);
-    mockClt = vi.mocked(require('../../../extension/utils/shortcuts/global.js').clt);
-    mockOn = vi.mocked(require('../../../extension/utils/shortcuts/dom.js').on);
-    mockQs = vi.mocked(require('../../../extension/utils/shortcuts/dom.js').qs);
-    mockOe = vi.mocked(require('../../../extension/utils/shortcuts/core.js').oe);
+    mockE = vi.mocked(vi.fn().e);
+    mockTo = vi.mocked(vi.fn().to);
+    mockClt = vi.mocked(vi.fn().clt);
+    mockOn = vi.mocked(vi.fn().on);
+    mockQs = vi.mocked(vi.fn().qs);
+    mockOe = vi.mocked(vi.fn().oe);
     mockSm = { update: vi.fn() };
     mockNotifier = { saving: vi.fn(), success: vi.fn(), error: vi.fn() };
     mockTo.mockImplementation(fn => fn());

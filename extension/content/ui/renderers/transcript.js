@@ -1,23 +1,23 @@
-import { gu } from '../../../utils/shortcuts/runtime.js';
 
-const { showPlaceholder } = await import(gu('content/ui/components/loading.js'));
-const { seekVideo } = await import(gu('content/utils/dom.js'));
-const { formatTime } = await import(gu('content/utils/time.js'));
-const { id: ge, on, qs: $, qsa: $$ } = await import(gu('utils/shortcuts/dom.js'));
-const { e } = await import(gu('utils/shortcuts/log.js'));
-const { sg, ss } = await import(gu('utils/shortcuts/storage.js'));
+
+const { showPlaceholder } = await import(chrome.runtime.getURL('content/ui/components/loading.js'));
+const { seekVideo } = await import(chrome.runtime.getURL('content/utils/dom.js'));
+const { formatTime } = await import(chrome.runtime.getURL('content/utils/time.js'));
+);
+);
+);
 
 let autoCloseEnabled = true;
 
 // Load initial state from config
 (async () => {
   try {
-    const r = await sg('config');
+    const r = await chrome.storage.sync.get('config');
     if (r.config?.transcript?.autoClose !== undefined) {
       autoCloseEnabled = r.config.transcript.autoClose;
     }
   } catch (err) {
-    e('Err:loadAutoClose', err);
+    console.error('Err:loadAutoClose', err);
   }
 })();
 
@@ -53,30 +53,30 @@ export function renderTranscript(c, s) {
     c.innerHTML = `${ab}<div class="ytai-transcript-display">${h}</div>`;
 
     $$('.ytai-transcript-line', c).forEach(e =>
-      on(e, 'click', () => seekVideo(parseFloat(e.dataset.time)))
+      (e)?.addEventListener('click', () => seekVideo(parseFloat(e.dataset.time)))
     );
 
     const tb = $('#yt-ai-transcript-autoclose-toggle', c);
     if (tb) {
-      on(tb, 'click', async () => {
+      (tb)?.addEventListener('click', async () => {
         autoCloseEnabled = !autoCloseEnabled;
         tb.classList.toggle('active', autoCloseEnabled);
         tb.textContent = `${autoCloseEnabled ? '✓' : '✗'} Auto-close after extraction`;
 
         // Save to config
         try {
-          const r = await sg('config');
+          const r = await chrome.storage.sync.get('config');
           const config = r.config || {};
           config.transcript = config.transcript || {};
           config.transcript.autoClose = autoCloseEnabled;
-          await ss({ config });
+          await chrome.storage.sync.set(typeof { config } === 'string' ? { [{ config }]: undefined } : { config });
         } catch (err) {
-          e('Err:saveAutoClose', err);
+          console.error('Err:saveAutoClose', err);
         }
       });
     }
   } catch (err) {
-    e('Err:renderTranscript', err);
+    console.error('Err:renderTranscript', err);
   }
 }
 
@@ -84,14 +84,14 @@ export function shouldAutoClose() {
   try {
     return autoCloseEnabled;
   } catch (err) {
-    e('Err:shouldAutoClose', err);
+    console.error('Err:shouldAutoClose', err);
     return false;
   }
 }
 
 export function collapseTranscriptWidget() {
   try {
-    const w = ge('yt-ai-master-widget');
+    const w = document.getElementById('yt-ai-master-widget');
     if (w && autoCloseEnabled) {
       w.classList.add('yt-ai-collapsed');
       const cb = $('#yt-ai-close-btn', w);
@@ -101,6 +101,6 @@ export function collapseTranscriptWidget() {
       }
     }
   } catch (err) {
-    e('Err:collapseTranscriptWidget', err);
+    console.error('Err:collapseTranscriptWidget', err);
   }
 }

@@ -25,12 +25,12 @@ describe('ConfigManager', () => {
     vi.clearAllMocks();
     manager = new ConfigManager();
 
-    mockSg = vi.mocked(require('../../extension/utils/shortcuts/storage.js').sg);
-    mockSs = vi.mocked(require('../../extension/utils/shortcuts/storage.js').ss);
-    mockNw = vi.mocked(require('../../extension/utils/shortcuts/core.js').nw);
-    mockJp = vi.mocked(require('../../extension/utils/shortcuts/core.js').jp);
-    mockJs = vi.mocked(require('../../extension/utils/shortcuts/core.js').js);
-    mockIsa = vi.mocked(require('../../extension/utils/shortcuts/array.js').isa);
+    mockSg = vi.mocked(vi.fn().sg);
+    mockSs = vi.mocked(vi.fn().ss);
+    mockNw = vi.mocked(vi.fn().nw);
+    mockJp = vi.mocked(vi.fn().jp);
+    mockJs = vi.mocked(vi.fn().js);
+    mockIsa = vi.mocked(vi.fn().isa);
   });
 
   describe('constructor', () => {

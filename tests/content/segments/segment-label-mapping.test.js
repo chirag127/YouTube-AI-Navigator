@@ -1,122 +1,122 @@
-import { lk, ln, lgc, LM, CM } from '../extension/utils/shortcuts/segments.js';
+
 
 describe('Segment Label Mapping Tests', () => {
-  describe('Label Key Mapping (lk)', () => {
+  describe('Label Key Mapping (getLabelKey)', () => {
     it('should map all 13 SponsorBlock categories', () => {
-      expect(lk('sponsor')).toBe('sponsor');
-      expect(lk('selfpromo')).toBe('selfpromo');
-      expect(lk('interaction')).toBe('interaction');
-      expect(lk('intro')).toBe('intro');
-      expect(lk('outro')).toBe('outro');
-      expect(lk('preview')).toBe('preview');
-      expect(lk('hook')).toBe('hook');
-      expect(lk('music_offtopic')).toBe('music_offtopic');
-      expect(lk('poi_highlight')).toBe('poi_highlight');
-      expect(lk('filler')).toBe('filler');
-      expect(lk('exclusive_access')).toBe('exclusive_access');
-      expect(lk('chapter')).toBe('chapter');
-      expect(lk('content')).toBe('content');
+      expect(getLabelKey('sponsor')).toBe('sponsor');
+      expect(getLabelKey('selfpromo')).toBe('selfpromo');
+      expect(getLabelKey('interaction')).toBe('interaction');
+      expect(getLabelKey('intro')).toBe('intro');
+      expect(getLabelKey('outro')).toBe('outro');
+      expect(getLabelKey('preview')).toBe('preview');
+      expect(getLabelKey('hook')).toBe('hook');
+      expect(getLabelKey('music_offtopic')).toBe('music_offtopic');
+      expect(getLabelKey('poi_highlight')).toBe('poi_highlight');
+      expect(getLabelKey('filler')).toBe('filler');
+      expect(getLabelKey('exclusive_access')).toBe('exclusive_access');
+      expect(getLabelKey('chapter')).toBe('chapter');
+      expect(getLabelKey('content')).toBe('content');
     });
 
     it('should map label variations to keys', () => {
-      expect(lk('Sponsor')).toBe('sponsor');
-      expect(lk('Self Promotion')).toBe('selfpromo');
-      expect(lk('Self Promotion/Unpaid Promotion')).toBe('selfpromo');
-      expect(lk('Unpaid/Self Promotion')).toBe('selfpromo');
-      expect(lk('Interaction Reminder')).toBe('interaction');
-      expect(lk('Intermission/Intro Animation')).toBe('intro');
-      expect(lk('Intermission/Intro')).toBe('intro');
-      expect(lk('Intro')).toBe('intro');
-      expect(lk('Endcards/Credits')).toBe('outro');
-      expect(lk('Outro')).toBe('outro');
-      expect(lk('Preview/Recap')).toBe('preview');
-      expect(lk('Preview')).toBe('preview');
-      expect(lk('Tangents/Jokes')).toBe('filler');
-      expect(lk('Filler/Tangent')).toBe('filler');
-      expect(lk('Filler')).toBe('filler');
-      expect(lk('Highlight')).toBe('poi_highlight');
-      expect(lk('Exclusive Access')).toBe('exclusive_access');
-      expect(lk('Off-Topic')).toBe('music_offtopic');
-      expect(lk('Music: Non-Music Section')).toBe('music_offtopic');
-      expect(lk('Music: Off-Topic')).toBe('music_offtopic');
-      expect(lk('Hook/Greetings')).toBe('hook');
-      expect(lk('Hook')).toBe('hook');
-      expect(lk('Chapter')).toBe('chapter');
-      expect(lk('Content')).toBe('content');
-      expect(lk('Main Content')).toBe('content');
-      expect(lk('Content (Main Video)')).toBe('content');
+      expect(getLabelKey('Sponsor')).toBe('sponsor');
+      expect(getLabelKey('Self Promotion')).toBe('selfpromo');
+      expect(getLabelKey('Self Promotion/Unpaid Promotion')).toBe('selfpromo');
+      expect(getLabelKey('Unpaid/Self Promotion')).toBe('selfpromo');
+      expect(getLabelKey('Interaction Reminder')).toBe('interaction');
+      expect(getLabelKey('Intermission/Intro Animation')).toBe('intro');
+      expect(getLabelKey('Intermission/Intro')).toBe('intro');
+      expect(getLabelKey('Intro')).toBe('intro');
+      expect(getLabelKey('Endcards/Credits')).toBe('outro');
+      expect(getLabelKey('Outro')).toBe('outro');
+      expect(getLabelKey('Preview/Recap')).toBe('preview');
+      expect(getLabelKey('Preview')).toBe('preview');
+      expect(getLabelKey('Tangents/Jokes')).toBe('filler');
+      expect(getLabelKey('Filler/Tangent')).toBe('filler');
+      expect(getLabelKey('Filler')).toBe('filler');
+      expect(getLabelKey('Highlight')).toBe('poi_highlight');
+      expect(getLabelKey('Exclusive Access')).toBe('exclusive_access');
+      expect(getLabelKey('Off-Topic')).toBe('music_offtopic');
+      expect(getLabelKey('Music: Non-Music Section')).toBe('music_offtopic');
+      expect(getLabelKey('Music: Off-Topic')).toBe('music_offtopic');
+      expect(getLabelKey('Hook/Greetings')).toBe('hook');
+      expect(getLabelKey('Hook')).toBe('hook');
+      expect(getLabelKey('Chapter')).toBe('chapter');
+      expect(getLabelKey('Content')).toBe('content');
+      expect(getLabelKey('Main Content')).toBe('content');
+      expect(getLabelKey('Content (Main Video)')).toBe('content');
     });
 
     it('should handle null/undefined with default', () => {
-      expect(lk(null)).toBe('content');
-      expect(lk(undefined)).toBe('content');
-      expect(lk('')).toBe('content');
+      expect(getLabelKey(null)).toBe('content');
+      expect(getLabelKey(undefined)).toBe('content');
+      expect(getLabelKey('')).toBe('content');
     });
 
     it('should handle unknown labels with fallback', () => {
-      expect(lk('Unknown Label')).toBe('unknown_label');
-      expect(lk('New Category')).toBe('new_category');
+      expect(getLabelKey('Unknown Label')).toBe('unknown_label');
+      expect(getLabelKey('New Category')).toBe('new_category');
     });
   });
 
-  describe('Label Name Mapping (ln)', () => {
+  describe('Label Name Mapping (getLabelName)', () => {
     it('should return full names for all categories', () => {
-      expect(ln('sponsor')).toBe('Sponsor');
-      expect(ln('selfpromo')).toBe('Self Promotion');
-      expect(ln('interaction')).toBe('Interaction Reminder');
-      expect(ln('intro')).toBe('Intro');
-      expect(ln('outro')).toBe('Outro');
-      expect(ln('preview')).toBe('Preview');
-      expect(ln('hook')).toBe('Hook');
-      expect(ln('music_offtopic')).toBe('Music: Off-Topic');
-      expect(ln('poi_highlight')).toBe('Highlight');
-      expect(ln('filler')).toBe('Filler');
-      expect(ln('exclusive_access')).toBe('Exclusive Access');
-      expect(ln('chapter')).toBe('Chapter');
-      expect(ln('content')).toBe('Content');
+      expect(getLabelName('sponsor')).toBe('Sponsor');
+      expect(getLabelName('selfpromo')).toBe('Self Promotion');
+      expect(getLabelName('interaction')).toBe('Interaction Reminder');
+      expect(getLabelName('intro')).toBe('Intro');
+      expect(getLabelName('outro')).toBe('Outro');
+      expect(getLabelName('preview')).toBe('Preview');
+      expect(getLabelName('hook')).toBe('Hook');
+      expect(getLabelName('music_offtopic')).toBe('Music: Off-Topic');
+      expect(getLabelName('poi_highlight')).toBe('Highlight');
+      expect(getLabelName('filler')).toBe('Filler');
+      expect(getLabelName('exclusive_access')).toBe('Exclusive Access');
+      expect(getLabelName('chapter')).toBe('Chapter');
+      expect(getLabelName('content')).toBe('Content');
     });
 
     it('should return input for unknown categories', () => {
-      expect(ln('unknown')).toBe('unknown');
+      expect(getLabelName('unknown')).toBe('unknown');
     });
   });
 
-  describe('Label Color Mapping (lgc)', () => {
+  describe('Label Color Mapping (getLabelColor)', () => {
     it('should return colors for all categories', () => {
-      expect(lgc('sponsor')).toBe('#00d26a');
-      expect(lgc('selfpromo')).toBe('#ffff00');
-      expect(lgc('interaction')).toBe('#a020f0');
-      expect(lgc('intro')).toBe('#00ffff');
-      expect(lgc('outro')).toBe('#0000ff');
-      expect(lgc('preview')).toBe('#00bfff');
-      expect(lgc('hook')).toBe('#4169e1');
-      expect(lgc('music_offtopic')).toBe('#ff9900');
-      expect(lgc('poi_highlight')).toBe('#ff0055');
-      expect(lgc('filler')).toBe('#9400d3');
-      expect(lgc('exclusive_access')).toBe('#008b45');
-      expect(lgc('chapter')).toBe('#1e90ff');
-      expect(lgc('content')).toBe('#999999');
+      expect(getLabelColor('sponsor')).toBe('#00d26a');
+      expect(getLabelColor('selfpromo')).toBe('#ffff00');
+      expect(getLabelColor('interaction')).toBe('#a020f0');
+      expect(getLabelColor('intro')).toBe('#00ffff');
+      expect(getLabelColor('outro')).toBe('#0000ff');
+      expect(getLabelColor('preview')).toBe('#00bfff');
+      expect(getLabelColor('hook')).toBe('#4169e1');
+      expect(getLabelColor('music_offtopic')).toBe('#ff9900');
+      expect(getLabelColor('poi_highlight')).toBe('#ff0055');
+      expect(getLabelColor('filler')).toBe('#9400d3');
+      expect(getLabelColor('exclusive_access')).toBe('#008b45');
+      expect(getLabelColor('chapter')).toBe('#1e90ff');
+      expect(getLabelColor('content')).toBe('#999999');
     });
 
     it('should return default color for unknown categories', () => {
-      expect(lgc('unknown')).toBe('#999999');
+      expect(getLabelColor('unknown')).toBe('#999999');
     });
   });
 
   describe('Consistency Checks', () => {
-    it('should have matching keys in LM and CM', () => {
-      const lmKeys = Object.keys(LM);
-      const cmKeys = Object.keys(CM);
+    it('should have matching keys in LABEL_MAPPING and COLOR_MAPPING', () => {
+      const lmKeys = Object.keys(LABEL_MAPPING);
+      const cmKeys = Object.keys(COLOR_MAPPING);
       expect(lmKeys.sort()).toEqual(cmKeys.sort());
     });
 
     it('should have all 13 categories in both maps', () => {
-      expect(Object.keys(LM).length).toBe(13);
-      expect(Object.keys(CM).length).toBe(13);
+      expect(Object.keys(LABEL_MAPPING).length).toBe(13);
+      expect(Object.keys(COLOR_MAPPING).length).toBe(13);
     });
 
     it('should have unique colors', () => {
-      const colors = Object.values(CM);
+      const colors = Object.values(COLOR_MAPPING);
       const uniqueColors = new Set(colors);
       expect(uniqueColors.size).toBe(colors.length);
     });

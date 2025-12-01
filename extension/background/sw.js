@@ -1,6 +1,6 @@
-import { l, e, w } from '../utils/shortcuts/log.js';
-import { rt as cr, url, rgm as rg, oop } from '../utils/shortcuts/runtime.js';
-import { tbc as tc } from '../utils/shortcuts/tabs.js';
+
+
+
 import { ael } from '../utils/shortcuts.js';
 import { verifySender as vs } from './security/sender-check.js';
 import { validateMessage as vm, sanitizeRequest as sr } from './security/validator.js';
@@ -21,11 +21,11 @@ import { handleGetLyrics } from './handlers/get-lyrics.js';
 cr.onInstalled.addListener(async d => {
   if (d.reason === 'install') {
     try {
-      await tc({ url: url('onboarding/onboarding.html') });
+      await tc({ url: chrome.runtime.getURL('onboarding/onboarding.html') });
     } catch (x) {
-      e('Onboard:', x);
+      console.error('Onboard:', x);
     }
-  } else if (d.reason === 'update') l('YAM updated:', rg().version);
+  } else if (d.reason === 'update') console.log('YAM updated:', rg().version);
 });
 cr.onMessage.addListener((q, s, r) => {
   const a = q.action || q.type;
@@ -88,15 +88,15 @@ cr.onMessage.addListener((q, s, r) => {
           r(await handleGetVideoData(n));
           break;
         case 'OPEN_OPTIONS':
-          oop();
+          chrome.runtime.openOptionsPage();
           r({ success: true });
           break;
         default:
-          w('Unknown:', a);
+          console.warn('Unknown:', a);
           r({ success: false, error: 'Unknown' });
       }
     } catch (x) {
-      e('BG err:', x);
+      console.error('BG err:', x);
       r({ success: false, error: x.message });
     }
   })();
@@ -112,7 +112,7 @@ ael(self, 'fetch', event => {
           if (preloadResponse) return preloadResponse;
           return fetch(event.request);
         } catch (error) {
-          e('Err:Fetch', error);
+          console.error('Err:Fetch', error);
           return fetch(event.request);
         }
       })()

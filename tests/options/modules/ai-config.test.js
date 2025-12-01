@@ -16,7 +16,7 @@ vi.mock('../../../extension/utils/shortcuts/storage.js', () => ({
   sls: vi.fn(),
 }));
 
-import { qs, id } from '../../../extension/utils/shortcuts/dom.js';
+
 
 describe('AIConfig', () => {
   let settingsManager;
@@ -44,8 +44,8 @@ describe('AIConfig', () => {
       return mockElements[elId];
     };
 
-    qs.mockImplementation(mockEl);
-    id.mockImplementation(mockEl);
+    document.querySelector.mockImplementation(mockEl);
+    document.getElementById.mockImplementation(mockEl);
 
     settingsManager = {
       get: vi.fn().mockReturnValue({}),

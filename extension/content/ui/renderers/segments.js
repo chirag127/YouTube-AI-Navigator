@@ -1,14 +1,14 @@
-import { gu } from '../../../utils/shortcuts/runtime.js';
-import { isa } from '../../../utils/shortcuts/array.js';
 
-const { e } = await import(gu('utils/shortcuts/log.js'));
-const { showPlaceholder } = await import(gu('content/ui/components/loading.js'));
 
-const { seekVideo } = await import(gu('content/utils/dom.js'));
-const { formatTime } = await import(gu('content/utils/time.js'));
-const { qs, ae, qsa: $ } = await import(gu('utils/shortcuts/dom.js'));
-const { CM: colors, LM } = await import(gu('utils/shortcuts/segments.js'));
-const { sg } = await import(gu('utils/shortcuts/storage.js'));
+
+);
+const { showPlaceholder } = await import(chrome.runtime.getURL('content/ui/components/loading.js'));
+
+const { seekVideo } = await import(chrome.runtime.getURL('content/utils/dom.js'));
+const { formatTime } = await import(chrome.runtime.getURL('content/utils/time.js'));
+);
+);
+);
 
 // Mapping of segment categories to filter names
 const SEGMENT_FILTER_MAP = {
@@ -27,7 +27,7 @@ const SEGMENT_FILTER_MAP = {
 
 async function getSegmentFilters() {
   try {
-    const r = await sg('config');
+    const r = await chrome.storage.sync.get('config');
     return (
       r.config?.widget?.segmentFilters || {
         sponsor: true,
@@ -58,16 +58,16 @@ async function getSegmentFilters() {
 
 export async function renderSegments(c, data) {
   try {
-    const s = isa(data) ? data : data?.segments || [];
-    const fl = !isa(data) ? data?.fullVideoLabel : null;
-    const b = qs('#yt-ai-full-video-label');
+    const s = Array.isArray(data) ? data : data?.segments || [];
+    const fl = !Array.isArray(data) ? data?.fullVideoLabel : null;
+    const b = (document).querySelector('#yt-ai-full-video-label');
 
     // Handle Full Video Label
     if (b) {
       if (fl) {
-        b.textContent = LM[fl] || fl;
+        b.textContent = LABEL_MAPPING[fl] || fl;
         b.style.display = 'inline-block';
-        b.style.backgroundColor = colors[fl] || 'var(--glass-highlight)';
+        b.style.backgroundColor = COLOR_MAPPING[fl] || 'var(--glass-highlight)';
         b.style.color = '#fff';
         b.style.marginLeft = '8px';
         b.style.fontSize = '0.75em';
@@ -103,7 +103,7 @@ export async function renderSegments(c, data) {
     // Generate HTML with Liquid Glass structure
     const h = filteredSegments
       .map((x, i) => {
-        const cl = colors[x.label] || 'var(--glass-border)';
+        const cl = COLOR_MAPPING[x.label] || 'var(--glass-border)';
         const ts = x.timestamps || [
           { type: 'start', time: x.start },
           { type: 'end', time: x.end },
@@ -123,7 +123,7 @@ export async function renderSegments(c, data) {
         return `
           <div class="yt-ai-segment-item" style="border-left: 3px solid ${cl}; animation-delay: ${delay}s">
             <div class="yt-ai-segment-header">
-              <div class="yt-ai-segment-label" style="background: ${cl}22; border: 1px solid ${cl}44; color: ${cl}">${LM[x.label] || x.label}</div>
+              <div class="yt-ai-segment-label" style="background: ${cl}22; border: 1px solid ${cl}44; color: ${cl}">${LABEL_MAPPING[x.label] || x.label}</div>
               <div class="yt-ai-segment-time">${th}</div>
             </div>
             ${x.title ? `<div class="yt-ai-segment-title">${x.title}</div>` : ''}
@@ -138,20 +138,20 @@ export async function renderSegments(c, data) {
     // Attach Event Listeners
     $('.yt-ai-timestamp', c).forEach(e => {
       e.style.cursor = 'pointer';
-      ae(e, 'click', evt => {
+      (e)?.addEventListener('click', evt => {
         evt.stopPropagation();
         seekVideo(parseFloat(e.dataset.time));
       });
 
       // Add micro-interaction on hover
-      ae(e, 'mouseenter', () => {
+      (e)?.addEventListener('mouseenter', () => {
         e.style.textShadow = '0 0 8px var(--primary)';
       });
-      ae(e, 'mouseleave', () => {
+      (e)?.addEventListener('mouseleave', () => {
         e.style.textShadow = 'none';
       });
     });
   } catch (err) {
-    e('Err:renderSegments', err);
+    console.error('Err:renderSegments', err);
   }
 }

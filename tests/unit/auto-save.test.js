@@ -55,7 +55,7 @@ describe('AutoSave', () => {
     };
 
     const mockElement = { type: 'text', value: 'value' };
-    mocks.qs.mockReturnValue(mockElement);
+    mocks.document.querySelector.mockReturnValue(mockElement);
 
     autoSave.attachToAll(config);
 
@@ -72,7 +72,7 @@ describe('AutoSave', () => {
     };
 
     const mockElement = { type: 'text', value: 'value' };
-    mocks.qs.mockReturnValue(mockElement);
+    mocks.document.querySelector.mockReturnValue(mockElement);
 
     autoSave.attachToAll(config);
 

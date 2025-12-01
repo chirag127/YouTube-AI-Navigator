@@ -1,7 +1,7 @@
-import { w } from '../utils/shortcuts/log.js';
-import { jf as fj } from '../utils/shortcuts/network.js';
-import { afl, am } from '../utils/shortcuts/array.js';
-import { rp } from '../utils/shortcuts/string.js';
+
+
+
+
 
 export class ModelManager {
   constructor(apiKey, baseUrl) {
@@ -12,14 +12,11 @@ export class ModelManager {
   async fetch() {
     if (!this.apiKey) return;
     try {
-      const data = await fj(`${this.baseUrl}/models?key=${this.apiKey}`);
+      const data = await (await fetch(`${this.baseUrl}/models?key=${this.apiKey}`)).json();
       if (data?.models)
-        this.models = am(
-          afl(data.models, m => m.supportedGenerationMethods?.includes('generateContent')),
-          m => rp(m.name, 'models/', '')
-        );
+        this.models = data.models.filter(m => m.supportedGenerationMethods?.includes('generateContent')).map(m => m.name.replace('models/', ''));
     } catch (e) {
-      w('Mod fetch fail:', e);
+      console.warn('Mod fetch fail:', e);
       this.models = [];
     }
     return this.models;

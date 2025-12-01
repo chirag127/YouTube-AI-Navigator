@@ -24,12 +24,12 @@ describe('SponsorBlock Integration Tests', () => {
   });
 
   describe('Label Mapping', () => {
-    it('should import LM from segments.js shortcuts', async () => {
-      const { LM } = await import('../extension/utils/shortcuts/segments.js');
-      expect(LM).toBeDefined();
-      expect(LM.sponsor).toBe('Sponsor');
-      expect(LM.content).toBe('Content');
-      expect(LM.chapter).toBe('Chapter');
+    it('should import LABEL_MAPPING from segments.js shortcuts', async () => {
+
+      expect(LABEL_MAPPING).toBeDefined();
+      expect(LABEL_MAPPING.sponsor).toBe('Sponsor');
+      expect(LABEL_MAPPING.content).toBe('Content');
+      expect(LABEL_MAPPING.chapter).toBe('Chapter');
     });
 
     it('should have all 13 categories', async () => {

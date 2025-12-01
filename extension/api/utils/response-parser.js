@@ -1,13 +1,13 @@
-import { trm, rp as rep } from '../../utils/shortcuts/string.js';
+
 import { jp } from '../../utils/shortcuts/core.js';
-import { isa } from '../../utils/shortcuts/array.js';
+
 import { mp } from '../../utils/shortcuts/core.js';
-import { e } from '../../utils/shortcuts/log.js';
+
 
 export const extractSection = (t, sn) => {
   const r = new RegExp(`## ${sn}\\s*([\\s\\S]*?)(?=##|$)`, 'i');
   const m = t.match(r);
-  return m ? trm(m[1]) : null;
+  return m ? m[1].trim() : null;
 };
 
 export const extractTimestamps = t => {
@@ -24,19 +24,19 @@ export const extractTimestamps = t => {
 };
 
 export const parseSegmentsJSON = r => {
-  let cr = trm(r);
-  cr = rep(cr, /```json\s*/g, '');
-  cr = rep(cr, /```\s*/g, '');
-  cr = trm(cr);
+  let cr = r.trim();
+  cr = cr.replace(/```json\s*/g, '');
+  cr = cr.replace(/```\s*/g, '');
+  cr = cr.trim();
   let jm = cr.match(/\{[\s\S]*\}/);
   if (!jm) {
-    e('error:parseSegmentsJSON no JSON:', r);
+    console.error('error:parseSegmentsJSON no JSON:', r);
     return null;
   }
   const jsStr = jm[0];
   const p = jp(jsStr);
-  if (!p.segments || !isa(p.segments)) {
-    e('error:parseSegmentsJSON inv struct:', p);
+  if (!p.segments || !Array.isArray(p.segments)) {
+    console.error('error:parseSegmentsJSON inv struct:', p);
     return null;
   }
   return p;

@@ -87,7 +87,7 @@ describe('Transcript Renderer', () => {
   });
 
   it('should toggle auto-close', async () => {
-    const { ss } = await import('../../../../extension/utils/shortcuts/storage.js');
+
     renderTranscript(container, [{ start: 0, text: 'Test' }]);
 
     const toggle = container.querySelector('#yt-ai-transcript-autoclose-toggle');

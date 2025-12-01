@@ -1,8 +1,8 @@
-import { sg } from '../../utils/shortcuts/storage.js';
+
 import { analyzeTranscript, buildPatternHints } from '../../utils/patterns/index.js';
 
 export const chat = async (question, context) => {
-  const cfg = await sg('config');
+  const cfg = await chrome.storage.sync.get('config');
   const pCfg = cfg.config?.prompts?.chat || {};
   const hintsEnabled = pCfg.enablePatternHints !== false;
 

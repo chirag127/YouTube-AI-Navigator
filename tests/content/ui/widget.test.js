@@ -64,8 +64,8 @@ vi.mock('../../../../extension/utils/shortcuts.js', () => ({
 }));
 
 import { findSecondaryColumn } from '../../../../extension/content/utils/dom.js';
-import { sg } from '../../../../extension/utils/shortcuts/storage.js';
-import { id } from '../../../../extension/utils/shortcuts/dom.js';
+
+
 
 describe('widget', () => {
   let mockSecondaryColumn;
@@ -79,7 +79,7 @@ describe('widget', () => {
     };
 
     findSecondaryColumn.mockReturnValue(mockSecondaryColumn);
-    id.mockReturnValue(null);
+    document.getElementById.mockReturnValue(null);
     sg.mockResolvedValue({ config: { widget: {} } });
 
     global.window = { innerHeight: 1000 };
@@ -96,7 +96,7 @@ describe('widget', () => {
     it('should reuse existing widget if properly visible', async () => {
       const existingWidget = document.createElement('div');
       existingWidget.id = 'yt-ai-master-widget';
-      id.mockReturnValue(existingWidget);
+      document.getElementById.mockReturnValue(existingWidget);
 
       const { isWidgetProperlyVisible } =
         await import('../../../../extension/content/utils/dom.js');

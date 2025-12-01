@@ -1,4 +1,4 @@
-import { id as i } from '../../utils/shortcuts/dom.js';
+
 import { ael } from '../../utils/shortcuts.js';
 export class PromptsSettings {
   constructor(sm, as) {
@@ -7,7 +7,7 @@ export class PromptsSettings {
   }
   async init() {
     const cfg = this.sm.get('prompts') || {};
-    const el = id => i(id);
+    const el = id => document.getElementById(id);
     if (el('prompts-segments-role'))
       el('prompts-segments-role').value = cfg.segments?.roleDescription || '';
     if (el('prompts-segments-timing'))
@@ -82,9 +82,9 @@ export class PromptsSettings {
       'prompts-comments-themes',
       'prompts-comments-questions',
       'prompts-comments-opportunities',
-    ].forEach(id => ael(i(id), 'change', () => this.as.trigger(() => this.save())));
+    ].forEach(id => ael(document.getElementById(id), 'change', () => this.as.trigger(() => this.save())));
 
-    const saveBtn = i('save-prompts');
+    const saveBtn = document.getElementById('save-prompts');
     if (saveBtn) {
       ael(saveBtn, 'click', async () => {
         await this.save();
@@ -93,7 +93,7 @@ export class PromptsSettings {
     }
   }
   async save() {
-    const el = id => i(id);
+    const el = id => document.getElementById(id);
     const sponsorRange = el('prompts-segments-sponsor-range')?.value.split(',').map(Number) || [
       30, 90,
     ];

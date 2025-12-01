@@ -9,7 +9,7 @@ vi.mock('../../../extension/utils/patterns/index.js', () => ({
   buildPatternHints: vi.fn(),
 }));
 
-import { sg } from '../../../extension/utils/shortcuts/storage.js';
+
 import { analyzeTranscript, buildPatternHints } from '../../../extension/utils/patterns/index.js';
 
 describe('chat prompt', () => {

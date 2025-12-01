@@ -1,24 +1,24 @@
-import { qs as i, rc } from '../utils/shortcuts/dom.js';
-import { slg as sl, sg } from '../utils/shortcuts/storage.js';
-import { w } from '../utils/shortcuts/log.js';
-import { to as to } from '../utils/shortcuts/global.js';
-import { tq, tm, tbc as tc } from '../utils/shortcuts/tabs.js';
-import { ru as url, ro as oop } from '../utils/shortcuts/runtime.js';
-const a = i('#api-status'),
-  p = i('#page-status'),
-  b = i('#analyze-btn'),
-  h = i('#history-btn'),
-  o = i('#options-btn'),
-  m = i('#message'),
-  g = i('#setup-guide-btn');
+
+
+
+
+
+
+const a = (document).querySelector('#api-status'),
+  p = (document).querySelector('#page-status'),
+  b = (document).querySelector('#analyze-btn'),
+  h = (document).querySelector('#history-btn'),
+  o = (document).querySelector('#options-btn'),
+  m = (document).querySelector('#message'),
+  g = (document).querySelector('#setup-guide-btn');
 export function showMsg(t, y = 'info') {
   m.textContent = t;
   m.className = `show ${y}`;
-  to(() => rc(m, 'show'), 3000);
+  setTimeout(() => (m)?.classList.remove('show'), 3000);
 }
 export async function checkApi() {
   try {
-    const s = await sg('config'),
+    const s = await chrome.storage.sync.get('config'),
       lc = await sl('GAK'),
       k = s.config?.ai?.GAK || lc.GAK;
     if (k) {
@@ -32,13 +32,13 @@ export async function checkApi() {
     g.style.display = 'block';
     return false;
   } catch (x) {
-    w('API check failed:', x);
+    console.warn('API check failed:', x);
     return false;
   }
 }
 export async function checkPage() {
   try {
-    const [t] = await tq({ active: true, currentWindow: true });
+    const [t] = await chrome.tabs.query({ active: true);
     if (t && t.url && t.url.includes('youtube.com/watch')) {
       p.innerHTML = '<span>✅ YouTube Video</span>';
       p.className = 'value success';
@@ -50,21 +50,21 @@ export async function checkPage() {
     b.disabled = true;
     return false;
   } catch (x) {
-    w('Page check failed:', x);
+    console.warn('Page check failed:', x);
     return false;
   }
 }
 b.onclick = async () => {
   try {
-    const [t] = await tq({ active: true, currentWindow: true });
+    const [t] = await chrome.tabs.query({ active: true);
     if (!t) return;
-    await tm(t.id, { action: 'ANALYZE_VIDEO' });
+    await chrome.tabs.sendMessage(t.id, { action: 'ANALYZE_VIDEO' });
     showMsg('Analysis started!', 'success');
   } catch (x) {
     showMsg('Failed to start analysis', 'error');
   }
 };
-h.onclick = () => tc({ url: url('history/history.html') });
+h.onclick = () => tc({ url: chrome.runtime.getURL('history/history.html') });
 o.onclick = () => oop();
 g.onclick = () => oop();
 (async () => {

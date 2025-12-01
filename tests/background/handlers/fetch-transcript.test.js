@@ -29,14 +29,14 @@ describe('handleFetchTranscript', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockRp = vi.mocked(require('../../../extension/utils/shortcuts/string.js').rp);
-    mockTrm = vi.mocked(require('../../../extension/utils/shortcuts/string.js').trm);
-    mockPf = vi.mocked(require('../../../extension/utils/shortcuts/global.js').pf);
-    mockJp = vi.mocked(require('../../../extension/utils/shortcuts/core.js').jp);
-    mockAfl = vi.mocked(require('../../../extension/utils/shortcuts/array.js').afl);
-    mockAm = vi.mocked(require('../../../extension/utils/shortcuts/array.js').am);
-    mockAjn = vi.mocked(require('../../../extension/utils/shortcuts/array.js').ajn);
-    mockFt = vi.mocked(require('../../../extension/utils/shortcuts/network.js').ft);
+    mockRp = vi.mocked(vi.fn().rp);
+    mockTrm = vi.mocked(vi.fn().trm);
+    mockPf = vi.mocked(vi.fn().pf);
+    mockJp = vi.mocked(vi.fn().jp);
+    mockAfl = vi.mocked(vi.fn().afl);
+    mockAm = vi.mocked(vi.fn().am);
+    mockAjn = vi.mocked(vi.fn().ajn);
+    mockFt = vi.mocked(vi.fn().ft);
     mockRsp = vi.fn();
 
     // Setup common mocks

@@ -1,4 +1,4 @@
-import { e, l } from '../../utils/shortcuts/log.js';
+
 
 export class APIDetector {
   static async checkSponsorBlock() {
@@ -9,7 +9,7 @@ export class APIDetector {
       });
       return r.ok || r.status === 400;
     } catch (x) {
-      e('[APIDetector] SponsorBlock unavailable:', x.message);
+      console.error('[APIDetector] SponsorBlock unavailable:', x.message);
       return false;
     }
   }
@@ -22,7 +22,7 @@ export class APIDetector {
       });
       return r.ok || r.status === 400;
     } catch (x) {
-      e('[APIDetector] DeArrow unavailable:', x.message);
+      console.error('[APIDetector] DeArrow unavailable:', x.message);
       return false;
     }
   }
@@ -36,7 +36,7 @@ export class APIDetector {
       );
       return r.ok;
     } catch (x) {
-      e('[APIDetector] Gemini unavailable:', x.message);
+      console.error('[APIDetector] Gemini unavailable:', x.message);
       return false;
     }
   }
@@ -49,7 +49,7 @@ export class APIDetector {
       });
       return r.ok;
     } catch (x) {
-      e('[APIDetector] TMDB unavailable:', x.message);
+      console.error('[APIDetector] TMDB unavailable:', x.message);
       return false;
     }
   }
@@ -62,7 +62,7 @@ export class APIDetector {
       });
       return r.ok;
     } catch (x) {
-      e('[APIDetector] NewsData unavailable:', x.message);
+      console.error('[APIDetector] NewsData unavailable:', x.message);
       return false;
     }
   }
@@ -76,7 +76,7 @@ export class APIDetector {
       );
       return r.ok;
     } catch (x) {
-      e('[APIDetector] GoogleFactCheck unavailable:', x.message);
+      console.error('[APIDetector] GoogleFactCheck unavailable:', x.message);
       return false;
     }
   }
@@ -91,7 +91,7 @@ export class APIDetector {
       newsData: await this.checkNewsData(externalApis.newsData),
       googleFactCheck: await this.checkGoogleFactCheck(externalApis.googleFactCheck),
     };
-    l('[APIDetector] Available APIs:', availability);
+    console.log('[APIDetector] Available APIs:', availability);
     return availability;
   }
 }

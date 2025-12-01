@@ -1,5 +1,5 @@
 import { getComments } from '../../../extension/content/handlers/comments.js';
-import { sg } from '../../../extension/utils/shortcuts/storage.js';
+
 
 // Mock dependencies
 vi.mock('../../../extension/utils/shortcuts/storage.js', () => ({

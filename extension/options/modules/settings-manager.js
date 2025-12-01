@@ -1,7 +1,7 @@
-import { sg, ss } from '../../utils/shortcuts/storage.js';
-import { e } from '../../utils/shortcuts/log.js';
+
+
 import { now as nt, keys as ok, jp, js } from '../../utils/shortcuts/core.js';
-import { isa } from '../../utils/shortcuts/array.js';
+
 
 export const SEGMENT_CATEGORIES = [
   { id: 'sponsor', label: 'Sponsor', color: '#00d400' },
@@ -27,14 +27,14 @@ export class SettingsManager {
   }
   async load() {
     try {
-      const r = await sg('config');
+      const r = await chrome.storage.sync.get('config');
       if (r.config && ok(r.config).length > 0) this.settings = this.mergeWithDefaults(r.config);
       else {
         this.settings = this.getDefaults();
       }
       return this.settings;
     } catch (x) {
-      e('[SettingsManager] Load error:', x);
+      console.error('[SettingsManager] Load error:', x);
       this.settings = this.getDefaults();
       return this.settings;
     }
@@ -43,11 +43,11 @@ export class SettingsManager {
     try {
       this.settings._meta = this.settings._meta || {};
       this.settings._meta.lastUpdated = nt();
-      await ss({ config: this.settings });
+      await chrome.storage.sync.set(typeof { config: this.settings } === 'string' ? { [{ config: this.settings }]: undefined } : { config: this.settings });
       this.notify();
       return true;
     } catch (x) {
-      e('[SettingsManager] Save error:', x);
+      console.error('[SettingsManager] Save error:', x);
       throw x;
     }
   }
@@ -56,7 +56,7 @@ export class SettingsManager {
       m = jp(js(d));
     const dm = (t, s) => {
       for (const k in s) {
-        if (s[k] && typeof s[k] === 'object' && !isa(s[k])) {
+        if (s[k] && typeof s[k] === 'object' && !Array.isArray(s[k])) {
           t[k] = t[k] || {};
           dm(t[k], s[k]);
         } else t[k] = s[k];
@@ -318,7 +318,7 @@ export class SettingsManager {
       await this.save();
       return true;
     } catch (x) {
-      e('[Settings] Import failed:', x);
+      console.error('[Settings] Import failed:', x);
       return false;
     }
   }

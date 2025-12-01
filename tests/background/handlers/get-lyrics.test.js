@@ -19,7 +19,7 @@ describe('handleGetLyrics', () => {
     mockGetLyrics = vi.mocked(
       require('../../../extension/api/genius-lyrics.js').geniusLyricsAPI.getLyrics
     );
-    mockE = vi.mocked(require('../../../extension/utils/shortcuts/log.js').e);
+    mockE = vi.mocked(vi.fn().e);
     mockRsp = vi.fn();
   });
 

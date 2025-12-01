@@ -1,7 +1,7 @@
 import { buildContextString } from './utils.js';
-import { sg } from '../../utils/shortcuts/storage.js';
+
 export const comprehensive = async (context, options = {}) => {
-  const cfg = await sg('config');
+  const cfg = await chrome.storage.sync.get('config');
   const pCfg = cfg.config?.prompts?.comprehensive || {};
   const {
     summaryLength = 'long',

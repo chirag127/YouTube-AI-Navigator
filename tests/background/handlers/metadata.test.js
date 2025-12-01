@@ -11,7 +11,7 @@ describe('handleGetMetadata', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockW = vi.mocked(require('../../../extension/utils/shortcuts/log.js').w);
+    mockW = vi.mocked(vi.fn().w);
     mockRsp = vi.fn();
   });
 

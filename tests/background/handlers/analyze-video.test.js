@@ -53,7 +53,7 @@ import { initializeServices, getServices } from '../../../extension/background/s
 import { getApiKey } from '../../../extension/background/utils/api-key.js';
 import { geniusLyricsAPI } from '../../../extension/api/genius-lyrics.js';
 import { sponsorBlockAPI } from '../../../extension/api/sponsorblock.js';
-import { sg } from '../../../extension/utils/shortcuts/storage.js';
+
 
 describe('handleAnalyzeVideo', () => {
   let mockCallback;

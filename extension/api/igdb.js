@@ -1,5 +1,5 @@
-import { w } from '../utils/shortcuts/log.js';
-import { ft } from '../utils/shortcuts/network.js';
+
+
 
 const BASE_URL = 'https://api.igdb.com/v4';
 
@@ -12,7 +12,7 @@ export class IgdbAPI {
   async searchGame(query) {
     if (!this.clientId || !this.accessToken) return null;
     try {
-      const res = await ft(`${BASE_URL}/games`, {
+      const res = await fetch(`${BASE_URL}/games`, {
         method: 'POST',
         headers: {
           'Client-ID': this.clientId,
@@ -22,7 +22,7 @@ export class IgdbAPI {
       });
       return res?.[0] || null;
     } catch (x) {
-      w('[IGDB] searchGame fail:', x.message);
+      console.warn('[IGDB] searchGame fail:', x.message);
       return null;
     }
   }

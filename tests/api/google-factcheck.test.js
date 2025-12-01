@@ -29,7 +29,7 @@ describe('GoogleFactCheckAPI', () => {
   describe('searchClaims', () => {
     it('should return claims on success', async () => {
       const mockData = { claims: [{ text: 'claim' }] };
-      const { sf } = await import('../../extension/utils/shortcuts/network.js');
+
       sf.mockResolvedValue(mockData);
 
       const result = await api.searchClaims('query');
@@ -41,7 +41,7 @@ describe('GoogleFactCheckAPI', () => {
     });
 
     it('should return empty array on failure', async () => {
-      const { sf } = await import('../../extension/utils/shortcuts/network.js');
+
       sf.mockRejectedValue(new Error('error'));
 
       const result = await api.searchClaims('query');
@@ -58,7 +58,7 @@ describe('GoogleFactCheckAPI', () => {
     });
 
     it('should return empty array when safeFetch returns null', async () => {
-      const { sf } = await import('../../extension/utils/shortcuts/network.js');
+
       sf.mockResolvedValue(null);
 
       const result = await api.searchClaims('query');

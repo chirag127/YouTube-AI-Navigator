@@ -1,8 +1,8 @@
 const gu = p => chrome.runtime.getURL(p);
 
-const { e } = await import(gu('utils/shortcuts/log.js'));
+);
 const { getVideoElement } = await import(gu('content/utils/dom.js'));
-const { qs: $, ce } = await import(gu('utils/shortcuts/dom.js'));
+);
 export async function injectSegmentMarkers(s) {
   try {
     if (!s?.length) return;
@@ -10,7 +10,7 @@ export async function injectSegmentMarkers(s) {
     if (!p) return;
     const ex = $('#yt-ai-markers');
     if (ex) ex.remove();
-    const c = ce('div');
+    const c = document.createElement('div');
     c.id = 'yt-ai-markers';
     c.style.cssText =
       'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:30;';
@@ -21,7 +21,7 @@ export async function injectSegmentMarkers(s) {
       if (x.label === 'content' || x.label === 'Content') continue;
       const st = (x.start / d) * 100,
         w = ((x.end - x.start) / d) * 100,
-        m = ce('div');
+        m = document.createElement('div');
       const color = await getSegmentColor(x.label);
       m.style.cssText = `position:absolute;left:${st}%;width:${w}%;height:100%;background:${color};opacity:0.6;`;
       m.title = x.labelFull || x.label;
@@ -29,13 +29,13 @@ export async function injectSegmentMarkers(s) {
     }
     p.appendChild(c);
   } catch (err) {
-    e('Err:injectSegmentMarkers', err);
+    console.error('Err:injectSegmentMarkers', err);
   }
 }
 async function getSegmentColor(lb) {
   try {
-    const { lgc, CM } = await import(gu('utils/shortcuts/segments.js'));
-    if (CM[lb]) return CM[lb];
+    );
+    if (COLOR_MAPPING[lb]) return COLOR_MAPPING[lb];
     const fallback = {
       Sponsor: '#00d26a',
       'Self Promotion': '#ffff00',
@@ -53,9 +53,9 @@ async function getSegmentColor(lb) {
       'Music: Non-Music Section': '#ff9900',
       Content: '#999999',
     };
-    return fallback[lb] || lgc(lb);
+    return fallback[lb] || getLabelColor(lb);
   } catch (err) {
-    e('Err:getSegmentColor', err);
+    console.error('Err:getSegmentColor', err);
     return '#999999';
   }
 }

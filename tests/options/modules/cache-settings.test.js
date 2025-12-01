@@ -7,7 +7,7 @@ vi.mock('../../../extension/utils/shortcuts/dom.js', () => ({
   on: vi.fn(),
 }));
 
-import { qs, id } from '../../../extension/utils/shortcuts/dom.js';
+
 
 describe('CacheSettings', () => {
   let settingsManager;
@@ -30,8 +30,8 @@ describe('CacheSettings', () => {
       return mockElements[elId];
     };
 
-    qs.mockImplementation(mockEl);
-    id.mockImplementation(mockEl);
+    document.querySelector.mockImplementation(mockEl);
+    document.getElementById.mockImplementation(mockEl);
 
     settingsManager = {
       get: vi.fn().mockReturnValue({}),

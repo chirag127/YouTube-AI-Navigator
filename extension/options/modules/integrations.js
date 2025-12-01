@@ -1,5 +1,5 @@
-import { id, on } from '../../utils/shortcuts/dom.js';
-import { e } from '../../utils/shortcuts/log.js';
+
+
 
 export class IntegrationsSettings {
   constructor(sm, nm) {
@@ -12,7 +12,7 @@ export class IntegrationsSettings {
       this.loadSettings();
       this.attachListeners();
     } catch (err) {
-      e('[IntegrationsSettings] Init error:', err);
+      console.error('[IntegrationsSettings] Init error:', err);
     }
   }
 
@@ -51,7 +51,7 @@ export class IntegrationsSettings {
 
       this.setCheckbox('api-openlibrary-enabled', cfg.openlibrary?.enabled);
     } catch (err) {
-      e('[IntegrationsSettings] Load error:', err);
+      console.error('[IntegrationsSettings] Load error:', err);
     }
   }
 
@@ -81,11 +81,11 @@ export class IntegrationsSettings {
       ];
 
       inputs.forEach(inputId => {
-        const el = id(inputId);
-        if (el) on(el, 'change', () => this.save());
+        const el = document.getElementById(inputId);
+        if (el) (el)?.addEventListener('change', () => this.save());
       });
     } catch (err) {
-      e('[IntegrationsSettings] Attach listeners error:', err);
+      console.error('[IntegrationsSettings] Attach listeners error:', err);
     }
   }
 
@@ -130,28 +130,28 @@ export class IntegrationsSettings {
       await this.sm.save();
       this.nm.show('Integration settings saved', 'success');
     } catch (err) {
-      e('[IntegrationsSettings] Save error:', err);
+      console.error('[IntegrationsSettings] Save error:', err);
       this.nm.show('Failed to save integration settings', 'error');
     }
   }
 
   setCheckbox(elementId, value) {
-    const el = id(elementId);
+    const el = document.getElementById(elementId);
     if (el) el.checked = value !== false; // Default to true if undefined, or logic depending on default
   }
 
   getCheckbox(elementId) {
-    const el = id(elementId);
+    const el = document.getElementById(elementId);
     return el ? el.checked : false;
   }
 
   setValue(elementId, value) {
-    const el = id(elementId);
+    const el = document.getElementById(elementId);
     if (el) el.value = value || '';
   }
 
   getValue(elementId) {
-    const el = id(elementId);
+    const el = document.getElementById(elementId);
     return el ? el.value : '';
   }
 }

@@ -1,10 +1,10 @@
-import { ft } from '../../utils/shortcuts/network.js';
-import { e } from '../../utils/shortcuts/log.js';
+
+
 
 export async function handleGetVideoInfo({ videoId }) {
   try {
     const u = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`;
-    const r = await ft(u);
+    const r = await fetch(u);
     if (!r.ok) throw new Error('Failed to fetch oEmbed');
     const d = await r.json();
     return {
@@ -18,7 +18,7 @@ export async function handleGetVideoInfo({ videoId }) {
       },
     };
   } catch (x) {
-    e('[VideoInfo] Error:', x);
+    console.error('[VideoInfo] Error:', x);
     return { success: false, error: x.message };
   }
 }

@@ -88,7 +88,7 @@ describe('GeniusLyricsAPI', () => {
           ],
         },
       };
-      const { jf } = await import('../../extension/utils/shortcuts/network.js');
+
       jf.mockResolvedValue(data);
 
       const result = await api.search('title', 'artist');
@@ -97,7 +97,7 @@ describe('GeniusLyricsAPI', () => {
     });
 
     it('should return null on no sections', async () => {
-      const { jf } = await import('../../extension/utils/shortcuts/network.js');
+
       jf.mockResolvedValue({ response: { sections: [] } });
 
       const result = await api.search('title', 'artist');
@@ -106,7 +106,7 @@ describe('GeniusLyricsAPI', () => {
     });
 
     it('should return null on no hits', async () => {
-      const { jf } = await import('../../extension/utils/shortcuts/network.js');
+
       jf.mockResolvedValue({
         response: {
           sections: [{ type: 'song', hits: [] }],
@@ -122,7 +122,7 @@ describe('GeniusLyricsAPI', () => {
   describe('fetchLyrics', () => {
     it('should extract lyrics from HTML', async () => {
       const html = '<div data-lyrics-container="true">line1<br>line2</div>';
-      const { tf } = await import('../../extension/utils/shortcuts/network.js');
+
       tf.mockResolvedValue(html);
 
       const result = await api.fetchLyrics('url');
@@ -131,7 +131,7 @@ describe('GeniusLyricsAPI', () => {
     });
 
     it('should return null on no HTML', async () => {
-      const { tf } = await import('../../extension/utils/shortcuts/network.js');
+
       tf.mockResolvedValue(null);
 
       const result = await api.fetchLyrics('url');
@@ -140,7 +140,7 @@ describe('GeniusLyricsAPI', () => {
     });
 
     it('should return null on no lyrics match', async () => {
-      const { tf } = await import('../../extension/utils/shortcuts/network.js');
+
       tf.mockResolvedValue('<div>no lyrics</div>');
 
       const result = await api.fetchLyrics('url');
@@ -151,7 +151,7 @@ describe('GeniusLyricsAPI', () => {
 
   describe('cleanTitle', () => {
     it('should clean title', () => {
-      const { rp, trm } = require('../../extension/utils/shortcuts/string.js');
+      const { rp, trm } = vi.fn();
       rp.mockImplementation((str, regex, repl) => str.replace(regex, repl));
       trm.mockImplementation(str => str.trim());
 

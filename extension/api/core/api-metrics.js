@@ -1,4 +1,4 @@
-import { l } from '../../utils/shortcuts/log.js';
+
 import { now as nt } from '../../utils/shortcuts/core.js';
 
 const metrics = new Map();
@@ -61,9 +61,7 @@ export class APIMetrics {
     const meetsDuration = stats.avgDuration <= maxAvgDuration;
     const shouldUse = meetsSuccessRate && meetsDuration;
     if (!shouldUse) {
-      l(
-        `[APIMetrics] ${apiName} fails criteria: success=${stats.successRate.toFixed(1)}% (min ${minSuccessRate}%), avg=${stats.avgDuration}ms (max ${maxAvgDuration}ms)`
-      );
+      console.log(`[APIMetrics] ${apiName} fails criteria: success=${stats.successRate.toFixed(1)}% (min ${minSuccessRate}%), avg=${stats.avgDuration}ms (max ${maxAvgDuration}ms)`);
     }
     return shouldUse;
   }

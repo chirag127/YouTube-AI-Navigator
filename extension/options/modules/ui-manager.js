@@ -1,6 +1,6 @@
-import { ft } from '../../utils/shortcuts/network.js';
-import { id as i, $$, on, ce } from '../../utils/shortcuts/dom.js';
-import { to as st } from '../../utils/shortcuts/global.js';
+
+
+
 
 export class UIManager {
   constructor() {
@@ -8,29 +8,29 @@ export class UIManager {
   }
   async loadSection(id) {
     try {
-      const r = await ft(`sections/${id}.html`);
+      const r = await fetch(`sections/${id}.html`);
       return await r.text();
     } catch (x) {
-      ce(`Failed to load section ${id}:`, x);
+      (()=>{const e=document.createElement(`Failed to load section ${id}:`);e.className=x;return e;})();
       return `<div class="error">Failed to load section: ${id}</div>`;
     }
   }
   showToast(m, t = 'success') {
-    const el = i('toast');
+    const el = document.getElementById('toast');
     if (!el) return;
     el.textContent = m;
     el.className = `toast show ${t}`;
-    st(() => el.classList.remove('show'), 3000);
+    setTimeout(() => el.classList.remove('show'), 3000);
   }
   setupSections(cb) {
     const sections = $$('.nav-item');
     sections.forEach(t => {
-      on(t, 'click', () => {
+      (t)?.addEventListener('click', () => {
         const tgt = t.dataset.section;
         sections.forEach(x => x.classList.remove('active'));
         t.classList.add('active');
         $$('.section-content').forEach(c => c.classList.remove('active'));
-        const s = i(tgt);
+        const s = document.getElementById(tgt);
         if (s) s.classList.add('active');
         if (cb) cb(tgt);
       });

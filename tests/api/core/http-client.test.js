@@ -44,7 +44,7 @@ describe('HttpClient', () => {
     it('should return response on success', async () => {
       const mockResponse = { ok: true };
       global.fetch = vi.fn().mockResolvedValue(mockResponse);
-      const { to } = await import('../../../extension/utils/shortcuts/global.js');
+
       to.mockReturnValue('timeoutId');
 
       const result = await client.fetch('url');
@@ -60,7 +60,7 @@ describe('HttpClient', () => {
         .fn()
         .mockResolvedValueOnce({ ok: false, status: 429, statusText: 'Too Many Requests' })
         .mockResolvedValueOnce({ ok: true });
-      const { to, mn } = await import('../../../extension/utils/shortcuts/global.js');
+
       to.mockReturnValue('timeoutId');
       mn.mockImplementation((a, b) => Math.min(a, b));
 
@@ -78,7 +78,7 @@ describe('HttpClient', () => {
         json: vi.fn().mockResolvedValue({}),
       };
       global.fetch = vi.fn().mockResolvedValue(mockResponse);
-      const { to } = await import('../../../extension/utils/shortcuts/global.js');
+
       to.mockReturnValue('timeoutId');
 
       await expect(client.fetch('url')).rejects.toThrow('HTTP 400: Bad Request');
@@ -118,7 +118,7 @@ describe('HttpClient', () => {
 
   describe('_sleep', () => {
     it('should sleep for specified ms', async () => {
-      const { to } = await import('../../../extension/utils/shortcuts/global.js');
+
       const { np } = await import('../../../extension/utils/shortcuts/async.js');
       to.mockImplementation((fn, ms) => setTimeout(fn, ms));
       np.mockImplementation(fn => {

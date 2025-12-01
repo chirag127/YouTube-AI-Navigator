@@ -1,15 +1,15 @@
-import { gu } from '../../../utils/shortcuts/runtime.js';
 
-const { e } = await import(gu('utils/shortcuts/log.js'));
-const { showPlaceholder } = await import(gu('content/ui/components/loading.js'));
-const { makeTimestampsClickable } = await import(gu('content/utils/timestamps.js'));
-const { parseMarkdown } = await import(gu('lib/marked-loader.js'));
+
+);
+const { showPlaceholder } = await import(chrome.runtime.getURL('content/ui/components/loading.js'));
+const { makeTimestampsClickable } = await import(chrome.runtime.getURL('content/utils/timestamps.js'));
+const { parseMarkdown } = await import(chrome.runtime.getURL('lib/marked-loader.js'));
 
 function processHighlights(html) {
   try {
     return html.replace(/==(.*?)==/g, '<mark class="yt-ai-highlight">$1</mark>');
   } catch (err) {
-    e('Err:processHighlights', err);
+    console.error('Err:processHighlights', err);
     return html;
   }
 }
@@ -53,6 +53,6 @@ export async function renderSummary(c, d) {
 
     makeTimestampsClickable(c);
   } catch (err) {
-    e('Err:renderSummary', err);
+    console.error('Err:renderSummary', err);
   }
 }

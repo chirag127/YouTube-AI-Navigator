@@ -1,7 +1,7 @@
 import { DatamuseAPI } from '../../extension/api/datamuse.js';
 
 vi.mock('../../extension/utils/shortcuts/global.js', () => ({
-  en: vi.fn(word => encodeURIComponent(word)),
+  encodeURIComponent: vi.fn(word => encodeURIComponent(word)),
 }));
 
 vi.mock('../../extension/utils/shortcuts/network.js', () => ({
@@ -22,7 +22,7 @@ describe('DatamuseAPI', () => {
 
   describe('getRelatedWords', () => {
     it('should return related words on success', async () => {
-      const { sf } = await import('../../extension/utils/shortcuts/network.js');
+
       sf.mockResolvedValue([{ word: 'test' }]);
 
       const result = await api.getRelatedWords('test');
@@ -32,7 +32,7 @@ describe('DatamuseAPI', () => {
     });
 
     it('should return empty array on network failure', async () => {
-      const { sf } = await import('../../extension/utils/shortcuts/network.js');
+
       sf.mockRejectedValue(new Error('Network error'));
 
       const result = await api.getRelatedWords('test');
@@ -41,7 +41,7 @@ describe('DatamuseAPI', () => {
     });
 
     it('should return empty array when safeFetch returns null', async () => {
-      const { sf } = await import('../../extension/utils/shortcuts/network.js');
+
       sf.mockResolvedValue(null);
 
       const result = await api.getRelatedWords('test');
@@ -50,13 +50,13 @@ describe('DatamuseAPI', () => {
     });
 
     it('should encode the word parameter', async () => {
-      const { sf } = await import('../../extension/utils/shortcuts/network.js');
-      const { en } = await import('../../extension/utils/shortcuts/global.js');
+
+
       sf.mockResolvedValue([]);
 
       await api.getRelatedWords('test word');
 
-      expect(en).toHaveBeenCalledWith('test word');
+      expect(encodeURIComponent).toHaveBeenCalledWith('test word');
     });
   });
 });

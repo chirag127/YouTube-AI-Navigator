@@ -19,8 +19,8 @@ describe('VideoCache', () => {
     vi.clearAllMocks();
     cache = new VideoCache();
 
-    mockSl = vi.mocked(require('../../../extension/utils/shortcuts/storage.js').sl);
-    mockOk = vi.mocked(require('../../../extension/utils/shortcuts/core.js').ok);
+    mockSl = vi.mocked(vi.fn().sl);
+    mockOk = vi.mocked(vi.fn().ok);
   });
 
   describe('get', () => {

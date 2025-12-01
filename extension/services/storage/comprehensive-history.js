@@ -1,7 +1,7 @@
-import { e } from '../../utils/shortcuts/log.js';
-import { afl, afn, aus, aic as inc, isa } from '../../utils/shortcuts/array.js';
+
+
 import { nw as nt, jp, js, lc } from '../../utils/shortcuts/core.js';
-import { sl, slcc as slc } from '../../utils/shortcuts/storage.js';
+
 export class ComprehensiveHistory {
   constructor() {
     this.k = 'comprehensive_history';
@@ -30,48 +30,45 @@ export class ComprehensiveHistory {
       },
     };
     const h = await this.getAll(),
-      f = afl(h, x => x.videoId !== v);
-    aus(f, n);
+      f = h.filter(x => x.videoId !== v);
+    [...new Set(f)];
     const t = slc(f, 0, this.m);
-    await sl({ [this.k]: t });
+    await chrome.storage.local.set({ [this.k]: t });
 
     return n;
   }
   async get(v) {
     const h = await this.getAll();
-    return afn(h, x => x.videoId === v);
+    return h.find(x => x.videoId === v);
   }
   async getAll() {
-    const r = await sl(this.k);
+    const r = await chrome.storage.local.get(this.k);
     return r[this.k] || [];
   }
   async delete(v) {
     const h = await this.getAll(),
-      f = afl(h, x => x.videoId !== v);
-    await sl({ [this.k]: f });
+      f = h.filter(x => x.videoId !== v);
+    await chrome.storage.local.set({ [this.k]: f });
   }
   async clear() {
-    await sl(this.k, null);
+    await chrome.storage.local.remove(this.k);
   }
   async search(q) {
     const h = await this.getAll(),
       lq = lc(q);
-    return afl(
-      h,
-      e =>
+    return h.filter(e =>
         (e.metadata?.title && inc(lc(e.metadata.title), lq)) ||
         (e.metadata?.author && inc(lc(e.metadata.author), lq)) ||
-        inc(e.videoId, lq)
-    );
+        inc(e.videoId, lq));
   }
   async getStats() {
     const h = await this.getAll();
     return {
       totalVideos: h.length,
-      totalTranscripts: afl(h, x => x.transcript?.length > 0).length,
-      totalComments: afl(h, x => x.comments?.raw?.length > 0).length,
-      totalSegments: afl(h, x => x.segments?.detected?.length > 0).length,
-      totalAnalyses: afl(h, x => x.analysis?.summary).length,
+      totalTranscripts: h.filter(x => x.transcript?.length > 0).length,
+      totalComments: h.filter(x => x.comments?.raw?.length > 0).length,
+      totalSegments: h.filter(x => x.segments?.detected?.length > 0).length,
+      totalAnalyses: h.filter(x => x.analysis?.summary).length,
       storageSize: js(h).length,
     };
   }
@@ -82,11 +79,11 @@ export class ComprehensiveHistory {
   async import(j) {
     try {
       const i = jp(j);
-      if (!isa(i)) throw new Error('Invalid format');
-      await sl({ [this.k]: i });
+      if (!Array.isArray(i)) throw new Error('Invalid format');
+      await chrome.storage.local.set({ [this.k]: i });
       return true;
     } catch (x) {
-      e('[History] Import failed:', x);
+      console.error('[History] Import failed:', x);
       return false;
     }
   }

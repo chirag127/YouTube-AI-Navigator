@@ -29,7 +29,7 @@ describe('NewsDataAPI', () => {
   describe('searchNews', () => {
     it('should return results on success', async () => {
       const mockData = { results: [{ title: 'News' }] };
-      const { sf } = await import('../../extension/utils/shortcuts/network.js');
+
       sf.mockResolvedValue(mockData);
 
       const result = await api.searchNews('query');
@@ -42,7 +42,7 @@ describe('NewsDataAPI', () => {
 
     it('should use custom language', async () => {
       const mockData = { results: [] };
-      const { sf } = await import('../../extension/utils/shortcuts/network.js');
+
       sf.mockResolvedValue(mockData);
 
       await api.searchNews('query', 'fr');
@@ -61,7 +61,7 @@ describe('NewsDataAPI', () => {
     });
 
     it('should return empty array on failure', async () => {
-      const { sf } = await import('../../extension/utils/shortcuts/network.js');
+
       sf.mockRejectedValue(new Error('error'));
 
       const result = await api.searchNews('query');
@@ -70,7 +70,7 @@ describe('NewsDataAPI', () => {
     });
 
     it('should return empty array when safeFetch returns null', async () => {
-      const { sf } = await import('../../extension/utils/shortcuts/network.js');
+
       sf.mockResolvedValue(null);
 
       const result = await api.searchNews('query');

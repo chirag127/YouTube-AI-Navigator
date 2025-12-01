@@ -1,4 +1,4 @@
-import { trm as tr, sb as sub, li as lio } from '../../utils/shortcuts/string.js';
+
 
 export function chunkText(t, s = 20000, o = 500) {
   if (!t) {
@@ -12,12 +12,12 @@ export function chunkText(t, s = 20000, o = 500) {
   while (i < t.length) {
     let e = i + s;
     if (e < t.length) {
-      const sp = lio(t, ' ', e),
-        p = lio(t, '.', e);
+      const sp = t.lastIndexOf(' '),
+        p = t.lastIndexOf('.');
       if (p > i + s * 0.5) e = p + 1;
       else if (sp > i) e = sp + 1;
     }
-    const ch = tr(sub(t, i, e));
+    const ch = sub(t, i, e).trim();
     if (ch) c.push(ch);
     i = e - o;
     if (i >= e) i = e;

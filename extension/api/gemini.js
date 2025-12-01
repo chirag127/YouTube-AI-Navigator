@@ -8,7 +8,7 @@ import {
   expandLabel,
   transformSegments,
 } from './utils/response-parser.js';
-import { w, e } from '../utils/shortcuts/log.js';
+
 
 export { ModelManager };
 
@@ -36,7 +36,7 @@ export class GeminiService {
 
   async analyzeCommentSentiment(c, m = null) {
     if (!c || !c.length) {
-      w('[GS] No comms');
+      console.warn('[GS] No comms');
       return 'No comments available to analyze.';
     }
     const prompt = await prompts.comments(c);
@@ -58,7 +58,7 @@ export class GeminiService {
         timestamps: ts,
       };
     } catch (x) {
-      e('[API:Fail:Gemini] generateComprehensiveAnalysis fail:', x);
+      console.error('[API:Fail:Gemini] generateComprehensiveAnalysis fail:', x);
       throw x;
     }
   }
@@ -77,8 +77,8 @@ export class GeminiService {
         fullVideoLabel: expandLabel(parsed.fullVideoLabel) || null,
       };
     } catch (x) {
-      e('[API:Fail:Gemini] extractSegments fail:', x.message);
-      e('[GS] Stack:', x.stack);
+      console.error('[API:Fail:Gemini] extractSegments fail:', x.message);
+      console.error('[GS] Stack:', x.stack);
       return { segments: [], fullVideoLabel: null };
     }
   }
@@ -100,7 +100,7 @@ export class GeminiService {
         try {
           await this.models.fetch();
         } catch (x) {
-          w('Mod fetch fail:', x.message);
+          console.warn('Mod fetch fail:', x.message);
           ml = fm;
         }
       }
@@ -115,14 +115,14 @@ export class GeminiService {
         return res;
       } catch (x) {
         errs.push({ model: mn, error: x.message });
-        w(`[GS] ${mn} fail:`, x.message);
+        console.warn(`[GS] ${mn} fail:`, x.message);
         if (x.retryable === false) {
           throw x;
         }
       }
     }
     const em = `All ${ml.length} failed. ${errs[0]?.error || 'Unknown'}`;
-    e('[API:Fail:Gemini] generateContent all failed:', em);
+    console.error('[API:Fail:Gemini] generateContent all failed:', em);
     throw new Error(em);
   }
 

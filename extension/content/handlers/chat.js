@@ -1,25 +1,22 @@
 const gu = p => chrome.runtime.getURL(p);
 
-const { e } = await import(gu('utils/shortcuts/log.js'));
+);
 const { state } = await import(gu('content/core/state.js'));
 const { addChatMessage } = await import(gu('content/ui/renderers/chat.js'));
 const { parseMarkdown } = await import(gu('lib/marked-loader.js'));
-const { qs } = await import(gu('utils/shortcuts/dom.js'));
-const { rs } = await import(gu('utils/shortcuts/runtime.js'));
-const { am, ajn } = await import(gu('utils/shortcuts/array.js'));
+);
+);
+);
 export async function sendChatMessage() {
   try {
-    const i = qs('#yt-ai-chat-input'),
+    const i = (document).querySelector('#yt-ai-chat-input'),
       q = i?.value?.trim();
     if (!q) return;
     await addChatMessage('user', q);
     i.value = '';
     const el = await addChatMessage('ai', 'Thinking...');
     try {
-      const ctx = ajn(
-        am(state.currentTranscript, t => t.text),
-        ' '
-      );
+      const ctx = state.currentTranscript.map(t => t.text).join(' ');
       const md = null;
       const r = await rs({ action: 'CHAT_WITH_VIDEO', question: q, context: ctx, metadata: md });
       el.innerHTML = r.success
@@ -27,9 +24,9 @@ export async function sendChatMessage() {
         : `Error: ${r.error}`;
     } catch (x) {
       el.textContent = `Error: ${x.message}`;
-      e('Err:sendChatMessage', x);
+      console.error('Err:sendChatMessage', x);
     }
   } catch (err) {
-    e('Err:sendChatMessage', err);
+    console.error('Err:sendChatMessage', err);
   }
 }

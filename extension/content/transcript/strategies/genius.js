@@ -1,8 +1,8 @@
 const gu = p => chrome.runtime.getURL(p);
 
-const { qs: $ } = await import(gu('utils/shortcuts/dom.js'));
-const { e } = await import(gu('utils/shortcuts/log.js'));
-const { msg } = await import(gu('utils/shortcuts/runtime.js'));
+);
+);
+);
 export const name = 'Genius Lyrics';
 export const priority = 20;
 
@@ -26,17 +26,17 @@ export const extract = async () => {
       '';
 
     if (!title) {
-      e('Genius: No title found');
+      console.error('Genius: No title found');
       return null;
     }
 
-    const r = await msg({ type: 'GET_LYRICS', title, artist: channel });
+    const r = await chrome.runtime.sendMessage({ type: 'GET_LYRICS', title, artist: channel });
     if (r?.result?.lyrics) {
       return [{ start: 0, duration: 0, text: r.result.lyrics }];
     }
     throw new Error('Genius failed or not music');
   } catch (err) {
-    e('Err:extract', err);
+    console.error('Err:extract', err);
     throw err;
   }
 };

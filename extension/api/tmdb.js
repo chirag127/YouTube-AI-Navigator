@@ -1,5 +1,5 @@
-import { en as enc } from '../utils/shortcuts/global.js';
-import { sf as safeFetch } from '../utils/shortcuts/network.js';
+
+
 
 const BASE_URL = 'https://api.themoviedb.org/3';
 
@@ -12,7 +12,7 @@ export class TmdbAPI {
     if (!this.apiKey) return null;
     try {
       const data = await safeFetch(
-        `${BASE_URL}/search/movie?api_key=${this.apiKey}&query=${enc(query)}`
+        `${BASE_URL}/search/movie?api_key=${this.apiKey}&query=${encodeURIComponent(query)}`
       );
       return data?.results?.[0] || null;
     } catch (x) {
@@ -25,7 +25,7 @@ export class TmdbAPI {
     if (!this.apiKey) return null;
     try {
       const data = await safeFetch(
-        `${BASE_URL}/search/tv?api_key=${this.apiKey}&query=${enc(query)}`
+        `${BASE_URL}/search/tv?api_key=${this.apiKey}&query=${encodeURIComponent(query)}`
       );
       return data?.results?.[0] || null;
     } catch (x) {

@@ -14,8 +14,8 @@ describe('handleGetSettings', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockSg = vi.mocked(require('../../../extension/utils/shortcuts/storage.js').sg);
-    mockE = vi.mocked(require('../../../extension/utils/shortcuts/log.js').e);
+    mockSg = vi.mocked(vi.fn().sg);
+    mockE = vi.mocked(vi.fn().e);
     mockRsp = vi.fn();
   });
 

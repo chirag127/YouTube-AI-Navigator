@@ -1,6 +1,6 @@
-import { e } from '../../utils/shortcuts/log.js';
-import { to, clt } from '../../utils/shortcuts/global.js';
-import { on, qs as i } from '../../utils/shortcuts/dom.js';
+
+
+
 import { oe } from '../../utils/shortcuts/core.js';
 export class AutoSave {
   constructor(sm, d = 500, nm = null) {
@@ -11,27 +11,27 @@ export class AutoSave {
     this.c = 0;
   }
   async save(p, v) {
-    clt(this.t);
+    clearTimeout(this.t);
     if (this.n) this.n.saving('Saving...');
-    this.t = to(async () => {
+    this.t = setTimeout(async () => {
       try {
         await this.s.update(p, v);
         this.c++;
         if (this.n) this.n.success(`Setting saved: ${p.split('.').pop()}`);
-        e(`[AutoSave] Saved ${p}`);
+        console.error(`[AutoSave] Saved ${p}`);
       } catch (x) {
-        e(`[AutoSave] Failed to save ${p}:`, x);
+        console.error(`[AutoSave] Failed to save ${p}:`, x);
         if (this.n) this.n.error(`Failed to save: ${x.message}`);
       }
     }, this.d);
   }
   trigger(cb) {
-    clt(this.t);
-    this.t = to(async () => {
+    clearTimeout(this.t);
+    this.t = setTimeout(async () => {
       try {
         await cb();
       } catch (x) {
-        e('[AutoSave] Error in triggered callback:', x);
+        console.error('[AutoSave] Error in triggered callback:', x);
       }
     }, this.d);
   }
@@ -42,19 +42,19 @@ export class AutoSave {
         const v = el.type === 'checkbox' ? el.checked : el.value;
         this.save(p, tr(v));
       } catch (x) {
-        e('[AutoSave] Error in event handler:', x);
+        console.error('[AutoSave] Error in event handler:', x);
       }
     };
-    on(el, 'change', h);
-    on(el, 'input', h);
+    (el)?.addEventListener('change', h);
+    (el)?.addEventListener('input', h);
   }
   attachToAll(m) {
     oe(m).forEach(([id, c]) => {
-      const el = i(c.selector || `#${id}`);
+      const el = (document).querySelector(c.selector || `#${id}`);
       if (el) {
         this.attachToInput(el, c.path, c.transform);
       } else {
-        e(`[AutoSave] Element #${id} not found, skipping auto-save`);
+        console.error(`[AutoSave] Element #${id} not found, skipping auto-save`);
       }
     });
   }

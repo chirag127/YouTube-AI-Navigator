@@ -1,21 +1,21 @@
 const gu = p => chrome.runtime.getURL(p);
 
 const { sendChatMessage } = await import(gu('content/handlers/chat.js'));
-const { ae, qs } = await import(gu('utils/shortcuts/dom.js'));
-const { e } = await import(gu('utils/shortcuts/log.js'));
+);
+);
 export function attachEventListeners(w) {
   try {
-    const c = qs('#yt-ai-chat-send', w);
+    const c = (w).querySelector('#yt-ai-chat-send');
     if (c)
-      ae(c, 'click', () => {
+      (c)?.addEventListener('click', () => {
         sendChatMessage();
       });
-    const i = qs('#yt-ai-chat-input', w);
+    const i = (w).querySelector('#yt-ai-chat-input');
     if (i)
-      ae(i, 'keypress', e => {
+      (i)?.addEventListener('keypress', e => {
         if (e.key === 'Enter') sendChatMessage();
       });
   } catch (err) {
-    e('Err:attachEventListeners', err);
+    console.error('Err:attachEventListeners', err);
   }
 }

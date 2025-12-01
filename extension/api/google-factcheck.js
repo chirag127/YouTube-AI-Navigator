@@ -1,5 +1,5 @@
-import { en as enc } from '../utils/shortcuts/global.js';
-import { sf as safeFetch } from '../utils/shortcuts/network.js';
+
+
 
 const BASE_URL = 'https://factchecktools.googleapis.com/v1alpha1';
 
@@ -12,7 +12,7 @@ export class GoogleFactCheckAPI {
     if (!this.apiKey) return [];
     try {
       const data = await safeFetch(
-        `${BASE_URL}/claims:search?key=${this.apiKey}&query=${enc(query)}`
+        `${BASE_URL}/claims:search?key=${this.apiKey}&query=${encodeURIComponent(query)}`
       );
       return data?.claims || [];
     } catch (x) {

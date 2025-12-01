@@ -14,8 +14,8 @@ describe('handleGetVideoInfo', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockFt = vi.mocked(require('../../../extension/utils/shortcuts/network.js').ft);
-    mockE = vi.mocked(require('../../../extension/utils/shortcuts/log.js').e);
+    mockFt = vi.mocked(vi.fn().ft);
+    mockE = vi.mocked(vi.fn().e);
   });
 
   it('should get video info successfully', async () => {

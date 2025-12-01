@@ -69,7 +69,7 @@ describe('sanitizeString', () => {
   let mockRp;
 
   beforeEach(() => {
-    mockRp = vi.mocked(require('../../../extension/utils/shortcuts/string.js').rp);
+    mockRp = vi.mocked(vi.fn().rp);
     mockRp.mockImplementation((str, regex, repl) => str.replace(regex, repl));
   });
 
@@ -90,8 +90,8 @@ describe('validateTranscript', () => {
   let mockIsa, mockJs;
 
   beforeEach(() => {
-    mockIsa = vi.mocked(require('../../../extension/utils/shortcuts/array.js').isa);
-    mockJs = vi.mocked(require('../../../extension/utils/shortcuts/core.js').js);
+    mockIsa = vi.mocked(vi.fn().isa);
+    mockJs = vi.mocked(vi.fn().js);
     mockIsa.mockReturnValue(true);
     mockJs.mockReturnValue('{"test":"data"}');
   });

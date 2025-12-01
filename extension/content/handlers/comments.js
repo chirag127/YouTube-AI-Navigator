@@ -1,22 +1,22 @@
-import { e } from '../../utils/shortcuts/log.js';
-import { to } from '../../utils/shortcuts/global.js';
+
+
 import { js } from '../../utils/shortcuts/core.js';
-import { ae, qsa as $ } from '../../utils/shortcuts/dom.js';
-import { sg, slg as lg } from '../../utils/shortcuts/storage.js';
-import { ft } from '../../utils/shortcuts/network.js';
+
+
+
 import { mp } from '../../utils/shortcuts/core.js';
-import { jn } from '../../utils/shortcuts/string.js';
+
 class CommentsExtractor {
   constructor() {
     try {
       this.comments = [];
       this.hasIntercepted = false;
-      ae(window, 'message', ev => {
+      (window)?.addEventListener('message', ev => {
         if (ev.source !== window) return;
         if (ev.data.type === 'YT_COMMENTS') this.handleInterceptedComments(ev.data.payload);
       });
     } catch (err) {
-      e('Err:CommentsExtractor', err);
+      console.error('Err:CommentsExtractor', err);
     }
   }
   handleInterceptedComments(d) {
@@ -49,7 +49,7 @@ class CommentsExtractor {
         }
       }
     } catch (x) {
-      e('[CE] Err int:', x);
+      console.error('[CE] Err int:', x);
     }
   }
   async getComments(retries = 1) {
@@ -63,14 +63,14 @@ class CommentsExtractor {
         if (initialComments.length > 0) return initialComments;
       }
     } catch (err) {
-      e('Err:extracting initial comments', err);
+      console.error('Err:extracting initial comments', err);
     }
     if (cfg.cache?.enabled && cfg.cache?.comments) {
       try {
         const c = await this.checkCache(vid);
         if (c && c.length > 0) return c;
       } catch (x) {
-        e('Err:cache', x);
+        console.error('Err:cache', x);
       }
     }
     if (this.hasIntercepted && this.comments.length > 0) return this.comments;
@@ -79,7 +79,7 @@ class CommentsExtractor {
   }
   async getConfig() {
     try {
-      const r = await sg('config');
+      const r = await chrome.storage.sync.get('config');
       const c = r.config || {};
       // Ensure comments config exists with default enabled=true
       if (!c.comments) c.comments = { enabled: true };
@@ -99,7 +99,7 @@ class CommentsExtractor {
       }
       return null;
     } catch (err) {
-      e('Err:checkCache', err);
+      console.error('Err:checkCache', err);
       return null;
     }
   }
@@ -109,7 +109,7 @@ class CommentsExtractor {
       const sm = getScrollManager();
       await sm.scrollToComments();
     } catch (err) {
-      e('Err:scrollToComments', err);
+      console.error('Err:scrollToComments', err);
     }
   }
   getCurrentVideoId() {
@@ -117,7 +117,7 @@ class CommentsExtractor {
       const result = new URLSearchParams(window.location.search).get('v');
       return result;
     } catch (err) {
-      e('Err:getCurrentVideoId', err);
+      console.error('Err:getCurrentVideoId', err);
       return null;
     }
   }
@@ -131,16 +131,16 @@ class CommentsExtractor {
             r(ev.data.payload);
           }
         };
-        ae(window, 'message', lis);
+        (window)?.addEventListener('message', lis);
         window.postMessage({ type: 'YT_GET_DATA' }, '*');
-        to(() => {
+        setTimeout(() => {
           window.removeEventListener('message', lis);
           r(null);
         }, 1e3);
       });
       return result;
     } catch (err) {
-      e('Err:getInitialDataFromMainWorld', err);
+      console.error('Err:getInitialDataFromMainWorld', err);
       return null;
     }
   }
@@ -172,13 +172,13 @@ class CommentsExtractor {
       }
       return comments;
     } catch (err) {
-      e('Err:extractCommentsFromInitialData', err);
+      console.error('Err:extractCommentsFromInitialData', err);
       return [];
     }
   }
   async fetchCommentsFromDOM(retries = 1) {
     for (let attempt = 1; attempt <= retries; attempt++) {
-      if (attempt > 1) await new Promise(r => to(r, 1000)); // Wait 1s between retries
+      if (attempt > 1) await new Promise(r => setTimeout(r, 1000)); // Wait 1s between retries
       try {
         // 1. Check for "Comments are turned off" or restricted message
         const messageEl = $(
@@ -192,7 +192,7 @@ class CommentsExtractor {
               text.includes('restricted') ||
               text.includes('disabled')
             ) {
-              e('[CE] Comments are disabled/restricted');
+              console.error('[CE] Comments are disabled/restricted');
               return []; // Exit early if disabled
             }
           }
@@ -219,7 +219,7 @@ class CommentsExtractor {
             continue;
           }
 
-          if (retries > 1) e(`[CE] No comments in DOM (${attempt}/${retries})`);
+          if (retries > 1) console.error(`[CE] No comments in DOM (${attempt}/${retries})`);
           continue;
         }
 
@@ -268,19 +268,19 @@ class CommentsExtractor {
                 publishedTime: pt,
               });
           } catch (x) {
-            e(`[CE] Err ${i + 1}:`, x);
+            console.error(`[CE] Err ${i + 1}:`, x);
           }
         }
         if (c.length > 0) return c;
       } catch (x) {
-        e(`[CE] Attempt ${attempt} failed:`, x);
+        console.error(`[CE] Attempt ${attempt} failed:`, x);
       }
     }
     return [];
   }
   async fetchCommentsActive(k, t, c) {
     try {
-      const r = await ft(`https://www.youtube.com/youtubei/v1/next?key=${k}`, {
+      const r = await fetch(`https://www.youtube.com/youtubei/v1/next?key=${k}`, {
         method: 'POST',
         body: js({ context: c, continuation: t }),
       });
@@ -288,7 +288,7 @@ class CommentsExtractor {
       const result = this.parseComments(d);
       return result;
     } catch (x) {
-      e('Err:fetchCommentsActive', x);
+      console.error('Err:fetchCommentsActive', x);
       return { comments: [], nextToken: null };
     }
   }
@@ -325,7 +325,7 @@ class CommentsExtractor {
       }
       return { comments: c, nextToken: nt };
     } catch (err) {
-      e('Err:parseComments', err);
+      console.error('Err:parseComments', err);
       return { comments: [], nextToken: null };
     }
   }

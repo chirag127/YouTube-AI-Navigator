@@ -1,10 +1,10 @@
 const gu = p => chrome.runtime.getURL(p);
 
 const { deArrowAPI } = await import(gu('api/dearrow.js'));
-const { l, e } = await import(gu('utils/shortcuts/log.js'));
+);
 const { jp } = await import(gu('utils/shortcuts/core.js'));
-const { to } = await import(gu('utils/shortcuts/global.js'));
-const { ae, qs: $ } = await import(gu('utils/shortcuts/dom.js'));
+);
+);
 class MetadataExtractor {
   constructor() {
     this.cache = new Map();
@@ -108,7 +108,7 @@ class MetadataExtractor {
 
       return md;
     } catch (err) {
-      e('Err:extract', err);
+      console.error('Err:extract', err);
       throw err;
     }
   }
@@ -135,7 +135,7 @@ class MetadataExtractor {
 
       return 'Unknown Title';
     } catch (err) {
-      e('Err:_extractTitle', err);
+      console.error('Err:_extractTitle', err);
       return 'Unknown Title';
     }
   }
@@ -166,7 +166,7 @@ class MetadataExtractor {
 
       return '';
     } catch (err) {
-      e('Err:_extractDescription', err);
+      console.error('Err:_extractDescription', err);
       return '';
     }
   }
@@ -191,7 +191,7 @@ class MetadataExtractor {
 
       return 'Unknown Channel';
     } catch (err) {
-      e('Err:_extractAuthor', err);
+      console.error('Err:_extractAuthor', err);
       return 'Unknown Channel';
     }
   }
@@ -215,7 +215,7 @@ class MetadataExtractor {
 
       return 'Unknown';
     } catch (err) {
-      e('Err:_extractViewCount', err);
+      console.error('Err:_extractViewCount', err);
       return 'Unknown';
     }
   }
@@ -229,7 +229,7 @@ class MetadataExtractor {
 
       return result;
     } catch (err) {
-      e('Err:_parseViewCount', err);
+      console.error('Err:_parseViewCount', err);
       return null;
     }
   }
@@ -253,7 +253,7 @@ class MetadataExtractor {
 
       return null;
     } catch (err) {
-      e('Err:_extractPublishDate', err);
+      console.error('Err:_extractPublishDate', err);
       return null;
     }
   }
@@ -280,7 +280,7 @@ class MetadataExtractor {
 
       return null;
     } catch (err) {
-      e('Err:_extractDuration', err);
+      console.error('Err:_extractDuration', err);
       return null;
     }
   }
@@ -306,7 +306,7 @@ class MetadataExtractor {
 
       return [];
     } catch (err) {
-      e('Err:_extractKeywords', err);
+      console.error('Err:_extractKeywords', err);
       return [];
     }
   }
@@ -316,7 +316,7 @@ class MetadataExtractor {
 
       return result;
     } catch (err) {
-      e('Err:_extractCategory', err);
+      console.error('Err:_extractCategory', err);
       return null;
     }
   }
@@ -331,7 +331,7 @@ class MetadataExtractor {
 
       return null;
     } catch (err) {
-      e('Err:_extractJsonLd', err);
+      console.error('Err:_extractJsonLd', err);
       return null;
     }
   }
@@ -345,9 +345,9 @@ class MetadataExtractor {
             r(ev.data.payload);
           }
         };
-        ae(window, 'message', lis);
+        (window)?.addEventListener('message', lis);
         window.postMessage({ type: 'YT_GET_DATA' }, '*');
-        to(() => {
+        setTimeout(() => {
           window.removeEventListener('message', lis);
           r(null);
         }, 1000);
@@ -355,7 +355,7 @@ class MetadataExtractor {
 
       return result;
     } catch (err) {
-      e('Err:getInitialData', err);
+      console.error('Err:getInitialData', err);
       return null;
     }
   }
@@ -366,7 +366,7 @@ class MetadataExtractor {
 
       return result;
     } catch (err) {
-      e('Err:_getCache', err);
+      console.error('Err:_getCache', err);
       return null;
     }
   }
@@ -374,7 +374,7 @@ class MetadataExtractor {
     try {
       this.cache.set(vid, { data: d, ts: Date.now() });
     } catch (err) {
-      e('Err:_setCache', err);
+      console.error('Err:_setCache', err);
     }
   }
   clearCache() {
@@ -382,7 +382,7 @@ class MetadataExtractor {
       this.cache.clear();
       this.log('info', 'Cache cleared');
     } catch (err) {
-      e('Err:clearCache', err);
+      console.error('Err:clearCache', err);
     }
   }
 }

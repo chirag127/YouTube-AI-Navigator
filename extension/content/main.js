@@ -1,59 +1,59 @@
 (async () => {
   if (window.top !== window) return;
   if (window.location.hostname !== 'www.youtube.com') return;
-  const { r, ru: gu } = await import(chrome.runtime.getURL('utils/shortcuts/runtime.js'));
-  const { ce: el, qs } = await import(gu('utils/shortcuts/dom.js'));
-  const { e } = await import(gu('utils/shortcuts/log.js'));
-  const { to } = await import(gu('utils/shortcuts/global.js'));
-  const { sl } = await import(gu('utils/shortcuts/storage.js'));
-  const s = el('script');
+  );
+  );
+  );
+  );
+  );
+  const s = document.createElement('script');
   s.type = 'module';
-  s.src = gu('content/youtube-extractor.js');
+  s.src = chrome.runtime.getURL('content/youtube-extractor.js');
   s.onload = () => s.remove();
   (document.head || document.documentElement).appendChild(s);
   try {
     const { initializeExtension: ie, waitForPageReady: wp } = await import(
-      gu('content/core/init.js')
+      chrome.runtime.getURL('content/core/init.js')
     );
     await wp();
-    if (!(await ie())) e('YAM: Init fail');
+    if (!(await ie())) console.error('YAM: Init fail');
 
     const v = new URLSearchParams(window.location.search).get('v');
     if (v) {
-      const { sg } = await import(gu('utils/shortcuts/storage.js'));
-      const st = await sg('config');
+      );
+      const st = await chrome.storage.sync.get('config');
       const cfg = st.config || {};
       if (cfg.segments?.enabled) {
-        const { StorageService } = await import(gu('services/storage/index.js'));
+        const { StorageService } = await import(chrome.runtime.getURL('services/storage/index.js'));
         const ss = new StorageService();
         const vd = await ss.getVideoData(v);
         if (vd?.segments?.length) {
-          const { setupAutoSkip } = await import(gu('content/segments/autoskip.js'));
-          const { injectSegmentMarkers } = await import(gu('content/segments/markers.js'));
-          const { injectVideoLabel } = await import(gu('content/ui/components/video-label.js'));
+          const { setupAutoSkip } = await import(chrome.runtime.getURL('content/segments/autoskip.js'));
+          const { injectSegmentMarkers } = await import(chrome.runtime.getURL('content/segments/markers.js'));
+          const { injectVideoLabel } = await import(chrome.runtime.getURL('content/ui/components/video-label.js'));
 
           await setupAutoSkip(vd.segments);
           injectSegmentMarkers(vd.segments);
           injectVideoLabel(vd.segments);
 
-          e(`[Init] Loaded ${vd.segments.length} cached segments`);
+          console.error(`[Init] Loaded ${vd.segments.length} cached segments`);
         }
       }
     }
   } catch (x) {
-    e('YAM: Fatal', x);
+    console.error('YAM: Fatal', x);
   }
   r.onMessage.addListener((m, _, p) => {
     const a = m.action || m.type;
     switch (a) {
       case 'START_ANALYSIS':
-        import(gu('content/core/analyzer.js'))
+        import(chrome.runtime.getURL('content/core/analyzer.js'))
           .then(({ startAnalysis: sa }) => {
             sa();
             p({ success: true });
           })
           .catch(x => {
-            e('Err:START_ANALYSIS', x);
+            console.error('Err:START_ANALYSIS', x);
             p({ success: false, error: x.message });
           });
         return true;
@@ -81,10 +81,10 @@
   });
   const hGM = async (m, p) => {
     try {
-      const { MetadataExtractor: ME } = await import(gu('content/metadata/extractor.js'));
+      const { MetadataExtractor: ME } = await import(chrome.runtime.getURL('content/metadata/extractor.js'));
       p({ success: true, metadata: await ME.extract(m.videoId) });
     } catch (x) {
-      e('Err:hGM', x);
+      console.error('Err:hGM', x);
       p({
         success: true,
         metadata: {
@@ -100,23 +100,23 @@
     try {
       const { videoId: v } = m;
       const wc = await cTC(v);
-      const { extractTranscript: gT } = await import(gu('content/transcript/strategy-manager.js'));
+      const { extractTranscript: gT } = await import(chrome.runtime.getURL('content/transcript/strategy-manager.js'));
       const r2 = await gT(v);
       if (!r2.success || !r2.data || !r2.data.length) throw new Error(r2.error || 'No caps');
       const t = r2.data;
       if (!wc) {
         try {
           const { collapseTranscriptWidget: cTW } = await import(
-            gu('content/ui/renderers/transcript.js')
+            chrome.runtime.getURL('content/ui/renderers/transcript.js')
           );
-          to(() => cTW(), 1e3);
+          setTimeout(() => cTW(), 1e3);
         } catch (x) {
-          e('[Tr] Auto-close err:', x);
+          console.error('[Tr] Auto-close err:', x);
         }
       }
       p({ success: true, transcript: t });
     } catch (x) {
-      e('Err:hGT', x);
+      console.error('Err:hGT', x);
       let msg = x.message;
       if (msg.includes('Transcript is disabled')) msg = 'No caps enabled';
       else if (msg.includes('No transcript found')) msg = 'No caps avail';
@@ -125,10 +125,10 @@
   };
   const hGC = async (_, p) => {
     try {
-      const { getComments: gC } = await import(gu('content/handlers/comments.js'));
+      const { getComments: gC } = await import(chrome.runtime.getURL('content/handlers/comments.js'));
       p({ success: true, comments: await gC() });
     } catch (x) {
-      e('Err:hGC', x);
+      console.error('Err:hGC', x);
       p({ comments: [] });
     }
   };
@@ -145,48 +145,48 @@
       }
       return false;
     } catch (err) {
-      e('Err:cTC', err);
+      console.error('Err:cTC', err);
       return false;
     }
   };
   const hST = (m, p) => {
     try {
-      const v = qs('video');
+      const v = (document).querySelector('video');
       if (v) {
         v.currentTime = m.timestamp;
         p({ success: true });
       } else throw new Error('No video');
     } catch (x) {
-      e('Err:hST', x);
+      console.error('Err:hST', x);
       p({ success: false, error: x.message });
     }
   };
   const hSS = async (m, p) => {
     try {
-      const { setupAutoSkip } = await import(gu('content/segments/autoskip.js'));
-      const { injectSegmentMarkers } = await import(gu('content/segments/markers.js'));
+      const { setupAutoSkip } = await import(chrome.runtime.getURL('content/segments/autoskip.js'));
+      const { injectSegmentMarkers } = await import(chrome.runtime.getURL('content/segments/markers.js'));
       if (m.segments?.length) {
         await setupAutoSkip(m.segments);
         injectSegmentMarkers(m.segments);
 
         // Inject video label
-        const { injectVideoLabel } = await import(gu('content/ui/components/video-label.js'));
+        const { injectVideoLabel } = await import(chrome.runtime.getURL('content/ui/components/video-label.js'));
         injectVideoLabel(m.segments);
 
-        e(`[SHOW_SEGMENTS] Applied ${m.segments.length} segments`);
+        console.error(`[SHOW_SEGMENTS] Applied ${m.segments.length} segments`);
       }
       p({ success: true });
     } catch (x) {
-      e('Err:hSS', x);
+      console.error('Err:hSS', x);
       p({ success: false, error: x.message });
     }
   };
   const hGVD = async (m, p) => {
     try {
-      const { VideoDataExtractor: VDE } = await import(gu('content/metadata/video-data.js'));
+      const { VideoDataExtractor: VDE } = await import(chrome.runtime.getURL('content/metadata/video-data.js'));
       p({ success: true, data: await VDE.extract(m.videoId) });
     } catch (x) {
-      e('Err:hGVD', x);
+      console.error('Err:hGVD', x);
       p({ success: false, error: x.message });
     }
   };

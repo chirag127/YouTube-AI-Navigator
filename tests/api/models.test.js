@@ -41,7 +41,7 @@ describe('ModelManager', () => {
           { name: 'models/model2', supportedGenerationMethods: [] },
         ],
       };
-      const { jf } = await import('../../extension/utils/shortcuts/network.js');
+
       jf.mockResolvedValue(mockData);
 
       const result = await manager.fetch();
@@ -60,7 +60,7 @@ describe('ModelManager', () => {
     });
 
     it('should handle failure', async () => {
-      const { jf } = await import('../../extension/utils/shortcuts/network.js');
+
       jf.mockRejectedValue(new Error('error'));
 
       await manager.fetch();

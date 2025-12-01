@@ -1,16 +1,16 @@
-import { gu } from '../../utils/shortcuts/runtime.js';
-import { af } from '../../utils/shortcuts/array.js';
 
-const { findSecondaryColumn, isWidgetProperlyVisible } = await import(gu('content/utils/dom.js'));
-const { initTabs } = await import(gu('content/ui/tabs.js'));
-const { attachEventListeners } = await import(gu('content/handlers/events.js'));
-const { createWidgetHTML } = await import(gu('content/ui/components/widget/structure.js'));
-const { qs: $, id: ge, on, el: ce, wfe, mo } = await import(gu('utils/shortcuts/dom.js'));
-const { e } = await import(gu('utils/shortcuts/log.js'));
-const { si, ci, to } = await import(gu('utils/shortcuts/global.js'));
-const { log } = await import(gu('utils/shortcuts/core.js'));
-const { sg, ss } = await import(gu('utils/shortcuts/storage.js'));
-const { ael, stc, ih } = await import(gu('utils/shortcuts.js'));
+
+
+const { findSecondaryColumn, isWidgetProperlyVisible } = await import(chrome.runtime.getURL('content/utils/dom.js'));
+const { initTabs } = await import(chrome.runtime.getURL('content/ui/tabs.js'));
+const { attachEventListeners } = await import(chrome.runtime.getURL('content/handlers/events.js'));
+const { createWidgetHTML } = await import(chrome.runtime.getURL('content/ui/components/widget/structure.js'));
+);
+);
+);
+const { log } = await import(chrome.runtime.getURL('utils/shortcuts/core.js'));
+);
+const { ael, stc, ih } = await import(chrome.runtime.getURL('utils/shortcuts.js'));
 
 let widgetContainer = null,
   resizeObserver = null,
@@ -52,7 +52,7 @@ function updateWidgetHeight() {
       }
     }
   } catch (err) {
-    e('Err:updateWidgetHeight', err);
+    console.error('Err:updateWidgetHeight', err);
   }
 }
 
@@ -73,7 +73,7 @@ function ensureWidgetAtTop(c) {
     if (!widgetContainer.style.order || widgetContainer.style.order !== '-9999')
       widgetContainer.style.order = '-9999';
   } catch (err) {
-    e('Err:ensureWidgetAtTop', err);
+    console.error('Err:ensureWidgetAtTop', err);
   }
 }
 
@@ -85,18 +85,18 @@ function reattachWidget() {
       sc.insertBefore(widgetContainer, sc.firstChild);
       lastKnownContainer = sc;
       setupObservers(sc);
-    } else e('Err:reattachWidget', 'Cannot reattach widget: secondary column not found');
+    } else console.error('Err:reattachWidget', 'Cannot reattach widget: secondary column not found');
   } catch (err) {
-    e('Err:reattachWidget', err);
+    console.error('Err:reattachWidget', err);
   }
 }
 
 function startPositionMonitoring() {
   try {
-    if (positionCheckInterval) ci(positionCheckInterval);
-    positionCheckInterval = si(() => {
+    if (positionCheckInterval) clearInterval(positionCheckInterval);
+    positionCheckInterval = setInterval(() => {
       if (!widgetContainer) {
-        ci(positionCheckInterval);
+        clearInterval(positionCheckInterval);
         return;
       }
       if (!document.contains(widgetContainer)) {
@@ -107,7 +107,7 @@ function startPositionMonitoring() {
       if (p && p.firstChild !== widgetContainer) ensureWidgetAtTop(p);
     }, 500);
   } catch (err) {
-    e('Err:startPositionMonitoring', err);
+    console.error('Err:startPositionMonitoring', err);
   }
 }
 
@@ -115,7 +115,7 @@ export async function injectWidget() {
   try {
     const cfg = await loadWidgetConfig();
     widgetConfig = cfg;
-    const ex = ge('yt-ai-master-widget');
+    const ex = document.getElementById('yt-ai-master-widget');
     if (ex) {
       if (isWidgetProperlyVisible(ex)) {
         widgetContainer = ex;
@@ -152,17 +152,17 @@ export async function injectWidget() {
         void err;
       }
       att++;
-      await new Promise(r => to(r, 200));
+      await new Promise(r => setTimeout(r, 200));
     }
     if (!sc) {
       sc = $('#columns');
       if (!sc) {
-        e('Target container not found. Widget injection aborted.');
+        console.error('Target container not found. Widget injection aborted.');
         return;
       }
       log('Using fallback #columns container');
     }
-    widgetContainer = ce('div');
+    widgetContainer = document.createElement('div');
     widgetContainer.id = 'yt-ai-master-widget';
     widgetContainer.style.order = '-9999';
     ih(widgetContainer, createWidgetHTML(cfg));
@@ -174,13 +174,13 @@ export async function injectWidget() {
     setupObservers(sc);
     startPositionMonitoring();
   } catch (err) {
-    e('Err:injectWidget', err);
+    console.error('Err:injectWidget', err);
   }
 }
 
 async function loadWidgetConfig() {
   try {
-    const r = await sg('config');
+    const r = await chrome.storage.sync.get('config');
     const defaults = {
       height: 500,
       minHeight: 200,
@@ -215,7 +215,7 @@ async function loadWidgetConfig() {
       segmentFilters: { ...defaults.segmentFilters, ...r.config.widget.segmentFilters },
     };
   } catch (err) {
-    e('Err:loadWidgetConfig', err);
+    console.error('Err:loadWidgetConfig', err);
     return {
       height: 500,
       minHeight: 200,
@@ -268,7 +268,7 @@ async function applyWidgetConfig() {
       widgetContainer.style.setProperty('--yt-ai-accent', widgetConfig.accentColor);
     }
 
-    const r = await sg('config');
+    const r = await chrome.storage.sync.get('config');
     const ui = r.config?.ui || {};
     if (ui.fontFamily) {
       const font =
@@ -284,7 +284,7 @@ async function applyWidgetConfig() {
       widgetContainer.style.webkitBackdropFilter = `blur(${widgetConfig.blur}px)`;
     }
 
-    const r2 = await sg('config');
+    const r2 = await chrome.storage.sync.get('config');
     const theme = r2.config?.ui?.theme || 'liquid-glass';
     widgetContainer.setAttribute('data-theme', theme);
 
@@ -298,19 +298,19 @@ async function applyWidgetConfig() {
     const rwh = $('#yt-ai-resize-handle-width', widgetContainer);
     if (rwh) rwh.style.display = widgetConfig.resizableWidth ? 'flex' : 'none';
   } catch (err) {
-    e('Err:applyWidgetConfig', err);
+    console.error('Err:applyWidgetConfig', err);
   }
 }
 
 async function saveWidgetHeight(h) {
   try {
-    const r = await sg('config');
+    const r = await chrome.storage.sync.get('config');
     const cfg = r.config || {};
     cfg.widget = cfg.widget || {};
     cfg.widget.height = h;
-    await ss({ config: cfg });
+    await chrome.storage.sync.set(typeof { config: cfg } === 'string' ? { [{ config: cfg }]: undefined } : { config: cfg });
   } catch (err) {
-    e('Err:saveWidgetHeight', err);
+    console.error('Err:saveWidgetHeight', err);
   }
 }
 
@@ -318,7 +318,7 @@ function setupResizeHandle(c) {
   try {
     const rh = $('#yt-ai-resize-handle', c);
     if (!rh || !widgetConfig?.resizable) return;
-    on(rh, 'mousedown', ev => {
+    (rh)?.addEventListener('mousedown', ev => {
       ev.preventDefault();
       isResizing = true;
       startY = ev.clientY;
@@ -327,7 +327,7 @@ function setupResizeHandle(c) {
       document.body.style.cursor = 'ns-resize';
       document.body.style.userSelect = 'none';
     });
-    on(document, 'mousemove', ev => {
+    (document)?.addEventListener('mousemove', ev => {
       if (!isResizing) return;
       ev.preventDefault();
       const dy = ev.clientY - startY;
@@ -336,7 +336,7 @@ function setupResizeHandle(c) {
       const ca = $('#yt-ai-content-area', c);
       if (ca) ca.style.height = `${nh}px`;
     });
-    on(document, 'mouseup', async () => {
+    (document)?.addEventListener('mouseup', async () => {
       if (!isResizing) return;
       isResizing = false;
       document.body.style.cursor = '';
@@ -345,7 +345,7 @@ function setupResizeHandle(c) {
       if (ca) await saveWidgetHeight(ca.offsetHeight);
     });
   } catch (err) {
-    e('Err:setupResizeHandle', err);
+    console.error('Err:setupResizeHandle', err);
   }
 }
 
@@ -357,7 +357,7 @@ function setupWidthResizeHandle(c) {
   try {
     const rwh = $('#yt-ai-resize-handle-width', c);
     if (!rwh || !widgetConfig?.resizableWidth) return;
-    on(rwh, 'mousedown', ev => {
+    (rwh)?.addEventListener('mousedown', ev => {
       ev.preventDefault();
       isResizingWidth = true;
       startX = ev.clientX;
@@ -365,7 +365,7 @@ function setupWidthResizeHandle(c) {
       document.body.style.cursor = 'ew-resize';
       document.body.style.userSelect = 'none';
     });
-    on(document, 'mousemove', ev => {
+    (document)?.addEventListener('mousemove', ev => {
       if (!isResizingWidth) return;
       ev.preventDefault();
       const dx = widgetConfig.position === 'right' ? startX - ev.clientX : ev.clientX - startX;
@@ -373,7 +373,7 @@ function setupWidthResizeHandle(c) {
       nw = Math.max(widgetConfig.minWidth, Math.min(widgetConfig.maxWidth, nw));
       c.style.width = `${nw}px`;
     });
-    on(document, 'mouseup', async () => {
+    (document)?.addEventListener('mouseup', async () => {
       if (!isResizingWidth) return;
       isResizingWidth = false;
       document.body.style.cursor = '';
@@ -381,19 +381,19 @@ function setupWidthResizeHandle(c) {
       await saveWidgetWidth(c.offsetWidth);
     });
   } catch (err) {
-    e('Err:setupWidthResizeHandle', err);
+    console.error('Err:setupWidthResizeHandle', err);
   }
 }
 
 async function saveWidgetWidth(w) {
   try {
-    const r = await sg('config');
+    const r = await chrome.storage.sync.get('config');
     const cfg = r.config || {};
     cfg.widget = cfg.widget || {};
     cfg.widget.width = w;
-    await ss({ config: cfg });
+    await chrome.storage.sync.set(typeof { config: cfg } === 'string' ? { [{ config: cfg }]: undefined } : { config: cfg });
   } catch (err) {
-    e('Err:saveWidgetWidth', err);
+    console.error('Err:saveWidgetWidth', err);
   }
 }
 
@@ -410,7 +410,7 @@ function setupDragHandler(c) {
       initialTransformX = 0,
       initialTransformY = 0;
 
-    on(header, 'mousedown', e => {
+    (header)?.addEventListener('mousedown', e => {
       // Ignore if clicking buttons/inputs
       if (
         e.target.closest('button') ||
@@ -435,7 +435,7 @@ function setupDragHandler(c) {
       document.body.style.userSelect = 'none';
     });
 
-    on(document, 'mousemove', e => {
+    (document)?.addEventListener('mousemove', e => {
       if (!isDragging) return;
       e.preventDefault();
       const dx = e.clientX - startX;
@@ -443,14 +443,14 @@ function setupDragHandler(c) {
       c.style.transform = `translate(${initialTransformX + dx}px, ${initialTransformY + dy}px)`;
     });
 
-    on(document, 'mouseup', () => {
+    (document)?.addEventListener('mouseup', () => {
       if (!isDragging) return;
       isDragging = false;
       header.style.cursor = 'grab';
       document.body.style.userSelect = '';
     });
   } catch (err) {
-    e('Err:setupDragHandler', err);
+    console.error('Err:setupDragHandler', err);
   }
 }
 
@@ -458,7 +458,7 @@ function setupWidgetLogic(c) {
   try {
     const cb = $('#yt-ai-close-btn', c);
     if (cb) {
-      on(cb, 'click', () => {
+      (cb)?.addEventListener('click', () => {
         const ic = c.classList.contains('yt-ai-collapsed');
         if (ic) {
           c.classList.remove('yt-ai-collapsed');
@@ -479,7 +479,7 @@ function setupWidgetLogic(c) {
     initTabs(c);
     attachEventListeners(c);
   } catch (err) {
-    e('Err:setupWidgetLogic', err);
+    console.error('Err:setupWidgetLogic', err);
   }
 }
 
@@ -505,22 +505,22 @@ async function applyDefaultWidgetState() {
       cb.title = 'Expand';
     }
   } catch (err) {
-    e('Err:applyDefaultWidgetState', err);
+    console.error('Err:applyDefaultWidgetState', err);
   }
 }
 
 async function saveWidgetState(isCollapsed) {
   try {
     if (!widgetConfig?.rememberState) return;
-    await ss({ widgetCollapsedState: isCollapsed });
+    await chrome.storage.sync.set(typeof { widgetCollapsedState: isCollapsed } === 'string' ? { [{ widgetCollapsedState: isCollapsed }]: undefined } : { widgetCollapsedState: isCollapsed });
   } catch (err) {
-    e('Err:saveWidgetState', err);
+    console.error('Err:saveWidgetState', err);
   }
 }
 
 async function getSavedWidgetState() {
   try {
-    const r = await sg('widgetCollapsedState');
+    const r = await chrome.storage.sync.get('widgetCollapsedState');
     return r.widgetCollapsedState ?? null;
   } catch {
     return null;
@@ -543,7 +543,7 @@ function setupObservers(c) {
       for (const mu of m) {
         if (mu.type === 'childList') {
           if (af(mu.removedNodes).includes(widgetContainer)) {
-            to(() => reattachWidget(), 100);
+            setTimeout(() => reattachWidget(), 100);
             return;
           }
           if (c.firstChild !== widgetContainer && !af(mu.addedNodes).includes(widgetContainer))
@@ -565,7 +565,7 @@ function setupObservers(c) {
     });
     bo.observe(document.body, { childList: true, subtree: true });
   } catch (err) {
-    e('Err:setupObservers', err);
+    console.error('Err:setupObservers', err);
   }
 }
 
@@ -573,7 +573,7 @@ export function getWidget() {
   try {
     return widgetContainer;
   } catch (err) {
-    e('Err:getWidget', err);
+    console.error('Err:getWidget', err);
     return null;
   }
 }

@@ -67,10 +67,10 @@ describe('handleGetVideoData', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockSlg = vi.mocked(require('../../../extension/utils/shortcuts/storage.js').slg);
-    mockSls = vi.mocked(require('../../../extension/utils/shortcuts/storage.js').sls);
-    mockE = vi.mocked(require('../../../extension/utils/shortcuts/log.js').e);
-    mockNw = vi.mocked(require('../../../extension/utils/shortcuts/core.js').nw);
+    mockSlg = vi.mocked(vi.fn().slg);
+    mockSls = vi.mocked(vi.fn().sls);
+    mockE = vi.mocked(vi.fn().e);
+    mockNw = vi.mocked(vi.fn().nw);
     mockHandleGetVideoInfo = vi.mocked(
       require('../../../extension/background/handlers/video-info.js').handleGetVideoInfo
     );

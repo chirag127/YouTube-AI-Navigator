@@ -1,6 +1,6 @@
 const gu = p => chrome.runtime.getURL(p);
-const { e } = await import(gu('utils/shortcuts/log.js'));
-const { ce, qs } = await import(gu('utils/shortcuts/dom.js'));
+);
+);
 export function findSecondaryColumn() {
   try {
     const s = [
@@ -12,20 +12,20 @@ export function findSecondaryColumn() {
       'ytd-watch-flexy #secondary',
     ];
     for (const sel of s) {
-      const el = qs(sel);
+      const el = (document).querySelector(sel);
       if (el && (el.offsetWidth > 0 || el.offsetHeight > 0 || el.getClientRects().length > 0)) {
         return el;
       }
     }
     for (const sel of s) {
-      const el = qs(sel);
+      const el = (document).querySelector(sel);
       if (el) {
         return el;
       }
     }
     return null;
   } catch (err) {
-    e('Err:findSecondaryColumn', err);
+    console.error('Err:findSecondaryColumn', err);
     return null;
   }
 }
@@ -48,36 +48,36 @@ export function isWidgetProperlyVisible(w) {
     }
     return true;
   } catch (err) {
-    e('Err:isWidgetProperlyVisible', err);
+    console.error('Err:isWidgetProperlyVisible', err);
     return false;
   }
 }
 export function seekVideo(t) {
   try {
-    const v = qs('video');
+    const v = (document).querySelector('video');
     if (v) {
       v.currentTime = t;
       v.play();
     }
   } catch (err) {
-    e('Err:seekVideo', err);
+    console.error('Err:seekVideo', err);
   }
 }
 export function getVideoElement() {
   try {
-    return qs('video');
+    return (document).querySelector('video');
   } catch (err) {
-    e('Err:getVideoElement', err);
+    console.error('Err:getVideoElement', err);
     return null;
   }
 }
 export function decodeHTML(h) {
   try {
-    const t = ce('textarea');
+    const t = document.createElement('textarea');
     t.innerHTML = h;
     return t.value;
   } catch (err) {
-    e('Err:decodeHTML', err);
+    console.error('Err:decodeHTML', err);
     return h;
   }
 }

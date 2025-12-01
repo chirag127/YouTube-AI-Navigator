@@ -1,5 +1,5 @@
-import { qs as i } from '../../utils/shortcuts/dom.js';
-import { pi } from '../../utils/shortcuts/global.js';
+
+
 export class PerformanceSettings {
   constructor(s, a) {
     this.s = s;
@@ -25,22 +25,22 @@ export class PerformanceSettings {
       maxConcurrentRequests: {
         path: 'performance.maxConcurrentRequests',
         selector: '#section-maxConcurrentRequests',
-        transform: v => pi(v),
+        transform: v => parseInt(v),
       },
       rateLimitDelay: {
         path: 'performance.rateLimitDelay',
         selector: '#section-rateLimitDelay',
-        transform: v => pi(v),
+        transform: v => parseInt(v),
       },
       retryAttempts: {
         path: 'performance.retryAttempts',
         selector: '#section-retryAttempts',
-        transform: v => pi(v),
+        transform: v => parseInt(v),
       },
       retryDelay: {
         path: 'performance.retryDelay',
         selector: '#section-retryDelay',
-        transform: v => pi(v),
+        transform: v => parseInt(v),
       },
       enableCompression: { path: 'performance.enableCompression' },
       lazyLoad: { path: 'performance.lazyLoad' },
@@ -48,11 +48,11 @@ export class PerformanceSettings {
     });
   }
   set(id, v) {
-    const el = i(`#${id}`);
+    const el = (document).querySelector(`#${id}`);
     if (el) el.value = v;
   }
   chk(id, v) {
-    const el = i(`#${id}`);
+    const el = (document).querySelector(`#${id}`);
     if (el) el.checked = v;
   }
 }

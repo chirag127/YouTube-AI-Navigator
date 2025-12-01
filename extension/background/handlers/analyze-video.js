@@ -3,20 +3,20 @@ import { getApiKey as gk } from '../utils/api-key.js';
 import { geniusLyricsAPI as gl } from '../../api/genius-lyrics.js';
 import { sponsorBlockAPI as sb } from '../../api/sponsorblock.js';
 import { ContextManager as CM } from '../../services/context-manager.js';
-import { w, e } from '../../utils/shortcuts/log.js';
-import { si, ci, to as to } from '../../utils/shortcuts/global.js';
-import { r as cr } from '../../utils/shortcuts/runtime.js';
-import { sg, ss } from '../../utils/shortcuts/storage.js';
 
-import { inc as ic, lwc } from '../../utils/shortcuts/string.js';
+
+
+
+
+
 import { np, pc } from '../../utils/shortcuts/async.js';
 let ka = null;
 const ska = () => {
-  if (!ka) ka = si(() => cr.getPlatformInfo(() => {}), 2e4);
+  if (!ka) ka = setInterval(() => cr.getPlatformInfo(() => {}), 2e4);
 };
 const stka = () => {
   if (ka) {
-    ci(ka);
+    clearInterval(ka);
     ka = null;
   }
 };
@@ -50,41 +50,41 @@ export async function handleAnalyzeVideo(q, r) {
       }
     }
     let ly = null;
-    const st4 = await sg('config');
+    const st4 = await chrome.storage.sync.get('config');
     const glEn = st4?.config?.externalApis?.geniusLyrics?.enabled ?? true;
     const im =
       m?.category === 'Music' ||
-      ic(lwc(m?.title || ''), 'official video') ||
-      ic(lwc(m?.title || ''), 'lyrics');
+      lwc(m?.title || '').includes('official video') ||
+      lwc(m?.title || '').includes('lyrics');
     if (glEn && (im || !t?.length)) {
       try {
         ly = await gl.getLyrics(m.title, m.author);
       } catch (x) {
-        w('[AV]Lyrics:', x.message);
+        console.warn('[AV]Lyrics:', x.message);
       }
     }
     let sb2 = [];
-    const st3 = await sg('config');
+    const st3 = await chrome.storage.sync.get('config');
     const sbEn = st3?.config?.externalApis?.sponsorBlock?.enabled ?? true;
     if (v && sbEn) {
       try {
         sb2 = await sb.fetchSegments(v);
       } catch (x) {
-        w('[AV]SB:', x.message);
+        console.warn('[AV]SB:', x.message);
       }
     }
     let ec = {};
     try {
       if (!ss) throw new Error('Sync NA');
-      const st = await sg('config');
-      if (!st?.config) w('[AV]No cfg');
+      const st = await chrome.storage.sync.get('config');
+      if (!st?.config) console.warn('[AV]No cfg');
       if (!m) throw new Error('No meta');
       const cm = new CM(st.config?.externalApis || {});
       const fp = cm.fetchContext(m);
-      const tp = np((_, j) => to(() => j(new Error('TO')), 1e4));
+      const tp = np((_, j) => setTimeout(() => j(new Error('TO')), 1e4));
       ec = await pc([fp, tp]);
     } catch (x) {
-      e('[AV]Ctx:', x.message);
+      console.error('[AV]Ctx:', x.message);
     }
     if ((!t || !t.length) && !ly && (!c || !c.length)) throw new Error('No content');
     const ac = {
@@ -95,7 +95,7 @@ export async function handleAnalyzeVideo(q, r) {
       sponsorBlockSegments: sb2,
       externalContext: ec,
     };
-    const st2 = await sg(['summaryLength', 'maxInsights', 'maxFAQ', 'includeTimestamps']);
+    const st2 = await chrome.storage.sync.get(['summaryLength');
     const an = await g.generateComprehensiveAnalysis(ac, {
       summaryLength: o.summaryLength || st2.summaryLength || 'medium',
       language: o.language || 'en',
@@ -127,7 +127,7 @@ export async function handleAnalyzeVideo(q, r) {
           timestamps: an.timestamps,
         });
       } catch (x) {
-        w('[AV]Save:', x.message);
+        console.warn('[AV]Save:', x.message);
       }
     }
     r({
@@ -143,7 +143,7 @@ export async function handleAnalyzeVideo(q, r) {
       },
     });
   } catch (x) {
-    e('Err:AV', x);
+    console.error('Err:AV', x);
     r({ success: false, error: x.message });
   } finally {
     stka();

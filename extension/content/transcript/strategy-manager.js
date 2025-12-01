@@ -1,6 +1,6 @@
 const gu = p => chrome.runtime.getURL(p);
 
-const { e } = await import(gu('utils/shortcuts/log.js'));
+);
 const { getCfg } = await import(gu('utils/config.js'));
 const { vals } = await import(gu('utils/shortcuts/core.js'));
 const domAutomation = await import(gu('content/transcript/strategies/dom-automation.js'));
@@ -29,10 +29,10 @@ export const extractTranscript = async (vid, lang = 'en') => {
         err = x;
       }
     }
-    e('Err:extractTranscript', err?.message || 'All fail');
+    console.error('Err:extractTranscript', err?.message || 'All fail');
     return { success: false, error: err?.message || 'All fail' };
   } catch (error) {
-    e('Err:extractTranscript', error);
+    console.error('Err:extractTranscript', error);
     return { success: false, error: error.message };
   }
 };
@@ -45,7 +45,7 @@ export const getAvailableStrategies = () => {
     }));
     return result;
   } catch (err) {
-    e('Err:getAvailableStrategies', err);
+    console.error('Err:getAvailableStrategies', err);
     return [];
   }
 };

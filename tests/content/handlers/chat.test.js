@@ -36,7 +36,7 @@ describe('sendChatMessage', () => {
 
   it('should send message successfully', async () => {
     const qs = vi.mocked(await import('../../../extension/utils/shortcuts/dom.js')).qs;
-    qs.mockReturnValue({ value: 'question' });
+    document.querySelector.mockReturnValue({ value: 'question' });
     const addChatMessage = vi.mocked(
       await import('../../../extension/content/ui/renderers/chat.js')
     ).addChatMessage;
@@ -63,7 +63,7 @@ describe('sendChatMessage', () => {
 
   it('should handle error', async () => {
     const qs = vi.mocked(await import('../../../extension/utils/shortcuts/dom.js')).qs;
-    qs.mockReturnValue({ value: 'question' });
+    document.querySelector.mockReturnValue({ value: 'question' });
     const addChatMessage = vi.mocked(
       await import('../../../extension/content/ui/renderers/chat.js')
     ).addChatMessage;

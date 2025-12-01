@@ -6,20 +6,20 @@ const { renderSummary } = await import(gu('content/ui/renderers/summary.js'));
 const { renderSegments } = await import(gu('content/ui/renderers/segments.js'));
 const { renderChat } = await import(gu('content/ui/renderers/chat.js'));
 const { renderComments } = await import(gu('content/ui/renderers/comments.js'));
-const { qs: $, qsa: $$, id: ge, on } = await import(gu('utils/shortcuts/dom.js'));
-const { e } = await import(gu('utils/shortcuts/log.js'));
+);
+);
 
 export function initTabs(c) {
   try {
-    $$('.yt-ai-tab', c).forEach(t => on(t, 'click', () => switchTab(t.dataset.tab, c)));
+    $$('.yt-ai-tab', c).forEach(t => (t)?.addEventListener('click', () => switchTab(t.dataset.tab, c)));
   } catch (err) {
-    e('Err:initTabs', err);
+    console.error('Err:initTabs', err);
   }
 }
 
 export function switchTab(n, container) {
   try {
-    const c = container || ge('yt-ai-master-widget');
+    const c = container || document.getElementById('yt-ai-master-widget');
     if (!c) return;
     $$('.yt-ai-tab', c).forEach(t => t.classList.remove('active'));
     $(`[data-tab="${n}"]`, c)?.classList.add('active');
@@ -44,10 +44,10 @@ export function switchTab(n, container) {
           break;
       }
     } catch (x) {
-      e('Err:switchTab', x);
+      console.error('Err:switchTab', x);
       a.innerHTML = `<div class="yt-ai-error">Error loading tab content</div>`;
     }
   } catch (err) {
-    e('Err:switchTab', err);
+    console.error('Err:switchTab', err);
   }
 }

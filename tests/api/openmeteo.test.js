@@ -26,7 +26,7 @@ describe('OpenMeteoAPI', () => {
       global.fetch = vi.fn().mockResolvedValue({
         json: vi.fn().mockResolvedValue(mockData),
       });
-      const { sg } = await import('../../extension/utils/shortcuts/storage.js');
+
       sg.mockResolvedValue({ integrations: { openmeteo: { enabled: true } } });
 
       const result = await api.getWeather(10, 20);
@@ -38,7 +38,7 @@ describe('OpenMeteoAPI', () => {
     });
 
     it('should return null when disabled', async () => {
-      const { sg } = await import('../../extension/utils/shortcuts/storage.js');
+
       sg.mockResolvedValue({ integrations: { openmeteo: { enabled: false } } });
 
       const result = await api.getWeather(10, 20);
@@ -56,7 +56,7 @@ describe('OpenMeteoAPI', () => {
       global.fetch = vi.fn().mockResolvedValue({
         json: vi.fn().mockResolvedValue({}),
       });
-      const { sg } = await import('../../extension/utils/shortcuts/storage.js');
+
       sg.mockResolvedValue({ integrations: { openmeteo: { enabled: true } } });
 
       const result = await api.getWeather(10, 20);
@@ -68,7 +68,7 @@ describe('OpenMeteoAPI', () => {
   describe('getCoordinates', () => {
     it('should return coordinates on success', async () => {
       const mockData = { results: [{ lat: 10, lon: 20 }] };
-      const { sf } = await import('../../extension/utils/shortcuts/network.js');
+
       sf.mockResolvedValue(mockData);
 
       const result = await api.getCoordinates('city');
@@ -80,7 +80,7 @@ describe('OpenMeteoAPI', () => {
     });
 
     it('should return null on no results', async () => {
-      const { sf } = await import('../../extension/utils/shortcuts/network.js');
+
       sf.mockResolvedValue({ results: [] });
 
       const result = await api.getCoordinates('city');

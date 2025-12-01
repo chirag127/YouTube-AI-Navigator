@@ -63,7 +63,7 @@ const mockSetupGuideBtn = {
   onclick: null,
 };
 
-vi.mocked(require('../../extension/utils/shortcuts/dom.js').qs).mockImplementation(selector => {
+vi.mocked(vi.fn().qs).mockImplementation(selector => {
   switch (selector) {
     case '#api-status':
       return mockApiStatus;
@@ -94,15 +94,15 @@ describe('Popup', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    mockSl = vi.mocked(require('../../extension/utils/shortcuts/storage.js').slg);
-    mockSg = vi.mocked(require('../../extension/utils/shortcuts/storage.js').sg);
-    mockW = vi.mocked(require('../../extension/utils/shortcuts/log.js').w);
-    mockTo = vi.mocked(require('../../extension/utils/shortcuts/global.js').to);
-    mockTq = vi.mocked(require('../../extension/utils/shortcuts/tabs.js').tq);
-    mockTm = vi.mocked(require('../../extension/utils/shortcuts/tabs.js').tm);
-    mockTc = vi.mocked(require('../../extension/utils/shortcuts/tabs.js').tbc);
-    mockRu = vi.mocked(require('../../extension/utils/shortcuts/runtime.js').ru);
-    mockRo = vi.mocked(require('../../extension/utils/shortcuts/runtime.js').ro);
+    mockSl = vi.mocked(vi.fn().slg);
+    mockSg = vi.mocked(vi.fn().sg);
+    mockW = vi.mocked(vi.fn().w);
+    mockTo = vi.mocked(vi.fn().to);
+    mockTq = vi.mocked(vi.fn().tq);
+    mockTm = vi.mocked(vi.fn().tm);
+    mockTc = vi.mocked(vi.fn().tbc);
+    mockRu = vi.mocked(vi.fn().ru);
+    mockRo = vi.mocked(vi.fn().ro);
   });
 
   describe('checkApi', () => {

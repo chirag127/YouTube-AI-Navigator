@@ -1,8 +1,8 @@
 const gu = p => chrome.runtime.getURL(p);
 
-const { e } = await import(gu('utils/shortcuts/log.js'));
-const { msg } = await import(gu('utils/shortcuts/runtime.js'));
-const { to } = await import(gu('utils/shortcuts/global.js'));
+);
+);
+);
 export const name = 'Speech to Text';
 export const priority = 30;
 
@@ -10,13 +10,13 @@ export const extract = async (vid, lang = 'en') => {
   try {
     const u = await getAudioUrl();
     if (!u) throw new Error('No audio URL found');
-    const r = await msg({ action: 'TRANSCRIBE_AUDIO', audioUrl: u, lang });
+    const r = await chrome.runtime.sendMessage({ action: 'TRANSCRIBE_AUDIO', audioUrl: u, lang });
     if (r?.success && r.segments) {
       return r.segments;
     }
     throw new Error(r?.error || 'STT failed');
   } catch (err) {
-    e('Err:extract', err);
+    console.error('Err:extract', err);
     throw err;
   }
 };
@@ -28,7 +28,7 @@ const getAudioUrl = async (retries = 3, delay = 1000) => {
         const pr = window.ytInitialPlayerResponse;
         if (!pr?.streamingData?.adaptiveFormats) {
           if (i < retries - 1) {
-            await new Promise(r => to(r, delay));
+            await new Promise(r => setTimeout(r, delay));
             continue;
           }
           return null;
@@ -39,12 +39,12 @@ const getAudioUrl = async (retries = 3, delay = 1000) => {
         if (!af) af = f.find(x => x.mimeType.includes('audio'));
         return af?.url || null;
       } catch (err) {
-        if (i < retries - 1) await new Promise(r => to(r, delay));
+        if (i < retries - 1) await new Promise(r => setTimeout(r, delay));
       }
     }
     return null;
   } catch (err) {
-    e('Err:getAudioUrl', err);
+    console.error('Err:getAudioUrl', err);
     return null;
   }
 };

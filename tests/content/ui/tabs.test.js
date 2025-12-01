@@ -39,7 +39,7 @@ import { renderSummary } from '../../../../extension/content/ui/renderers/summar
 import { renderSegments } from '../../../../extension/content/ui/renderers/segments.js';
 import { renderChat } from '../../../../extension/content/ui/renderers/chat.js';
 import { renderComments } from '../../../../extension/content/ui/renderers/comments.js';
-import { qs, qsa, id, on } from '../../../../extension/utils/shortcuts/dom.js';
+
 
 describe('tabs', () => {
   let mockContainer;
@@ -60,13 +60,13 @@ describe('tabs', () => {
     mockContainer = {};
 
     qsa.mockReturnValue(mockTabs);
-    qs.mockImplementation(selector => {
+    document.querySelector.mockImplementation(selector => {
       if (selector.includes('chat-input-area')) return mockChatInputArea;
       if (selector.includes('content-area')) return mockContentArea;
       if (selector.includes('[data-tab=')) return mockTabs[0];
       return null;
     });
-    id.mockReturnValue(mockContainer);
+    document.getElementById.mockReturnValue(mockContainer);
   });
 
   describe('initTabs', () => {
@@ -106,7 +106,7 @@ describe('tabs', () => {
     });
 
     it('should handle missing content area', () => {
-      qs.mockImplementation(selector => {
+      document.querySelector.mockImplementation(selector => {
         if (selector.includes('content-area')) return null;
         return mockChatInputArea;
       });
@@ -127,7 +127,7 @@ describe('tabs', () => {
     });
 
     it('should use provided container or default to master widget', () => {
-      id.mockReturnValue(mockContainer);
+      document.getElementById.mockReturnValue(mockContainer);
 
       switchTab('summary');
 

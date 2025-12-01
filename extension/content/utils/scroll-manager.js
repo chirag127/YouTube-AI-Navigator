@@ -1,36 +1,36 @@
 const gu = p => chrome.runtime.getURL(p);
 
-const { qs: $, qsa: $$ } = await import(gu('utils/shortcuts/dom.js'));
-const { e, w } = await import(gu('utils/shortcuts/log.js'));
-const { to } = await import(gu('utils/shortcuts/global.js'));
+);
+);
+);
 export class ScrollManager {
   constructor() {
     try {
       this.originalScrollPosition = 0;
       this.isScrolling = false;
     } catch (err) {
-      e('Err:ScrollManager', err);
+      console.error('Err:ScrollManager', err);
     }
   }
   savePosition() {
     try {
       this.originalScrollPosition = window.scrollY;
     } catch (err) {
-      e('Err:savePosition', err);
+      console.error('Err:savePosition', err);
     }
   }
   restorePosition() {
     try {
       window.scrollTo({ top: this.originalScrollPosition, behavior: 'smooth' });
     } catch (err) {
-      e('Err:restorePosition', err);
+      console.error('Err:restorePosition', err);
     }
   }
   scrollToTop(i = false) {
     try {
       window.scrollTo({ top: 0, behavior: i ? 'auto' : 'smooth' });
     } catch (err) {
-      e('Err:scrollToTop', err);
+      console.error('Err:scrollToTop', err);
     }
   }
   scrollToTopInstant() {
@@ -39,7 +39,7 @@ export class ScrollManager {
       document.documentElement.scrollTop = 0;
       document.body.scrollTop = 0;
     } catch (err) {
-      e('Err:scrollToTopInstant', err);
+      console.error('Err:scrollToTopInstant', err);
     }
   }
   async scrollToComments() {
@@ -61,7 +61,7 @@ export class ScrollManager {
       this.isScrolling = false;
       return loaded;
     } catch (x) {
-      e('[SM] Err scroll:', x);
+      console.error('[SM] Err scroll:', x);
       this.isScrolling = false;
       return false;
     }
@@ -88,7 +88,7 @@ export class ScrollManager {
       await this.waitForScroll(int);
       el += int;
     }
-    w('[SM] Timeout waiting for comments');
+    console.warn('[SM] Timeout waiting for comments');
     return false;
   }
   async scrollToElement(sel, opt = {}) {
@@ -99,15 +99,15 @@ export class ScrollManager {
       await this.waitForScroll(1000);
       return true;
     } catch (err) {
-      e('Err:scrollToElement', err);
+      console.error('Err:scrollToElement', err);
       return false;
     }
   }
   waitForScroll(ms) {
     try {
-      return new Promise(r => to(r, ms));
+      return new Promise(r => setTimeout(r, ms));
     } catch (err) {
-      e('Err:waitForScroll', err);
+      console.error('Err:waitForScroll', err);
       return Promise.resolve();
     }
   }
@@ -121,7 +121,7 @@ export class ScrollManager {
         r.right <= (window.innerWidth || document.documentElement.clientWidth)
       );
     } catch (err) {
-      e('Err:isInViewport', err);
+      console.error('Err:isInViewport', err);
       return false;
     }
   }
@@ -129,7 +129,7 @@ export class ScrollManager {
     try {
       if (!this.isInViewport(el)) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } catch (err) {
-      e('Err:ensureVisible', err);
+      console.error('Err:ensureVisible', err);
     }
   }
 }
@@ -139,7 +139,7 @@ export function getScrollManager() {
     if (!sm) sm = new ScrollManager();
     return sm;
   } catch (err) {
-    e('Err:getScrollManager', err);
+    console.error('Err:getScrollManager', err);
     return null;
   }
 }
