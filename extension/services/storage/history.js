@@ -18,5 +18,9 @@ export async function searchHistory(q) {
   if (!q) return getHistory();
   const i = await getHistory(),
     l = q.toLowerCase();
-  return i.filter(x => (x.title && x.title.toLowerCase().includes(l)) || (x.author && x.author.toLowerCase().includes(l)));
+  return i.filter(
+    x =>
+      (x.title && x.title.toLowerCase().includes(l)) ||
+      (x.author && x.author.toLowerCase().includes(l))
+  );
 }

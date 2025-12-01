@@ -1,5 +1,7 @@
 const { showPlaceholder } = await import(chrome.runtime.getURL('content/ui/components/loading.js'));
-const { makeTimestampsClickable } = await import(chrome.runtime.getURL('content/utils/timestamps.js'));
+const { makeTimestampsClickable } = await import(
+  chrome.runtime.getURL('content/utils/timestamps.js')
+);
 const { parseMarkdown } = await import(chrome.runtime.getURL('lib/marked-loader.js'));
 
 function processHighlights(html) {

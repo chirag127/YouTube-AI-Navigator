@@ -1,8 +1,3 @@
-
-
-
-
-
 const API_BASE = 'https://sponsor.ajay.app/api';
 
 async function _gh(vid) {

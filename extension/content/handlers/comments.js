@@ -29,8 +29,7 @@ class CommentsExtractor {
             nc.push({
               id: c.commentId,
               author: c.authorText?.simpleText || 'Unknown',
-              text:
-                (c.contentText?.runs || []).map(r => r.text).join('') || '',
+              text: (c.contentText?.runs || []).map(r => r.text).join('') || '',
               likes: c.voteCount?.simpleText || '0',
               publishedTime: c.publishedTimeText?.runs?.[0]?.text || '',
             });
@@ -153,8 +152,7 @@ class CommentsExtractor {
           comments.push({
             id: c.commentId,
             author: c.authorText?.simpleText || 'Unknown',
-            text:
-              (c.contentText?.runs || []).map(r => r.text).join('') || '',
+            text: (c.contentText?.runs || []).map(r => r.text).join('') || '',
             likes: c.voteCount?.simpleText || '0',
             publishedTime: c.publishedTimeText?.runs?.[0]?.text || '',
           });
@@ -300,8 +298,7 @@ class CommentsExtractor {
             c.push({
               id: cm.commentId,
               author: cm.authorText?.simpleText || 'Unknown',
-              text:
-                (cm.contentText?.runs || []).map(r => r.text).join('') || '',
+              text: (cm.contentText?.runs || []).map(r => r.text).join('') || '',
               likes: cm.voteCount?.simpleText || '0',
               publishedTime: cm.publishedTimeText?.runs?.[0]?.text || '',
             });

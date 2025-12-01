@@ -147,9 +147,9 @@ async function analyzeVideo(rc = 0) {
     setStatus('loading', 'Classifying segments...');
     try {
       const cls = await scs.classifyTranscript({ transcript: ts, metadata: md });
-      chrome.tabs.sendMessage(tab.id, { action: 'SHOW_SEGMENTS', segments: cls.segments }).catch(x =>
-        console.warn('Failed to send segments:', x)
-      );
+      chrome.tabs
+        .sendMessage(tab.id, { action: 'SHOW_SEGMENTS', segments: cls.segments })
+        .catch(x => console.warn('Failed to send segments:', x));
     } catch (x) {
       console.warn('Segment classification failed:', x);
     }

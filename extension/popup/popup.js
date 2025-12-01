@@ -1,16 +1,10 @@
-
-
-
-
-
-
-const a = (document).querySelector('#api-status'),
-  p = (document).querySelector('#page-status'),
-  b = (document).querySelector('#analyze-btn'),
-  h = (document).querySelector('#history-btn'),
-  o = (document).querySelector('#options-btn'),
-  m = (document).querySelector('#message'),
-  g = (document).querySelector('#setup-guide-btn');
+const a = document.querySelector('#api-status'),
+  p = document.querySelector('#page-status'),
+  b = document.querySelector('#analyze-btn'),
+  h = document.querySelector('#history-btn'),
+  o = document.querySelector('#options-btn'),
+  m = document.querySelector('#message'),
+  g = document.querySelector('#setup-guide-btn');
 export function showMsg(t, y = 'info') {
   m.textContent = t;
   m.className = `show ${y}`;

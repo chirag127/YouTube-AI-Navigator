@@ -18,7 +18,10 @@ export async function handleTranscribeAudio(req, rsp) {
     const txt = await c.generateContent(parts, m);
     let seg = [];
     try {
-      const cln = txt.replace(/```json/g, '').replace(/```/g, '').trim();
+      const cln = txt
+        .replace(/```json/g, '')
+        .replace(/```/g, '')
+        .trim();
       seg = JSON.parse(cln);
     } catch (x) {
       console.warn('[TranscribeAudio] JSON parse failed, trying to extract array', x);

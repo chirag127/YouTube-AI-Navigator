@@ -17,7 +17,7 @@ export const renderLegend = () => {
 };
 export const injectLegendStyles = () => {
   try {
-    if ((document).querySelector('#yt-ai-legend-styles')) return;
+    if (document.querySelector('#yt-ai-legend-styles')) return;
     const s = document.createElement('style');
     s.id = 'yt-ai-legend-styles';
     s.textContent = `.seg-legend{margin:10px 0;padding:10px;background:#0f0f0f;border-radius:8px}.seg-legend-title{font-weight:600;margin-bottom:8px;font-size:13px}.seg-legend-item{display:flex;align-items:center;gap:8px;margin:4px 0;font-size:12px}.seg-color{width:16px;height:16px;border-radius:3px;display:inline-block}`;

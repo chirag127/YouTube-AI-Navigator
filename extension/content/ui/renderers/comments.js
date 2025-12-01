@@ -1,5 +1,7 @@
 const { state } = await import(chrome.runtime.getURL('content/core/state.js'));
-const { showLoading, showPlaceholder } = await import(chrome.runtime.getURL('content/ui/components/loading.js'));
+const { showLoading, showPlaceholder } = await import(
+  chrome.runtime.getURL('content/ui/components/loading.js')
+);
 const { getComments } = await import(chrome.runtime.getURL('content/handlers/comments.js'));
 const { parseMarkdown } = await import(chrome.runtime.getURL('lib/marked-loader.js'));
 
@@ -12,7 +14,7 @@ export async function renderComments(c) {
     if (state.analysisData?.commentAnalysis) {
       const html = await parseMarkdown(state.analysisData.commentAnalysis);
       // Wrap existing analysis in glass card
-      (c).innerHTML = `
+      c.innerHTML = `
         <div class="yt-ai-card glass-panel" style="animation: slideUpFade 0.4s var(--ease-fluid)">
           <h3 class="yt-ai-card-title">💬 Comment Sentiment Analysis</h3>
           <div class="yt-ai-card-content">${html}</div>
@@ -29,7 +31,7 @@ export async function renderComments(c) {
     // Scroll to comments and wait for them to load
     await forceLoadComments();
     showLoading(c, 'Waiting for comments...');
-    await setTimeout(() => { }, 1200); // Increased wait time for lazy-load
+    await setTimeout(() => {}, 1200); // Increased wait time for lazy-load
 
     try {
       // Extract comments with retry logic - stay scrolled down during this process
@@ -37,7 +39,7 @@ export async function renderComments(c) {
 
       // Scroll back AFTER extraction completes
       if (cfg.scroll?.scrollBackAfterComments !== false) {
-        await setTimeout(() => { }, 300); // Brief delay before scroll-back
+        await setTimeout(() => {}, 300); // Brief delay before scroll-back
         scrollBackToTop(origPos, cfg.scroll?.showScrollNotification ?? true);
       }
 
@@ -55,8 +57,10 @@ export async function renderComments(c) {
         const html = await parseMarkdown(r.analysis);
 
         // Render with Liquid Glass Design
-        const topCommentsHtml = cm.slice(0, 5)
-          .map((x, i) => `
+        const topCommentsHtml = cm
+          .slice(0, 5)
+          .map(
+            (x, i) => `
               <div class="yt-ai-comment glass-panel-sub" style="animation: slideUpFade 0.3s var(--ease-fluid) ${0.1 + i * 0.05}s backwards; margin-bottom: 8px; padding: 12px; border-radius: var(--radius-md);">
                 <div class="yt-ai-comment-header" style="display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 0.85em; opacity: 0.8;">
                   <span class="yt-ai-comment-author" style="font-weight: 600; color: var(--accent);">${x.author}</span>
@@ -64,10 +68,11 @@ export async function renderComments(c) {
                 </div>
                 <div class="yt-ai-comment-text" style="font-size: 0.95em; line-height: 1.4;">${x.text}</div>
               </div>
-            `)
+            `
+          )
           .join('');
 
-        (c).innerHTML = `
+        c.innerHTML = `
             <div class="yt-ai-comments-container" style="display: flex; flex-direction: column; gap: 16px; padding: 8px 0;">
               <div class="yt-ai-card glass-panel" style="animation: slideUpFade 0.4s var(--ease-fluid)">
                 <h3 class="yt-ai-card-title">💬 Comment Sentiment Analysis</h3>
@@ -86,10 +91,10 @@ export async function renderComments(c) {
     } catch (x) {
       // Scroll back even on error after full retry attempts
       if (cfg.scroll?.scrollBackAfterComments !== false) {
-        await setTimeout(() => { }, 300);
+        await setTimeout(() => {}, 300);
         scrollBackToTop(origPos, cfg.scroll?.showScrollNotification ?? true);
       }
-      (c).innerHTML = `<div class="yt-ai-error-msg">Failed: ${x.message}</div>`;
+      c.innerHTML = `<div class="yt-ai-error-msg">Failed: ${x.message}</div>`;
       console.error('Err:renderComments', x);
     }
   } catch (err) {
@@ -117,13 +122,15 @@ async function forceLoadComments() {
       const maxAttempts = 20; // 20 * 500ms = 10 seconds
 
       while (attempts < maxAttempts) {
-        await setTimeout(() => { }, 500);
+        await setTimeout(() => {}, 500);
 
         // Check if comments have loaded
-        const comments = document.querySelectorAll('ytd-comment-thread-renderer, ytd-comment-renderer');
+        const comments = document.querySelectorAll(
+          'ytd-comment-thread-renderer, ytd-comment-renderer'
+        );
         if (comments && comments.length > 0) {
           // Comments appeared! Give a tiny bit more time for text to render
-          await setTimeout(() => { }, 500);
+          await setTimeout(() => {}, 500);
           return;
         }
 
@@ -139,7 +146,7 @@ async function forceLoadComments() {
         // If we are at the bottom, maybe scroll up a bit to trigger lazy load
         if (attempts % 5 === 0) {
           window.scrollBy(0, -50);
-          await setTimeout(() => { }, 100);
+          await setTimeout(() => {}, 100);
           window.scrollBy(0, 50);
         }
 
@@ -150,7 +157,7 @@ async function forceLoadComments() {
 
     // Fallback if no comments section found (e.g. mobile/other layout)
     window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
-    await setTimeout(() => { }, 2000);
+    await setTimeout(() => {}, 2000);
   } catch (err) {
     console.error('Err:forceLoadComments', err);
   }
@@ -189,7 +196,7 @@ function showScrollNotification() {
   try {
     const n = document.createElement('div');
     n.id = 'yt-ai-scroll-notification';
-    (n).textContent = '⬆️ Scrolled to top';
+    n.textContent = '⬆️ Scrolled to top';
     // Updated style to match Neo-Brutalist/Glass aesthetic
     n.style.cssText = `
       position: fixed;
@@ -207,7 +214,7 @@ function showScrollNotification() {
       border: 2px solid #000;
       animation: slideIn 0.3s var(--ease-fluid, ease-out);
     `;
-    (document.body)?.appendChild(n);
+    document.body?.appendChild(n);
     setTimeout(() => {
       n.style.animation = 'slideOut 0.3s ease-in';
       setTimeout(() => n.remove(), 300);

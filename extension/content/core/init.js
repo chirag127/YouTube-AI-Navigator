@@ -24,7 +24,7 @@ export async function waitForPageReady() {
   try {
     const p = new Promise(r => {
       if (document.readyState === 'complete') r();
-      else (window)?.addEventListener('load', r);
+      else window?.addEventListener('load', r);
     });
     await p;
 

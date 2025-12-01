@@ -20,7 +20,7 @@ export function initObserver() {
         dt = setTimeout(() => checkCurrentPage(), 300);
       }
     });
-    (document)?.addEventListener('yt-navigate-finish', () => {
+    document?.addEventListener('yt-navigate-finish', () => {
       if (dt) clearTimeout(dt);
       dt = setTimeout(() => checkCurrentPage(), 500);
     });
@@ -28,7 +28,7 @@ export function initObserver() {
       if (location.pathname !== '/watch') return;
       const u = new URLSearchParams(location.search),
         v = u.get('v');
-      const w = (document).querySelector('#yt-ai-master-widget');
+      const w = document.querySelector('#yt-ai-master-widget');
       if ((v && v !== state.currentVideoId) || (v && !isWidgetProperlyVisible(w))) {
         if (dt) clearTimeout(dt);
         dt = setTimeout(() => handleNewVideo(v), 300);
@@ -50,7 +50,7 @@ async function handleNewVideo(v) {
     }
     await injectWidget();
     setTimeout(() => {
-      const w = (document).querySelector('#yt-ai-master-widget');
+      const w = document.querySelector('#yt-ai-master-widget');
       if (w && w.parentElement) {
         const p = w.parentElement;
         if (p.firstChild !== w) {
@@ -79,7 +79,7 @@ function checkCurrentPage() {
       const u = new URLSearchParams(location.search),
         v = u.get('v');
       if (v) {
-        const w = (document).querySelector('#yt-ai-master-widget');
+        const w = document.querySelector('#yt-ai-master-widget');
         if (v === state.currentVideoId && isWidgetProperlyVisible(w)) {
           return;
         }

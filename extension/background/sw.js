@@ -21,7 +21,8 @@ chrome.runtime.onInstalled.addListener(async d => {
     } catch (x) {
       console.error('Onboard:', x);
     }
-  } else if (d.reason === 'update') console.log('YAM updated:', chrome.runtime.getManifest().version);
+  } else if (d.reason === 'update')
+    console.log('YAM updated:', chrome.runtime.getManifest().version);
 });
 chrome.runtime.onMessage.addListener((q, s, r) => {
   const a = q.action || q.type;

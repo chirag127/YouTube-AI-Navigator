@@ -23,9 +23,15 @@
         const ss = new StorageService();
         const vd = await ss.getVideoData(v);
         if (vd?.segments?.length) {
-          const { setupAutoSkip } = await import(chrome.runtime.getURL('content/segments/autoskip.js'));
-          const { injectSegmentMarkers } = await import(chrome.runtime.getURL('content/segments/markers.js'));
-          const { injectVideoLabel } = await import(chrome.runtime.getURL('content/ui/components/video-label.js'));
+          const { setupAutoSkip } = await import(
+            chrome.runtime.getURL('content/segments/autoskip.js')
+          );
+          const { injectSegmentMarkers } = await import(
+            chrome.runtime.getURL('content/segments/markers.js')
+          );
+          const { injectVideoLabel } = await import(
+            chrome.runtime.getURL('content/ui/components/video-label.js')
+          );
 
           await setupAutoSkip(vd.segments);
           injectSegmentMarkers(vd.segments);
@@ -76,7 +82,9 @@
   });
   const hGM = async (m, p) => {
     try {
-      const { MetadataExtractor: ME } = await import(chrome.runtime.getURL('content/metadata/extractor.js'));
+      const { MetadataExtractor: ME } = await import(
+        chrome.runtime.getURL('content/metadata/extractor.js')
+      );
       p({ success: true, metadata: await ME.extract(m.videoId) });
     } catch (x) {
       console.error('Err:hGM', x);
@@ -95,7 +103,9 @@
     try {
       const { videoId: v } = m;
       const wc = await cTC(v);
-      const { extractTranscript: gT } = await import(chrome.runtime.getURL('content/transcript/strategy-manager.js'));
+      const { extractTranscript: gT } = await import(
+        chrome.runtime.getURL('content/transcript/strategy-manager.js')
+      );
       const r2 = await gT(v);
       if (!r2.success || !r2.data || !r2.data.length) throw new Error(r2.error || 'No caps');
       const t = r2.data;
@@ -120,7 +130,9 @@
   };
   const hGC = async (_, p) => {
     try {
-      const { getComments: gC } = await import(chrome.runtime.getURL('content/handlers/comments.js'));
+      const { getComments: gC } = await import(
+        chrome.runtime.getURL('content/handlers/comments.js')
+      );
       p({ success: true, comments: await gC() });
     } catch (x) {
       console.error('Err:hGC', x);
@@ -146,7 +158,7 @@
   };
   const hST = (m, p) => {
     try {
-      const v = (document).querySelector('video');
+      const v = document.querySelector('video');
       if (v) {
         v.currentTime = m.timestamp;
         p({ success: true });
@@ -159,13 +171,17 @@
   const hSS = async (m, p) => {
     try {
       const { setupAutoSkip } = await import(chrome.runtime.getURL('content/segments/autoskip.js'));
-      const { injectSegmentMarkers } = await import(chrome.runtime.getURL('content/segments/markers.js'));
+      const { injectSegmentMarkers } = await import(
+        chrome.runtime.getURL('content/segments/markers.js')
+      );
       if (m.segments?.length) {
         await setupAutoSkip(m.segments);
         injectSegmentMarkers(m.segments);
 
         // Inject video label
-        const { injectVideoLabel } = await import(chrome.runtime.getURL('content/ui/components/video-label.js'));
+        const { injectVideoLabel } = await import(
+          chrome.runtime.getURL('content/ui/components/video-label.js')
+        );
         injectVideoLabel(m.segments);
 
         console.error(`[SHOW_SEGMENTS] Applied ${m.segments.length} segments`);
@@ -178,7 +194,9 @@
   };
   const hGVD = async (m, p) => {
     try {
-      const { VideoDataExtractor: VDE } = await import(chrome.runtime.getURL('content/metadata/video-data.js'));
+      const { VideoDataExtractor: VDE } = await import(
+        chrome.runtime.getURL('content/metadata/video-data.js')
+      );
       p({ success: true, data: await VDE.extract(m.videoId) });
     } catch (x) {
       console.error('Err:hGVD', x);

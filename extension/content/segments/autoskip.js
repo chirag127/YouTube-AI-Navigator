@@ -42,8 +42,8 @@ export async function setupAutoSkip(s) {
       en = true;
       const v = getVideoElement();
       if (v) {
-        (v)?.removeEventListener('timeupdate', handleAutoSkip);
-        (v)?.addEventListener('timeupdate', handleAutoSkip);
+        v?.removeEventListener('timeupdate', handleAutoSkip);
+        v?.addEventListener('timeupdate', handleAutoSkip);
         opr = v.playbackRate;
         console.error(`[AutoSkip] Enabled with ${as.length}/${s.length} segments`);
       } else {
@@ -66,7 +66,7 @@ function disableAutoSkip() {
     en = false;
     const v = getVideoElement();
     if (v) {
-      (v)?.removeEventListener('timeupdate', handleAutoSkip);
+      v?.removeEventListener('timeupdate', handleAutoSkip);
       if (isu) {
         v.playbackRate = opr;
         isu = false;
@@ -91,7 +91,9 @@ export function handleAutoSkip() {
           if (Math.abs(v.currentTime - nt) > 0.5) {
             v.currentTime = nt;
             showNotification(`⏭️ Skipped: ${s.displayLabel || s.label}`);
-            console.error(`[AutoSkip] Skipped ${s.displayLabel || s.label} (${s.start.toFixed(1)}s-${s.end.toFixed(1)}s)`);
+            console.error(
+              `[AutoSkip] Skipped ${s.displayLabel || s.label} (${s.start.toFixed(1)}s-${s.end.toFixed(1)}s)`
+            );
           }
           return;
         } else if (s.config.action === 'speed') {
@@ -119,7 +121,7 @@ export function handleAutoSkip() {
 function showNotification(tx) {
   try {
     const id = 'yt-ai-skip-notif';
-    let n = (document).querySelector('#' + id);
+    let n = document.querySelector('#' + id);
     if (n) n.remove();
     n = document.createElement('div');
     n.id = id;

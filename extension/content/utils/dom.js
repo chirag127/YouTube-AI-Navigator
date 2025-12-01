@@ -9,13 +9,13 @@ export function findSecondaryColumn() {
       'ytd-watch-flexy #secondary',
     ];
     for (const sel of s) {
-      const el = (document).querySelector(sel);
+      const el = document.querySelector(sel);
       if (el && (el.offsetWidth > 0 || el.offsetHeight > 0 || el.getClientRects().length > 0)) {
         return el;
       }
     }
     for (const sel of s) {
-      const el = (document).querySelector(sel);
+      const el = document.querySelector(sel);
       if (el) {
         return el;
       }
@@ -51,7 +51,7 @@ export function isWidgetProperlyVisible(w) {
 }
 export function seekVideo(t) {
   try {
-    const v = (document).querySelector('video');
+    const v = document.querySelector('video');
     if (v) {
       v.currentTime = t;
       v.play();
@@ -62,7 +62,7 @@ export function seekVideo(t) {
 }
 export function getVideoElement() {
   try {
-    return (document).querySelector('video');
+    return document.querySelector('video');
   } catch (err) {
     console.error('Err:getVideoElement', err);
     return null;

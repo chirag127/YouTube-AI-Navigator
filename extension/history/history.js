@@ -40,9 +40,8 @@ async function handleSearch(e) {
     renderList(hd);
     return;
   }
-  const f = hd.filter(x =>
-    (x.title || '').toLowerCase().includes(q) ||
-    (x.author || '').toLowerCase().includes(q)
+  const f = hd.filter(
+    x => (x.title || '').toLowerCase().includes(q) || (x.author || '').toLowerCase().includes(q)
   );
   renderList(f);
 }

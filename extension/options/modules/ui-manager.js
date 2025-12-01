@@ -25,7 +25,9 @@ export class UIManager {
         const tgt = t.dataset.section;
         sections.forEach(x => x.classList.remove('active'));
         t.classList.add('active');
-        Array.from(document.querySelectorAll('.section-content')).forEach(c => c.classList.remove('active'));
+        Array.from(document.querySelectorAll('.section-content')).forEach(c =>
+          c.classList.remove('active')
+        );
         const s = document.getElementById(tgt);
         if (s) s.classList.add('active');
         if (cb) cb(tgt);

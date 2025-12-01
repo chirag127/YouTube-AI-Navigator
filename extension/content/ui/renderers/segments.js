@@ -84,7 +84,7 @@ export async function renderSegments(c, data) {
   try {
     const s = Array.isArray(data) ? data : data?.segments || [];
     const fl = !Array.isArray(data) ? data?.fullVideoLabel : null;
-    const b = (document).querySelector('#yt-ai-full-video-label');
+    const b = document.querySelector('#yt-ai-full-video-label');
 
     // Handle Full Video Label
     if (b) {
@@ -162,16 +162,16 @@ export async function renderSegments(c, data) {
     // Attach Event Listeners
     $$('.yt-ai-timestamp', c).forEach(e => {
       e.style.cursor = 'pointer';
-      (e)?.addEventListener('click', evt => {
+      e?.addEventListener('click', evt => {
         evt.stopPropagation();
         seekVideo(parseFloat(e.dataset.time));
       });
 
       // Add micro-interaction on hover
-      (e)?.addEventListener('mouseenter', () => {
+      e?.addEventListener('mouseenter', () => {
         e.style.textShadow = '0 0 8px var(--primary)';
       });
-      (e)?.addEventListener('mouseleave', () => {
+      e?.addEventListener('mouseleave', () => {
         e.style.textShadow = 'none';
       });
     });

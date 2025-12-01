@@ -4,15 +4,10 @@ import { geniusLyricsAPI as gl } from '../../api/genius-lyrics.js';
 import { sponsorBlockAPI as sb } from '../../api/sponsorblock.js';
 import { ContextManager as CM } from '../../services/context-manager.js';
 
-
-
-
-
-
 // Removed unused imports
 let ka = null;
 const ska = () => {
-  if (!ka) ka = setInterval(() => chrome.runtime.getPlatformInfo(() => { }), 2e4);
+  if (!ka) ka = setInterval(() => chrome.runtime.getPlatformInfo(() => {}), 2e4);
 };
 const stka = () => {
   if (ka) {
@@ -94,7 +89,12 @@ export async function handleAnalyzeVideo(q, r) {
       sponsorBlockSegments: sb2,
       externalContext: ec,
     };
-    const st2 = await chrome.storage.sync.get(['summaryLength', 'maxInsights', 'maxFAQ', 'includeTimestamps']);
+    const st2 = await chrome.storage.sync.get([
+      'summaryLength',
+      'maxInsights',
+      'maxFAQ',
+      'includeTimestamps',
+    ]);
     const an = await g.generateComprehensiveAnalysis(ac, {
       summaryLength: o.summaryLength || st2.summaryLength || 'medium',
       language: o.language || 'en',

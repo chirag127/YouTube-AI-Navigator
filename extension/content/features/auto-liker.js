@@ -20,12 +20,12 @@ export class AutoLiker {
     try {
       if (this.isObserving) return;
       const o = new MutationObserver(() => {
-        const v = (document).querySelector('video');
+        const v = document.querySelector('video');
         if (v && v !== this.video) this.attachToVideo(v);
       });
       o.observe(document.body, { childList: true, subtree: true });
       this.isObserving = true;
-      const v = (document).querySelector('video');
+      const v = document.querySelector('video');
       if (v) this.attachToVideo(v);
     } catch (err) {
       console.error('Err:startObserving', err);
@@ -33,9 +33,9 @@ export class AutoLiker {
   }
   attachToVideo(v) {
     try {
-      if (this.video) (this.video)?.removeEventListener('timeupdate', this.handleTimeUpdate);
+      if (this.video) this.video?.removeEventListener('timeupdate', this.handleTimeUpdate);
       this.video = v;
-      (this.video)?.addEventListener('timeupdate', this.handleTimeUpdate.bind(this));
+      this.video?.addEventListener('timeupdate', this.handleTimeUpdate.bind(this));
       const vid = state.currentVideoId || new URLSearchParams(location.search).get('v');
       if (vid && !this.likedVideos.has(vid)) console.log(`AL: New vid ${vid}`);
     } catch (err) {
@@ -82,7 +82,7 @@ export class AutoLiker {
   }
   isLiveStream() {
     try {
-      const b = (document).querySelector('.ytp-live-badge');
+      const b = document.querySelector('.ytp-live-badge');
       if (b && window.getComputedStyle(b).display !== 'none') {
         return true;
       }
@@ -104,7 +104,7 @@ export class AutoLiker {
       ];
       let b = null;
       for (const sel of s) {
-        b = (document).querySelector(sel);
+        b = document.querySelector(sel);
         if (b) break;
       }
       if (!b) {
@@ -130,7 +130,7 @@ export class AutoLiker {
       ];
       let lb = null;
       for (const sel of s) {
-        const btns = (document).querySelectorAll(sel);
+        const btns = document.querySelectorAll(sel);
         for (const b of btns) {
           if (b.closest('#top-level-buttons-computed') || b.closest('#actions')) {
             lb = b;

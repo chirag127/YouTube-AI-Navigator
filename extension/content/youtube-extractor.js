@@ -21,7 +21,7 @@ function $(selector) {
         this.iu = new Set();
         this.ii();
         this.inl();
-        (w)?.addEventListener('message', ev => {
+        w?.addEventListener('message', ev => {
           if (ev.source !== w) return;
           if (ev.data.type === 'YT_GET_DATA') this.e('data_response', this.gid());
         });
@@ -97,7 +97,7 @@ function $(selector) {
     }
     inl() {
       try {
-        (d)?.addEventListener('yt-navigate-finish', ev => {
+        d?.addEventListener('yt-navigate-finish', ev => {
           const vid = ev.detail?.response?.playerResponse?.videoDetails?.videoId;
           this.e('navigation', { videoId: vid, detail: ev.detail });
         });
@@ -118,7 +118,7 @@ function $(selector) {
         }
         if (!pr) {
           try {
-            for (const s of (document).querySelectorAll('script')) {
+            for (const s of document.querySelectorAll('script')) {
               const m = (s.textContent || '').match(/ytInitialPlayerResponse\s*=\s*({.+?});/s);
               if (m) {
                 pr = jp(m[1]);

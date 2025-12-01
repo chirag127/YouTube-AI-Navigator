@@ -1,7 +1,11 @@
-const { findSecondaryColumn, isWidgetProperlyVisible } = await import(chrome.runtime.getURL('content/utils/dom.js'));
+const { findSecondaryColumn, isWidgetProperlyVisible } = await import(
+  chrome.runtime.getURL('content/utils/dom.js')
+);
 const { initTabs } = await import(chrome.runtime.getURL('content/ui/tabs.js'));
 const { attachEventListeners } = await import(chrome.runtime.getURL('content/handlers/events.js'));
-const { createWidgetHTML } = await import(chrome.runtime.getURL('content/ui/components/widget/structure.js'));
+const { createWidgetHTML } = await import(
+  chrome.runtime.getURL('content/ui/components/widget/structure.js')
+);
 
 function $(selector, context = document) {
   return context.querySelector(selector);
@@ -114,7 +118,8 @@ function reattachWidget() {
       sc.insertBefore(widgetContainer, sc.firstChild);
       lastKnownContainer = sc;
       setupObservers(sc);
-    } else console.error('Err:reattachWidget', 'Cannot reattach widget: secondary column not found');
+    } else
+      console.error('Err:reattachWidget', 'Cannot reattach widget: secondary column not found');
   } catch (err) {
     console.error('Err:reattachWidget', err);
   }
@@ -347,7 +352,7 @@ function setupResizeHandle(c) {
   try {
     const rh = $('#yt-ai-resize-handle', c);
     if (!rh || !widgetConfig?.resizable) return;
-    (rh)?.addEventListener('mousedown', ev => {
+    rh?.addEventListener('mousedown', ev => {
       ev.preventDefault();
       isResizing = true;
       startY = ev.clientY;
@@ -356,7 +361,7 @@ function setupResizeHandle(c) {
       document.body.style.cursor = 'ns-resize';
       document.body.style.userSelect = 'none';
     });
-    (document)?.addEventListener('mousemove', ev => {
+    document?.addEventListener('mousemove', ev => {
       if (!isResizing) return;
       ev.preventDefault();
       const dy = ev.clientY - startY;
@@ -365,7 +370,7 @@ function setupResizeHandle(c) {
       const ca = $('#yt-ai-content-area', c);
       if (ca) ca.style.height = `${nh}px`;
     });
-    (document)?.addEventListener('mouseup', async () => {
+    document?.addEventListener('mouseup', async () => {
       if (!isResizing) return;
       isResizing = false;
       document.body.style.cursor = '';
@@ -386,7 +391,7 @@ function setupWidthResizeHandle(c) {
   try {
     const rwh = $('#yt-ai-resize-handle-width', c);
     if (!rwh || !widgetConfig?.resizableWidth) return;
-    (rwh)?.addEventListener('mousedown', ev => {
+    rwh?.addEventListener('mousedown', ev => {
       ev.preventDefault();
       isResizingWidth = true;
       startX = ev.clientX;
@@ -394,7 +399,7 @@ function setupWidthResizeHandle(c) {
       document.body.style.cursor = 'ew-resize';
       document.body.style.userSelect = 'none';
     });
-    (document)?.addEventListener('mousemove', ev => {
+    document?.addEventListener('mousemove', ev => {
       if (!isResizingWidth) return;
       ev.preventDefault();
       const dx = widgetConfig.position === 'right' ? startX - ev.clientX : ev.clientX - startX;
@@ -402,7 +407,7 @@ function setupWidthResizeHandle(c) {
       nw = Math.max(widgetConfig.minWidth, Math.min(widgetConfig.maxWidth, nw));
       c.style.width = `${nw}px`;
     });
-    (document)?.addEventListener('mouseup', async () => {
+    document?.addEventListener('mouseup', async () => {
       if (!isResizingWidth) return;
       isResizingWidth = false;
       document.body.style.cursor = '';
@@ -439,7 +444,7 @@ function setupDragHandler(c) {
       initialTransformX = 0,
       initialTransformY = 0;
 
-    (header)?.addEventListener('mousedown', e => {
+    header?.addEventListener('mousedown', e => {
       // Ignore if clicking buttons/inputs
       if (
         e.target.closest('button') ||
@@ -464,7 +469,7 @@ function setupDragHandler(c) {
       document.body.style.userSelect = 'none';
     });
 
-    (document)?.addEventListener('mousemove', e => {
+    document?.addEventListener('mousemove', e => {
       if (!isDragging) return;
       e.preventDefault();
       const dx = e.clientX - startX;
@@ -472,7 +477,7 @@ function setupDragHandler(c) {
       c.style.transform = `translate(${initialTransformX + dx}px, ${initialTransformY + dy}px)`;
     });
 
-    (document)?.addEventListener('mouseup', () => {
+    document?.addEventListener('mouseup', () => {
       if (!isDragging) return;
       isDragging = false;
       header.style.cursor = 'grab';
@@ -487,7 +492,7 @@ function setupWidgetLogic(c) {
   try {
     const cb = $('#yt-ai-close-btn', c);
     if (cb) {
-      (cb)?.addEventListener('click', () => {
+      cb?.addEventListener('click', () => {
         const ic = c.classList.contains('yt-ai-collapsed');
         if (ic) {
           c.classList.remove('yt-ai-collapsed');
@@ -575,7 +580,10 @@ function setupObservers(c) {
             setTimeout(() => reattachWidget(), 100);
             return;
           }
-          if (c.firstChild !== widgetContainer && !arrayFrom(mu.addedNodes).includes(widgetContainer))
+          if (
+            c.firstChild !== widgetContainer &&
+            !arrayFrom(mu.addedNodes).includes(widgetContainer)
+          )
             ensureWidgetAtTop(c);
         }
       }

@@ -8,7 +8,9 @@ const { renderComments } = await import(gu('content/ui/renderers/comments.js'));
 
 export function initTabs(c) {
   try {
-    c.querySelectorAll('.yt-ai-tab').forEach(t => t?.addEventListener('click', () => switchTab(t.dataset.tab, c)));
+    c.querySelectorAll('.yt-ai-tab').forEach(t =>
+      t?.addEventListener('click', () => switchTab(t.dataset.tab, c))
+    );
   } catch (err) {
     console.error('Err:initTabs', err);
   }
