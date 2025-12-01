@@ -1,112 +1,72 @@
-# YouTube AI Navigator: Real-Time Analysis & Enhancement
+# YouTube-AI-Navigator-Browser-Extension
 
-An apex-grade, privacy-first browser extension for real-time, AI-powered YouTube analysis. Features Gemini summaries, smart transcripts, SponsorBlock integration, and advanced comment analysis, all with zero configuration and a strict privacy commitment.
+![YouTube AI Navigator Hero Banner](https://via.placeholder.com/1200x400/007bff/ffffff?text=YouTube+AI+Navigator+Browser+Extension)
 
----
+[![Build Status](https://github.com/chirag127/YouTube-AI-Navigator-Browser-Extension/actions/workflows/ci.yml/badge.svg)](https://github.com/chirag127/YouTube-AI-Navigator-Browser-Extension/actions/workflows/ci.yml)
+[![Code Coverage](https://codecov.io/gh/chirag127/YouTube-AI-Navigator-Browser-Extension/branch/main/graph/badge.svg?token=YOUR_CODECOV_TOKEN_HERE)](https://codecov.io/gh/chirag127/YouTube-AI-Navigator-Browser-Extension)
+[![Top Language](https://img.shields.io/github/languages/top/chirag127/YouTube-AI-Navigator-Browser-Extension?style=flat-square)](https://github.com/chirag127/YouTube-AI-Navigator-Browser-Extension)
+[![Framework](https://img.shields.io/badge/WXT-Toolkit-blue?style=flat-square)](https://wxt.dev)
+[![Lint & Format](https://img.shields.io/badge/lint_format-Biome-0070a7?style=flat-square)](https://biomejs.dev)
+[![License](https://img.shields.io/badge/License-CC_BY--NC_4.0-lightgrey?style=flat-square)](LICENSE)
 
-## 🚀 Live Status
-
-[![Build Status](https://img.shields.io/github/actions/workflow/status/chirag127/YouTube-AI-Navigator-Browser-Extension/ci.yml?style=flat-square&logo=githubactions)](https://github.com/chirag127/YouTube-AI-Navigator-Browser-Extension/actions/workflows/ci.yml)
-[![Coverage](https://img.shields.io/codecov/c/github/chirag127/YouTube-AI-Navigator-Browser-Extension?style=flat-square&logo=codecov)](https://codecov.io/gh/chirag127/YouTube-AI-Navigator-Browser-Extension)
-[![TypeScript Version](https://img.shields.io/badge/TypeScript-6.x-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
-[![Vite Version](https://img.shields.io/badge/Vite-7.x-orange?style=flat-square&logo=vite)](https://vitejs.dev/)
-[![License](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey?style=flat-square&logo=creativecommons)](LICENSE)
-[![GitHub Stars](https://img.shields.io/github/stars/chirag127/YouTube-AI-Navigator-Browser-Extension?style=flat-square&logo=github)](https://github.com/chirag127/YouTube-AI-Navigator-Browser-Extension/stargazers)
-[![Linting & Formatting](https://img.shields.io/badge/Biome-v18-f2f2f2?style=flat-square&logo=biome)](https://biomejs.dev/)
+### Star ⭐ this Repo!
+If you find this project valuable, please consider starring it to show your support!
 
 ---
 
-## ⭐ Star this Repo
+## BLUF (Bottom Line Up Front)
 
-If you find this project valuable, please consider starring it on GitHub! Your support helps us grow and maintain this apex-grade tool.
+**YouTube-AI-Navigator** is an apex-grade, privacy-first browser extension that transforms your YouTube experience with real-time, AI-powered insights and productivity tools. Leveraging Google Gemini, it delivers instant video summaries, smart transcripts, integrated SponsorBlock functionality, and advanced comment analysis, all with zero configuration and a steadfast commitment to user privacy.
 
 ---
 
-## 🌳 Architecture Overview
+## ARCHITECTURE: Feature-Sliced Design (FSD)
 
-ascii
-/YouTube-AI-Navigator-Browser-Extension
-├── .github/
-│   ├── AUDIT.md
-│   ├── CONTRIBUING.md
-│   ├── ISSUE_TEMPLATE/
-│   │   └── bug_report.md
-│   ├── PULL_REQUEST_TEMPLATE.md
-│   ├── SECURITY.md
-│   └── workflows/
-│       └── ci.yml
-├── src/
-│   ├── features/
-│   │   ├── ai-summary/
-│   │   │   └── index.ts
-│   │   ├── comment-analysis/
-│   │   │   └── index.ts
-│   │   ├── sponsorblock/
-│   │   │   └── index.ts
-│   │   └── transcript-enhancement/
-│   │       └── index.ts
-│   ├── shared/
-│   │   ├── constants/
-│   │   │   └── index.ts
-│   │   ├── hooks/
-│   │   │   └── index.ts
-│   │   └── utils/
-│   │       └── index.ts
-│   └── main.ts
-├── tests/
-│   ├── e2e/
-│   │   └── youtube-navigator.e2e.ts
-│   └── unit/
-│       ├── features/
-│       │   └── ai-summary/
-│       │       └── index.test.ts
-│       └── shared/
-│           └── utils/
-│               └── index.test.ts
-├── .gitignore
-├── AGENTS.md
-├── badges.yml
-├── biome.json
-├── LICENSE
-├── package.json
-├── README.md
-├── tsconfig.json
-└── vite.config.ts
+This project adheres to the robust [Feature-Sliced Design (FSD)](https://feature-sliced.design/) methodology, ensuring a highly modular, scalable, and maintainable codebase. Components are organized into distinct layers and slices, promoting strict dependency rules and clear separation of concerns.
+
+mermaid
+graph TD
+    A[App Layer] --> P1(Processes Layer: Data Synchronization)
+    A --> P2(Pages Layer: Popup UI)
+    P2 --> W1(Widgets Layer: Summary Card)
+    P2 --> W2(Widgets Layer: Transcript Viewer)
+    W1 --> F1(Features Layer: AI Summarization)
+    W2 --> F2(Features Layer: Interactive Transcript)
+    F1 --> E1(Entities Layer: Video Data)
+    F2 --> E1
+    F1 --> E2(Entities Layer: Gemini API Client)
+    F2 --> E2
+    F3(Features Layer: SponsorBlock Integration) --> E1
+    F4(Features Layer: Comment Analysis) --> E1
+    F3 --> S1(Shared Layer: Browser APIs)
+    F4 --> S1
+    E1 --> S2(Shared Layer: Utilities, Types)
+    E2 --> S2
 
 
 ---
 
-## 📜 Table of Contents
+## Table of Contents
 
-* [🚀 Live Status](#-live-status)
-* [⭐ Star this Repo](#-star-this-repo)
-* [🌳 Architecture Overview](#-architecture-overview)
-* [📜 Table of Contents](#-table-of-contents)
-* [💡 Core Concepts](#-core-concepts)
-* [⚙️ AI Agent Directives](#️-ai-agent-directives)
-* [🛠️ Development Setup](#️-development-setup)
-* [🚀 Deployment](#-deployment)
-* [📚 Development Principles](#-development-principles)
-* [🔒 Security & Privacy](#-security--privacy)
-* [🧪 Testing & Verification](#-testing--verification)
-* [⚖️ License](#️-license)
-
----
-
-## 💡 Core Concepts
-
-*   **Privacy-First:** All analysis is performed client-side. No user data is transmitted externally.
-*   **AI-Powered Insights:** Leverages Gemini AI for accurate video summaries and insightful comment analysis.
-*   **Real-Time Enhancement:** Provides immediate feedback and enhancements as you browse YouTube.
-*   **Seamless Integration:** Works directly within the YouTube interface without requiring manual uploads or complex configurations.
-*   **SponsorBlock Integration:** Automatically skips sponsored segments, enhancing viewing efficiency.
+*   [BLUF (Bottom Line Up Front)](#bluf-bottom-line-up-front)
+*   [ARCHITECTURE: Feature-Sliced Design (FSD)](#architecture-feature-sliced-design-fsd)
+*   [Table of Contents](#table-of-contents)
+*   [🤖 AI Agent Directives](#ai-agent-directives)
+*   [Key Features](#key-features)
+*   [Installation](#installation)
+*   [Development Setup](#development-setup)
+*   [Available Scripts](#available-scripts)
+*   [Core Principles](#core-principles)
+*   [Contributing](#contributing)
+*   [Security](#security)
+*   [License](#license)
 
 ---
 
-## ⚙️ AI Agent Directives
+## 🤖 AI Agent Directives
 
 <details>
-<summary>View Apex AI Agent Directives</summary>
+<summary>Click to Expand: AI Agent Directives (CRITICAL for Development)</summary>
 
 # SYSTEM: APEX TECHNICAL AUTHORITY & ELITE ARCHITECT (DECEMBER 2025 EDITION)
 
@@ -119,251 +79,213 @@ ascii
 ---
 
 ## 2. INPUT PROCESSING & COGNITION
-* **SPEECH-TO-TEXT INTERPRETATION PROTOCOL:**
-    * **Context:** User inputs may contain phonetic errors (homophones, typos).
-    * **Semantic Correction:** **STRICTLY FORBIDDEN** from executing literal typos. You must **INFER** technical intent based on the project context.
-    * **Logic Anchor:** Treat the `README.md` as the **Single Source of Truth (SSOT)**.
-* **MANDATORY MCP INSTRUMENTATION:**
-    * **No Guessing:** Do not hallucinate APIs.
-    * **Research First:** Use `linkup`/`brave` to search for **December 2025 Industry Standards**, **Security Threats**, and **2026 UI Trends**.
-    * **Validation:** Use `docfork` to verify *every* external API signature.
-    * **Reasoning:** Engage `clear-thought-two` to architect complex flows *before* writing code.
+*   **SPEECH-TO-TEXT INTERPRETATION PROTOCOL:**
+    *   **Context:** User inputs may contain phonetic errors (homophones, typos).
+    *   **Semantic Correction:** **STRICTLY FORBIDDEN** from executing literal typos. You must **INFER** technical intent based on the project context.
+    *   **Logic Anchor:** Treat the `README.md` as the **Single Source of Truth (SSOT)**.
+*   **MANDATORY MCP INSTRUMENTATION:**
+    *   **No Guessing:** Do not hallucinate APIs.
+    *   **Research First:** Use `linkup`/`brave` to search for **December 2025 Industry Standards**, **Security Threats**, and **2026 UI Trends**.
+    *   **Validation:** Use `docfork` to verify *every* external API signature.
+    *   **Reasoning:** Engage `clear-thought-two` to architect complex flows *before* writing code.
 
 ---
 
 ## 3. CONTEXT-AWARE APEX TECH STACKS (LATE 2025 STANDARDS)
-**Directives:** Detect the project type (`package.json`, `Cargo.toml`, `pyproject.toml`) and apply the corresponding **Apex Toolchain**.
-* **SCENARIO A: WEB / APP / EXTENSION (TypeScript)**
-    * **Stack:** **TypeScript 6.x** (Strict), **Vite 7** (Rolldown), **WXT** (Extensions).
-    * **State:** **Signals** (Standardized).
-    * **Lint/Test:** **Biome** (Speed) + **Vitest** (Unit) + **Playwright** (E2E).
-* **SCENARIO B: SYSTEMS / PERFORMANCE (Rust/Go)**
-    * **Stack:** **Rust 1.8x** (Cargo) or **Go 1.2x**.
-    * **Lint:** **Clippy** / **GolangCI-Lint**.
-* **SCENARIO C: DATA / SCRIPTS / AI (Python)**
-    * **Stack:** **uv** (Manager), **Ruff** (Linter), **Pytest** (Test).
+**Directives:** Detect the project type and apply the corresponding **Apex Toolchain**. This repository, `YouTube-AI-Navigator-Browser-Extension`, is a modern browser extension.
+
+*   **PRIMARY SCENARIO: WEB / APP / EXTENSION (Modern Frontend)**
+    *   **Stack:** This project leverages **TypeScript 6.x (Strict)** for robust type safety, **Vite 7** with **WXT** (Web Extension Toolkit) for rapid development and optimized builds, and **TailwindCSS v4** for utility-first styling.
+    *   **Lint/Test:** **Biome** for ultra-fast formatting and linting, **Vitest** for unit and component testing, and **Playwright** for end-to-end browser automation testing.
+    *   **Architecture:** Adheres to the **Feature-Sliced Design (FSD)** methodology, ensuring strict layering and encapsulated features for maintainability and scalability, particularly for complex extension logic and UI components.
+    *   **State Management:** Utilizes modern **Signals** patterns (e.g., SolidJS Signals or similar reactive primitives) for efficient and predictable state management within the extension.
+    *   **AI Integration:** Deeply integrated with **Google Gemini API** (`gemini-3-pro` by default) for intelligent video content analysis, summarization, and transcription. Prioritize modular design, clear API contracts, and robust error handling for all AI model interactions.
+    *   **Browser API Integration:** Direct interaction with Chrome/Firefox extension APIs, ensuring secure and performant content script injection, background service worker management, and message passing between different extension parts.
+
+*   **SECONDARY SCENARIO B: SYSTEMS / PERFORMANCE (Low Level) - *Not applicable for this project. Reference only.***
+    *   **Stack:** Rust (Cargo) or Go (Modules).
+    *   **Lint:** Clippy / GolangCI-Lint.
+    *   **Architecture:** Hexagonal Architecture (Ports & Adapters).
+
+*   **SECONDARY SCENARIO C: DATA / AI / SCRIPTS (Python) - *Not applicable for this project. Reference only for potential future backend services.***
+    *   **Stack:** uv (Manager), Ruff (Linter), Pytest (Test).
+    *   **Architecture:** Modular Monolith or Microservices.
 
 ---
 
-## 4. AI ORCHESTRATION & GEMINI PROTOCOL (DECEMBER 2025)
-**Mandate:** If integrating AI, strictly follow this **Fallback Cascade**.
-* **Tier 1 (Intelligence):** `gemini-3-pro` (Stable Dec 2025) - Multimodal Reasoning.
-* **Tier 2 (Reasoning):** `gemini-2.5-pro` (Legacy Stable) - Deep analysis/STEM.
-* **Tier 3 (Balanced):** `gemini-2.5-flash` - High Volume/Low Latency.
-* **Tier 4 (Speed):** `gemini-2.5-flash-lite` - Cost-efficiency.
-* **Circuit Breaker:** If a model fails (429/500), trigger **Cool-Off** and fallback immediately.
+## 4. ARCHITECTURAL PATTERNS & PRINCIPLES
+*   **Feature-Sliced Design (FSD):** Enforce strict FSD principles for organizing code.
+    *   **Layers:** `app`, `processes`, `pages`, `widgets`, `features`, `entities`, `shared`.
+    *   **Slices:** Each feature/entity is a self-contained slice.
+    *   **Rules:** No direct dependency between higher and lower layers, explicit public API for each slice.
+*   **SOLID Principles:** Ensure all classes and modules adhere to Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, and Dependency Inversion.
+*   **DRY (Don't Repeat Yourself):** Abstract common logic, components, and utilities.
+*   **YAGNI (You Aren't Gonna Need It):** Avoid over-engineering; build only what is required for the current iteration.
+*   **Atomic Design (for UI components):** Organize UI into Atoms, Molecules, Organisms, Templates, and Pages for consistency and reusability.
 
 ---
 
-## 5. RECURSIVE PERFECTION LOOP (THE "ZERO-ERROR" MANDATE)
-**The Loop:**
-1.  **Analyze:** Scan the codebase.
-2.  **Fix:** Apply architectural patterns and fixes.
-3.  **Lint/Format:** Run the stack's strictest linter (Biome/Ruff).
-4.  **Test:** Run the test suite.
-5.  **DECISION GATE:**
-    * **IF** Errors/Warnings exist -> **GO TO STEP 2** (Self-Correct).
-    * **IF** Clean -> **COMMIT** and Present.
-**Constraint:** **DO NOT STOP** until the build is perfectly clean.
+## 5. VERIFICATION COMMANDS & QUALITY GATES
+Before any pull request, the following must pass with zero errors/warnings:
+
+*   **Lint & Format:** `biome check . --apply-unsafe && biome format . --write`
+*   **Type Check:** `tsc --noEmit`
+*   **Unit Tests:** `vitest run`
+*   **End-to-End Tests:** `playwright test`
+*   **Build:** `wxt build` (or `npm run build` if WXT is wrapped)
+*   **Security Scan:** `npm audit` (or equivalent supply chain security tool)
 
 ---
 
-## 6. CORE ARCHITECTURAL PRINCIPLES
-* **SOLID MANDATE:** SRP, OCP, LSP, ISP, DIP.
-* **ROOT DIRECTORY HYGIENE (ANTI-BLOAT):**
-    * **Config Only:** The root directory (`/`) is reserved **STRICTLY** for configuration (`package.json`, `README.md`, `.gitignore`).
-    * **No Root Scripts:** Do not create a `scripts/` folder in the root.
-    * **Containment:** All source code goes to `src/`. All verification code goes to `tests/`.
-* **MODULARITY:** Feature-First Structure (`src/features/auth`), not type.
-* **CQS:** Methods must be **Commands** or **Queries**, never both.
-* **12-Factor App:** Config in environment; backing services attached.
+## 6. PROJECT CONTEXT & SCOPE
+*   **Name:** `YouTube-AI-Navigator-Browser-Extension`
+*   **Description:** Apex-grade, privacy-first browser extension for real-time, AI-powered YouTube analysis. Features Gemini summaries, smart transcripts, SponsorBlock, and advanced comment analysis. Privacy-first, zero-config.
+*   **Core Functionality:** Enhance YouTube experience with AI-driven insights, content filtering, and productivity tools.
+*   **Target Browsers:** Chrome, Firefox, Edge (via WXT cross-browser compatibility).
 
 ---
 
-## 7. CODE HYGIENE & STANDARDS (READABILITY FIRST)
-* **SEMANTIC NAMING PROTOCOL:**
-    * **Descriptive Verbs:** `calculateWeeklyPay` (Good) vs `calc` (Bad).
-    * **Casing:** `camelCase` (JS/TS), `snake_case` (Python), `PascalCase` (Classes).
-* **CLEAN CODE RULES:**
-    * **Verticality:** Optimize for reading down.
-    * **No Nesting:** Use **Guard Clauses** (`return early`).
-    * **DRY & KISS:** Automate repetitive tasks. Keep logic simple.
-    * **Zero Comments:** Code must be **Self-Documenting**. Use comments *only* for "Why".
+## 7. ETHICAL AI & PRIVACY CONSIDERATIONS
+*   **Data Minimization:** Only collect data absolutely necessary for features.
+*   **Local Processing:** Prioritize client-side processing where possible to enhance privacy.
+*   **Transparency:** Clearly inform users about data usage and AI model interactions.
+*   **Opt-in:** Features involving external AI APIs or data sharing should be opt-in.
+*   **Anonymization:** Any aggregated telemetry must be fully anonymized.
 
 ---
 
-## 8. RELIABILITY, SECURITY & SUSTAINABILITY
-* **DEVSECOPS PROTOCOL:**
-    * **Zero Trust:** Sanitize **ALL** inputs (OWASP Top 10 2025).
-    * **Supply Chain:** Generate **SBOMs** for all builds.
-    * **Fail Fast:** Throw errors immediately on invalid state.
-    * **Encryption:** Secure sensitive data at rest and in transit.
-* **EXCEPTION HANDLING:**
-    * **Resilience:** App must **NEVER** crash. Wrap critical I/O in `try-catch-finally`.
-    * **Recovery:** Implement retry logic with exponential backoff.
-* **GREEN SOFTWARE:**
-    * **Rule of Least Power:** Choose the lightest tool for the job.
-    * **Efficiency:** Optimize loops ($O(n)$ over $O(n^2)$).
-    * **Lazy Loading:** Load resources only when needed.
+## 8. DEVOPS & CI/CD STRATEGY
+*   **Branching Model:** GitFlow or GitHub Flow, depending on project velocity.
+*   **Automated Testing:** CI workflow triggers on push/PR for lint, type check, unit, and E2E tests.
+*   **Automated Deployment:** CD workflow for publishing to browser stores (manual trigger or on release tag).
+*   **Semantic Release:** Use semantic versioning and automated release notes generation.
 
 ---
 
-## 9. COMPREHENSIVE TESTING & VERIFICATION STRATEGY
-* **FOLDER SEPARATION PROTOCOL (STRICT):**
-    * **Production Purity:** The `src/` or `extension/` folder is a **Production-Only Zone**. It must contain **ZERO** test files and **ZERO** test scripts.
-    * **Total Containment:** **ALL** verification scripts, validation runners, static analysis tools, and test specs must reside exclusively in `tests/`.
-    * **Structure:**
-        * `tests/unit/`: Unit tests.
-        * `tests/e2e/`: Playwright/Selenium tests.
-        * `tests/scripts/`: Verification/Validation scripts (e.g., `verify-imports.js`, `audit-coverage.js`).
-* **TESTING PYRAMID (F.I.R.S.T.):**
-    * **Fast:** Tests run in milliseconds.
-    * **Isolated:** No external dependencies.
-    * **Repeatable:** Deterministic results.
-* **COVERAGE MANDATE:**
-    * **1:1 Mapping:** Every source file **MUST** have a corresponding test file.
-    * **Target:** 100% Branch Coverage.
-    * **Zero-Error Standard:** Software must run with 0 console errors.
-
----
-
-## 10. UI/UX AESTHETIC SINGULARITY (2026 STANDARD)
-* **VISUAL LANGUAGE:**
-    * **Style:** Blend **Liquid Glass** + **Neo-Brutalist** + **Material You 3.0**.
-    * **Motion:** **MANDATORY** fluid animations (`transition: all 0.2s`).
-* **PERFORMANCE UX:**
-    * **INP Optimization:** Interaction to Next Paint < 200ms.
-    * **Optimistic UI:** UI updates instantly; server syncs in background.
-* **INTERACTION DESIGN:**
-    * **Hyper-Personalization:** Adapt layouts based on user behavior.
-    * **Micro-interactions:** Every click/hover must have feedback.
-* **HYPER-CONFIGURABILITY:**
-    * **Mandate:** Every feature/color must be user-configurable via Settings.
-
----
-
-## 11. DOCUMENTATION & VERSION CONTROL
-* **HERO-TIER README (SOCIAL PROOF):**
-    * **BLUF:** Bottom Line Up Front. Value prop first.
-    * **Live Sync:** Update README **IN THE SAME TURN** as code changes.
-    * **Visuals:** High-Res Badges (Shields.io), ASCII Architecture Trees.
-    * **AI Replication Block:** Include `<details>` with stack info for other agents.
-    * **Social Proof:** Explicitly ask users to **"Star ⭐ this Repo"**.
-* **ADVANCED GIT OPERATIONS:**
-    * **Context Archaeology:** Use `git log`/`git blame`.
-    * **Conventional Commits:** Strict format (`feat:`, `fix:`, `docs:`).
-    * **Semantic Versioning:** Enforce `Major.Minor.Patch`.
-
----
-
-## 12. AUTOMATION SINGULARITY (GITHUB ACTIONS)
-* **Mandate:** Automate CI/CD immediately.
-* **Workflows:**
-    1.  **Integrity:** Lint + Test on Push.
-    2.  **Security:** Audit dependencies + SBOM.
-    3.  **Release:** Semantic Versioning + Artifact Upload.
-    4.  **Deps:** Auto-merge non-breaking updates.
-
----
-
-## 13. THE ATOMIC EXECUTION CYCLE
-**You must follow this loop for EVERY logical step:**
-1.  **Audit:** Scan state (`ls -R`) & History (`git log`).
-2.  **Research:** Query Best Practices & Trends.
-3.  **Plan:** Architect via `clear-thought-two`.
-4.  **Act:** Fix Code + Polish + Add Settings + Write Tests (in `tests/`).
-5.  **Automate:** Create/Update CI/CD YAMLs.
-6.  **Docs:** Update `README.md` (Replication Ready).
-7.  **Verify:** Run Tests & Linters.
-8.  **REITERATE:** If *any* error/warning exists, fix it immediately.
-    **DO NOT STOP** until the build is perfectly clean.
-9.  **Commit:** `git commit` immediately (Only when clean).
+## 9. DOCUMENTATION MANDATE
+*   **README.md:** Comprehensive, up-to-date, self-contained project operating system.
+*   **CONTRIBUTING.md:** Clear guidelines for contributions.
+*   **SECURITY.md:** Vulnerability reporting and security policy.
+*   **Code Comments:** Explain *why*, not just *what*. Focus on complex logic, edge cases, and architectural decisions.
+*   **API Documentation:** JSDoc/TSDoc for all public functions, components, and types.
 
 </details>
 
 ---
 
-## 🛠️ Development Setup
+## Key Features
 
-### Prerequisites
+*   **Gemini-Powered Video Summaries:** Get concise, AI-generated summaries of any YouTube video in real-time, saving valuable time.
+*   **Smart, Interactive Transcripts:** Access synchronized, searchable transcripts with enhanced readability and navigation.
+*   **Integrated SponsorBlock:** Automatically skip sponsored segments, introductions, and outros for an uninterrupted viewing experience.
+*   **Advanced Comment Analysis:** Utilize AI to categorize and summarize comments, highlighting key discussions or sentiments.
+*   **Privacy-First Design:** No personal data collection, local processing where possible, and transparent AI interactions.
+*   **Zero-Configuration:** Installs and works out-of-the-box with sensible defaults.
+*   **Cross-Browser Compatibility:** Built with WXT for seamless experience across Chrome, Firefox, and Edge.
 
-*   **Node.js:** v20.x or later
-*   **npm/yarn/pnpm:** Latest version
-*   **TypeScript:** v6.x (globally installed or via project)
-*   **Vite:** v7.x
-*   **Biome:** Latest version
+---
 
-### Installation
+## Installation
+
+### From Browser Web Stores (Recommended for Users)
+
+YouTube-AI-Navigator will be available on the following browser stores upon official release:
+
+*   [Chrome Web Store](https://chrome.google.com/webstore/category/extensions) (Link will be active post-release)
+*   [Firefox Add-ons](https://addons.mozilla.org/) (Link will be active post-release)
+*   [Microsoft Edge Add-ons](https://microsoftedge.microsoft.com/addons/Microsoft-Edge-Extensions-Home) (Link will be active post-release)
+
+### Manual Installation (For Developers & Early Adopters)
 
 1.  **Clone the Repository:**
     bash
     git clone https://github.com/chirag127/YouTube-AI-Navigator-Browser-Extension.git
     cd YouTube-AI-Navigator-Browser-Extension
     
-
 2.  **Install Dependencies:**
     bash
-    npm install # or yarn install or pnpm install
+    npm install
     
-
-### Development Server
-
-To run the extension in development mode:
-
-bash
-npm run dev
-
-
-This will start the Vite development server and provide instructions on how to load the extension into your browser.
-
----
-
-## 🚀 Deployment
-
-*   **Browser Extension Stores:** For production deployment, the extension will be bundled and submitted to the Chrome Web Store and Firefox Add-ons, following their respective guidelines.
-*   **Build Command:**
+3.  **Build for Development (Watch Mode):**
     bash
-    npm run build
+    npm run dev
     
-    This command generates an optimized build in the `dist/` directory, ready for packaging.
+    This will build the extension into the `.wxt` directory and watch for changes.
+4.  **Load into your Browser:**
+    *   **Chrome/Edge:**
+        1.  Open `chrome://extensions` or `edge://extensions`.
+        2.  Enable "Developer mode" (usually top right).
+        3.  Click "Load unpacked" and select the `.wxt/chrome` directory inside your cloned repository.
+    *   **Firefox:**
+        1.  Open `about:debugging#/runtime/this-firefox`.
+        2.  Click "Load Temporary Add-on..." and select the `manifest.json` file from the `.wxt/firefox` directory inside your cloned repository.
 
 ---
 
-## 📚 Development Principles
+## Development Setup
 
-This project adheres to the following core software development principles:
+Ensure you have Node.js (v18+) and npm (or pnpm/yarn) installed.
 
-*   **SOLID:** Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion.
-*   **DRY (Don't Repeat Yourself):** Eliminate redundancy through abstraction and modularity.
-*   **KISS (Keep It Simple, Stupid):** Prioritize clarity and straightforward solutions.
-*   **YAGNI (You Ain't Gonna Need It):** Implement only what is currently required.
-*   **CQS (Command Query Separation):** Methods either perform an action (Command) or return data (Query), not both.
-*   **12-Factor App:** Adherence to configuration, statelessness, and service binding.
-
----
-
-## 🔒 Security & Privacy
-
-This extension is built with a **privacy-first** approach. All AI processing and analysis are performed **client-side**. We **do not collect or transmit any user data**.
-
-*   **Zero-Trust Architecture:** Inputs are rigorously sanitized, adhering to OWASP Top 10 (2025) standards.
-*   **Dependency Auditing:** Regular checks are performed on all dependencies to mitigate supply chain risks.
-*   **No Data Collection:** No telemetry, no analytics, no PII is ever stored or shared.
+1.  **Clone the repository:**
+    bash
+    git clone https://github.com/chirag127/YouTube-AI-Navigator-Browser-Extension.git
+    cd YouTube-AI-Navigator-Browser-Extension
+    
+2.  **Install dependencies using `npm`:**
+    bash
+    npm install
+    
+3.  **Create a `.env` file** in the project root with your Google Gemini API key:
+    
+    VITE_GEMINI_API_KEY="YOUR_GOOGLE_GEMINI_API_KEY"
+    
+    (Replace `YOUR_GOOGLE_GEMINI_API_KEY` with your actual key. Obtain one from the [Google AI Studio](https://ai.google.dev/))
 
 ---
 
-## 🧪 Testing & Verification
+## Available Scripts
 
-*   **Unit Tests:** Located in `tests/unit/`. Use Vitest for fast, isolated testing.
-*   **End-to-End (E2E) Tests:** Located in `tests/e2e/`. Utilize Playwright for comprehensive browser automation.
-*   **Linting & Formatting:** Biome is enforced across the codebase for consistency and quality. All code must pass Biome checks.
-*   **Coverage Target:** Aim for 100% branch coverage. All production code must have corresponding tests.
-*   **Zero Console Errors:** The extension must run without any console errors in the browser.
+In the project directory, you can run:
+
+| Script              | Description                                                                  |
+| :------------------ | :--------------------------------------------------------------------------- |
+| `npm run dev`       | Starts the development server in watch mode. Builds to `.wxt` directory.     |
+| `npm run build`     | Builds the extension for production across all target browsers.              |
+| `npm run zip`       | Zips the production builds for submission to browser stores.                 |
+| `npm run test`      | Runs unit and component tests with Vitest.                                   |
+| `npm run test:e2e`  | Runs end-to-end browser tests with Playwright.                               |
+| `npm run lint`      | Lints and formats the codebase using Biome, fixing auto-fixable issues.      |
+| `npm run lint:check`| Checks for linting and formatting issues without fixing them.                |
+| `npm run typecheck` | Checks TypeScript files for type errors.                                     |
 
 ---
 
-## ⚖️ License
+## Core Principles
 
-This project is licensed under the **Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0)**.
+This project is built upon a foundation of engineering excellence and ethical considerations:
 
-See the [LICENSE](LICENSE) file for more details.
+*   **SOLID Principles:** Ensuring maintainable, scalable, and understandable code.
+*   **DRY (Don't Repeat Yourself):** Promoting code reusability and minimizing redundancy.
+*   **YAGNI (You Aren't Gonna Need It):** Focused development on current needs to avoid over-engineering.
+*   **Privacy by Design:** Integrating privacy controls and data minimization from conception.
+*   **Performance Optimization:** Delivering a fast and responsive user experience.
+*   **Accessibility:** Striving for an inclusive design that is usable by everyone.
+
+---
+
+## Contributing
+
+We welcome contributions from the community! Please refer to our [CONTRIBUTING.md](.github/CONTRIBUTING.md) for detailed guidelines on how to get started, report bugs, suggest features, and submit pull requests.
+
+---
+
+## Security
+
+Your security is our top priority. Please review our [SECURITY.md](.github/SECURITY.md) to learn how to report vulnerabilities and understand our security practices.
+
+---
+
+## License
+
+This project is licensed under the [Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0) License](LICENSE). This means you are free to share and adapt the work for non-commercial purposes, with appropriate attribution.
+
