@@ -1,366 +1,179 @@
 # YouTube AI Navigator
 
-AI-powered YouTube analysis extension. Transcripts, insights, segments, comments analysis - all private, zero-config.
-
-## Summary of Changes
-
-- **Removed Comments from Production Code**: All production code stripped of comments for minimal tokens, compressed keys, dense ES6+ syntax to optimize performance and reduce bundle size.
-- **2026 UI/UX Compliance**: Implemented Liquid Glass (translucency, depth), Neo-Brutalist accents (bold typography), Material You (dynamic tonal palettes), fluid animations (mandatory cubic-bezier easing), hyper-personalization (adaptive layouts/content), micro-interactions (glow on inputs, ripple on buttons), accessibility (WCAG 2.1 baseline).
-- **Hyper-Configurable Settings**: Every feature, rule, color, and variable user-customizable through Options page, with instant chrome.storage sync.
-- **Comprehensive Test Coverage**: 1:1 mapping with source files, including edge cases (network failures, empty states, boundary conditions), static analysis for dependency resolution, import/export integrity validation.
-- **Audit Findings**: Zero runtime crashes, strict named exports only, systematic refactoring of import/export mismatches.
-- **Research Recommendations**: Incorporated 2026 UI trends (loveable designs), current best practices for AI integration, design patterns for modularity, token optimization via hybrid pattern-recognition protocol.
-
-## Features
-
-- **AI Analysis**: Gemini-powered summaries, insights, FAQ (configurable length, insights count, FAQ count)
-- **Smart Transcripts**: Multi-strategy fetching (DOM Automation, Genius, Speech-to-Text) - auto-closes YouTube panel, scrolls to top
-- **Segment Classification**: Auto-detect sponsors, intros, off-topic sections with skip/speed actions (13 SponsorBlock categories: sponsor, selfpromo, interaction, intro, outro, preview, hook, music_offtopic, poi_highlight, filler, exclusive_access, chapter, content)
-  - **DISABLED BY DEFAULT**: Segment detection and auto-skip are OFF by default to protect video content
-  - **Conservative Defaults**: Only sponsor/selfpromo default to "skip"; all others default to "ignore"
-  - **Explicit Opt-In**: Users must enable segment features in settings
-  - **Granular Control**: Configure each segment type individually (ignore/skip/speed) with adjustable speed (1-16x)
-  - **Bulk Operations**: Set all segments to skip/speed/ignore with one click
-- **Comment Analysis**: Sentiment analysis, key themes
-- **Configurable Output**: Control summary length (short/medium/long), max insights (3-20), max FAQ (3-15), timestamps on/off
-- **Widget UI**: Responsive sidebar widget with 4 tabs (Summary, Segments, Chat, Comments) - 70vh scrollable content area with "Scrollytelling" animations
-- **DeArrow Integration**: Community-sourced clickbait-free titles
-- **SponsorBlock**: Skip/speed through segments (configurable per category)
-- **Comprehensive Options Page**: Full-featured settings UI for all configuration aspects
-- **Privacy-First**: All processing client-side, no tracking
-
-## Quick Start
-
-```bash
-npm install
-npm test  # Run headless test suite (Vitest + JSDOM)
-```
-
-Load `extension/` folder in Chrome as unpacked extension.
-
-## 🎨 Hyper-Configurability (25+ Settings)
-
-The extension implements **maximum user configurability** - every feature, rule, color, and variable is user-customizable through the comprehensive Options page. All settings save to chrome.storage and apply instantly.
-
-### Core Features Configurable
-
-- **Video Analysis**: Enable/disable auto-analysis, auto-summarize, auto-extract key points, auto-detect language, auto-load transcript
-- **Chat**: Enable/disable chat features
-- **Comments**: Enable/disable analysis, set limit (5-100), max replies depth (0-5), sort by (top/newest/oldest), auto-summarize
-- **Segments**: Enable/disable detection, auto-skip, show notifications, show markers, skip tolerance (0.1-2s), min duration (0.5-10s), per-category actions (ignore/skip/speed 1-16x)
-- **Transcripts**: Enable/disable, active state, auto-open widget, method (auto/dom/genius/speech), language, include timestamps, auto-translate, show original, highlight keywords, auto-close, auto-close delay (0-5000ms), auto-close on cached, auto-scroll
-- **Metadata**: Include/extract title, author, views, duration, description, tags, upload date, chapters
-- **Notifications**: Enable/disable, position (top/bottom), duration (1-10s), sound, vibration, browser notifications
-- **Cache**: Enable/disable, TTL (1-168h), max size (10-500MB), per-type caching (transcripts/comments/metadata/segments/summaries)
-- **Performance**: Rate limits, timeouts, retry attempts, chunk sizes, memory limits
-- **UI Appearance**: Theme (dark/light/system), wallpaper mode, compact mode, font family, icon style, primary/accent/background/text/border colors
-- **Automation**: Auto-like, auto-thumbs up, auto-next video, auto-loop
-- **External APIs**: TMDB, NewsData, Google Fact Check, Twitch (client ID/access token), enable/disable toggles for all 14 APIs
-- **Advanced**: Debug mode, enable telemetry, max history (10-1000), export/import settings, reset defaults
-
-### Widget Appearance (2026 Futurist Standard)
-
-- **Hybrid Aesthetic:** "Liquid Glass" translucency meets "Neo-Brutalist" boldness.
-- **Liquid Glass:** High-saturation background blurs (`backdrop-filter: blur(40px)`), fluid gradients, and light reflection effects.
-- **Neo-Brutalism:** High-contrast borders, raw typography (JetBrains Mono + Outfit), and hard shadows for interactive elements.
-- **Scrollytelling:** Data elements (segments, insights, comments) animate in sequentially with staggered delays to guide the user's eye.
-- **Micro-interactions:** Every hover, click, and focus state triggers fluid feedback animations (`cubic-bezier` easing).
-- **Hyper-Configurability (Options → UI Appearance):**
-  - **Colors:** Primary, accent, background, text, border (full color pickers)
-  - **Typography:** Font family (Inter/Roboto/Open Sans/Lato/System), icon style
-  - **Glass Effects:** Backdrop blur intensity (0-64px), card opacity (0-100%)
-  - **Motion:** Animation speed (0.05-0.5s), easing curves (ease-out/elastic/linear), micro-interactions toggle
-  - **Structure:** Border width (1-4px), radius scale (0.5-2x), spacing scale (0.75-1.5x)
-  - **Effects:** Shadow intensity (0-100%), glow intensity (0-100%), gradient accents toggle
-  - **Modes:** Wallpaper mode, compact mode
-- **Responsive Layout:**
-  - **Dynamic Height:** Automatically adapts to viewport height to prevent clipping.
-  - **Resizability:** Drag handles for both width and height.
-  - **Positioning:** Dock to Left or Right side.
-
-### Widget Behavior
-
-- **Tab Visibility:** Toggle Summary, Segments, Chat, and Comments tabs.
-- **Default State:** Choose whether the widget starts expanded or collapsed.
-- **Memory:** Remembers your last used state (collapsed/expanded).
-
-### Segment Filtering
-
-- **Granular Control:** Toggle visibility for specific segment types (Sponsors, Self-promo, Intros, etc.).
-
-### AI Configuration
-
-- **Model Selection:** Choose from available Gemini models
-- **API Key:** Secure storage of Gemini API key
-- **Temperature:** Creativity level (0-2)
-- **Max Tokens:** Response length (100-32768)
-- **Custom Prompts:** Editable AI instructions for all analysis types
-- **Output Settings:** Summary length, max insights, max FAQs, timestamps
-
-### Scroll & UI Settings
-
-- **Scroll Behavior:** Auto-scroll to comments, scroll back after, show notifications, smooth scrolling, speed, delay
-- **UI Preferences:** Theme, font size, animations, tooltips, compact mode
-
-## Configuration
-
-1. Click extension icon → Options
-2. Add Gemini API key (free at ai.google.dev)
-3. Configure AI analysis settings:
-   - Summary Length: short (2-3 paragraphs), medium (4-6), long (8-12)
-   - Max Key Insights: 3-20 (default: 8)
-   - Max FAQ Items: 3-15 (default: 5)
-   - Include Timestamps: Add [MM:SS] references (default: on)
-4. **Enable Segment Detection** (DISABLED by default):
-   - Navigate to Options → Segments & Actions
-   - Toggle "Enable Segment Detection" ON
-   - Toggle "Enable Auto-Skip" ON (if desired)
-   - Configure segment actions (default settings):
-     - **Skipped by Default**: Sponsor, Self Promotion
-     - **Ignored by Default**: Interaction, Intro, Outro, Preview, Off-Topic, Filler, Highlight, Exclusive Access
-5. Configure transcript methods, UI preferences
-
-## Architecture
-
-### Ultra-Compressed Design
-
-- **Shortcuts**: All common operations use 1-2 letter aliases (`l`=log, `e`=error, `w`=warn, `ael`=addEventListener, `rel`=removeEventListener, `$`=querySelector, `sg`=storage.get)
-- **Minimal Tokens**: Stripped comments, compressed keys, dense ES6+ syntax
-- **Modular**: Maximum files, minimum tokens per file (excellent modularity achieved)
-- **ESM Integrity**: Import validation tests ensure zero runtime errors
-- **Named Exports Only**: No default exports, explicit named exports throughout (audit confirmed integrity)
-
-### Key Files
-
-- `utils/shortcuts/` - Modular ultra-short utility aliases (dom.js, log.js, core.js, etc.)
-- `utils/config.js` - Compressed config with short keys
-- `content/transcript/strategy-manager.js` - Multi-strategy transcript extraction
-- `api/gemini-client.js` - Gemini API client with rate limiting
-- `tests/` - Comprehensive test coverage (1:1 mapping with source files, edge cases: network failures, empty states, UI rendering)
-  - `import-integrity.test.js` - Validates all imports match exports
-  - `options.test.js` - Verifies settings saving and auto-save logic
-  - `skipping.test.js` - Verifies segment skipping and speed control
-  - `comments.test.js` - Verifies comment extraction logic
-  - `segments-config.test.js` - Validates default segment category configuration
-  - `settings-manager.test.js` - Validates settings merge and defaults
-  - `comprehensive-settings.test.js` - Tests all 12 segment categories, defaults, persistence, export/import
-  - `segments-ui.test.js` - Tests UI module bulk operations (setAll) and individual updates
-  - `autoskip-integration.test.js` - Integration tests for segment action filtering
-  - `content-protection.test.js` - Validates disabled-by-default behavior
-  - `sponsorblock-integration.test.js` - SponsorBlock API integration, label mapping (13 categories)
-  - `api-detector.test.js` - API availability detection tests (SponsorBlock, DeArrow, Gemini, TMDB, NewsData, GoogleFactCheck)
-  - `segment-label-mapping.test.js` - Label-to-category mapping for all 13 segment types
-  - `api-performance.test.js` - API metrics tracking, auto-detection logic
-  - `prompts.test.js` - Verifies prompt settings and configuration
-  - `comments.test.js` (patterns) - Tests sentiment analysis and spam detection patterns
-  - `tab-loader.test.js` - Verifies dynamic tab loading logic
-  - `config-defaults.test.js` - Verifies default configuration values
-  - `comments.test.js` (api) - Verifies comment prompt generation logic
-
-### Storage Keys (Compressed)
-
-- `cfg` - Main config object
-- `obDone` - Onboarding completed
-- `apiKey` - Gemini API key
-
-### Default Model
-
-`gemini-2.5-flash-lite-preview-09-2025` - Fastest, most efficient Gemini model
-
-## Transcript Strategies (Priority Order)
-
-1. **DOM Automation** - Automates YouTube UI to extract captions (Auto-scrolls page back to original position)
-2. **Genius Lyrics** - Music videos only
-3. **Speech-to-Text** - Gemini audio transcription fallback
-
-## Comment Extraction Strategies (Priority Order)
-
-1. **Initial Data** - Extracts comments from ytInitialData before page load
-2. **API Interception** - Captures YouTube API responses for real-time comments
-3. **DOM Scraping** - Forces scroll to comments section, waits for load, then extracts with configurable retry logic
-   - Auto-scrolls to `ytd-comments#comments` section to trigger lazy loading
-   - Waits 1200ms + 600ms for comments to render
-   - Retry attempts configurable in Options → General → Comments (1-10, default: 5)
-   - Extracts up to 20 comments with multiple selector fallbacks
-   - Scrolls back to original position after extraction
-
-## Segment Categories & Default Actions
-
-| Category           | Label                | Default Action | Description                  |
-| ------------------ | -------------------- | -------------- | ---------------------------- |
-| `sponsor`          | Sponsor              | Skip           | Paid sponsorships            |
-| `selfpromo`        | Self Promotion       | Skip           | Self-promotion (paid/unpaid) |
-| `interaction`      | Interaction Reminder | **Ignore**     | Like/subscribe reminders     |
-| `intro`            | Intermission/Intro   | **Ignore**     | Intro animations             |
-| `outro`            | Endcards/Credits     | **Ignore**     | End credits                  |
-| `preview`          | Preview/Recap        | **Ignore**     | Episode recaps               |
-| `music_offtopic`   | Off-Topic            | **Ignore**     | Off-topic content            |
-| `filler`           | Filler/Tangent       | **Ignore**     | Tangential discussions       |
-| `poi_highlight`    | Highlight            | **Ignore**     | Important moments            |
-| `exclusive_access` | Exclusive Access     | **Ignore**     | Premium content              |
-| `content`          | Content              | **Ignore**     | Main video content           |
-
-**Global Defaults**: Segment detection **DISABLED**, Auto-skip **DISABLED**
-
-**Actions**: `ignore` = watch normally, `skip` = instant skip, `speed` = watch at higher playback speed (1-16x)
-
-## APIs Used
-
-| Service           | Purpose                    | Key Required | Settings Path                          |
-| ----------------- | -------------------------- | ------------ | -------------------------------------- |
-| Gemini            | AI analysis, transcription | ✅ Required  | `ai.apiKey`                            |
-| SponsorBlock      | Segment database           | ⚫ No key    | `externalApis.sponsorBlock.enabled`    |
-| DeArrow           | Clickbait-free titles      | ⚫ No key    | `externalApis.deArrow.enabled`         |
-| Genius Lyrics     | Music lyrics               | ⚫ No key    | `externalApis.geniusLyrics.enabled`    |
-| MusicBrainz       | Music metadata             | ⚫ No key    | `externalApis.musicBrainz.enabled`     |
-| Wikidata          | Knowledge base             | ⚫ No key    | `externalApis.wikidata.enabled`        |
-| Datamuse          | Word relations             | ⚫ No key    | `externalApis.datamuse.enabled`        |
-| Open-Meteo        | Weather data               | ⚫ No key    | `externalApis.openMeteo.enabled`       |
-| Open Library      | Book metadata              | ⚫ No key    | `externalApis.openLibrary.enabled`     |
-| Semantic Scholar  | Academic papers            | ⚫ No key    | `externalApis.semanticScholar.enabled` |
-| TMDB              | Movie/TV metadata          | ⚪ Optional  | `externalApis.tmdb.key`                |
-| IGDB              | Game metadata              | ⚪ Optional  | `externalApis.igdb.clientId`           |
-| NewsData          | News articles              | ⚪ Optional  | `externalApis.newsData.key`            |
-| Google Fact Check | Fact-checking              | ⚪ Optional  | `externalApis.googleFactCheck.key`     |
-
-**All APIs**: Configurable enable/disable toggles in Options → External APIs
-
-## Development
-
-### File Structure
-
-```
-extension/
-├── api/                    # External API clients (14 APIs)
-│   ├── gemini.js          # AI analysis, transcription
-│   ├── sponsorblock.js    # Segment database (13 categories)
-│   ├── dearrow.js         # Clickbait-free titles
-│   ├── genius-lyrics.js   # Music lyrics
-│   ├── tmdb.js            # Movie/TV metadata
-│   ├── igdb.js            # Game metadata
-│   ├── musicbrainz.js     # Music metadata
-│   ├── newsdata.js        # News articles
-│   ├── google-factcheck.js # Fact-checking
-│   ├── semanticscholar.js # Academic papers
-│   ├── wikidata.js        # Knowledge base
-│   ├── openlibrary.js     # Book metadata
-│   ├── datamuse.js        # Word relations
-│   ├── openmeteo.js       # Weather data
-│   └── API_REFERENCE.md   # Complete API documentation
-├── background/            # Service worker, message handlers
-├── content/               # Content scripts, UI injection
-├── services/              # Core services (transcript, segments, storage)
-│   └── context-manager.js # Orchestrates all external APIs
-├── utils/                 # Shortcuts, config, helpers
-├── options/               # Settings UI
-│   ├── modules/
-│   │   ├── external-apis.js # API settings module
-│   │   └── settings-manager.js # Settings persistence
-│   └── sections/
-│       └── external-apis.html # API configuration UI
-├── sidepanel/             # Analysis panel
-└── manifest.json
-tests/
-├── api-settings.test.js   # API configuration tests
-├── context-manager.test.js # API integration tests
-└── ...                    # 17 test files total
-```
-
-## API Auto-Detection
-
-The extension automatically detects API availability:
-
-**No API Keys Required**:
-
-- SponsorBlock: Always available (public API)
-- DeArrow: Always available (public API)
-
-**API Key Required**:
-
-- Gemini API: Set in Options → AI Configuration
-- TMDB API: Set in Options → External APIs
-- NewsData API: Set in Options → External APIs
-- GoogleFactCheck API: Set in Options → External APIs
-
-**Availability Checks**:
-
-- Performed on startup and when settings change
-- 3-5 second timeouts prevent blocking
-- Graceful degradation if APIs unavailable
-
-**Performance Monitoring**:
-
-- Tracks success rate and average duration per API
-- Auto-detects underperforming APIs (< 50% success or > 5s avg)
-- Metrics reset on extension reload
-
-## Performance Optimization
-
-- **Rate Limiting**: Gemini API limited to 15 requests/minute
-- **Retry Logic**: HTTP client retries failed requests (2x with backoff)
-- **Timeout Handling**: All API requests have 3-30s timeouts
-- **Caching**: Not yet implemented (TODO)
-
-### Resilience Logging
-
-Mandatory failure tracking with concise shortcuts:
-
-- `e('message')` - console.error for failures
-- `w('message')` - console.warn for retries/fallbacks
-- `l('message')` - console.log for success/info
-
-Every failure, retry, and fallback is logged with context.
-
-### Shortcuts Usage
-
-```js
-import { l, w, e } from './utils/shortcuts/log.js';
-import { qs, ael, rel } from './utils/shortcuts/dom.js';
-import { sg, ss } from './utils/shortcuts/storage.js';
-import { lk, ln, lgc } from './utils/shortcuts/segments.js';
-
-l('Log message'); // console.log
-e('Error message'); // console.error
-w('Warning message'); // console.warn
-const el = qs('.selector'); // document.querySelector
-ael(btn, 'click', handler); // addEventListener
-rel(btn, 'click', handler); // removeEventListener
-const cfg = await sg('cfg'); // chrome.storage.sync.get
-const key = lk('S'); // 'sponsor' - label code to category key
-const name = ln('S'); // 'Sponsor' - label code to full name
-const color = lgc('S'); // '#00d26a' - label code to color
-```
-
-## License
-
-MIT - See LICENSE file
-
-## Prompt Engineering Architecture
-
-### Hybrid Pattern-Recognition Protocol
-
-- **Token Optimization**: Regex pre-processing for pattern detection (sponsor, selfpromo, interaction, intro, outro, preview, hook, filler)
-- **AI Reasoning**: Complex semantic analysis, timing prediction, topic segmentation
-- **Pattern Files**: `extension/utils/patterns/` - atomic detection modules per category
-- **Hint Generation**: Pre-analyzed patterns injected as context to AI prompts
-
-### Configurable Prompts
-
-All prompts user-editable via Options → Prompt Engineering:
-
-- **Segments**: Role description, timing accuracy (±seconds), pattern hints toggle, duration ranges, min segments
-- **Comprehensive**: Role description, keyword bolding, resources section, takeaways, max counts
-- **Comments**: Role description, spam filtering, sentiment labeling, engagement thresholds, max themes/questions
-
-### Best Practices (November 2025)
-
-- **Few-Shot**: Examples embedded in prompt structure
-- **Chain-of-Thought**: Step-by-step reasoning protocols
-- **Persona-Based**: Expert role definitions (15-20+ years experience)
-- **SponsorBlock Guidelines**: Official November 2025 category definitions
-- **Summary Structure**: Opening → Arguments → Evidence → Conclusions → Takeaways
-- **FAQ Structure**: Technical depth → Practical how-to → Comparisons → Troubleshooting → Advanced
-
-## Credits
-
-Built with Gemini AI, SponsorBlock, DeArrow, and other open-source projects.
+<p align="center">
+  <img src="https://raw.githubusercontent.com/chirag127/chirag127/main/assets/repository_placeholders/youtube-ai-navigator.png" alt="YouTube AI Navigator Hero Banner" width="800"/>
+</p>
+
+<p align="center">
+    <a href="https://github.com/chirag127/YouTube-AI-Navigator-Browser-Extension/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/chirag127/YouTube-AI-Navigator-Browser-Extension/ci.yml?branch=main&style=flat-square&logo=githubactions&logoColor=white" alt="Build Status"></a>
+    <a href="https://codecov.io/gh/chirag127/YouTube-AI-Navigator-Browser-Extension"><img src="https://img.shields.io/codecov/c/github/chirag127/YouTube-AI-Navigator-Browser-Extension?style=flat-square&logo=codecov&logoColor=white" alt="Code Coverage"></a>
+    <img src="https://img.shields.io/badge/TypeScript-Strict-blue?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
+    <img src="https://img.shields.io/badge/Framework-WXT-orange?style=flat-square&logo=googlechrome&logoColor=white" alt="WXT Framework">
+    <img src="https://img.shields.io/badge/Linter-Biome-blueviolet?style=flat-square&logo=biome&logoColor=white" alt="Biome Linter">
+    <a href="https://github.com/chirag127/YouTube-AI-Navigator-Browser-Extension/blob/main/LICENSE"><img src="https://img.shields.io/github/license/chirag127/YouTube-AI-Navigator-Browser-Extension?style=flat-square&color=black" alt="License"></a>
+    <a href="https://github.com/chirag127/YouTube-AI-Navigator-Browser-Extension/stargazers"><img src="https://img.shields.io/github/stars/chirag127/YouTube-AI-Navigator-Browser-Extension?style=flat-square&logo=github&logoColor=white" alt="GitHub Stars"></a>
+</p>
+
+<p align="center">
+  <strong>Apex-grade, privacy-first browser extension for real-time, AI-powered YouTube analysis.</strong>
+  <br />
+  Features Gemini summaries, smart transcripts, SponsorBlock, and advanced comment analysis. Privacy-first, zero-config.
+</p>
+
+<p align="center">
+  <a href="https://github.com/chirag127/YouTube-AI-Navigator-Browser-Extension/stargazers"><strong>Star ⭐ this Repo</strong></a> if you find it useful!
+</p>
+
+---
+
+## Table of Contents
+
+- [✨ Key Features](#-key-features)
+- [🏛️ Architecture](#️-architecture)
+- [🚀 Getting Started](#-getting-started)
+- [🤖 AI Agent Directives](#-ai-agent-directives)
+- [🤝 Contributing](#-contributing)
+- [🛡️ Security Policy](#️-security-policy)
+- [📄 License](#-license)
+
+## ✨ Key Features
+
+- **🧠 Gemini-Powered Summaries:** Get instant, concise summaries of any video, saving you hours of viewing time.
+- **💬 Smart Transcripts:** Navigate videos with searchable, time-stamped transcripts that are easy to read and reference.
+- **🚫 Integrated SponsorBlock:** Automatically skip sponsors, intros, outros, and other annoying segments.
+- **📊 Advanced Comment Analysis:** Instantly gauge sentiment and identify key topics in the comments section.
+- **🔐 Privacy First:** All processing is done to maximize your privacy. No user data is stored or tracked.
+- **⚙️ Zero-Config:** Install and go. The extension works out-of-the-box with sensible defaults.
+
+## 🏛️ Architecture
+
+This repository follows a strict Feature-Sliced Design (FSD) for maximum scalability and maintainability. All source code is contained within the `extension/` directory, and all tests are isolated in the `tests/` directory.
+
+sh
+.YouTube-AI-Navigator-Browser-Extension/
+├── .github/                # GitHub Actions, issue templates, PR templates
+├── .vscode/                # VSCode settings for consistent development
+├── extension/              # PRODUCTION-ONLY ZONE: All source code
+│   ├── assets/             # Icons, fonts, and other static assets
+│   ├── entrypoints/        # Content scripts, background service workers, popups
+│   │   ├── background.ts
+│   │   └── content.ts
+│   ├── features/           # Feature-Sliced Design: Self-contained features
+│   │   ├── summary-generator/
+│   │   └── transcript-navigator/
+│   ├── services/           # Shared services (e.g., Gemini API client)
+│   ├── types/              # Global TypeScript type definitions
+│   └── wxt.config.ts       # WXT framework configuration
+├── tests/                  # VERIFICATION-ONLY ZONE: All tests and validation scripts
+│   ├── e2e/                # Playwright end-to-end tests
+│   ├── unit/               # Vitest unit tests
+│   └── scripts/            # Verification and validation scripts
+├── .gitignore
+├── LICENSE
+├── package.json
+└── README.md
+
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js (v20+)
+- pnpm (or npm/yarn)
+
+### Installation & Setup
+
+1.  **Clone the repository:**
+    sh
+    git clone https://github.com/chirag127/YouTube-AI-Navigator-Browser-Extension.git
+    cd YouTube-AI-Navigator-Browser-Extension
+    
+
+2.  **Install dependencies:**
+    sh
+    pnpm install
+    
+
+3.  **Run the development server:**
+    sh
+    pnpm dev
+    
+
+4.  **Load the extension in your browser:**
+    - **Chrome:** Go to `chrome://extensions`, enable "Developer mode", and load the `extension/.output/chrome-mv3` directory.
+    - **Firefox:** Go to `about:debugging`, click "This Firefox", and load the `extension/.output/firefox-mv2/manifest.json` file.
+
+### Available Scripts
+
+| Script | Description                                   |
+| :------- | :-------------------------------------------- |
+| `pnpm dev`   | Starts the development server with hot-reloading. |
+| `pnpm build` | Builds the extension for production.          |
+| `pnpm test`  | Runs the unit test suite (Vitest).            |
+| `pnpm lint`  | Lints and formats the codebase using Biome.   |
+| `pnpm zip`   | Zips the production builds for distribution.  |
+
+---
+
+## 🤖 AI Agent Directives
+
+<details>
+<summary><strong>Expand for Apex Technical Authority Instructions (2026 Standard)</strong></summary>
+
+### SYSTEM: APEX TECHNICAL AUTHORITY & ELITE ARCHITECT (DECEMBER 2025 EDITION)
+
+#### 1. IDENTITY & PRIME DIRECTIVE
+**Role:** You are a Senior Principal Software Architect and Master Technical Copywriter with **40+ years of elite industry experience**. You operate with absolute precision, enforcing FAANG-level standards.
+**Context:** Current Date is **December 2025**. You are building for the 2026 standard.
+**Output Standard:** Deliver **EXECUTION-ONLY** results.
+**Philosophy:** "Zero-Defect, High-Velocity, Future-Proof."
+
+#### 2. CONTEXT-AWARE APEX TECH STACKS (LATE 2025 STANDARDS)
+This project is identified as **SCENARIO A: WEB / APP / EXTENSION (TypeScript)**. You **MUST** adhere to this toolchain.
+
+*   **Stack:** **TypeScript 6.x** (Strict), **Vite 7** (via Rolldown), **WXT** (Web Extension Framework).
+*   **State Management:** **Signals** (Standardized Pattern).
+*   **Linting/Formatting:** **Biome** (Primary). Enforce 100% compliance.
+*   **Testing:** **Vitest** (Unit/Integration), **Playwright** (E2E).
+
+#### 3. AI ORCHESTRATION & GEMINI PROTOCOL (DECEMBER 2025)
+This extension uses Gemini. Follow this **Fallback Cascade** for all AI integrations.
+*   **Tier 1 (Intelligence):** `gemini-3-pro` - Multimodal Reasoning.
+*   **Tier 2 (Reasoning):** `gemini-2.5-pro` - Deep analysis/STEM.
+*   **Tier 3 (Balanced):** `gemini-2.5-flash` - High Volume/Low Latency.
+*   **Circuit Breaker:** If a model fails (429/500), trigger **Cool-Off** and fallback immediately.
+
+#### 4. RECURSIVE PERFECTION LOOP (THE "ZERO-ERROR" MANDATE)
+The Loop: **Analyze -> Fix -> Lint -> Test -> DECISION GATE**. Do not stop until the build is perfectly clean.
+
+#### 5. CORE ARCHITECTURAL PRINCIPLES
+*   **SOLID MANDATE:** SRP, OCP, LSP, ISP, DIP.
+*   **ROOT DIRECTORY HYGIENE:** The root is for config ONLY. All source code is in `extension/`. All verification code is in `tests/`.
+*   **MODULARITY:** Feature-First Structure (`extension/features/summary-generator`), not by type (`controllers/`, `views/`).
+
+#### 6. COMPREHENSIVE TESTING & VERIFICATION STRATEGY
+*   **FOLDER SEPARATION PROTOCOL (STRICT):**
+    *   **Production Purity:** The `extension/` folder is a **Production-Only Zone**. It must contain **ZERO** test files or scripts.
+    *   **Total Containment:** **ALL** verification scripts, validation runners, and test specs must reside exclusively in `tests/`.
+    *   **Structure:** `tests/unit/`, `tests/e2e/`, `tests/scripts/`.
+*   **COVERAGE MANDATE:** Aim for 100% Branch Coverage. Every source file in `extension/` MUST have a corresponding test file in `tests/`.
+
+#### 7. AUTOMATION SINGULARITY (GITHUB ACTIONS)
+*   **Mandate:** Automate CI/CD immediately.
+*   **Workflows:** `ci.yml` for linting/testing, `release.yml` for semantic versioning and artifact upload.
+
+</details>
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow the guidelines outlined in [CONTRIBUTING.md](https://github.com/chirag127/YouTube-AI-Navigator-Browser-Extension/blob/main/.github/CONTRIBUTING.md). We adhere to a strict code of conduct and expect all contributors to do the same.
+
+## 🛡️ Security Policy
+
+For information on reporting security vulnerabilities, please refer to our [SECURITY.md](https://github.com/chirag127/YouTube-AI-Navigator-Browser-Extension/blob/main/.github/SECURITY.md) file.
+
+## 📄 License
+
+This project is licensed under the **Creative Commons Attribution-NonCommercial 4.0 International License** - see the [LICENSE](https://github.com/chirag127/YouTube-AI-Navigator-Browser-Extension/blob/main/LICENSE) file for details.
