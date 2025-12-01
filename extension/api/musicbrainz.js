@@ -31,9 +31,10 @@ export class MusicBrainzAPI {
     console.log(`[MusicBrainz] Searching release: ${q}`);
 
     try {
-      const data = await safeFetch(`${BASE_URL}/release?query=${encodeURIComponent(q)}&fmt=json`, {
+      const response = await fetch(`${BASE_URL}/release?query=${encodeURIComponent(q)}&fmt=json`, {
         headers: { 'User-Agent': UA },
       });
+      const data = await response.json();
       const result = data?.releases?.[0] || null;
       console.log(`[MusicBrainz] Release search ${result ? 'success' : 'no results'}`);
       return result;

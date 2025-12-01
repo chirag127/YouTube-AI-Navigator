@@ -1,16 +1,49 @@
-
-
-
 const { findSecondaryColumn, isWidgetProperlyVisible } = await import(chrome.runtime.getURL('content/utils/dom.js'));
 const { initTabs } = await import(chrome.runtime.getURL('content/ui/tabs.js'));
 const { attachEventListeners } = await import(chrome.runtime.getURL('content/handlers/events.js'));
 const { createWidgetHTML } = await import(chrome.runtime.getURL('content/ui/components/widget/structure.js'));
-);
-);
-);
-const { log } = await import(chrome.runtime.getURL('utils/shortcuts/core.js'));
-);
-const { ael, stc, ih } = await import(chrome.runtime.getURL('utils/shortcuts.js'));
+
+function $(selector, context = document) {
+  return context.querySelector(selector);
+}
+
+function $$(selector, context = document) {
+  return Array.from(context.querySelectorAll(selector));
+}
+
+function log(...args) {
+  console.log('[Widget]', ...args);
+}
+
+async function waitForElement(selector, timeout = 5000) {
+  const startTime = Date.now();
+  while (Date.now() - startTime < timeout) {
+    const element = document.querySelector(selector);
+    if (element) return element;
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+  throw new Error(`Element ${selector} not found within ${timeout}ms`);
+}
+
+function setTextContent(element, text) {
+  if (element) element.textContent = text;
+}
+
+function setInnerHTML(element, html) {
+  if (element) element.innerHTML = html;
+}
+
+function addEventListener(element, event, handler) {
+  if (element) element.addEventListener(event, handler);
+}
+
+function createMutationObserver(callback) {
+  return new MutationObserver(callback);
+}
+
+function arrayFrom(arrayLike) {
+  return Array.from(arrayLike);
+}
 
 let widgetContainer = null,
   resizeObserver = null,
@@ -143,7 +176,7 @@ export async function injectWidget() {
       att = 0;
     while (!sc && att < 20) {
       try {
-        sc = await wfe(
+        sc = await waitForElement(
           '#secondary-inner, #secondary, #related, ytd-watch-next-secondary-results-renderer, ytd-watch-flexy #secondary',
           500
         );
@@ -165,7 +198,7 @@ export async function injectWidget() {
     widgetContainer = document.createElement('div');
     widgetContainer.id = 'yt-ai-master-widget';
     widgetContainer.style.order = '-9999';
-    ih(widgetContainer, createWidgetHTML(cfg));
+    setInnerHTML(widgetContainer, createWidgetHTML(cfg));
     sc.insertBefore(widgetContainer, sc.firstChild);
     lastKnownContainer = sc;
     await applyDefaultWidgetState();
@@ -308,7 +341,7 @@ async function saveWidgetHeight(h) {
     const cfg = r.config || {};
     cfg.widget = cfg.widget || {};
     cfg.widget.height = h;
-    await chrome.storage.sync.set(typeof { config: cfg } === 'string' ? { [{ config: cfg }]: undefined } : { config: cfg });
+    await chrome.storage.sync.set({ config: cfg });
   } catch (err) {
     console.error('Err:saveWidgetHeight', err);
   }
@@ -391,7 +424,7 @@ async function saveWidgetWidth(w) {
     const cfg = r.config || {};
     cfg.widget = cfg.widget || {};
     cfg.widget.width = w;
-    await chrome.storage.sync.set(typeof { config: cfg } === 'string' ? { [{ config: cfg }]: undefined } : { config: cfg });
+    await chrome.storage.sync.set({ config: cfg });
   } catch (err) {
     console.error('Err:saveWidgetWidth', err);
   }
@@ -462,12 +495,12 @@ function setupWidgetLogic(c) {
         const ic = c.classList.contains('yt-ai-collapsed');
         if (ic) {
           c.classList.remove('yt-ai-collapsed');
-          stc(cb, '❌');
+          setTextContent(cb, '❌');
           cb.title = 'Collapse';
           saveWidgetState(false);
         } else {
           c.classList.add('yt-ai-collapsed');
-          stc(cb, '⬇️');
+          setTextContent(cb, '⬇️');
           cb.title = 'Expand';
           saveWidgetState(true);
         }
@@ -493,7 +526,7 @@ async function applyDefaultWidgetState() {
       if (savedState !== null) {
         if (savedState) {
           widgetContainer.classList.add('yt-ai-collapsed');
-          stc(cb, '⬇️');
+          setTextContent(cb, '⬇️');
           cb.title = 'Expand';
         }
         return;
@@ -501,7 +534,7 @@ async function applyDefaultWidgetState() {
     }
     if (widgetConfig.defaultCollapsed) {
       widgetContainer.classList.add('yt-ai-collapsed');
-      stc(cb, '⬇️');
+      setTextContent(cb, '⬇️');
       cb.title = 'Expand';
     }
   } catch (err) {
@@ -512,7 +545,7 @@ async function applyDefaultWidgetState() {
 async function saveWidgetState(isCollapsed) {
   try {
     if (!widgetConfig?.rememberState) return;
-    await chrome.storage.sync.set(typeof { widgetCollapsedState: isCollapsed } === 'string' ? { [{ widgetCollapsedState: isCollapsed }]: undefined } : { widgetCollapsedState: isCollapsed });
+    await chrome.storage.sync.set({ widgetCollapsedState: isCollapsed });
   } catch (err) {
     console.error('Err:saveWidgetState', err);
   }
@@ -536,23 +569,23 @@ function setupObservers(c) {
       resizeObserver = new ResizeObserver(() => updateWidgetHeight());
       resizeObserver.observe(p);
     }
-    ael(window, 'resize', updateWidgetHeight);
+    addEventListener(window, 'resize', updateWidgetHeight);
 
     if (containerObserver) containerObserver.disconnect();
-    containerObserver = mo(m => {
+    containerObserver = createMutationObserver(m => {
       for (const mu of m) {
         if (mu.type === 'childList') {
-          if (af(mu.removedNodes).includes(widgetContainer)) {
+          if (arrayFrom(mu.removedNodes).includes(widgetContainer)) {
             setTimeout(() => reattachWidget(), 100);
             return;
           }
-          if (c.firstChild !== widgetContainer && !af(mu.addedNodes).includes(widgetContainer))
+          if (c.firstChild !== widgetContainer && !arrayFrom(mu.addedNodes).includes(widgetContainer))
             ensureWidgetAtTop(c);
         }
       }
     });
     containerObserver.observe(c, { childList: true, subtree: false });
-    const bo = mo(() => {
+    const bo = createMutationObserver(() => {
       if (!document.contains(widgetContainer)) {
         reattachWidget();
       } else if (widgetContainer.parentElement !== lastKnownContainer) {

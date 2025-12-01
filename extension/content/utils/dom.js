@@ -1,6 +1,5 @@
 const gu = p => chrome.runtime.getURL(p);
-);
-);
+
 export function findSecondaryColumn() {
   try {
     const s = [

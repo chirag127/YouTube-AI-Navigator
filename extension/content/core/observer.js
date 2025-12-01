@@ -3,25 +3,25 @@ const gu = p => chrome.runtime.getURL(p);
 const { state, resetState } = await import(gu('content/core/state.js'));
 const { injectWidget } = await import(gu('content/ui/widget.js'));
 const { isWidgetProperlyVisible } = await import(gu('content/utils/dom.js'));
-);
-const { ct } = await import(gu('utils/shortcuts/core.js'));
-);
-);
 
 let lastUrl = location.href;
 let dt = null;
+
+function mo(callback) {
+  return new MutationObserver(callback);
+}
 
 export function initObserver() {
   try {
     const uo = mo(() => {
       if (location.href !== lastUrl) {
         lastUrl = location.href;
-        if (dt) ct(dt);
+        if (dt) clearTimeout(dt);
         dt = setTimeout(() => checkCurrentPage(), 300);
       }
     });
     (document)?.addEventListener('yt-navigate-finish', () => {
-      if (dt) ct(dt);
+      if (dt) clearTimeout(dt);
       dt = setTimeout(() => checkCurrentPage(), 500);
     });
     const o = mo(() => {
@@ -30,7 +30,7 @@ export function initObserver() {
         v = u.get('v');
       const w = (document).querySelector('#yt-ai-master-widget');
       if ((v && v !== state.currentVideoId) || (v && !isWidgetProperlyVisible(w))) {
-        if (dt) ct(dt);
+        if (dt) clearTimeout(dt);
         dt = setTimeout(() => handleNewVideo(v), 300);
       }
     });

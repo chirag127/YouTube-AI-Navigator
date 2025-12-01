@@ -2,7 +2,7 @@ export const verifySender = s => {
   if (!s || !s.id) {
     return false;
   }
-  if (s.id !== cr.id) {
+  if (s.id !== chrome.runtime.id) {
     return false;
   }
 
@@ -19,7 +19,7 @@ export const isFromContentScript = s => {
   return result;
 };
 export const isFromExtensionPage = s => {
-  const result = s?.url?.startsWith(`chrome-extension://${cr.id}`);
+  const result = s?.url?.startsWith(`chrome-extension://${chrome.runtime.id}`);
 
   return result;
 };

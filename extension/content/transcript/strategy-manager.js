@@ -1,8 +1,6 @@
 const gu = p => chrome.runtime.getURL(p);
 
-);
 const { getCfg } = await import(gu('utils/config.js'));
-const { vals } = await import(gu('utils/shortcuts/core.js'));
 const domAutomation = await import(gu('content/transcript/strategies/dom-automation.js'));
 const genius = await import(gu('content/transcript/strategies/genius.js'));
 const speechToText = await import(gu('content/transcript/strategies/speech-to-text.js'));
@@ -39,7 +37,7 @@ export const extractTranscript = async (vid, lang = 'en') => {
 
 export const getAvailableStrategies = () => {
   try {
-    const result = vals(strategyMap).map(s => ({
+    const result = Object.values(strategyMap).map(s => ({
       name: s.name,
       priority: s.priority,
     }));

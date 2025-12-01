@@ -1,14 +1,10 @@
 import { GeminiClient } from '../../api/gemini-client.js';
 
-import { jp } from '../../utils/shortcuts/core.js';
-
-
-
 export async function handleTranscribeAudio(req, rsp) {
   try {
     const { audioUrl, lang } = req;
     if (!audioUrl) throw new Error('No audio URL provided');
-    const s = await chrome.storage.sync.get(['apiKey');
+    const s = await chrome.storage.sync.get(['apiKey', 'model']);
     if (!s.apiKey) throw new Error('Gemini API key not found');
     let m = s.model || 'gemini-2.5-flash-lite-preview-09-2025';
     if (m.startsWith('models/')) m = m.replace('models/', '');
@@ -23,11 +19,11 @@ export async function handleTranscribeAudio(req, rsp) {
     let seg = [];
     try {
       const cln = txt.replace(/```json/g, '').replace(/```/g, '').trim();
-      seg = jp(cln);
+      seg = JSON.parse(cln);
     } catch (x) {
       console.warn('[TranscribeAudio] JSON parse failed, trying to extract array', x);
       const m = txt.match(/\[.*\]/s);
-      if (m) seg = jp(m[0]);
+      if (m) seg = JSON.parse(m[0]);
       else throw new Error('Failed to parse transcription response');
     }
     rsp({ success: true, segments: seg });

@@ -1,11 +1,7 @@
 (async () => {
   if (window.top !== window) return;
   if (window.location.hostname !== 'www.youtube.com') return;
-  );
-  );
-  );
-  );
-  );
+
   const s = document.createElement('script');
   s.type = 'module';
   s.src = chrome.runtime.getURL('content/youtube-extractor.js');
@@ -20,7 +16,6 @@
 
     const v = new URLSearchParams(window.location.search).get('v');
     if (v) {
-      );
       const st = await chrome.storage.sync.get('config');
       const cfg = st.config || {};
       if (cfg.segments?.enabled) {
@@ -43,7 +38,7 @@
   } catch (x) {
     console.error('YAM: Fatal', x);
   }
-  r.onMessage.addListener((m, _, p) => {
+  chrome.runtime.onMessage.addListener((m, _, p) => {
     const a = m.action || m.type;
     switch (a) {
       case 'START_ANALYSIS':
@@ -135,7 +130,7 @@
   const cTC = async v => {
     try {
       const k = `v_${v}_t`;
-      const r = await sl.get(k);
+      const r = await chrome.storage.local.get(k);
       if (r[k]) {
         const c = r[k],
           a = Date.now() - c.timestamp;

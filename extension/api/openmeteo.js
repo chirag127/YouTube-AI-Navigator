@@ -13,11 +13,12 @@ export class OpenMeteoAPI {
     return data?.current_weather || null;
   }
   async getCoordinates(city) {
-    const data = await safeFetch(
+    const response = await fetch(
       `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(
         city
       )}&count=1&language=en&format=json`
     );
+    const data = await response.json();
     return data?.results?.[0] || null;
   }
 }

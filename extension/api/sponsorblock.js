@@ -9,7 +9,7 @@ async function _gh(vid) {
   const e = new TextEncoder();
   const d = e.encode(vid);
   const hb = await crypto.subtle.digest('SHA-256', d);
-  const ha = af(new Uint8Array(hb));
+  const ha = Array.from(new Uint8Array(hb));
   const hh = ha.map(b => b.toString(16).padStart(2, '0')).join('');
   return hh.substring(0, 4);
 }
@@ -57,11 +57,17 @@ export async function fetchSegments(vid) {
     }
     const s = vd.segments.map(sg => {
       return {
-        start: sg.segment[0]);
+        start: sg.segment[0],
+        end: sg.segment[1],
+        category: sg.category,
+        actionType: sg.actionType,
+        uuid: sg.UUID,
+      };
+    });
 
     return s;
   } catch (x) {
-    (()=>{const e=document.createElement('[API:Fail:SponsorBlock] Fail:');e.className=x.message;return e;})();
+    console.error('[API:Fail:SponsorBlock] Fail:', x.message);
     return [];
   }
 }

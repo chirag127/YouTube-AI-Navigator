@@ -1,20 +1,14 @@
-const gu = p => chrome.runtime.getURL(p);
+const COLOR_MAPPING = {};
+const LABEL_MAPPING = {};
 
-);
-const { oe } = await import(gu('utils/shortcuts/core.js'));
-);
-);
-);
 export const renderLegend = () => {
   try {
-    const h = jn(
-      mp(
-        oe(COLOR_MAPPING),
+    const h = Object.entries(COLOR_MAPPING)
+      .map(
         ([apiLabel, c]) =>
           `<div class="seg-legend-item"><span class="seg-color" style="background:${c}"></span><span>${LABEL_MAPPING[apiLabel] || apiLabel}</span></div>`
-      ),
-      ''
-    );
+      )
+      .join('');
     return `<div class="seg-legend"><div class="seg-legend-title">Segment Types</div>${h}</div>`;
   } catch (err) {
     console.error('Err:renderLegend', err);

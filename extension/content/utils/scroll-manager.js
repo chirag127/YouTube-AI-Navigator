@@ -1,8 +1,9 @@
 const gu = p => chrome.runtime.getURL(p);
 
-);
-);
-);
+function $(selector) {
+  return document.querySelector(selector);
+}
+
 export class ScrollManager {
   constructor() {
     try {

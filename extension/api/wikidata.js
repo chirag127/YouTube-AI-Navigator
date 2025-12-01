@@ -5,7 +5,8 @@ export async function searchWikidata(query) {
   if (cfg.integrations?.wikidata?.enabled === false) return null;
 
   const url = `${BASE_URL}?action=wbsearchentities&search=${encodeURIComponent(query)}&language=en&format=json&origin=*`;
-  const data = await safeFetch(url);
+  const response = await fetch(url);
+  const data = await response.json();
   return data?.search?.[0] || null;
 }
 
@@ -17,7 +18,8 @@ export class WikidataAPI {
   async getEntityDetails(id) {
     if (!id) return null;
     const url = `${BASE_URL}?action=wbgetentities&ids=${id}&format=json&origin=*`;
-    const data = await safeFetch(url);
+    const response = await fetch(url);
+    const data = await response.json();
     return data?.entities?.[id] || null;
   }
 }

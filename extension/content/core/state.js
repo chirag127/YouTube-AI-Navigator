@@ -1,7 +1,3 @@
-const gu = p => chrome.runtime.getURL(p);
-let slg, assign;
-);
-
 export const state = {
   currentVideoId: null,
   isAnalyzing: false,
@@ -28,13 +24,7 @@ export function resetState() {
 }
 export async function loadSettings() {
   try {
-    if (!slg) {
-      const storage = await import(gu('utils/shortcuts/storage.js'));
-      slg = storage.slg;
-      const core = await import(gu('utils/shortcuts/core.js'));
-      assign = core.assign;
-    }
-    const r = await slg([
+    const r = await chrome.storage.local.get([
       'autoAnalyze',
       'autoSkipSponsors',
       'autoSkipIntros',
@@ -43,7 +33,7 @@ export async function loadSettings() {
       'autoLikeLive',
       'likeIfNotSubscribed',
     ]);
-    assign(state.settings, r);
+    Object.assign(state.settings, r);
 
     return state.settings;
   } catch (err) {

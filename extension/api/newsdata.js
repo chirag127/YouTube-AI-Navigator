@@ -8,9 +8,10 @@ export class NewsDataAPI {
   async searchNews(query, language = 'en') {
     if (!this.apiKey) return [];
     try {
-      const data = await safeFetch(
+      const response = await fetch(
         `${BASE_URL}/news?apikey=${this.apiKey}&q=${encodeURIComponent(query)}&language=${language}`
       );
+      const data = await response.json();
       return data?.results || [];
     } catch (x) {
       import('../utils/shortcuts/log.js').then(({ e }) =>

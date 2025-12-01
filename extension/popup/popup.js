@@ -18,9 +18,9 @@ export function showMsg(t, y = 'info') {
 }
 export async function checkApi() {
   try {
-    const s = await chrome.storage.sync.get('config'),
-      lc = await sl('GAK'),
-      k = s.config?.ai?.GAK || lc.GAK;
+    const s = await chrome.storage.sync.get('config');
+    const lc = await chrome.storage.local.get('GAK');
+    const k = s.config?.ai?.GAK || lc.GAK;
     if (k) {
       a.innerHTML = '<span>✅ Configured</span>';
       a.className = 'value success';
@@ -64,9 +64,9 @@ b.onclick = async () => {
     showMsg('Failed to start analysis', 'error');
   }
 };
-h.onclick = () => tc({ url: chrome.runtime.getURL('history/history.html') });
-o.onclick = () => oop();
-g.onclick = () => oop();
+h.onclick = () => chrome.tabs.create({ url: chrome.runtime.getURL('history/history.html') });
+o.onclick = () => chrome.runtime.openOptionsPage();
+g.onclick = () => chrome.runtime.openOptionsPage();
 (async () => {
   await checkApi();
   await checkPage();

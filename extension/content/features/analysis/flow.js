@@ -10,10 +10,7 @@ const { injectSegmentMarkers } = await import(gu('content/segments/markers.js'))
 const { setupAutoSkip } = await import(gu('content/segments/autoskip.js'));
 const { renderTimeline } = await import(gu('content/segments/timeline.js'));
 const { analyzeVideo } = await import(gu('content/features/analysis/service.js'));
-);
-);
-);
-const { E: Er } = await import(gu('utils/shortcuts/core.js'));
+
 export async function startAnalysis() {
   if (state.isAnalyzing || !state.currentVideoId) {
     if (state.isAnalyzing) console.warn('[Analysis] Already analyzing, skipping');
@@ -84,7 +81,7 @@ export async function startAnalysis() {
 
     if (!r.success) {
       console.error('[Context:Fail] Analysis service:', r.error);
-      throw new Er(r.error || 'Analysis failed');
+      throw new Error(r.error || 'Analysis failed');
     }
     console.log(`[Analysis] AI analysis completed successfully`);
     state.analysisData = r.data;
@@ -93,7 +90,7 @@ export async function startAnalysis() {
       console.log(`[Analysis] Applying ${segmentCount} segments`);
       injectSegmentMarkers(state.analysisData.segments);
       setupAutoSkip(state.analysisData.segments);
-      const v = $('video');
+      const v = document.querySelector('video');
       if (v) renderTimeline(state.analysisData.segments, v.duration);
     }
     try {

@@ -1,14 +1,42 @@
-
-
-
-);
 const { showPlaceholder } = await import(chrome.runtime.getURL('content/ui/components/loading.js'));
-
 const { seekVideo } = await import(chrome.runtime.getURL('content/utils/dom.js'));
 const { formatTime } = await import(chrome.runtime.getURL('content/utils/time.js'));
-);
-);
-);
+
+function $(selector, context = document) {
+  return context.querySelector(selector);
+}
+
+function $$(selector, context = document) {
+  return Array.from(context.querySelectorAll(selector));
+}
+
+const COLOR_MAPPING = {
+  Sponsor: '#00d400',
+  SelfPromotion: '#ffff00',
+  InteractionReminderSubscribe: '#cc00ff',
+  InteractionReminder: '#cc00ff',
+  HookGreetings: '#00ffff',
+  IntermissionIntroAnimation: '#00ffff',
+  EndcardsCredits: '#0202ed',
+  PreviewRecap: '#008fd6',
+  TangentsJokes: '#ff9900',
+  Highlight: '#ff1684',
+  ExclusiveAccess: '#008a5c',
+};
+
+const LABEL_MAPPING = {
+  Sponsor: '💰 Sponsor',
+  SelfPromotion: '📢 Self Promotion',
+  InteractionReminderSubscribe: '🔔 Interaction Reminder',
+  InteractionReminder: '🔔 Interaction Reminder',
+  HookGreetings: '👋 Intro/Hook',
+  IntermissionIntroAnimation: '🎬 Intermission',
+  EndcardsCredits: '🎬 Outro/Credits',
+  PreviewRecap: '🔄 Preview/Recap',
+  TangentsJokes: '💬 Filler/Tangent',
+  Highlight: '⭐ Highlight',
+  ExclusiveAccess: '🔒 Exclusive Access',
+};
 
 // Mapping of segment categories to filter names
 const SEGMENT_FILTER_MAP = {
@@ -136,7 +164,7 @@ export async function renderSegments(c, data) {
     c.innerHTML = `<div class="yt-ai-segments-list">${h}</div>`;
 
     // Attach Event Listeners
-    $('.yt-ai-timestamp', c).forEach(e => {
+    $$('.yt-ai-timestamp', c).forEach(e => {
       e.style.cursor = 'pointer';
       (e)?.addEventListener('click', evt => {
         evt.stopPropagation();

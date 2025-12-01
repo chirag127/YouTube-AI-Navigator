@@ -1,8 +1,7 @@
 const gu = p => chrome.runtime.getURL(p);
 
 const { state } = await import(gu('content/core/state.js'));
-);
-);
+
 export class AutoLiker {
   constructor() {
     this.video = null;

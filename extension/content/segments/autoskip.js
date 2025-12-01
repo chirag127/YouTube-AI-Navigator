@@ -1,10 +1,5 @@
-const gu = p => chrome.runtime.getURL(p);
+const { getVideoElement } = await import(chrome.runtime.getURL('content/utils/dom.js'));
 
-);
-const { getVideoElement } = await import(gu('content/utils/dom.js'));
-);
-);
-);
 let as = [];
 let en = false;
 let opr = 1;
@@ -29,8 +24,8 @@ export async function setupAutoSkip(s) {
     const msd = cfg.segments?.minSegmentDuration || 1;
     const filtered = [];
     for (const x of s) {
-      const getLabelKey = await getLabelKey(x.label);
-      const c = cats[getLabelKey] || { action: 'ignore', speed: 2 };
+      const labelKey = getLabelKey(x.label);
+      const c = cats[labelKey] || { action: 'ignore', speed: 2 };
       const dur = x.end - x.start;
       if (c.action && c.action !== 'ignore' && dur >= msd) {
         const displayLabel = x.labelFull || x.label;
@@ -63,9 +58,8 @@ export async function setupAutoSkip(s) {
     console.error('Err:setupAutoSkip', err);
   }
 }
-async function getLabelKey(l) {
-  );
-  return getLabelKey(l);
+function getLabelKey(l) {
+  return l.toLowerCase().replace(/[^a-z0-9]/g, '_');
 }
 function disableAutoSkip() {
   try {

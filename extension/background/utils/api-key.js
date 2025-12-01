@@ -1,6 +1,6 @@
 export async function getApiKey() {
   try {
-    const result = await slg('GAK');
+    const result = await chrome.storage.local.get('GAK');
 
     return result.GAK || null;
   } catch (err) {

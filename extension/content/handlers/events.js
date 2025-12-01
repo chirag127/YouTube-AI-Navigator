@@ -1,8 +1,7 @@
 const gu = p => chrome.runtime.getURL(p);
 
 const { sendChatMessage } = await import(gu('content/handlers/chat.js'));
-);
-);
+
 export function attachEventListeners(w) {
   try {
     const c = (w).querySelector('#yt-ai-chat-send');

@@ -1,7 +1,5 @@
 const gu = p => chrome.runtime.getURL(p);
 
-);
-);
 export async function retry(fn, max = 3, d = 1000) {
   console.log(`[Retry] Starting with max ${max} attempts, delay ${d}ms`);
   try {

@@ -1,6 +1,6 @@
-import { js } from '../../utils/shortcuts/core.js';
-
-import { mp } from '../../utils/shortcuts/core.js';
+function $(selector) {
+  return document.querySelectorAll(selector);
+}
 
 class CommentsExtractor {
   constructor() {
@@ -30,10 +30,7 @@ class CommentsExtractor {
               id: c.commentId,
               author: c.authorText?.simpleText || 'Unknown',
               text:
-                jn(
-                  mp(c.contentText?.runs || [], r => r.text),
-                  ''
-                ) || '',
+                (c.contentText?.runs || []).map(r => r.text).join('') || '',
               likes: c.voteCount?.simpleText || '0',
               publishedTime: c.publishedTimeText?.runs?.[0]?.text || '',
             });
@@ -87,7 +84,7 @@ class CommentsExtractor {
   async checkCache(vid) {
     try {
       const k = `video_${vid}_comments`;
-      const r = await lg(k);
+      const r = await chrome.storage.local.get(k);
       if (r[k]) {
         const c = r[k];
         const age = Date.now() - c.timestamp;
@@ -157,10 +154,7 @@ class CommentsExtractor {
             id: c.commentId,
             author: c.authorText?.simpleText || 'Unknown',
             text:
-              jn(
-                mp(c.contentText?.runs || [], r => r.text),
-                ''
-              ) || '',
+              (c.contentText?.runs || []).map(r => r.text).join('') || '',
             likes: c.voteCount?.simpleText || '0',
             publishedTime: c.publishedTimeText?.runs?.[0]?.text || '',
           });
@@ -278,7 +272,7 @@ class CommentsExtractor {
     try {
       const r = await fetch(`https://www.youtube.com/youtubei/v1/next?key=${k}`, {
         method: 'POST',
-        body: js({ context: c, continuation: t }),
+        body: JSON.stringify({ context: c, continuation: t }),
       });
       const d = await r.json();
       const result = this.parseComments(d);
@@ -307,10 +301,7 @@ class CommentsExtractor {
               id: cm.commentId,
               author: cm.authorText?.simpleText || 'Unknown',
               text:
-                jn(
-                  mp(cm.contentText?.runs || [], r => r.text),
-                  ''
-                ) || '',
+                (cm.contentText?.runs || []).map(r => r.text).join('') || '',
               likes: cm.voteCount?.simpleText || '0',
               publishedTime: cm.publishedTimeText?.runs?.[0]?.text || '',
             });

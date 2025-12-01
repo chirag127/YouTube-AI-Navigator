@@ -8,9 +8,10 @@ export class GoogleFactCheckAPI {
   async searchClaims(query) {
     if (!this.apiKey) return [];
     try {
-      const data = await safeFetch(
+      const response = await fetch(
         `${BASE_URL}/claims:search?key=${this.apiKey}&query=${encodeURIComponent(query)}`
       );
+      const data = await response.json();
       return data?.claims || [];
     } catch (x) {
       import('../utils/shortcuts/log.js').then(({ e }) =>

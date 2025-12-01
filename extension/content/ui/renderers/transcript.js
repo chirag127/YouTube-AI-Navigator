@@ -1,11 +1,14 @@
-
-
 const { showPlaceholder } = await import(chrome.runtime.getURL('content/ui/components/loading.js'));
 const { seekVideo } = await import(chrome.runtime.getURL('content/utils/dom.js'));
 const { formatTime } = await import(chrome.runtime.getURL('content/utils/time.js'));
-);
-);
-);
+
+function $(selector, context = document) {
+  return context.querySelector(selector);
+}
+
+function $$(selector, context = document) {
+  return Array.from(context.querySelectorAll(selector));
+}
 
 let autoCloseEnabled = true;
 
@@ -53,12 +56,12 @@ export function renderTranscript(c, s) {
     c.innerHTML = `${ab}<div class="ytai-transcript-display">${h}</div>`;
 
     $$('.ytai-transcript-line', c).forEach(e =>
-      (e)?.addEventListener('click', () => seekVideo(parseFloat(e.dataset.time)))
+      e?.addEventListener('click', () => seekVideo(parseFloat(e.dataset.time)))
     );
 
     const tb = $('#yt-ai-transcript-autoclose-toggle', c);
     if (tb) {
-      (tb)?.addEventListener('click', async () => {
+      tb?.addEventListener('click', async () => {
         autoCloseEnabled = !autoCloseEnabled;
         tb.classList.toggle('active', autoCloseEnabled);
         tb.textContent = `${autoCloseEnabled ? '✓' : '✗'} Auto-close after extraction`;
@@ -69,7 +72,7 @@ export function renderTranscript(c, s) {
           const config = r.config || {};
           config.transcript = config.transcript || {};
           config.transcript.autoClose = autoCloseEnabled;
-          await chrome.storage.sync.set(typeof { config } === 'string' ? { [{ config }]: undefined } : { config });
+          await chrome.storage.sync.set({ config });
         } catch (err) {
           console.error('Err:saveAutoClose', err);
         }

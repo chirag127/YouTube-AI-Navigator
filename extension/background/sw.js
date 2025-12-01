@@ -1,4 +1,3 @@
-import { ael } from '../utils/shortcuts.js';
 import { verifySender as vs } from './security/sender-check.js';
 import { validateMessage as vm, sanitizeRequest as sr } from './security/validator.js';
 import { handleGetSettings } from './handlers/settings.js';
@@ -15,16 +14,16 @@ import { handleSaveComments } from './handlers/comments-storage.js';
 import { handleTranscribeAudio } from './handlers/transcribe-audio.js';
 import { handleGetLyrics } from './handlers/get-lyrics.js';
 
-cr.onInstalled.addListener(async d => {
+chrome.runtime.onInstalled.addListener(async d => {
   if (d.reason === 'install') {
     try {
-      await tc({ url: chrome.runtime.getURL('onboarding/onboarding.html') });
+      await chrome.tabs.create({ url: chrome.runtime.getURL('onboarding/onboarding.html') });
     } catch (x) {
       console.error('Onboard:', x);
     }
-  } else if (d.reason === 'update') console.log('YAM updated:', rg().version);
+  } else if (d.reason === 'update') console.log('YAM updated:', chrome.runtime.getManifest().version);
 });
-cr.onMessage.addListener((q, s, r) => {
+chrome.runtime.onMessage.addListener((q, s, r) => {
   const a = q.action || q.type;
   (async () => {
     try {
@@ -100,7 +99,7 @@ cr.onMessage.addListener((q, s, r) => {
   return true;
 });
 
-ael(self, 'fetch', event => {
+self.addEventListener('fetch', event => {
   if (event.request.mode === 'navigate') {
     event.respondWith(
       (async () => {

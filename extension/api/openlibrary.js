@@ -13,6 +13,7 @@ export class OpenLibraryAPI {
 
   async getWork(key) {
     if (!key) return null;
-    return await safeFetch(`${BASE_URL}${key}.json`);
+    const response = await fetch(`${BASE_URL}${key}.json`);
+    return await response.json();
   }
 }

@@ -41,7 +41,8 @@ export class GeniusLyricsAPI {
   }
 
   async fetchLyrics(url) {
-    const html = await ftx(url);
+    const response = await fetch(url);
+    const html = await response.text();
     if (!html) {
       return null;
     }

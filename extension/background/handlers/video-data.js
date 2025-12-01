@@ -1,26 +1,27 @@
 import { getHistory } from '../../services/storage/comprehensive-history.js';
-
-import { nw } from '../../utils/shortcuts/core.js';
 import { handleGetVideoInfo } from './video-info.js';
 import { handleFetchTranscript as handleGetTranscript } from './fetch-transcript.js';
 import { handleAnalyzeComments as handleGetComments } from './comments.js';
+
 const CV = 1;
 const CE = 864e5;
+
 const getCached = async (vid, type) => {
   const k = `video_${vid}_${type}`;
-  const r = await slg(k);
+  const r = await chrome.storage.local.get(k);
   if (r[k]) {
     const c = r[k];
-    if (c.version === CV && nw() - c.timestamp < CE) {
+    if (c.version === CV && Date.now() - c.timestamp < CE) {
       return c.data;
     }
-    await slr(k);
+    await chrome.storage.local.remove(k);
   }
   return null;
 };
+
 const setCache = async (vid, type, data) => {
   const k = `video_${vid}_${type}`;
-  await sls({ [k]: { version: CV, timestamp: nw(), data } });
+  await chrome.storage.local.set({ [k]: { version: CV, timestamp: Date.now(), data } });
 };
 export const handleSaveHistory = async req => {
   const { data } = req;

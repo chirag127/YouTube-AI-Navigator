@@ -12,7 +12,7 @@ export async function parseMarkdown(m) {
   h = h.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
   h = h.replace(/`([^`]+)`/g, '<code>$1</code>');
   h = h.replace(
-    /\[([^\]]+)\]\(([^)]+)\, undefined)/g,
+    /\[([^\]]+)\]\(([^)]+)\)/g,
     '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'
   );
   h = h.replace(
@@ -25,7 +25,7 @@ export async function parseMarkdown(m) {
   h = h.replace(/^\d+\. (.+)$/gim, '<li>$1</li>');
   h = h.replace(/\n\n/g, '</p><p>');
   h = h.replace(/\n/g, '<br>');
-  if (!sws(h, '<')) h = `<p>${h}</p>`;
+  if (!h.startsWith('<')) h = `<p>${h}</p>`;
   return h;
 }
 export async function loadMarked() {

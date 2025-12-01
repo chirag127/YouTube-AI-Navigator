@@ -1,8 +1,3 @@
-const gu = p => chrome.runtime.getURL(p);
-
-);
-);
-);
 export const name = 'Speech to Text';
 export const priority = 30;
 

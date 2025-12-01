@@ -1,16 +1,19 @@
-
-
 const { state } = await import(chrome.runtime.getURL('content/core/state.js'));
 const { showLoading, showPlaceholder } = await import(chrome.runtime.getURL('content/ui/components/loading.js'));
 const { getComments } = await import(chrome.runtime.getURL('content/handlers/comments.js'));
 const { parseMarkdown } = await import(chrome.runtime.getURL('lib/marked-loader.js'));
-);
-);
-);
-);
-const { mp } = await import(chrome.runtime.getURL('utils/shortcuts/core.js'));
-);
-);
+
+function $(selector, context = document) {
+  return context.querySelector(selector);
+}
+
+function $$(selector, context = document) {
+  return Array.from(context.querySelectorAll(selector));
+}
+
+async function sendRuntimeMessage(message) {
+  return await chrome.runtime.sendMessage(message);
+}
 
 export async function renderComments(c) {
   try {
@@ -34,7 +37,7 @@ export async function renderComments(c) {
     // Scroll to comments and wait for them to load
     await forceLoadComments();
     showLoading(c, 'Waiting for comments...');
-    await setTimeout(() => {}, 1200); // Increased wait time for lazy-load
+    await setTimeout(() => { }, 1200); // Increased wait time for lazy-load
 
     try {
       // Extract comments with retry logic - stay scrolled down during this process
@@ -42,7 +45,7 @@ export async function renderComments(c) {
 
       // Scroll back AFTER extraction completes
       if (cfg.scroll?.scrollBackAfterComments !== false) {
-        await setTimeout(() => {}, 300); // Brief delay before scroll-back
+        await setTimeout(() => { }, 300); // Brief delay before scroll-back
         scrollBackToTop(origPos, cfg.scroll?.showScrollNotification ?? true);
       }
 
@@ -52,7 +55,7 @@ export async function renderComments(c) {
       }
 
       showLoading(c, 'Analyzing...');
-      const r = await rs({ action: 'ANALYZE_COMMENTS', comments: cm });
+      const r = await sendRuntimeMessage({ action: 'ANALYZE_COMMENTS', comments: cm });
 
       if (r.success) {
         if (!state.analysisData) state.analysisData = {};
@@ -60,10 +63,8 @@ export async function renderComments(c) {
         const html = await parseMarkdown(r.analysis);
 
         // Render with Liquid Glass Design
-        const topCommentsHtml = jn(
-          mp(
-            cm.slice(0, 5),
-            (x, i) => `
+        const topCommentsHtml = cm.slice(0, 5)
+          .map((x, i) => `
               <div class="yt-ai-comment glass-panel-sub" style="animation: slideUpFade 0.3s var(--ease-fluid) ${0.1 + i * 0.05}s backwards; margin-bottom: 8px; padding: 12px; border-radius: var(--radius-md);">
                 <div class="yt-ai-comment-header" style="display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 0.85em; opacity: 0.8;">
                   <span class="yt-ai-comment-author" style="font-weight: 600; color: var(--accent);">${x.author}</span>
@@ -71,10 +72,8 @@ export async function renderComments(c) {
                 </div>
                 <div class="yt-ai-comment-text" style="font-size: 0.95em; line-height: 1.4;">${x.text}</div>
               </div>
-            `
-          ),
-          ''
-        );
+            `)
+          .join('');
 
         (c).innerHTML = `
             <div class="yt-ai-comments-container" style="display: flex; flex-direction: column; gap: 16px; padding: 8px 0;">
@@ -95,7 +94,7 @@ export async function renderComments(c) {
     } catch (x) {
       // Scroll back even on error after full retry attempts
       if (cfg.scroll?.scrollBackAfterComments !== false) {
-        await setTimeout(() => {}, 300);
+        await setTimeout(() => { }, 300);
         scrollBackToTop(origPos, cfg.scroll?.showScrollNotification ?? true);
       }
       (c).innerHTML = `<div class="yt-ai-error-msg">Failed: ${x.message}</div>`;
@@ -126,13 +125,13 @@ async function forceLoadComments() {
       const maxAttempts = 20; // 20 * 500ms = 10 seconds
 
       while (attempts < maxAttempts) {
-        await setTimeout(() => {}, 500);
+        await setTimeout(() => { }, 500);
 
         // Check if comments have loaded
         const comments = document.querySelectorAll('ytd-comment-thread-renderer, ytd-comment-renderer');
         if (comments && comments.length > 0) {
           // Comments appeared! Give a tiny bit more time for text to render
-          await setTimeout(() => {}, 500);
+          await setTimeout(() => { }, 500);
           return;
         }
 
@@ -148,7 +147,7 @@ async function forceLoadComments() {
         // If we are at the bottom, maybe scroll up a bit to trigger lazy load
         if (attempts % 5 === 0) {
           window.scrollBy(0, -50);
-          await setTimeout(() => {}, 100);
+          await setTimeout(() => { }, 100);
           window.scrollBy(0, 50);
         }
 
@@ -159,7 +158,7 @@ async function forceLoadComments() {
 
     // Fallback if no comments section found (e.g. mobile/other layout)
     window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
-    await setTimeout(() => {}, 2000);
+    await setTimeout(() => { }, 2000);
   } catch (err) {
     console.error('Err:forceLoadComments', err);
   }

@@ -1,8 +1,10 @@
-const gu = p => chrome.runtime.getURL(p);
+function $(selector) {
+  return document.querySelector(selector);
+}
 
-);
-);
-);
+const COLOR_MAPPING = {};
+const LABEL_MAPPING = {};
+
 export const renderTimeline = (segs, dur) => {
   try {
     const bar = $('.ytp-progress-bar-container');

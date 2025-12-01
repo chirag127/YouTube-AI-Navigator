@@ -1,6 +1,5 @@
 const gu = p => chrome.runtime.getURL(p);
 
-);
 export async function initializeExtension() {
   try {
     const { loadSettings } = await import(gu('content/core/state.js'));
@@ -23,7 +22,6 @@ export async function initializeExtension() {
 
 export async function waitForPageReady() {
   try {
-    );
     const p = new Promise(r => {
       if (document.readyState === 'complete') r();
       else (window)?.addEventListener('load', r);

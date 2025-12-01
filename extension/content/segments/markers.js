@@ -1,8 +1,11 @@
 const gu = p => chrome.runtime.getURL(p);
 
-);
 const { getVideoElement } = await import(gu('content/utils/dom.js'));
-);
+
+function $(selector) {
+  return document.querySelector(selector);
+}
+
 export async function injectSegmentMarkers(s) {
   try {
     if (!s?.length) return;
@@ -34,8 +37,6 @@ export async function injectSegmentMarkers(s) {
 }
 async function getSegmentColor(lb) {
   try {
-    );
-    if (COLOR_MAPPING[lb]) return COLOR_MAPPING[lb];
     const fallback = {
       Sponsor: '#00d26a',
       'Self Promotion': '#ffff00',
@@ -53,7 +54,7 @@ async function getSegmentColor(lb) {
       'Music: Non-Music Section': '#ff9900',
       Content: '#999999',
     };
-    return fallback[lb] || getLabelColor(lb);
+    return fallback[lb] || '#999999';
   } catch (err) {
     console.error('Err:getSegmentColor', err);
     return '#999999';

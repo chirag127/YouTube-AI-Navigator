@@ -1,10 +1,11 @@
 const gu = p => chrome.runtime.getURL(p);
 
 const { deArrowAPI } = await import(gu('api/dearrow.js'));
-);
-const { jp } = await import(gu('utils/shortcuts/core.js'));
-);
-);
+
+function $(selector) {
+  return document.querySelector(selector);
+}
+
 class MetadataExtractor {
   constructor() {
     this.cache = new Map();
@@ -12,7 +13,7 @@ class MetadataExtractor {
   }
   log(lvl, msg) {
     const i = { info: 'ℹ️', success: '✅', warn: '⚠️', error: '❌' };
-    const f = lvl === 'error' ? e : l;
+    const f = lvl === 'error' ? console.error : console.log;
     const p = lvl === 'error' ? '[Metadata:Fail] ' : '[ME] ';
     f(`${p}${i[lvl]} ${msg}`);
   }
@@ -324,7 +325,7 @@ class MetadataExtractor {
     try {
       const s = $('script[type="application/ld+json"]');
       if (s && s.textContent) {
-        const result = jp(s.textContent);
+        const result = JSON.parse(s.textContent);
 
         return result;
       }

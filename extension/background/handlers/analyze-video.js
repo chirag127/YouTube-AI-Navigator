@@ -9,10 +9,10 @@ import { ContextManager as CM } from '../../services/context-manager.js';
 
 
 
-import { np, pc } from '../../utils/shortcuts/async.js';
+// Removed unused imports
 let ka = null;
 const ska = () => {
-  if (!ka) ka = setInterval(() => cr.getPlatformInfo(() => {}), 2e4);
+  if (!ka) ka = setInterval(() => chrome.runtime.getPlatformInfo(() => { }), 2e4);
 };
 const stka = () => {
   if (ka) {
@@ -54,8 +54,8 @@ export async function handleAnalyzeVideo(q, r) {
     const glEn = st4?.config?.externalApis?.geniusLyrics?.enabled ?? true;
     const im =
       m?.category === 'Music' ||
-      lwc(m?.title || '').includes('official video') ||
-      lwc(m?.title || '').includes('lyrics');
+      (m?.title || '').toLowerCase().includes('official video') ||
+      (m?.title || '').toLowerCase().includes('lyrics');
     if (glEn && (im || !t?.length)) {
       try {
         ly = await gl.getLyrics(m.title, m.author);
@@ -75,14 +75,13 @@ export async function handleAnalyzeVideo(q, r) {
     }
     let ec = {};
     try {
-      if (!ss) throw new Error('Sync NA');
       const st = await chrome.storage.sync.get('config');
       if (!st?.config) console.warn('[AV]No cfg');
       if (!m) throw new Error('No meta');
       const cm = new CM(st.config?.externalApis || {});
       const fp = cm.fetchContext(m);
-      const tp = np((_, j) => setTimeout(() => j(new Error('TO')), 1e4));
-      ec = await pc([fp, tp]);
+      const tp = new Promise((_, reject) => setTimeout(() => reject(new Error('TO')), 1e4));
+      ec = await Promise.race([fp, tp]);
     } catch (x) {
       console.error('[AV]Ctx:', x.message);
     }
@@ -95,7 +94,7 @@ export async function handleAnalyzeVideo(q, r) {
       sponsorBlockSegments: sb2,
       externalContext: ec,
     };
-    const st2 = await chrome.storage.sync.get(['summaryLength');
+    const st2 = await chrome.storage.sync.get(['summaryLength', 'maxInsights', 'maxFAQ', 'includeTimestamps']);
     const an = await g.generateComprehensiveAnalysis(ac, {
       summaryLength: o.summaryLength || st2.summaryLength || 'medium',
       language: o.language || 'en',

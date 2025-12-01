@@ -145,9 +145,9 @@ async function gsp(vid) {
   const e = new TextEncoder();
   const d = e.encode(vid);
   const hb = await crypto.subtle.digest('SHA-256', d);
-  const ha = af(new Uint8Array(hb));
+  const ha = Array.from(new Uint8Array(hb));
   const hh = ha.map(b => b.toString(16).padStart(2, '0')).join('');
-  return sbs(hh, 0, 4);
+  return hh.substring(0, 4);
 }
 
 export async function getVideoMetadata(vid, opt = {}) {

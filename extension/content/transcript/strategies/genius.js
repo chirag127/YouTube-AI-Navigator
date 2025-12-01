@@ -1,8 +1,7 @@
-const gu = p => chrome.runtime.getURL(p);
+function $(selector) {
+  return document.querySelector(selector);
+}
 
-);
-);
-);
 export const name = 'Genius Lyrics';
 export const priority = 20;
 

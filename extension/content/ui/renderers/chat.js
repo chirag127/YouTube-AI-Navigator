@@ -1,8 +1,8 @@
-
-
-);
 const { parseMarkdown } = await import(chrome.runtime.getURL('lib/marked-loader.js'));
-);
+
+function $(selector) {
+  return document.querySelector(selector);
+}
 
 function parseTime(t) {
   const p = t.split(':').map(Number);

@@ -1,6 +1,3 @@
-const gu = p => chrome.runtime.getURL(p);
-
-);
 export function showLoading(c, m) {
   try {
     if (!c) return;
