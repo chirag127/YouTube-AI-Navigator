@@ -157,7 +157,7 @@ function $(selector) {
     emit(ev, d) {
       try {
         this.ls.get(ev)?.forEach(c => c(d));
-        w.postMessage({ type: `YT_${uc(ev)}`, payload: d }, '*');
+        w.postMessage({ type: `YT_${uc(ev)}`, payload: d }, window.location.origin);
       } catch (err) {
         console.error('Err:e', err);
       }

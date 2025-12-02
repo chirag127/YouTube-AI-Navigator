@@ -347,7 +347,7 @@ class MetadataExtractor {
           }
         };
         window?.addEventListener('message', lis);
-        window.postMessage({ type: 'YT_GET_DATA' }, '*');
+        window.postMessage({ type: 'YT_GET_DATA' }, window.location.origin);
         setTimeout(() => {
           window.removeEventListener('message', lis);
           r(null);
