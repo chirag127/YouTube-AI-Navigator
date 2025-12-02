@@ -52,7 +52,10 @@ export class AutoLiker {
       if (!d || d === 0) return;
       const p = (c / d) * 100;
       const t = state.settings.autoLikeThreshold || 50;
-      if (p >= t) await this.attemptLike(vid);
+      if (p >= t) {
+        console.log(`AL: Attempting to like video ${vid} at ${p.toFixed(1)}% progress`);
+        await this.attemptLike(vid);
+      }
     } catch (err) {
       console.error('Err:handleTimeUpdate', err);
     }
@@ -97,10 +100,14 @@ export class AutoLiker {
   }
   async checkSubscriptionStatus() {
     try {
+      // Enhanced selector list for modern YouTube UI
       const s = [
         '#subscribe-button > ytd-subscribe-button-renderer',
         'ytd-reel-player-overlay-renderer #subscribe-button',
         '#subscribe-button',
+        'ytd-subscribe-button-renderer',
+        'ytd-video-secondary-info-renderer #subscribe-button',
+        'button[aria-label*="Subscribe"], button[aria-label*="Unsubscribe"]',
       ];
       let b = null;
       for (const sel of s) {
@@ -108,12 +115,17 @@ export class AutoLiker {
         if (b) break;
       }
       if (!b) {
+        console.warn('AL: Subscribe button not found');
         return false;
       }
-      return (
+      // Check if subscribed using multiple methods
+      const isSubscribed =
         b.hasAttribute('subscribed') ||
-        b.querySelector("button[aria-label^='Unsubscribe']") !== null
-      );
+        b.querySelector("button[aria-label^='Unsubscribe']") !== null ||
+        b.querySelector("button[aria-label*='Unsubscribe']") !== null ||
+        b.querySelector("button[aria-label*='Subscribed']") !== null ||
+        b.querySelector("button[aria-label*='subscribed']") !== null;
+      return isSubscribed;
     } catch (err) {
       console.error('Err:checkSubscriptionStatus', err);
       return false;
@@ -121,18 +133,25 @@ export class AutoLiker {
   }
   async clickLikeButton() {
     try {
+      // Enhanced selector list for modern YouTube UI
       const s = [
         'like-button-view-model button',
         '#menu .YtLikeButtonViewModelHost button',
         '#segmented-like-button button',
         '#like-button button',
         'ytd-toggle-button-renderer#like-button button',
+        'ytd-menu-renderer #like-button button',
+        'ytd-sentiment-bar-renderer button',
+        'button[aria-label*="like"]',
+        'button[aria-label*="Like"]',
+        'button[aria-label*="thumbs up"]',
+        'button[aria-label*="Thumbs up"]',
       ];
       let lb = null;
       for (const sel of s) {
         const btns = document.querySelectorAll(sel);
         for (const b of btns) {
-          if (b.closest('#top-level-buttons-computed') || b.closest('#actions')) {
+          if (b.closest('#top-level-buttons-computed') || b.closest('#actions') || b.closest('ytd-menu-renderer')) {
             lb = b;
             break;
           }
@@ -140,14 +159,36 @@ export class AutoLiker {
         if (lb) break;
       }
       if (!lb) {
-        return false;
+        console.warn('AL: Like button not found, trying alternative approach');
+        // Try alternative approach - find any button with like-related attributes
+        const altBtns = document.querySelectorAll('button[aria-label*="like"], button[aria-label*="Like"], button[aria-label*="thumbs"]');
+        for (const b of altBtns) {
+          if (b.offsetParent !== null) { // Only visible buttons
+            lb = b;
+            break;
+          }
+        }
+        if (!lb) {
+          return false;
+        }
       }
       const lkd =
-        lb.getAttribute('aria-pressed') === 'true' || lb.classList.contains('style-default-active');
+        lb.getAttribute('aria-pressed') === 'true' ||
+        lb.classList.contains('style-default-active') ||
+        lb.classList.contains('yt-spec-button-shape-next--filled') ||
+        lb.classList.contains('yt-spec-button-shape-next--tonal');
       if (lkd) {
         this.likedVideos.add(state.currentVideoId || new URLSearchParams(location.search).get('v'));
         return true;
       }
+      // Simulate click with proper event
+      const clickEvent = new MouseEvent('click', {
+        view: window,
+        bubbles: true,
+        cancelable: true
+      });
+      lb.dispatchEvent(clickEvent);
+      // Also try direct click as fallback
       lb.click();
       return true;
     } catch (err) {

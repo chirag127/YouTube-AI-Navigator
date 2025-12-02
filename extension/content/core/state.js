@@ -7,7 +7,7 @@ export const state = {
     autoAnalyze: true,
     autoSkipSponsors: false,
     autoSkipIntros: false,
-    autoLike: false,
+    autoLike: true,
     autoLikeThreshold: 50,
     autoLikeLive: false,
     likeIfNotSubscribed: false,
